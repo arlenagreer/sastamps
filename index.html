@@ -3,39 +3,386 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Placeholder Document</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f5f5f5;
+    <meta name="description" content="San Antonio Philatelic Association (SAPA) is a community of stamp collectors in San Antonio, Texas, dedicated to the hobby of philately since 1896. Join us for meetings, exhibitions, and educational opportunities.">
+    <meta name="keywords" content="SAPA, San Antonio Philatelic Association, stamp collecting, philately, stamp club, San Antonio stamps, Texas philately">
+    
+    <title>San Antonio Philatelic Association - Stamp Collecting Club in San Antonio, TX</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sastamps.org/">
+    <meta property="og:title" content="San Antonio Philatelic Association - Stamp Collecting Club">
+    <meta property="og:description" content="A vibrant community of stamp collectors in San Antonio, Texas, dedicated to the hobby of philately since 1896.">
+    <meta property="og:image" content="images/home-page-image.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://sastamps.org/">
+    <meta property="twitter:title" content="San Antonio Philatelic Association - Stamp Collecting Club">
+    <meta property="twitter:description" content="A vibrant community of stamp collectors in San Antonio, Texas, dedicated to the hobby of philately since 1896.">
+    <meta property="twitter:image" content="images/home-page-image.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon.png">
+    <link rel="manifest" href="site.webmanifest">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://sastamps.org/">
+    
+    <!-- JSON-LD structured data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "San Antonio Philatelic Association",
+        "alternateName": "SAPA",
+        "url": "https://sastamps.org",
+        "logo": "https://sastamps.org/images/sapa-logo.png",
+        "foundingDate": "1896",
+        "description": "A non-profit organization dedicated to promoting stamp collecting and philately in the San Antonio area since 1896.",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "San Antonio",
+            "addressRegion": "TX",
+            "postalCode": "78209",
+            "addressCountry": "US"
+        },
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "Customer Service",
+            "email": "contact@sastamps.org"
+        },
+        "sameAs": [
+            "https://www.facebook.com/SanAntonioPhilatelicAssociation",
+            "https://twitter.com/SAPAstamps"
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": "SAPA Monthly Meeting",
+        "startDate": "2025-05-15T19:00:00-06:00",
+        "endDate": "2025-05-15T21:00:00-06:00",
+        "location": {
+            "@type": "Place",
+            "name": "Lions Field Adult Center",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "2809 Broadway",
+                "addressLocality": "San Antonio",
+                "addressRegion": "TX",
+                "postalCode": "78209",
+                "addressCountry": "US"
+            }
+        },
+        "description": "Regular monthly meeting of the San Antonio Philatelic Association featuring a presentation on collecting U.S. Presidential stamps.",
+        "image": "https://sastamps.org/images/sapa-meeting.jpg",
+        "organizer": {
+            "@type": "Organization",
+            "name": "San Antonio Philatelic Association",
+            "url": "https://sastamps.org"
         }
-        .container {
-            text-align: center;
-            padding: 30px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-        }
-        h1 {
-            color: #333;
-        }
-        p {
-            color: #666;
-            line-height: 1.6;
-        }
-    </style>
+    }
+    </script>
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome to the Placeholder Page</h1>
-        <p>This is a basic HTML5 placeholder document. Replace this content with your actual content.</p>
-    </div>
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <h1 class="site-title"><a href="index.html">San Antonio Philatelic Association</a></h1>
+            <nav>
+                <button class="menu-toggle" aria-expanded="false" aria-controls="nav-menu">
+                    <i class="fas fa-bars"></i><span class="sr-only">Menu</span>
+                </button>
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home nav-icon"></i>Home</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle nav-icon"></i>About</a></li>
+                    <li><a href="events.html"><i class="fas fa-calendar-alt nav-icon"></i>Events</a></li>
+                    <li><a href="newsletter.html"><i class="fas fa-newspaper nav-icon"></i>Newsletter</a></li>
+                    <li><a href="membership.html"><i class="fas fa-users nav-icon"></i>Membership</a></li>
+                    <li><a href="contact.html"><i class="fas fa-envelope nav-icon"></i>Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="hero" style="background-image: linear-gradient(rgba(26, 82, 118, 0.85), rgba(26, 82, 118, 0.85)), url('images/home-page-image.png'); background-size: cover; background-position: center;">
+            <div class="container">
+                <h1>Welcome to the San Antonio Philatelic Association</h1>
+                <p>A vibrant community of stamp collectors <br />celebrating over 125 years of philately in San Antonio, Texas</p>
+                <div style="margin-top: 2rem;">
+                    <a href="membership.html" class="btn btn-secondary">Join Our Community</a>
+                    <a href="events.html" class="btn btn-light">Upcoming Events</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Newsletter Banner -->
+        <section class="section" style="padding-top: 0; padding-bottom: 0;">
+            <div class="container">
+                <div style="background-color: var(--accent); color: var(--dark); padding: 1.5rem; border-radius: var(--radius-lg); margin-top: -2rem; box-shadow: var(--shadow-md); position: relative; z-index: 2; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+                    <div style="margin-right: 1rem;">
+                        <h2 style="margin-bottom: 0.5rem; font-size: 1.5rem;">SAPA PHILATEX - Second Quarter 2025</h2>
+                        <p style="margin-bottom: 0;"><i class="fas fa-newspaper"></i> Our latest newsletter is now available &bull; <i class="fas fa-calendar-alt"></i> Published April 1, 2025</p>
+                    </div>
+                    <div>
+                        <a href="public/SAPA PHILATEX Second Quarter 2025.pdf" class="btn" style="background-color: var(--dark); color: white;">Download PDF <i class="fas fa-file-pdf"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- About Us Section -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Celebrating Our Philatelic Heritage</h2>
+                
+                <div class="grid" style="grid-template-columns: 2fr 3fr; gap: 3rem;">
+                    <div>
+                        <div style="text-align: center; background-color: var(--primary); color: white; padding: 1.5rem; border-radius: var(--radius-md);">
+                            <h3 style="color: white; margin-bottom: 1rem;">Founded in 1896</h3>
+                            <p>One of America's oldest continuously operating stamp collecting clubs</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <p class="lead" style="font-size: 1.2rem; color: var(--primary); font-family: var(--font-heading); margin-bottom: 1.5rem;">The San Antonio Philatelic Association (SAPA) has been bringing together stamp collectors from all walks of life for more than 125 years.</p>
+                        
+                        <p>Our organization provides a welcoming environment for philatelists of all experience levels, from beginners to advanced collectors. Whether you're interested in classic stamps, postal history, topical collecting, or any other aspect of the hobby, you'll find kindred spirits at SAPA.</p>
+                        
+                        <p>Our monthly meetings feature educational presentations, trading sessions, auctions, and plenty of opportunities to share knowledge and stories. We also organize special events and exhibitions throughout the year, including our annual SAPA EXPO.</p>
+                        
+                        <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem;">
+                            <div class="card" style="margin-bottom: 0;">
+                                <div class="card-content text-center">
+                                    <i class="fas fa-users fa-2x mb-2" style="color: var(--primary);"></i>
+                                    <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Diverse Community</h3>
+                                    <p style="font-size: 0.9rem; margin: 0;">Collectors of all ages and backgrounds</p>
+                                </div>
+                            </div>
+                            <div class="card" style="margin-bottom: 0;">
+                                <div class="card-content text-center">
+                                    <i class="fas fa-book fa-2x mb-2" style="color: var(--primary);"></i>
+                                    <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Philatelic Knowledge</h3>
+                                    <p style="font-size: 0.9rem; margin: 0;">Educational talks and resources</p>
+                                </div>
+                            </div>
+                            <div class="card" style="margin-bottom: 0;">
+                                <div class="card-content text-center">
+                                    <i class="fas fa-medal fa-2x mb-2" style="color: var(--primary);"></i>
+                                    <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Exhibition Excellence</h3>
+                                    <p style="font-size: 0.9rem; margin: 0;">Annual shows and exhibitions</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 2rem;">
+                            <a href="about.html" class="btn btn-primary">Learn More About SAPA</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        
+        <!-- Newsletter Section -->
+        <section class="section" style="background-color: var(--primary); color: white;">
+            <div class="container">
+                <h2 class="section-title" style="color: white;">The PHILATEX Newsletter</h2>
+                <p class="text-center mb-4">Our quarterly publication featuring philatelic articles, club news, and member stories</p>
+                
+                <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                    <div class="card" style="background-color: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.2);">
+                        <div class="card-content">
+                            <h3 style="color: var(--accent);">Latest Issue Highlights</h3>
+                            <ul style="list-style-type: none; padding-left: 0;">
+                                <li style="margin-bottom: 0.75rem;"><i class="fas fa-bookmark" style="color: var(--accent); margin-right: 0.5rem;"></i> The Evolution of Airmail Stamps in Texas</li>
+                                <li style="margin-bottom: 0.75rem;"><i class="fas fa-bookmark" style="color: var(--accent); margin-right: 0.5rem;"></i> Member Profile: Susan Taylor's British Commonwealth Collection</li>
+                                <li style="margin-bottom: 0.75rem;"><i class="fas fa-bookmark" style="color: var(--accent); margin-right: 0.5rem;"></i> Spotlight on the 1926 U.S. Sesquicentennial Issues</li>
+                                <li style="margin-bottom: 0.75rem;"><i class="fas fa-bookmark" style="color: var(--accent); margin-right: 0.5rem;"></i> Identifying Watermarks: Tips and Techniques</li>
+                                <li><i class="fas fa-bookmark" style="color: var(--accent); margin-right: 0.5rem;"></i> Club Auction Results and Upcoming Lots</li>
+                            </ul>
+                            <a href="newsletter.html" class="btn" style="background-color: var(--accent); color: var(--dark); margin-top: 1rem;">Read Latest Issue</a>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="background-color: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.2);">
+                        <div class="card-content">
+                            <h3 style="color: var(--accent);">Subscribe Today</h3>
+                            <p>PHILATEX is published quarterly and distributed to all SAPA members. Benefits include:</p>
+                            <ul>
+                                <li>In-depth articles on philatelic topics</li>
+                                <li>Calendar of upcoming club events and shows</li>
+                                <li>News from the American Philatelic Society</li>
+                                <li>Member classifieds and trading opportunities</li>
+                                <li>Digital archive access to past issues</li>
+                            </ul>
+                            <div style="margin-top: 1rem;">
+                                <a href="membership.html" class="btn" style="background-color: var(--accent); color: var(--dark);">Join SAPA</a>
+                                <a href="newsletter.html#subscribe" class="btn" style="background-color: transparent; border: 1px solid var(--accent); color: var(--accent); margin-left: 0.5rem;">Learn More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Join Us Section -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Join Our Philatelic Community</h2>
+                
+                <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                    <div class="card">
+                        <div class="card-content text-center">
+                            <i class="fas fa-user-plus fa-3x mb-3" style="color: var(--primary);"></i>
+                            <h3 class="card-title">Become a Member</h3>
+                            <p>Join our community of collectors and enjoy all the benefits of SAPA membership.</p>
+                            <a href="membership.html" class="btn btn-primary mt-2">Membership Details</a>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-content text-center">
+                            <i class="fas fa-calendar-check fa-3x mb-3" style="color: var(--primary);"></i>
+                            <h3 class="card-title">Attend a Meeting</h3>
+                            <p>Visit one of our monthly meetings as a guest and experience SAPA firsthand.</p>
+                            <a href="events.html" class="btn btn-primary mt-2">Meeting Schedule</a>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-content text-center">
+                            <i class="fas fa-envelope fa-3x mb-3" style="color: var(--primary);"></i>
+                            <h3 class="card-title">Contact Us</h3>
+                            <p>Have questions about stamp collecting or our club? We're here to help.</p>
+                            <a href="contact.html" class="btn btn-primary mt-2">Get in Touch</a>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-content text-center">
+                            <i class="fas fa-newspaper fa-3x mb-3" style="color: var(--primary);"></i>
+                            <h3 class="card-title">Newsletter</h3>
+                            <p>Read our quarterly PHILATEX publication for articles and club news.</p>
+                            <a href="newsletter.html" class="btn btn-primary mt-2">Read PHILATEX</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Testimonials Section -->
+        <section class="section" style="background-color: var(--light);">
+            <div class="container">
+                <h2 class="section-title">What Our Members Say</h2>
+                
+                <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                    <div class="card">
+                        <div class="card-content">
+                            <div style="font-size: 3rem; color: var(--primary); text-align: center; margin-bottom: 1rem;">
+                                <i class="fas fa-quote-left"></i>
+                            </div>
+                            <blockquote style="font-style: italic; margin-bottom: 1.5rem;">
+                                "SAPA has become like a second family to me. The wealth of knowledge shared at meetings is incredible, and I've made lasting friendships with fellow collectors who share my passion."
+                            </blockquote>
+                            <div style="display: flex; align-items: center;">
+                                <div style="width: 60px; height: 60px; background-color: var(--primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 1rem;">
+                                    <span style="color: white; font-weight: bold; font-size: 1.5rem;">TW</span>
+                                </div>
+                                <div>
+                                    <p style="margin: 0; font-weight: bold;">Thomas Wilson</p>
+                                    <p style="margin: 0; font-size: 0.9rem;">Member since 2018</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-content">
+                            <div style="font-size: 3rem; color: var(--primary); text-align: center; margin-bottom: 1rem;">
+                                <i class="fas fa-quote-left"></i>
+                            </div>
+                            <blockquote style="font-style: italic; margin-bottom: 1.5rem;">
+                                "As a beginner collector, I was intimidated at first, but everyone at SAPA was so welcoming and helpful. The mentorship program paired me with an experienced collector who has taught me so much."
+                            </blockquote>
+                            <div style="display: flex; align-items: center;">
+                                <div style="width: 60px; height: 60px; background-color: var(--primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 1rem;">
+                                    <span style="color: white; font-weight: bold; font-size: 1.5rem;">MG</span>
+                                </div>
+                                <div>
+                                    <p style="margin: 0; font-weight: bold;">Maria Garcia</p>
+                                    <p style="margin: 0; font-size: 0.9rem;">Member since 2023</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>San Antonio Philatelic Association</h3>
+                    <p>Founded in 1896</p>
+                    <p>Chapter #3 of the Texas Philatelic Association</p>
+                    <p>Chapter #388 of the American Philatelic Society</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="events.html">Events</a></li>
+                        <li><a href="newsletter.html">Newsletter</a></li>
+                        <li><a href="membership.html">Membership</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-envelope"></i> Email: <a href="mailto:contact@sastamps.org">contact@sastamps.org</a></p>
+                    <p><i class="fas fa-map-marker-alt"></i> Meeting Location: Lions Field Adult Center</p>
+                    <p><i class="fas fa-clock"></i> Meetings: 3rd Friday of each month, 7:00 PM</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 San Antonio Philatelic Association. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Back to top button -->
+    <button id="back-to-top" title="Back to Top" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 99; border: none; outline: none; background-color: var(--primary); color: white; cursor: pointer; padding: 15px; border-radius: 50%; font-size: 16px;">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    
+    <!-- Scripts -->
+    <script src="js/script.js"></script>
 </body>
 </html> 

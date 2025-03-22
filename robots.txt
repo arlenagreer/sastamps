@@ -1,0 +1,12 @@
+# robots.txt for San Antonio Philatelic Association (SAPA)
+# https://sastamps.org/
+
+User-agent: *
+Allow: /
+Disallow: /temp/
+
+# Sitemaps
+Sitemap: https://sastamps.org/sitemap.xml
+
+# Allow images to be indexed
+Allow: /images/ 
