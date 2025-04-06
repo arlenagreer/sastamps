@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//San Antonio Philatelic Association//SAPA Meetings//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:20250530T193000Z-sapa@sastamps.org
+DTSTAMP:20240306T000000Z
+DTSTART:20250530T233000Z
+DTEND:20250531T013000Z
+SUMMARY:SAPA Meeting - "The Greatest Engraver of All Time" by Mark Brill
+DESCRIPTION:San Antonio Philatelic Association educational program featuring Mark Brill's presentation on "The Greatest Engraver of All Time". Doors open at 6:30 PM\, program starts at 7:30 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting,Program
+END:VEVENT
+END:VCALENDAR 

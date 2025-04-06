@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//San Antonio Philatelic Association//SAPA Meetings//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:20250620T193000Z-sapa@sastamps.org
+DTSTAMP:20240306T000000Z
+DTSTART:20250620T233000Z
+DTEND:20250621T013000Z
+SUMMARY:SAPA Club Picnic
+DESCRIPTION:Annual San Antonio Philatelic Association Club Picnic. Join us for food\, fellowship\, and philatelic fun! Regular meeting time and location.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Social,Picnic
+END:VEVENT
+END:VCALENDAR 

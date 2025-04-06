@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//San Antonio Philatelic Association//SAPA Meetings//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:20250411T193000Z-sapa@sastamps.org
+DTSTAMP:20240306T000000Z
+DTSTART:20250411T233000Z
+DTEND:20250412T013000Z
+SUMMARY:SAPA Meeting - Auction Night
+DESCRIPTION:San Antonio Philatelic Association auction meeting. Bring items for auction by 7:15 PM. Auction starts at 7:30 PM. Doors open at 6:30 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting,Auction
+END:VEVENT
+END:VCALENDAR 

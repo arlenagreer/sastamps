@@ -1,0 +1,10 @@
+{
+  "server": {
+    "host": "127.0.0.1",
+    "port": 3025,
+    "skipDiscovery": true
+  },
+  "logging": {
+    "level": "debug"
+  }
+} 

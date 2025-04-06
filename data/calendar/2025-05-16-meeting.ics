@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//San Antonio Philatelic Association//SAPA Meetings//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:20250516T193000Z-sapa@sastamps.org
+DTSTAMP:20240306T000000Z
+DTSTART:20250516T233000Z
+DTEND:20250517T013000Z
+SUMMARY:SAPA Meeting - Bourse Night
+DESCRIPTION:San Antonio Philatelic Association bourse meeting. Buy\, sell\, and trade stamps with fellow collectors. Doors open at 6:30 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting,Bourse
+END:VEVENT
+END:VCALENDAR 

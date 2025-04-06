@@ -63,7 +63,7 @@
         "contactPoint": {
             "@type": "ContactPoint",
             "contactType": "Customer Service",
-            "email": "nrmabie@gmail.com"
+            "email": "loz33@hotmail.com"
         },
         "sameAs": [
             "https://www.facebook.com/SanAntonioPhilatelicAssociation",
@@ -115,6 +115,7 @@
                 <ul class="nav-menu" id="nav-menu">
                     <li><a href="index.html"><i class="fas fa-home nav-icon"></i>Home</a></li>
                     <li><a href="about.html"><i class="fas fa-info-circle nav-icon"></i>About</a></li>
+                    <li><a href="meetings.html"><i class="fas fa-calendar nav-icon"></i>Meetings</a></li>
                     <li><a href="newsletter.html"><i class="fas fa-newspaper nav-icon"></i>Newsletter</a></li>
                     <li><a href="membership.html"><i class="fas fa-users nav-icon"></i>Membership</a></li>
                     <li><a href="contact.html"><i class="fas fa-envelope nav-icon"></i>Contact</a></li>
@@ -170,12 +171,12 @@
                         
                         <p>Our weekly meetings feature educational presentations, trading sessions, auctions, and plenty of opportunities to share knowledge and stories. We also organize special events and exhibitions throughout the year, including our annual SAPA EXPO.</p>
                         
-                        <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem;">
+                        <div class="grid" style="grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 2rem;">
                             <div class="card" style="margin-bottom: 0;">
                                 <div class="card-content text-center">
                                     <i class="fas fa-users fa-2x mb-2" style="color: var(--primary);"></i>
                                     <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Diverse Community</h3>
-                                    <p style="font-size: 0.9rem; margin: 0;">Collectors of all ages and backgrounds</p>
+                                    <p style="font-size: 0.9rem; margin: 0;">We welcome collectors of all ages and backgrounds</p>
                                 </div>
                             </div>
                             <div class="card" style="margin-bottom: 0;">
@@ -183,13 +184,6 @@
                                     <i class="fas fa-book fa-2x mb-2" style="color: var(--primary);"></i>
                                     <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Philatelic Knowledge</h3>
                                     <p style="font-size: 0.9rem; margin: 0;">Educational talks and resources</p>
-                                </div>
-                            </div>
-                            <div class="card" style="margin-bottom: 0;">
-                                <div class="card-content text-center">
-                                    <i class="fas fa-medal fa-2x mb-2" style="color: var(--primary);"></i>
-                                    <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Exhibition Excellence</h3>
-                                    <p style="font-size: 0.9rem; margin: 0;">Annual shows and exhibitions</p>
                                 </div>
                             </div>
                         </div>
@@ -209,7 +203,6 @@
     <p class="text-center mb-4">Join us at MacArthur Park Lutheran Church</p>
     <div class="text-center mb-4">
       <p>We meet most Friday nights at MacArthur Park Lutheran Church in Building 1, facing Nacogdoches Rd. <br />Join us for educational presentations, auctions, trading sessions, and more!</p>
-     
     </div>
     <div class="card">
       <div class="card-content">
@@ -222,8 +215,7 @@
         </p>
         
         <div style="overflow-x: auto;">
-          
-            <table style="width: 100%; border-collapse: collapse; font-family: var(--font-body); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm);">
+          <table class="meeting-table" style="width: 100%; border-collapse: collapse; font-family: var(--font-body); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm);">
             <thead>
               <tr style="background-color: var(--primary); color: white; text-align: center;">
                 <th style="padding: 1rem; font-size: 1.1rem; background-color: var(--primary-dark); color: var(--accent); font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.3); width: 33.33%; text-align: center;">April 2025</th>
@@ -261,8 +253,21 @@
           </table>
         </div>
         
-        <div class="text-center" style="margin-top: 1.5rem;">
-          <!-- Removed "View Full Event Calendar" button -->
+        <!-- Calendar Download Options -->
+        <div class="calendar-downloads text-center mt-4" style="background-color: var(--light); padding: 1.5rem; border-radius: var(--radius-md);">
+          <div class="grid" style="grid-template-columns: 1fr auto 1fr; gap: 2rem; align-items: center;">
+            <div>
+              <a href="data/calendar/2025-Q2-schedule.ics" class="btn btn-primary" download style="width: 100%;">
+                <i class="fas fa-calendar-alt"></i> Download Complete Q2 2025 Schedule
+              </a>
+            </div>
+            <div style="color: var(--primary); font-weight: bold;">OR</div>
+            <div>
+              <a href="meetings.html" class="btn btn-secondary" style="width: 100%;">
+                <i class="fas fa-calendar-plus"></i> View Individual Meeting Downloads
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -324,7 +329,7 @@
                             <i class="fas fa-user-plus fa-3x mb-3" style="color: var(--primary);"></i>
                             <h3 class="card-title">Become a Member</h3>
                             <p>Join our community of collectors and enjoy all the benefits of SAPA membership.</p>
-                            <a href="membership.html" class="btn btn-primary mt-2">Membership Details</a>
+                            <a href="membership.html" class="btn btn-primary mt-2">Join SAPA Today</a>
                         </div>
                     </div>
                     
@@ -376,6 +381,7 @@
                     <ul>
                         <li><a href="index.html">Home</a></li>
                         <li><a href="about.html">About</a></li>
+                        <li><a href="meetings.html">Meetings</a></li>
                         <li><a href="newsletter.html">Newsletter</a></li>
                         <li><a href="membership.html">Membership</a></li>
                         <li><a href="contact.html">Contact</a></li>
@@ -383,7 +389,7 @@
                 </div>
                 <div class="footer-section">
                     <h3>Contact Us</h3>
-                    <p><i class="fas fa-envelope"></i> Email: <a href="mailto:nrmabie@gmail.com">nrmabie@gmail.com</a></p>
+                    <p><i class="fas fa-envelope"></i> Email: <a href="mailto:loz33@hotmail.com">loz33@hotmail.com</a></p>
                     <p><i class="fas fa-map-marker-alt"></i> Meeting Location: MacArthur Park Lutheran Church, Building 1</p>
                     <p><i class="fas fa-clock"></i> Meetings: Most Friday nights, doors open at 6:30 PM</p>
                 </div>

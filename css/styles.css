@@ -1070,4 +1070,243 @@ tr:hover {
         margin-right: 5px;
         font-size: 1rem;
     }
+}
+
+/* Mobile Calendar Styles */
+@media (max-width: 768px) {
+    .meeting-entry {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .calendar-link {
+        padding: 0.5rem;
+        background-color: var(--light);
+        border-radius: var(--radius-md);
+        display: inline-block;
+    }
+
+    .calendar-link:hover {
+        background-color: var(--primary-light);
+        color: var(--white);
+    }
+
+    /* Calendar Download Options */
+    .calendar-downloads .grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+
+    .calendar-downloads .grid > div:nth-child(2) {
+        display: none; /* Hide the "OR" divider on mobile */
+    }
+
+    /* Improve table readability on mobile */
+    .meeting-table {
+        font-size: 0.9rem;
+    }
+
+    .meeting-table td {
+        padding: 0.5rem !important;
+    }
+
+    .meeting-table i {
+        display: none; /* Hide icons in table cells on mobile to save space */
+    }
+
+    /* Make download buttons more touch-friendly */
+    .btn {
+        padding: 0.75rem 1rem;
+        min-height: 44px; /* Minimum touch target size */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    /* Meeting Times Display */
+    .meeting-times {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: left;
+        padding: 1rem;
+    }
+
+    .meeting-times span {
+        display: none; /* Hide the bullet points */
+    }
+
+    .meeting-times i {
+        width: 1.5rem;
+        text-align: center;
+        margin-right: 0.5rem;
+    }
+
+    /* Location Card */
+    .location-card {
+        padding: 1rem;
+    }
+
+    .location-card .grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .location-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.75rem;
+    }
+
+    /* Meeting Types List */
+    .meeting-types-list {
+        padding-left: 0;
+    }
+
+    .meeting-types-list li {
+        margin-bottom: 1rem;
+    }
+
+    .meeting-types-list strong {
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+}
+
+/* iPhone-specific optimizations */
+@media screen and (max-width: 428px) {
+    /* Calendar table optimizations */
+    .meeting-table {
+        font-size: 0.85rem;  /* Slightly smaller font for iPhone */
+    }
+
+    .meeting-table th {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.9rem;
+        line-height: 1.2;
+    }
+
+    .meeting-table td {
+        padding: 0.5rem 0.25rem;
+    }
+
+    /* Improve tap targets for calendar links */
+    .calendar-link {
+        padding: 0.75rem;
+        margin: 0.25rem 0;
+        min-width: 44px;  /* Apple's recommended minimum tap target size */
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--light);
+        border-radius: var(--radius-md);
+    }
+
+    /* Meeting entry layout */
+    .meeting-entry {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.25rem;
+    }
+
+    .meeting-entry span {
+        display: block;
+        text-align: center;
+        width: 100%;
+    }
+
+    /* Calendar download section */
+    .calendar-downloads {
+        padding: 1rem !important;
+    }
+
+    .calendar-downloads .grid {
+        gap: 1rem !important;
+    }
+
+    .calendar-downloads .btn {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+        min-height: 44px;
+        white-space: normal;  /* Allow text to wrap */
+        line-height: 1.2;
+    }
+
+    /* Meeting times and info */
+    .meeting-times li {
+        padding: 0.75rem;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: var(--radius-md);
+        margin-bottom: 0.5rem;
+    }
+
+    .meeting-types-list li {
+        padding: 0.75rem;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: var(--radius-md);
+        margin-bottom: 0.5rem;
+    }
+
+    /* Location card */
+    .location-card {
+        margin: 0 -1rem;  /* Full width on iPhone */
+        border-radius: 0;
+    }
+
+    .location-card h3 {
+        font-size: 1.1rem;
+    }
+
+    /* Fix notch interference */
+    .header-container {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+
+    /* Adjust container padding */
+    .container {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+    }
+
+    /* Improve scrolling */
+    .table-responsive {
+        -webkit-overflow-scrolling: touch;
+        scroll-padding: 0 1rem;
+    }
+}
+
+/* iPhone SE specific adjustments */
+@media screen and (max-width: 375px) {
+    .meeting-table {
+        font-size: 0.8rem;
+    }
+
+    .meeting-table th {
+        padding: 0.4rem 0.2rem;
+    }
+
+    .btn {
+        font-size: 0.85rem;
+        padding: 0.6rem;
+    }
+}
+
+/* Fix for iPhone landscape mode */
+@media screen and (max-height: 428px) and (orientation: landscape) {
+    .meeting-entry {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .calendar-downloads .grid {
+        grid-template-columns: 1fr 1fr !important;
+    }
+
+    .calendar-downloads .grid > div:nth-child(2) {
+        display: none;
+    }
 } 
