@@ -1,7 +1,7 @@
 {
     "name": "San Antonio Philatelic Association",
     "short_name": "SAPA",
-    "description": "San Antonio Philatelic Association - Celebrating stamp collecting in San Antonio since 1896",
+    "description": "San Antonio's premier stamp collecting club since 1896",
     "icons": [
         {
             "src": "images/favicon.png",
@@ -17,8 +17,10 @@
     "theme_color": "#1a5276",
     "background_color": "#ffffff",
     "display": "standalone",
-    "orientation": "portrait",
-    "start_url": "/index.html",
-    "scope": "/",
-    "lang": "en-US"
+    "orientation": "any",
+    "start_url": "/",
+    "categories": ["community", "education", "hobby"],
+    "lang": "en-US",
+    "dir": "ltr",
+    "prefer_related_applications": false
 } 
