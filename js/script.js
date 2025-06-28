@@ -91,15 +91,11 @@ function setupMobileMenu() {
         document.body.classList.toggle('menu-open');
     });
     
-    // Close menu when clicking on a link - simplified for better mobile compatibility
-    const navLinks = navMenu.querySelectorAll('a');
-    navLinks.forEach(link => {
-        // Use a single, reliable event handler
+    // Handle all mobile menu navigation links
+    const allNavLinks = navMenu.querySelectorAll('a');
+    allNavLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
-            
-            // Close the menu immediately
-            closeMenu();
             
             // For same-page anchors, prevent default and scroll
             if (href && href.startsWith('#') && href !== '#') {
@@ -109,8 +105,16 @@ function setupMobileMenu() {
                     target.scrollIntoView({ behavior: 'smooth' });
                     history.pushState(null, null, href);
                 }
+                closeMenu();
+            } else if (href && !href.startsWith('#')) {
+                // For page navigation, use direct navigation
+                e.preventDefault();
+                closeMenu();
+                // Use a short delay to allow menu close animation, then navigate
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 100);
             }
-            // For external links, let the browser handle navigation naturally
         });
     });
     
