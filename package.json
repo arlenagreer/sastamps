@@ -34,6 +34,7 @@
   "homepage": "https://github.com/arlenagreer/arlenagreer.github.io#readme",
   "description": "",
   "dependencies": {
+    "lunr": "^2.3.9",
     "node-fetch": "^3.3.2",
     "sharp": "^0.34.0"
   },

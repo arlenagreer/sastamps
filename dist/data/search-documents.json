@@ -1,0 +1,214 @@
+{
+  "documents": [
+    {
+      "id": "newsletter-2025-Q3",
+      "type": "newsletter",
+      "title": "SAPA PHILATEX Third Quarter 2025",
+      "summary": "Features the July-September meeting calendar, annual \"Blue Chip\" auction details, Greater Houston Stamp Show information, TSDA show schedule, 2025 membership drive, and programs on US Air Mail History and Classic Mexican Stamps.",
+      "url": "/newsletter.html#2025-Q3",
+      "date": "2025-07-01",
+      "tags": [
+        "2025",
+        "auction",
+        "meetings",
+        "air-mail",
+        "mexican-stamps",
+        "houston-show"
+      ],
+      "category": "newsletter"
+    },
+    {
+      "id": "newsletter-2025-Q2",
+      "type": "newsletter",
+      "title": "SAPA PHILATEX Second Quarter 2025",
+      "summary": "Contains the April-June meeting schedule, club updates, member spotlights, and special features on recent philatelic discoveries and collecting tips for the spring season.",
+      "url": "/newsletter.html#2025-Q2",
+      "date": "2025-04-01",
+      "tags": [
+        "2025",
+        "spring",
+        "collecting-tips",
+        "discoveries",
+        "member-spotlight"
+      ],
+      "category": "newsletter"
+    },
+    {
+      "id": "meeting-2025-07-11",
+      "type": "meeting",
+      "title": "US Air Mail History",
+      "summary": "An in-depth look at the early years of US air mail service, including the pioneering routes, famous pilots, and the stamps that commemorated these historic flights.",
+      "url": "/meetings.html#2025-07-11",
+      "date": "2025-07-11",
+      "tags": [
+        "air-mail",
+        "history",
+        "presentation",
+        "show-and-tell"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-07-18",
+      "type": "meeting",
+      "title": "Classic Mexican Stamps",
+      "summary": "Explore the fascinating world of early Mexican stamps, including the famous Hidalgo issues and the various printing varieties.",
+      "url": "/meetings.html#2025-07-18",
+      "date": "2025-07-18",
+      "tags": [
+        "mexican-stamps",
+        "classic-period",
+        "hidalgo",
+        "varieties"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-06-20",
+      "type": "meeting",
+      "title": "Annual SAPA Summer Picnic",
+      "summary": "Join us for our annual summer picnic! Food, fellowship, and philatelic fun. Bring the family!",
+      "url": "/meetings.html#2025-06-20",
+      "date": "2025-06-20",
+      "tags": [
+        "picnic",
+        "social",
+        "family",
+        "trading",
+        "summer"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "resource-beginners-guide",
+      "type": "resource",
+      "title": "Complete Beginner's Guide to Stamp Collecting",
+      "summary": "Everything you need to know to start your stamp collecting journey, from basic terminology to building your first collection.",
+      "url": "/resources.html#beginners-guide",
+      "date": "2025-06-28",
+      "tags": [
+        "beginner",
+        "basics",
+        "getting-started",
+        "supplies",
+        "terminology"
+      ],
+      "category": "getting-started",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "resource-stamp-grading-guide",
+      "type": "resource",
+      "title": "Understanding Stamp Grading and Condition",
+      "summary": "Learn how to properly assess stamp condition and understand grading standards used by collectors and dealers.",
+      "url": "/resources.html#stamp-grading-guide",
+      "date": "2025-06-28",
+      "tags": [
+        "grading",
+        "condition",
+        "mint",
+        "used",
+        "centering",
+        "gum",
+        "perforations"
+      ],
+      "category": "grading-condition",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "glossary-philately",
+      "type": "glossary",
+      "title": "Philately",
+      "summary": "The collection and study of postage stamps and related postal items.",
+      "url": "/glossary.html#philately",
+      "date": "2025-06-28",
+      "tags": [
+        "collecting",
+        "hobby",
+        "study",
+        "stamps",
+        "basic"
+      ],
+      "category": "general",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "glossary-mint",
+      "type": "glossary",
+      "title": "Mint",
+      "summary": "A stamp that has never been used for postage and retains its original gum.",
+      "url": "/glossary.html#mint",
+      "date": "2025-06-28",
+      "tags": [
+        "condition",
+        "unused",
+        "gum",
+        "grading",
+        "value"
+      ],
+      "category": "condition-grading",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "glossary-perforation",
+      "type": "glossary",
+      "title": "Perforation",
+      "summary": "Small holes punched between stamps to make separation easier.",
+      "url": "/glossary.html#perforation",
+      "date": "2025-06-28",
+      "tags": [
+        "production",
+        "separation",
+        "holes",
+        "measurement",
+        "varieties"
+      ],
+      "category": "paper-printing",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "glossary-watermark",
+      "type": "glossary",
+      "title": "Watermark",
+      "summary": "A design or pattern pressed into paper during manufacture, visible when held to light.",
+      "url": "/glossary.html#watermark",
+      "date": "2025-06-28",
+      "tags": [
+        "paper",
+        "security",
+        "identification",
+        "varieties",
+        "detection"
+      ],
+      "category": "paper-printing",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "glossary-first-day-cover",
+      "type": "glossary",
+      "title": "First Day Cover",
+      "summary": "An envelope bearing a stamp cancelled on its first day of issue.",
+      "url": "/glossary.html#first-day-cover",
+      "date": "2025-06-28",
+      "tags": [
+        "covers",
+        "first-day",
+        "commemorative",
+        "cachets",
+        "postmarks"
+      ],
+      "category": "postal-history",
+      "difficulty": "beginner"
+    }
+  ],
+  "metadata": {
+    "totalDocuments": 12,
+    "types": {
+      "newsletter": 2,
+      "meeting": 3,
+      "resource": 2,
+      "glossary": 5
+    },
+    "buildDate": "2025-06-28T17:59:01.512Z"
+  }
+}
