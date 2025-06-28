@@ -1,5 +1,8 @@
 /* San Antonio Philatelic Association - Main Stylesheet */
 
+/* ===== IMPORTS ===== */
+@import '../node_modules/vanilla-calendar-pro/build/vanilla-calendar.min.css';
+
 /* ===== VARIABLES ===== */
 :root {
     /* Color Palette */
@@ -1473,5 +1476,879 @@ tr:hover {
 
     .calendar-downloads .grid > div:nth-child(2) {
         display: none;
+    }
+}
+
+/* ===== CALENDAR STYLES ===== */
+
+/* Calendar Container */
+.calendar-container {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    margin: var(--space-lg) 0;
+}
+
+/* Override Vanilla Calendar styles with SAPA theme */
+.vanilla-calendar {
+    --vc-font-family: var(--font-body);
+    --vc-border-radius: var(--radius-md);
+    --vc-primary: var(--primary);
+    --vc-primary-dark: var(--primary-dark);
+    --vc-primary-light: var(--primary-light);
+    --vc-secondary: var(--secondary);
+    --vc-white: var(--white);
+    --vc-black: var(--dark);
+    --vc-gray: var(--medium);
+    --vc-gray-light: var(--light);
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Calendar header styling */
+.vanilla-calendar .vc-header {
+    background: var(--primary);
+    color: var(--white);
+    padding: var(--space-md);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.vanilla-calendar .vc-header button {
+    color: var(--white);
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-sm);
+    padding: var(--space-xs) var(--space-sm);
+    transition: all 0.2s ease;
+}
+
+.vanilla-calendar .vc-header button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Calendar grid styling */
+.vanilla-calendar .vc-content {
+    padding: var(--space-md);
+}
+
+.vanilla-calendar .vc-week-day {
+    color: var(--medium);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: var(--space-sm);
+}
+
+.vanilla-calendar .vc-date {
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+    font-weight: 500;
+    position: relative;
+}
+
+.vanilla-calendar .vc-date:hover {
+    background: var(--light);
+    transform: scale(1.05);
+}
+
+.vanilla-calendar .vc-date.vc-date-current {
+    background: var(--accent);
+    color: var(--dark);
+    font-weight: 700;
+}
+
+.vanilla-calendar .vc-date.vc-date-selected {
+    background: var(--primary);
+    color: var(--white);
+}
+
+/* Calendar Event Styles */
+.calendar-event {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.calendar-event.event-business {
+    background: var(--primary);
+}
+
+.calendar-event.event-auction {
+    background: var(--secondary);
+}
+
+.calendar-event.event-social {
+    background: var(--success);
+}
+
+.calendar-event.event-regular {
+    background: #8e44ad;
+}
+
+.calendar-event.event-holiday {
+    background: var(--danger);
+}
+
+.calendar-event.event-picnic {
+    background: var(--warning);
+}
+
+.calendar-event.cancelled {
+    opacity: 0.5;
+    filter: grayscale(50%);
+}
+
+/* Event type indicators */
+.event-indicators {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+    margin: var(--space-md) 0;
+    padding: var(--space-md);
+    background: var(--light);
+    border-radius: var(--radius-md);
+}
+
+.event-indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: 0.85rem;
+    color: var(--dark);
+}
+
+.event-indicator-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+/* Event Popover Styles */
+.meeting-popover {
+    max-width: 300px;
+    font-family: var(--font-body);
+}
+
+.meeting-popover h4 {
+    color: var(--primary);
+    margin: 0 0 var(--space-sm) 0;
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+}
+
+.meeting-details {
+    line-height: 1.4;
+    color: var(--dark);
+    font-size: 0.9rem;
+}
+
+.meeting-details strong {
+    color: var(--primary-dark);
+}
+
+.meeting-description {
+    margin-top: var(--space-sm);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--light);
+    font-style: italic;
+    color: var(--medium);
+}
+
+.cancelled-notice {
+    background: var(--danger);
+    color: var(--white);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-sm);
+    text-align: center;
+    font-weight: 600;
+}
+
+/* Calendar responsive design */
+@media (max-width: 768px) {
+    .calendar-container {
+        margin: var(--space-md) 0;
+        border-radius: var(--radius-md);
+    }
+    
+    .vanilla-calendar .vc-header {
+        padding: var(--space-sm);
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+    
+    .vanilla-calendar .vc-content {
+        padding: var(--space-sm);
+    }
+    
+    .vanilla-calendar .vc-week-day {
+        font-size: 0.75rem;
+        padding: var(--space-xs);
+    }
+    
+    .vanilla-calendar .vc-date {
+        min-height: 40px;
+        font-size: 0.9rem;
+    }
+    
+    .meeting-popover {
+        max-width: 280px;
+    }
+    
+    .event-indicators {
+        flex-direction: column;
+        gap: var(--space-xs);
+    }
+}
+
+@media (max-width: 480px) {
+    .vanilla-calendar .vc-date {
+        min-height: 35px;
+        font-size: 0.8rem;
+    }
+    
+    .calendar-event {
+        width: 4px;
+        height: 4px;
+    }
+    
+    .meeting-popover {
+        max-width: 250px;
+    }
+    
+    .meeting-popover h4 {
+        font-size: 1rem;
+    }
+    
+    .meeting-details {
+        font-size: 0.85rem;
+    }
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+    .calendar-container {
+        background: var(--dark);
+        border: 1px solid var(--medium);
+    }
+    
+    .vanilla-calendar .vc-content {
+        background: var(--dark);
+        color: var(--white);
+    }
+    
+    .vanilla-calendar .vc-date {
+        color: var(--white);
+    }
+    
+    .vanilla-calendar .vc-date:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .event-indicators {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .meeting-popover {
+        background: var(--dark);
+        color: var(--white);
+        border: 1px solid var(--medium);
+    }
+    
+    .meeting-details {
+        color: var(--light);
+    }
+    
+    .meeting-description {
+        border-color: var(--medium);
+        color: var(--medium);
+    }
+}
+
+/* Calendar loading states */
+.calendar-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    background: var(--light);
+    border-radius: var(--radius-lg);
+    color: var(--medium);
+    font-style: italic;
+}
+
+.calendar-loading::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--primary);
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: var(--space-sm);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Calendar error states */
+.calendar-error {
+    padding: var(--space-lg);
+    text-align: center;
+    background: var(--light);
+    border-radius: var(--radius-lg);
+    color: var(--danger);
+    border: 1px solid var(--danger);
+}
+
+.calendar-error h3 {
+    color: var(--danger);
+    margin-bottom: var(--space-sm);
+    font-family: var(--font-heading);
+}
+
+/* Accessibility improvements */
+.vanilla-calendar .vc-date:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.vanilla-calendar .vc-header button:focus {
+    outline: 2px solid var(--white);
+    outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+    .calendar-container {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+    
+    .vanilla-calendar .vc-header {
+        background: white !important;
+        color: black !important;
+        border-bottom: 2px solid #ccc;
+    }
+    
+    .calendar-event {
+        background: black !important;
+    }
+}
+
+/* ===== MODAL STYLES ===== */
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    backdrop-filter: blur(2px);
+}
+
+.modal-overlay.modal-open {
+    opacity: 1;
+}
+
+/* Modal Container */
+.modal-container {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    max-width: 90vw;
+    max-height: 90vh;
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.7) translateY(-50px);
+    transition: transform var(--transition-normal);
+    overflow: hidden;
+}
+
+.modal-overlay.modal-open .modal-container {
+    transform: scale(1) translateY(0);
+}
+
+/* Modal Header */
+.modal-header {
+    background: var(--primary);
+    color: var(--white);
+    padding: var(--space-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-family: var(--font-heading);
+    font-weight: 700;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: var(--space-xs);
+    border-radius: var(--radius-sm);
+    transition: background-color var(--transition-fast);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.modal-close:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* Modal Content */
+.modal-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+}
+
+.modal-body {
+    padding: var(--space-lg);
+}
+
+/* Modal Footer */
+.modal-footer {
+    padding: var(--space-md) var(--space-lg);
+    border-top: 1px solid var(--light);
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-sm);
+    background: var(--light);
+}
+
+/* Event Details Styles */
+.event-details {
+    line-height: 1.6;
+}
+
+.event-details.event-cancelled {
+    opacity: 0.8;
+}
+
+.cancelled-banner {
+    background: var(--danger);
+    color: var(--white);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-lg);
+    text-align: center;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+}
+
+.cancelled-banner i {
+    font-size: 1.2rem;
+}
+
+/* Event Meta */
+.event-meta {
+    display: flex;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-lg);
+    flex-wrap: wrap;
+}
+
+.event-date,
+.event-type {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-weight: 600;
+}
+
+.event-date i,
+.event-type i {
+    color: var(--primary);
+    width: 16px;
+}
+
+.type-badge {
+    background: var(--light);
+    color: var(--dark);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.type-badge.type-business {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.type-badge.type-auction {
+    background: var(--secondary);
+    color: var(--white);
+}
+
+.type-badge.type-social {
+    background: var(--success);
+    color: var(--white);
+}
+
+.type-badge.type-regular {
+    background: #8e44ad;
+    color: var(--white);
+}
+
+.type-badge.type-holiday {
+    background: var(--danger);
+    color: var(--white);
+}
+
+.type-badge.type-picnic {
+    background: var(--warning);
+    color: var(--dark);
+}
+
+/* Detail Sections */
+.detail-section {
+    margin-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--light);
+    padding-bottom: var(--space-lg);
+}
+
+.detail-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.detail-section h3 {
+    color: var(--primary);
+    font-size: 1.2rem;
+    margin-bottom: var(--space-md);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-family: var(--font-heading);
+}
+
+.detail-section h3 i {
+    width: 20px;
+    color: var(--primary);
+}
+
+/* Time Details */
+.time-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.time-item {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-xs) 0;
+}
+
+.time-item strong {
+    color: var(--primary-dark);
+}
+
+/* Location Details */
+.location-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.location-name {
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+.location-building,
+.location-room {
+    color: var(--dark);
+    font-weight: 500;
+}
+
+.location-address {
+    color: var(--medium);
+    font-style: italic;
+}
+
+/* Presenter Details */
+.presenter-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.presenter-name {
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+.presenter-bio {
+    color: var(--dark);
+    line-height: 1.5;
+}
+
+/* Description Content */
+.description-content {
+    color: var(--dark);
+    line-height: 1.6;
+}
+
+/* Agenda List */
+.agenda-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.agenda-item {
+    display: flex;
+    gap: var(--space-md);
+    padding: var(--space-sm);
+    background: var(--light);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--primary);
+}
+
+.agenda-time {
+    font-weight: 600;
+    color: var(--primary);
+    min-width: 80px;
+    flex-shrink: 0;
+}
+
+.agenda-content {
+    flex: 1;
+}
+
+.agenda-title {
+    font-weight: 500;
+    color: var(--dark);
+    margin-bottom: var(--space-xs);
+}
+
+.agenda-presenter {
+    font-size: 0.9rem;
+    color: var(--medium);
+    font-style: italic;
+}
+
+/* Special Notes */
+.special-notes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.special-notes li {
+    padding: var(--space-sm);
+    background: var(--warning);
+    color: var(--dark);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-sm);
+    border-left: 4px solid #e67e22;
+}
+
+.special-notes li:before {
+    content: "⚠️ ";
+    margin-right: var(--space-xs);
+}
+
+.special-notes li:last-child {
+    margin-bottom: 0;
+}
+
+/* Requirements */
+.requirements-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.requirement-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+    background: var(--light);
+    border-radius: var(--radius-sm);
+}
+
+.requirement-item i {
+    color: var(--success);
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.requirement-item i.fa-times {
+    color: var(--danger);
+}
+
+.requirement-item ul {
+    margin: var(--space-xs) 0 0 0;
+    padding-left: var(--space-md);
+}
+
+/* Contact Details */
+.contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.contact-name {
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+.contact-email,
+.contact-phone {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.contact-email a,
+.contact-phone a {
+    color: var(--primary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    transition: color var(--transition-fast);
+}
+
+.contact-email a:hover,
+.contact-phone a:hover {
+    color: var(--primary-light);
+}
+
+/* Modal Responsive Design */
+@media (max-width: 768px) {
+    .modal-container {
+        width: 95vw;
+        max-height: 95vh;
+        margin: var(--space-sm);
+    }
+    
+    .modal-header {
+        padding: var(--space-md);
+    }
+    
+    .modal-title {
+        font-size: 1.3rem;
+    }
+    
+    .modal-body {
+        padding: var(--space-md);
+    }
+    
+    .modal-footer {
+        padding: var(--space-sm) var(--space-md);
+    }
+    
+    .event-meta {
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+    
+    .agenda-item {
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+    
+    .agenda-time {
+        min-width: auto;
+    }
+    
+    .time-item {
+        flex-direction: column;
+        gap: var(--space-xs);
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-container {
+        width: 100vw;
+        height: 100vh;
+        max-width: 100vw;
+        max-height: 100vh;
+        border-radius: 0;
+        margin: 0;
+    }
+    
+    .modal-header {
+        border-radius: 0;
+    }
+    
+    .detail-section h3 {
+        font-size: 1.1rem;
+    }
+}
+
+/* Dark theme support for modal */
+@media (prefers-color-scheme: dark) {
+    .modal-container {
+        background: var(--dark);
+        border: 1px solid var(--medium);
+    }
+    
+    .modal-footer {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: var(--medium);
+    }
+    
+    .detail-section {
+        border-color: var(--medium);
+    }
+    
+    .agenda-item,
+    .requirement-item {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .special-notes li {
+        background: rgba(243, 156, 18, 0.2);
+        border-color: var(--warning);
     }
 } 

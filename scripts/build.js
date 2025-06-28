@@ -72,13 +72,16 @@ async function build() {
         console.log('\n5. Embedding search data...');
         await runCommand('node', ['scripts/build-search-embedded.js']);
 
-        console.log('\n6. Setting up monitoring...');
+        console.log('\n6. Building JavaScript...');
+        await runCommand('npm', ['run', 'build:js']);
+
+        console.log('\n7. Setting up monitoring...');
         await runCommand('node', ['scripts/setup-monitoring.js']);
 
-        console.log('\n7. Running performance analysis...');
+        console.log('\n8. Running performance analysis...');
         await runCommand('node', ['scripts/analyze-image-savings.js']);
 
-        console.log('\n8. Generating build info...');
+        console.log('\n9. Generating build info...');
         await generateBuildInfo();
 
         console.log('\nBuild completed successfully! 🎉');

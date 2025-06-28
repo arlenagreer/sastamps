@@ -3,6 +3,12 @@
  * Main JavaScript File
  */
 
+// Import calendar library
+import { Calendar } from 'vanilla-calendar-pro';
+import { calendarAdapter } from './calendar-adapter.js';
+import { testCalendarAdapter, testModal, testCalendarComponent } from './calendar-test.js';
+import { modal } from './modal.js';
+
 // Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Fix mobile viewport height issues
@@ -25,6 +31,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize theme toggle
     setupThemeToggle();
+    
+    // Test calendar functionality (development only)
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        testCalendarAdapter();
+        testModal();
+        testCalendarComponent();
+    }
 });
 
 /**
