@@ -1,0 +1,253 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Glossary Schema",
+  "description": "Schema for philatelic terminology glossary",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the term",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "term": {
+      "type": "string",
+      "description": "The philatelic term",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "slug": {
+      "type": "string",
+      "description": "URL-friendly version of the term",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "alternateNames": {
+      "type": "array",
+      "description": "Alternative names or spellings for the term",
+      "items": {
+        "type": "string"
+      }
+    },
+    "definition": {
+      "type": "string",
+      "description": "Clear, concise definition of the term",
+      "minLength": 10
+    },
+    "detailedDescription": {
+      "type": "string",
+      "description": "More comprehensive explanation with context"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "general",
+        "condition-grading",
+        "paper-printing",
+        "perforations",
+        "watermarks",
+        "postal-history",
+        "cancellations",
+        "varieties-errors",
+        "equipment-tools",
+        "collecting-terms",
+        "auction-terms",
+        "countries-regions",
+        "postal-markings",
+        "techniques",
+        "organizations"
+      ],
+      "description": "Category classification for the term"
+    },
+    "subcategory": {
+      "type": "string",
+      "description": "More specific subcategory within the main category"
+    },
+    "examples": {
+      "type": "array",
+      "description": "Examples illustrating the term",
+      "items": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Example description"
+          },
+          "image": {
+            "type": "string",
+            "description": "Path to example image"
+          },
+          "caption": {
+            "type": "string",
+            "description": "Image caption"
+          }
+        },
+        "required": ["description"]
+      }
+    },
+    "relatedTerms": {
+      "type": "array",
+      "description": "IDs of related glossary terms",
+      "items": {
+        "type": "string"
+      }
+    },
+    "seeAlso": {
+      "type": "array",
+      "description": "Cross-references to other terms",
+      "items": {
+        "type": "object",
+        "properties": {
+          "termId": {
+            "type": "string",
+            "description": "ID of related term"
+          },
+          "relationship": {
+            "type": "string",
+            "enum": ["synonym", "opposite", "broader", "narrower", "related"],
+            "description": "Type of relationship"
+          }
+        },
+        "required": ["termId", "relationship"]
+      }
+    },
+    "etymology": {
+      "type": "object",
+      "description": "Word origin and history",
+      "properties": {
+        "origin": {
+          "type": "string",
+          "description": "Language or source of origin"
+        },
+        "meaning": {
+          "type": "string",
+          "description": "Original meaning"
+        },
+        "history": {
+          "type": "string",
+          "description": "Historical development of the term"
+        }
+      }
+    },
+    "usage": {
+      "type": "object",
+      "properties": {
+        "context": {
+          "type": "string",
+          "description": "When and how the term is typically used"
+        },
+        "formality": {
+          "type": "string",
+          "enum": ["formal", "informal", "technical", "colloquial"],
+          "description": "Level of formality"
+        },
+        "frequency": {
+          "type": "string",
+          "enum": ["common", "uncommon", "rare", "obsolete"],
+          "description": "How frequently the term is used"
+        }
+      }
+    },
+    "images": {
+      "type": "array",
+      "description": "Images illustrating the term",
+      "items": {
+        "type": "object",
+        "properties": {
+          "src": {
+            "type": "string",
+            "description": "Image source path"
+          },
+          "alt": {
+            "type": "string",
+            "description": "Alt text for accessibility"
+          },
+          "caption": {
+            "type": "string",
+            "description": "Image caption"
+          },
+          "credit": {
+            "type": "string",
+            "description": "Image credit/source"
+          }
+        },
+        "required": ["src", "alt"]
+      }
+    },
+    "sources": {
+      "type": "array",
+      "description": "Reference sources for the definition",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Source title"
+          },
+          "author": {
+            "type": "string",
+            "description": "Source author"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Source URL if available"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["book", "article", "website", "catalog", "society"],
+            "description": "Type of source"
+          }
+        },
+        "required": ["title"]
+      }
+    },
+    "tags": {
+      "type": "array",
+      "description": "Tags for search and filtering",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9-]+$"
+      }
+    },
+    "difficulty": {
+      "type": "string", 
+      "enum": ["beginner", "intermediate", "advanced"],
+      "description": "Difficulty level for understanding this term"
+    },
+    "importance": {
+      "type": "string",
+      "enum": ["essential", "important", "useful", "specialized"],
+      "description": "Importance level for collectors"
+    },
+    "dateAdded": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the term was added to glossary"
+    },
+    "dateUpdated": {
+      "type": "string", 
+      "format": "date",
+      "description": "Date the term was last updated"
+    },
+    "contributor": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of contributor"
+        },
+        "credentials": {
+          "type": "string",
+          "description": "Contributor's credentials or expertise"
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "published", "under-review", "archived"],
+      "default": "published",
+      "description": "Status of the term entry"
+    }
+  },
+  "required": ["id", "term", "slug", "definition", "category"],
+  "additionalProperties": false
+}

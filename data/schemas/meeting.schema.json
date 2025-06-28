@@ -1,0 +1,213 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Meeting Schema",
+  "description": "Schema for SAPA meeting information",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the meeting",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Meeting date in YYYY-MM-DD format"
+    },
+    "time": {
+      "type": "object",
+      "properties": {
+        "doorsOpen": {
+          "type": "string",
+          "pattern": "^[0-9]{1,2}:[0-9]{2}\\s?(AM|PM)$",
+          "description": "Time doors open (e.g., '6:30 PM')"
+        },
+        "meetingStart": {
+          "type": "string",
+          "pattern": "^[0-9]{1,2}:[0-9]{2}\\s?(AM|PM)$",
+          "description": "Meeting start time (e.g., '7:00 PM')"
+        },
+        "meetingEnd": {
+          "type": "string",
+          "pattern": "^[0-9]{1,2}:[0-9]{2}\\s?(AM|PM)$",
+          "description": "Estimated meeting end time (e.g., '9:00 PM')"
+        }
+      },
+      "required": ["doorsOpen"],
+      "additionalProperties": false
+    },
+    "location": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Venue name"
+        },
+        "building": {
+          "type": "string",
+          "description": "Building name or number"
+        },
+        "room": {
+          "type": "string",
+          "description": "Room name or number"
+        },
+        "address": {
+          "type": "object",
+          "properties": {
+            "street": {
+              "type": "string"
+            },
+            "city": {
+              "type": "string"
+            },
+            "state": {
+              "type": "string"
+            },
+            "zipCode": {
+              "type": "string"
+            }
+          },
+          "required": ["street", "city", "state"]
+        },
+        "coordinates": {
+          "type": "object",
+          "properties": {
+            "latitude": {
+              "type": "number"
+            },
+            "longitude": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "required": ["name"],
+      "additionalProperties": false
+    },
+    "type": {
+      "type": "string",
+      "enum": ["regular", "business", "auction", "exhibition", "social", "special", "picnic", "holiday"],
+      "description": "Type of meeting"
+    },
+    "title": {
+      "type": "string",
+      "description": "Meeting title or theme"
+    },
+    "presenter": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Presenter's name"
+        },
+        "title": {
+          "type": "string",
+          "description": "Presenter's title or affiliation"
+        },
+        "bio": {
+          "type": "string",
+          "description": "Brief presenter biography"
+        }
+      },
+      "required": ["name"]
+    },
+    "topic": {
+      "type": "string",
+      "description": "Main topic or program for the meeting"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of the meeting content"
+    },
+    "agenda": {
+      "type": "array",
+      "description": "Meeting agenda items",
+      "items": {
+        "type": "object",
+        "properties": {
+          "time": {
+            "type": "string",
+            "description": "Agenda item time"
+          },
+          "item": {
+            "type": "string",
+            "description": "Agenda item description"
+          },
+          "presenter": {
+            "type": "string",
+            "description": "Person leading this agenda item"
+          }
+        },
+        "required": ["item"]
+      }
+    },
+    "specialNotes": {
+      "type": "array",
+      "description": "Special announcements or notes",
+      "items": {
+        "type": "string"
+      }
+    },
+    "requirements": {
+      "type": "object",
+      "properties": {
+        "rsvpRequired": {
+          "type": "boolean",
+          "default": false
+        },
+        "membershipRequired": {
+          "type": "boolean",
+          "default": false
+        },
+        "bringItems": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Items participants should bring"
+        }
+      }
+    },
+    "contact": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "phone": {
+          "type": "string"
+        }
+      }
+    },
+    "cancelled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the meeting is cancelled"
+    },
+    "rescheduled": {
+      "type": "object",
+      "properties": {
+        "originalDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "tags": {
+      "type": "array",
+      "description": "Tags for categorization",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": ["id", "date", "time", "location", "type"],
+  "additionalProperties": false
+}

@@ -1,0 +1,84 @@
+{
+  "newsletters": [
+    {
+      "id": "2025-Q3",
+      "title": "SAPA PHILATEX Third Quarter 2025",
+      "quarter": "Third",
+      "year": 2025,
+      "publishDate": "2025-07-01",
+      "filePath": "public/SAPA-PHILATEX-Third-Quarter-2025.pdf",
+      "description": "Features the July-September meeting calendar, annual \"Blue Chip\" auction details, Greater Houston Stamp Show information, TSDA show schedule, 2025 membership drive, and programs on US Air Mail History and Classic Mexican Stamps.",
+      "featuredArticles": [
+        {
+          "title": "US Air Mail History",
+          "category": "History",
+          "page": 3
+        },
+        {
+          "title": "Classic Mexican Stamps",
+          "category": "Feature",
+          "page": 5
+        },
+        {
+          "title": "Blue Chip Auction Preview",
+          "category": "News",
+          "page": 7
+        }
+      ],
+      "highlights": [
+        "July-September meeting calendar",
+        "Annual Blue Chip auction details",
+        "Greater Houston Stamp Show information",
+        "TSDA show schedule",
+        "2025 membership drive"
+      ],
+      "tags": ["2025", "auction", "meetings", "air-mail", "mexican-stamps", "houston-show"],
+      "pageCount": 12,
+      "fileSize": "2.1 MB",
+      "status": "published"
+    },
+    {
+      "id": "2025-Q2",
+      "title": "SAPA PHILATEX Second Quarter 2025",
+      "quarter": "Second", 
+      "year": 2025,
+      "publishDate": "2025-04-01",
+      "filePath": "public/SAPA PHILATEX Second Quarter 2025.pdf",
+      "description": "Contains the April-June meeting schedule, club updates, member spotlights, and special features on recent philatelic discoveries and collecting tips for the spring season.",
+      "featuredArticles": [
+        {
+          "title": "Spring Collecting Tips",
+          "category": "Collection Tips",
+          "page": 2
+        },
+        {
+          "title": "Recent Philatelic Discoveries",
+          "category": "Feature",
+          "page": 4
+        },
+        {
+          "title": "Member Spotlight: John Smith",
+          "category": "Member Spotlight",
+          "page": 6
+        }
+      ],
+      "highlights": [
+        "April-June meeting schedule",
+        "Club updates",
+        "Member spotlights",
+        "Recent philatelic discoveries",
+        "Spring collecting tips"
+      ],
+      "tags": ["2025", "spring", "collecting-tips", "discoveries", "member-spotlight"],
+      "pageCount": 10,
+      "fileSize": "1.8 MB",
+      "status": "published"
+    }
+  ],
+  "metadata": {
+    "lastUpdated": "2025-06-28T17:26:00.000Z",
+    "totalIssues": 2,
+    "latestIssue": "2025-Q3",
+    "version": "1.0"
+  }
+}

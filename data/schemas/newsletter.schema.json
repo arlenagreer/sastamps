@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Newsletter Schema",
+  "description": "Schema for SAPA PHILATEX newsletter metadata",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the newsletter",
+      "pattern": "^[0-9]{4}-Q[1-4]$"
+    },
+    "title": {
+      "type": "string",
+      "description": "Full title of the newsletter",
+      "example": "SAPA PHILATEX Third Quarter 2025"
+    },
+    "quarter": {
+      "type": "string",
+      "enum": ["First", "Second", "Third", "Fourth"],
+      "description": "Quarter of publication"
+    },
+    "year": {
+      "type": "integer",
+      "minimum": 1954,
+      "maximum": 2099,
+      "description": "Year of publication"
+    },
+    "publishDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Publication date in YYYY-MM-DD format"
+    },
+    "filePath": {
+      "type": "string",
+      "description": "Relative path to the PDF file",
+      "pattern": "^public/.*\\.pdf$"
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of the newsletter content"
+    },
+    "featuredArticles": {
+      "type": "array",
+      "description": "Array of featured articles in this issue",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Article title"
+          },
+          "author": {
+            "type": "string",
+            "description": "Article author"
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Page number where article starts"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["Feature", "History", "Collection Tips", "Meeting Report", "Show Report", "Member Spotlight", "News", "Education"],
+            "description": "Article category"
+          }
+        },
+        "required": ["title", "category"]
+      }
+    },
+    "highlights": {
+      "type": "array",
+      "description": "Key highlights or topics covered",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "description": "Tags for categorization and search",
+      "items": {
+        "type": "string"
+      }
+    },
+    "pageCount": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Total number of pages"
+    },
+    "fileSize": {
+      "type": "string",
+      "description": "File size (e.g., '2.1 MB')"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["published", "archived", "draft"],
+      "default": "published",
+      "description": "Publication status"
+    }
+  },
+  "required": ["id", "title", "quarter", "year", "publishDate", "filePath", "description"],
+  "additionalProperties": false
+}

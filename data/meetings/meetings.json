@@ -1,0 +1,202 @@
+{
+  "meetings": [
+    {
+      "id": "2025-07-11",
+      "date": "2025-07-11",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        },
+        "coordinates": {
+          "latitude": 29.543762,
+          "longitude": -98.481692
+        }
+      },
+      "type": "regular",
+      "title": "US Air Mail History",
+      "presenter": {
+        "name": "Dr. Robert Johnson",
+        "title": "Postal History Specialist",
+        "bio": "Dr. Johnson has been collecting air mail covers for over 30 years and is an expert on early US air mail routes."
+      },
+      "topic": "The Development of US Air Mail Service 1918-1930",
+      "description": "An in-depth look at the early years of US air mail service, including the pioneering routes, famous pilots, and the stamps that commemorated these historic flights.",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, social time"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Welcome and announcements",
+          "presenter": "President"
+        },
+        {
+          "time": "7:15 PM",
+          "item": "Show and Tell",
+          "presenter": "Members"
+        },
+        {
+          "time": "7:45 PM",
+          "item": "Break"
+        },
+        {
+          "time": "8:00 PM",
+          "item": "Main Program: US Air Mail History",
+          "presenter": "Dr. Robert Johnson"
+        },
+        {
+          "time": "8:45 PM",
+          "item": "Q&A and discussion"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Meeting adjournment"
+        }
+      ],
+      "specialNotes": [
+        "Bring air mail covers for show and tell",
+        "Refreshments will be provided"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false,
+        "bringItems": ["Show and tell items related to air mail"]
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["air-mail", "history", "presentation", "show-and-tell"]
+    },
+    {
+      "id": "2025-07-18",
+      "date": "2025-07-18",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "regular",
+      "title": "Classic Mexican Stamps",
+      "topic": "Mexican Stamps from the Classic Period (1856-1879)",
+      "description": "Explore the fascinating world of early Mexican stamps, including the famous Hidalgo issues and the various printing varieties.",
+      "specialNotes": [
+        "Bring Mexican stamps for discussion",
+        "Light refreshments available"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary", 
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["mexican-stamps", "classic-period", "hidalgo", "varieties"]
+    },
+    {
+      "id": "2025-06-20",
+      "date": "2025-06-20",
+      "time": {
+        "doorsOpen": "5:00 PM",
+        "meetingStart": "5:30 PM",
+        "meetingEnd": "8:00 PM"
+      },
+      "location": {
+        "name": "Brackenridge Park",
+        "building": "Pavilion Area",
+        "address": {
+          "street": "3910 N St Mary's St",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78212"
+        }
+      },
+      "type": "picnic",
+      "title": "Annual SAPA Summer Picnic",
+      "topic": "Summer Social Gathering",
+      "description": "Join us for our annual summer picnic! Food, fellowship, and philatelic fun. Bring the family!",
+      "agenda": [
+        {
+          "time": "5:00 PM",
+          "item": "Setup and arrival"
+        },
+        {
+          "time": "5:30 PM",
+          "item": "Social time and refreshments"
+        },
+        {
+          "time": "6:00 PM",
+          "item": "Picnic dinner"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Informal stamp trading and socializing"
+        },
+        {
+          "time": "8:00 PM",
+          "item": "Cleanup and departure"
+        }
+      ],
+      "specialNotes": [
+        "Bring your family!",
+        "Food and drinks provided by the club",
+        "Bring stamps for informal trading",
+        "Weather dependent - check email for updates"
+      ],
+      "requirements": {
+        "rsvpRequired": true,
+        "membershipRequired": false,
+        "bringItems": ["Stamps for trading (optional)", "Folding chairs (recommended)"]
+      },
+      "contact": {
+        "name": "Events Coordinator",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["picnic", "social", "family", "trading", "summer"]
+    }
+  ],
+  "metadata": {
+    "lastUpdated": "2025-06-28T17:27:00.000Z",
+    "totalMeetings": 3,
+    "upcomingMeetings": 2,
+    "version": "1.0",
+    "defaultLocation": {
+      "name": "MacArthur Park Lutheran Church",
+      "building": "Building 1",
+      "room": "Fellowship Hall",
+      "address": {
+        "street": "13030 Jones Maltsberger Road",
+        "city": "San Antonio",
+        "state": "TX",
+        "zipCode": "78247"
+      }
+    }
+  }
+}

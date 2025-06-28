@@ -1,0 +1,227 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Member Resource Schema",
+  "description": "Schema for SAPA member resources including guides, tutorials, and FAQs",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the resource",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "title": {
+      "type": "string",
+      "description": "Resource title",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "slug": {
+      "type": "string",
+      "description": "URL-friendly slug for the resource",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["guide", "tutorial", "faq", "article", "checklist", "reference"],
+      "description": "Type of resource"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "getting-started",
+        "collection-management", 
+        "grading-condition",
+        "valuation",
+        "storage-preservation",
+        "identification",
+        "history",
+        "techniques",
+        "tools-supplies",
+        "buying-selling",
+        "exhibitions",
+        "research"
+      ],
+      "description": "Resource category"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": ["beginner", "intermediate", "advanced"],
+      "description": "Difficulty level"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Brief summary or excerpt",
+      "maxLength": 500
+    },
+    "content": {
+      "type": "string",
+      "description": "Full content in Markdown format"
+    },
+    "sections": {
+      "type": "array",
+      "description": "Content sections for longer resources",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Section identifier"
+          },
+          "title": {
+            "type": "string",
+            "description": "Section title"
+          },
+          "content": {
+            "type": "string",
+            "description": "Section content in Markdown"
+          },
+          "order": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Display order"
+          }
+        },
+        "required": ["id", "title", "content", "order"]
+      }
+    },
+    "tags": {
+      "type": "array",
+      "description": "Tags for search and categorization",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9-]+$"
+      }
+    },
+    "prerequisites": {
+      "type": "array",
+      "description": "Prerequisites or recommended prior knowledge",
+      "items": {
+        "type": "string"
+      }
+    },
+    "relatedResources": {
+      "type": "array",
+      "description": "IDs of related resources",
+      "items": {
+        "type": "string"
+      }
+    },
+    "externalLinks": {
+      "type": "array",
+      "description": "External reference links",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Link title"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Link URL"
+          },
+          "description": {
+            "type": "string",
+            "description": "Link description"
+          }
+        },
+        "required": ["title", "url"]
+      }
+    },
+    "images": {
+      "type": "array",
+      "description": "Associated images",
+      "items": {
+        "type": "object",
+        "properties": {
+          "src": {
+            "type": "string",
+            "description": "Image source path"
+          },
+          "alt": {
+            "type": "string",
+            "description": "Alt text for accessibility"
+          },
+          "caption": {
+            "type": "string",
+            "description": "Image caption"
+          },
+          "credit": {
+            "type": "string",
+            "description": "Image credit/attribution"
+          }
+        },
+        "required": ["src", "alt"]
+      }
+    },
+    "author": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Author name"
+        },
+        "title": {
+          "type": "string",
+          "description": "Author title or credentials"
+        },
+        "bio": {
+          "type": "string",
+          "description": "Brief author biography"
+        }
+      },
+      "required": ["name"]
+    },
+    "contributors": {
+      "type": "array",
+      "description": "Additional contributors",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "description": "Contribution role (reviewer, editor, etc.)"
+          }
+        },
+        "required": ["name"]
+      }
+    },
+    "estimatedReadTime": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Estimated reading time in minutes"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this resource is featured"
+    },
+    "dateCreated": {
+      "type": "string",
+      "format": "date",
+      "description": "Creation date"
+    },
+    "dateUpdated": {
+      "type": "string",
+      "format": "date",
+      "description": "Last update date"
+    },
+    "version": {
+      "type": "string",
+      "description": "Resource version",
+      "pattern": "^[0-9]+\\.[0-9]+$"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "published", "archived", "under-review"],
+      "default": "published",
+      "description": "Publication status"
+    }
+  },
+  "required": ["id", "title", "slug", "type", "category", "difficulty", "summary", "content"],
+  "additionalProperties": false
+}

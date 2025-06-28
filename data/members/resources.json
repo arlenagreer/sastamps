@@ -1,0 +1,107 @@
+{
+  "resources": [
+    {
+      "id": "beginners-guide",
+      "title": "Complete Beginner's Guide to Stamp Collecting", 
+      "slug": "beginners-guide",
+      "type": "guide",
+      "category": "getting-started",
+      "difficulty": "beginner",
+      "summary": "Everything you need to know to start your stamp collecting journey, from basic terminology to building your first collection.",
+      "content": "# Complete Beginner's Guide to Stamp Collecting\n\nWelcome to the fascinating world of philately! Whether you've inherited a collection or are starting fresh, this guide will help you begin your stamp collecting journey.\n\n## What is Stamp Collecting?\n\nStamp collecting, also known as philately, is the study and collection of postage stamps and related postal items. It's one of the world's most popular hobbies, enjoyed by millions of people worldwide.\n\n## Getting Started\n\n### Basic Supplies You'll Need\n\n1. **Album or Stock Book** - A place to organize and store your stamps\n2. **Stamp Hinges or Mounts** - To attach stamps to album pages safely\n3. **Magnifying Glass** - To examine stamps closely\n4. **Stamp Tongs** - Special tweezers for handling stamps\n5. **Watermark Detector** - To identify watermarks on stamps\n\n### Where to Find Stamps\n\n- Local post offices (new issues)\n- Stamp dealers and shops\n- Stamp shows and exhibitions\n- Online marketplaces\n- Estate sales and auctions\n- Trading with other collectors\n\n## Basic Terminology\n\n**Mint** - An unused stamp in original condition\n**Used** - A stamp that has been cancelled and used for postage\n**Perforations** - The small holes around stamp edges\n**Watermark** - A design pressed into paper during manufacture\n**Overprint** - Text or design printed on top of existing stamp\n\n## Condition and Grading\n\nStamp condition significantly affects value:\n\n- **Superb** - Perfect centering and condition\n- **Very Fine** - Well-centered with minor imperfections\n- **Fine** - Acceptable condition with noticeable flaws\n- **Poor** - Major damage or defects\n\n## Building Your Collection\n\n### Choose a Focus\n\n1. **Country Collections** - Focus on stamps from specific countries\n2. **Topical Collections** - Collect by subject (animals, space, sports)\n3. **Postal History** - Focus on covers and postal markings\n4. **Specialized Collections** - Deep study of specific issues\n\n### Organization Tips\n\n- Use a systematic approach (chronological, alphabetical)\n- Keep detailed records\n- Store stamps in acid-free materials\n- Handle stamps carefully with tongs\n\n## Joining the Community\n\nConsider joining:\n- Local stamp clubs (like SAPA!)\n- National philatelic societies\n- Online forums and communities\n- Attend stamp shows and exhibitions\n\n## Resources for Learning\n\n- Stamp catalogs (Scott, Michel, etc.)\n- Philatelic literature and magazines\n- Online databases and websites\n- Experienced collectors and mentors\n\nRemember, stamp collecting should be enjoyable! Start small, learn as you go, and don't be afraid to ask questions.",
+      "sections": [
+        {
+          "id": "what-is-collecting",
+          "title": "What is Stamp Collecting?",
+          "content": "Stamp collecting, also known as philately, is the study and collection of postage stamps and related postal items. It's one of the world's most popular hobbies, enjoyed by millions of people worldwide.",
+          "order": 1
+        },
+        {
+          "id": "getting-started",
+          "title": "Getting Started",
+          "content": "Basic supplies and where to find stamps for your collection.",
+          "order": 2
+        },
+        {
+          "id": "terminology",
+          "title": "Basic Terminology", 
+          "content": "Essential terms every stamp collector should know.",
+          "order": 3
+        }
+      ],
+      "tags": ["beginner", "basics", "getting-started", "supplies", "terminology"],
+      "prerequisites": [],
+      "relatedResources": ["stamp-grading-guide", "storage-tips"],
+      "externalLinks": [
+        {
+          "title": "American Philatelic Society",
+          "url": "https://stamps.org",
+          "description": "National organization for stamp collectors"
+        },
+        {
+          "title": "Scott Catalog Online",
+          "url": "https://www.scottonline.com",
+          "description": "Standard stamp catalog and pricing guide"
+        }
+      ],
+      "author": {
+        "name": "SAPA Education Committee",
+        "title": "San Antonio Philatelic Association"
+      },
+      "estimatedReadTime": 15,
+      "featured": true,
+      "dateCreated": "2025-06-28",
+      "dateUpdated": "2025-06-28",
+      "version": "1.0",
+      "status": "published"
+    },
+    {
+      "id": "stamp-grading-guide",
+      "title": "Understanding Stamp Grading and Condition",
+      "slug": "stamp-grading-guide",
+      "type": "guide",
+      "category": "grading-condition",
+      "difficulty": "intermediate",
+      "summary": "Learn how to properly assess stamp condition and understand grading standards used by collectors and dealers.",
+      "content": "# Understanding Stamp Grading and Condition\n\nStamp condition is crucial for determining value and collectibility. This guide explains the standard grading system used by collectors worldwide.\n\n## Grading Scale\n\n### Mint Stamps\n- **Superb (98-100)** - Perfect centering, full original gum, no defects\n- **Extremely Fine (90-95)** - Excellent centering, minor gum disturbance allowed\n- **Very Fine (80-89)** - Good centering, light gum disturbance\n- **Fine (70-79)** - Average centering, gum problems acceptable\n- **Very Good (60-69)** - Poor centering, significant gum issues\n\n### Used Stamps\n- **Superb** - Light, unobtrusive cancellation, perfect centering\n- **Extremely Fine** - Clean cancellation, excellent centering\n- **Very Fine** - Readable cancellation, good centering\n- **Fine** - Heavy cancellation acceptable, average centering\n- **Poor** - Damaged or heavily cancelled\n\n## Factors Affecting Grade\n\n### Centering\nHow well the stamp design is positioned within the perforations.\n\n### Perforations\n- Should be intact and evenly spaced\n- Missing or damaged perfs lower grade significantly\n\n### Gum Condition (Mint stamps)\n- **Never Hinged (NH)** - Original gum, never mounted\n- **Lightly Hinged (LH)** - Minimal hinge remnant\n- **Heavily Hinged (HH)** - Significant hinge damage\n- **No Gum** - Gum removed or never present\n\n### Cancellations (Used stamps)\n- Light, readable cancellations preferred\n- Avoid pen cancellations when possible\n- \"Socked-on-the-nose\" (SON) cancels can be desirable\n\n## Common Defects to Avoid\n\n- **Creases** - Folds in the stamp paper\n- **Tears** - Rips or cuts in the stamp\n- **Thin spots** - Areas where paper has been damaged\n- **Stains** - Discoloration from various sources\n- **Pin holes** - Small holes from mounting\n- **Short perfs** - Damaged or missing perforations\n\n## Grading Tools\n\n- **Perforation gauge** - Measures perf size\n- **Watermark detector** - Reveals watermarks\n- **UV light** - Detects repairs and paper types\n- **Color guide** - Identifies color varieties\n- **Magnifying glass** - Essential for close examination\n\n## Professional Grading Services\n\nFor valuable stamps, consider professional grading:\n- PSE (Philatelic Foundation)\n- PSA/DNA\n- Independent third-party authentication\n\nRemember: Condition is everything in philately. A common stamp in superb condition can be worth more than a rare stamp in poor condition.",
+      "tags": ["grading", "condition", "mint", "used", "centering", "gum", "perforations"],
+      "prerequisites": ["Basic stamp terminology"],
+      "relatedResources": ["beginners-guide", "valuation-basics"],
+      "author": {
+        "name": "Expert Grading Committee",
+        "title": "SAPA"
+      },
+      "estimatedReadTime": 20,
+      "featured": false,
+      "dateCreated": "2025-06-28",
+      "dateUpdated": "2025-06-28", 
+      "version": "1.0",
+      "status": "published"
+    }
+  ],
+  "categories": [
+    {
+      "id": "getting-started",
+      "name": "Getting Started",
+      "description": "Essential information for new collectors",
+      "order": 1
+    },
+    {
+      "id": "grading-condition", 
+      "name": "Grading & Condition",
+      "description": "Understanding stamp quality and valuation",
+      "order": 2
+    },
+    {
+      "id": "storage-preservation",
+      "name": "Storage & Preservation", 
+      "description": "Protecting your collection",
+      "order": 3
+    }
+  ],
+  "metadata": {
+    "lastUpdated": "2025-06-28T17:28:00.000Z",
+    "totalResources": 2,
+    "version": "1.0"
+  }
+}
