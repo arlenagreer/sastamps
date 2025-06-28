@@ -2351,4 +2351,232 @@ tr:hover {
         background: rgba(243, 156, 18, 0.2);
         border-color: var(--warning);
     }
+}
+
+/* ===== REMINDER SYSTEM STYLES ===== */
+
+/* Reminder Notification */
+.reminder-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 350px;
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    border-left: 4px solid var(--accent);
+    z-index: 1001;
+    transform: translateX(100%);
+    animation: slideInRight 0.3s ease forwards;
+}
+
+@keyframes slideInRight {
+    to {
+        transform: translateX(0);
+    }
+}
+
+.reminder-content {
+    padding: var(--space-md);
+}
+
+.reminder-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-sm);
+}
+
+.reminder-header strong {
+    color: var(--primary);
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+}
+
+.reminder-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--medium);
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.reminder-close:hover {
+    background: var(--light);
+    color: var(--dark);
+}
+
+.reminder-message {
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: var(--space-xs);
+}
+
+.reminder-details {
+    color: var(--medium);
+    font-size: 0.9rem;
+    margin-bottom: var(--space-md);
+}
+
+.reminder-actions {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+/* Reminder Settings */
+.reminder-settings {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: var(--space-lg);
+    margin: var(--space-lg) 0;
+}
+
+.reminder-settings h3 {
+    color: var(--primary);
+    font-family: var(--font-heading);
+    margin-bottom: var(--space-md);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.reminder-settings h3:before {
+    content: "🔔";
+    font-size: 1.2rem;
+}
+
+.reminder-controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.reminder-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-weight: 600;
+    color: var(--dark);
+    cursor: pointer;
+}
+
+.reminder-toggle input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.reminder-options {
+    padding-left: var(--space-lg);
+    border-left: 2px solid var(--light);
+    transition: opacity var(--transition-normal);
+}
+
+.reminder-options.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.reminder-option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+    cursor: pointer;
+}
+
+.reminder-option input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.reminder-times {
+    margin: var(--space-md) 0;
+    padding: var(--space-sm);
+    background: var(--light);
+    border-radius: var(--radius-md);
+}
+
+.reminder-times strong {
+    color: var(--primary-dark);
+    display: block;
+    margin-bottom: var(--space-sm);
+}
+
+.reminder-time-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-xs) 0;
+    color: var(--dark);
+}
+
+.reminder-time-item:before {
+    content: "⏰";
+    font-size: 0.9rem;
+}
+
+.reminder-actions {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+/* Responsive design for reminders */
+@media (max-width: 768px) {
+    .reminder-notification {
+        width: 320px;
+        right: 10px;
+        top: 10px;
+    }
+    
+    .reminder-settings {
+        margin: var(--space-md) 0;
+        padding: var(--space-md);
+    }
+    
+    .reminder-actions {
+        flex-direction: column;
+    }
+    
+    .reminder-actions .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .reminder-notification {
+        width: calc(100vw - 20px);
+        right: 10px;
+        left: 10px;
+    }
+    
+    .reminder-options {
+        padding-left: var(--space-md);
+    }
+}
+
+/* Dark theme support for reminders */
+@media (prefers-color-scheme: dark) {
+    .reminder-notification {
+        background: var(--dark);
+        border-color: var(--accent);
+    }
+    
+    .reminder-settings {
+        background: var(--dark);
+        border: 1px solid var(--medium);
+    }
+    
+    .reminder-times {
+        background: rgba(255, 255, 255, 0.1);
+    }
 } 

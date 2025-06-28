@@ -152,5 +152,51 @@ function testCalendarComponent() {
     });
 }
 
+/**
+ * Test reminder system functionality
+ */
+function testReminderSystem() {
+    console.log('\nTesting Reminder System...\n');
+    
+    import('./reminder-system.js').then(({ reminderSystem }) => {
+        console.log('1. Reminder system stats:');
+        const stats = reminderSystem.getStats();
+        console.log('   Enabled:', stats.enabled);
+        console.log('   Total reminders:', stats.totalReminders);
+        console.log('   Active reminders:', stats.activeReminders);
+        console.log('   Scheduled timers:', stats.scheduledTimers);
+        
+        console.log('\n2. Setting up reminders for sample meetings:');
+        reminderSystem.setReminders(sampleMeetingData.meetings);
+        
+        const newStats = reminderSystem.getStats();
+        console.log('   After setup - Total reminders:', newStats.totalReminders);
+        console.log('   After setup - Active reminders:', newStats.activeReminders);
+        
+        // Create reminder settings UI container for testing
+        const testContainer = document.createElement('div');
+        testContainer.id = 'reminder-test-container';
+        testContainer.style.margin = '20px';
+        testContainer.style.padding = '20px';
+        testContainer.style.border = '1px solid #ccc';
+        testContainer.style.borderRadius = '5px';
+        
+        const title = document.createElement('h3');
+        title.textContent = 'Test Reminder System';
+        testContainer.appendChild(title);
+        
+        const settingsDiv = document.createElement('div');
+        settingsDiv.id = 'reminder-settings-container';
+        testContainer.appendChild(settingsDiv);
+        
+        document.body.appendChild(testContainer);
+        
+        // Initialize UI
+        reminderSystem.createReminderUI();
+        
+        console.log('✅ Reminder system test completed successfully!');
+    });
+}
+
 // Export for use in main application
-export { testCalendarAdapter, testModal, testCalendarComponent, sampleMeetingData };
+export { testCalendarAdapter, testModal, testCalendarComponent, testReminderSystem, sampleMeetingData };

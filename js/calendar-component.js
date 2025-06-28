@@ -6,6 +6,7 @@
 import { Calendar } from 'vanilla-calendar-pro';
 import { calendarAdapter } from './calendar-adapter.js';
 import { modal } from './modal.js';
+import { reminderSystem } from './reminder-system.js';
 
 export class CalendarComponent {
     constructor(containerId, meetingsData) {
@@ -106,6 +107,11 @@ export class CalendarComponent {
         
         // Add events to calendar
         this.updateCalendarEvents();
+        
+        // Set up reminders for meetings
+        if (this.meetingsData && this.meetingsData.meetings) {
+            reminderSystem.setReminders(this.meetingsData.meetings);
+        }
     }
 
     /**
@@ -273,6 +279,11 @@ export class CalendarComponent {
         this.meetingsData = meetingsData;
         this.events = calendarAdapter.convertToCalendarEvents(meetingsData);
         this.updateCalendarEvents();
+        
+        // Update reminders with new meeting data
+        if (meetingsData && meetingsData.meetings) {
+            reminderSystem.setReminders(meetingsData.meetings);
+        }
     }
 
     /**

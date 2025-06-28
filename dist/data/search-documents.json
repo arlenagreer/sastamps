@@ -34,16 +34,28 @@
       "category": "newsletter"
     },
     {
+      "id": "meeting-2025-07-04",
+      "type": "meeting",
+      "title": "No Meeting - Independence Day",
+      "summary": "No meeting scheduled due to Independence Day holiday.",
+      "url": "/meetings.html#2025-07-04",
+      "date": "2025-07-04",
+      "tags": [
+        "holiday",
+        "independence-day"
+      ],
+      "category": "meeting"
+    },
+    {
       "id": "meeting-2025-07-11",
       "type": "meeting",
-      "title": "US Air Mail History",
-      "summary": "An in-depth look at the early years of US air mail service, including the pioneering routes, famous pilots, and the stamps that commemorated these historic flights.",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "summary": "Monthly Board of Governors meeting followed by member show and tell presentations.",
       "url": "/meetings.html#2025-07-11",
       "date": "2025-07-11",
       "tags": [
-        "air-mail",
-        "history",
-        "presentation",
+        "bog",
+        "business",
         "show-and-tell"
       ],
       "category": "meeting"
@@ -51,15 +63,165 @@
     {
       "id": "meeting-2025-07-18",
       "type": "meeting",
-      "title": "Classic Mexican Stamps",
-      "summary": "Explore the fascinating world of early Mexican stamps, including the famous Hidalgo issues and the various printing varieties.",
+      "title": "Stamp Auction",
+      "summary": "Monthly club auction featuring member consignments and donated materials.",
       "url": "/meetings.html#2025-07-18",
       "date": "2025-07-18",
+      "tags": [
+        "auction",
+        "buying",
+        "selling",
+        "consignment"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-07-25",
+      "type": "meeting",
+      "title": "Stamp Bourse",
+      "summary": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers.",
+      "url": "/meetings.html#2025-07-25",
+      "date": "2025-07-25",
+      "tags": [
+        "bourse",
+        "dealers",
+        "trading",
+        "buying",
+        "selling"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-08-01",
+      "type": "meeting",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "summary": "Monthly Board of Governors meeting followed by member show and tell presentations.",
+      "url": "/meetings.html#2025-08-01",
+      "date": "2025-08-01",
+      "tags": [
+        "bog",
+        "business",
+        "show-and-tell"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-08-08",
+      "type": "meeting",
+      "title": "Stamp Auction",
+      "summary": "Monthly club auction featuring member consignments and donated materials.",
+      "url": "/meetings.html#2025-08-08",
+      "date": "2025-08-08",
+      "tags": [
+        "auction",
+        "buying",
+        "selling",
+        "consignment"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-08-15",
+      "type": "meeting",
+      "title": "Stamp Bourse",
+      "summary": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers.",
+      "url": "/meetings.html#2025-08-15",
+      "date": "2025-08-15",
+      "tags": [
+        "bourse",
+        "dealers",
+        "trading",
+        "buying",
+        "selling"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-08-22",
+      "type": "meeting",
+      "title": "The Early History of US Air Mail",
+      "summary": "An exploration of the pioneering days of US air mail service, including the brave pilots, early routes, and the stamps that commemorated these historic achievements.",
+      "url": "/meetings.html#2025-08-22",
+      "date": "2025-08-22",
+      "tags": [
+        "air-mail",
+        "history",
+        "presentation",
+        "program"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-08-29",
+      "type": "meeting",
+      "title": "No Meeting - Labor Day",
+      "summary": "No meeting scheduled due to Labor Day holiday.",
+      "url": "/meetings.html#2025-08-29",
+      "date": "2025-08-29",
+      "tags": [
+        "holiday",
+        "labor-day"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-09-05",
+      "type": "meeting",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "summary": "Monthly Board of Governors meeting followed by member show and tell presentations.",
+      "url": "/meetings.html#2025-09-05",
+      "date": "2025-09-05",
+      "tags": [
+        "bog",
+        "business",
+        "show-and-tell"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-09-12",
+      "type": "meeting",
+      "title": "Stamp Auction",
+      "summary": "Monthly club auction featuring member consignments and donated materials.",
+      "url": "/meetings.html#2025-09-12",
+      "date": "2025-09-12",
+      "tags": [
+        "auction",
+        "buying",
+        "selling",
+        "consignment"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-09-19",
+      "type": "meeting",
+      "title": "Stamp Bourse",
+      "summary": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers.",
+      "url": "/meetings.html#2025-09-19",
+      "date": "2025-09-19",
+      "tags": [
+        "bourse",
+        "dealers",
+        "trading",
+        "buying",
+        "selling"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-09-26",
+      "type": "meeting",
+      "title": "Classic Stamps of Mexico",
+      "summary": "An exploration of Mexico's classic stamp period, including the famous Hidalgo issues, printing varieties, and the historical context of early Mexican postal history.",
+      "url": "/meetings.html#2025-09-26",
+      "date": "2025-09-26",
       "tags": [
         "mexican-stamps",
         "classic-period",
         "hidalgo",
-        "varieties"
+        "presentation",
+        "program"
       ],
       "category": "meeting"
     },
@@ -202,13 +364,13 @@
     }
   ],
   "metadata": {
-    "totalDocuments": 12,
+    "totalDocuments": 23,
     "types": {
       "newsletter": 2,
-      "meeting": 3,
+      "meeting": 14,
       "resource": 2,
       "glossary": 5
     },
-    "buildDate": "2025-06-28T17:59:01.512Z"
+    "buildDate": "2025-06-28T22:21:55.634Z"
   }
 }
