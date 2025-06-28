@@ -95,11 +95,36 @@ When updating the quarterly newsletter (published January 1, April 1, July 1, Oc
 
 ## Known Issues & Improvements
 
-- Critical CSS is duplicated 3 times in each HTML file
-- Google Fonts URL has triple `&display=swap` parameters
-- Images lack alt text for accessibility
+- ~~Critical CSS is duplicated 3 times in each HTML file~~ (Fixed)
+- ~~Google Fonts URL has triple `&display=swap` parameters~~ (Fixed)
+- ~~Images lack alt text for accessibility~~ (N/A - site uses CSS background images and Font Awesome icons)
 - Consider implementing:
   - Newsletter archive page
   - Client-side search functionality
   - Dark mode toggle
-  - Better mobile menu overlay
+  - ~~Better mobile menu overlay~~ (Implemented)
+
+## Recent Learnings
+
+### Image Implementation
+- The website doesn't use `<img>` tags - all images are implemented as CSS background images
+- Font Awesome is used for all icons (navigation, social, decorative)
+- This means standard accessibility features like alt text and lazy loading attributes aren't applicable
+- The site follows modern practices for decorative images
+
+### Build Process
+- Running `npm run build:css` and `npm run build:js` rebuilds the minified files
+- The build process correctly handles PostCSS transformations and esbuild bundling
+- Always rebuild after making CSS or JS changes
+
+### Mobile Menu
+- Mobile menu uses a slide-in panel from the right
+- Overlay element is dynamically created via JavaScript for better performance
+- Body scroll is disabled when menu is open to prevent background interaction
+- Menu closes on ESC key, overlay click, or clicking outside
+
+### Accessibility
+- Skip-link is already implemented and properly styled
+- Enhanced with smooth transitions and visible focus indicators
+- Centered positioning for better visibility
+- Proper ARIA attributes on mobile menu toggle
