@@ -108,7 +108,6 @@ h2{font-size:1.75rem}
 @media screen and (max-width:375px){.meeting-table{font-size:.8rem}
 @media screen and (max-height:428px) and (orientation:landscape){.meeting-entry{align-items:center;flex-direction:row;justify-content:space-between}
     </style>
-
     <link rel="preload" href="dist/css/styles.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="dist/css/styles.min.css"></noscript>
     
@@ -227,6 +226,84 @@ h2{font-size:1.75rem}
             font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
         }
     </style>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/600.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/700.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/merriweather/v1/400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/merriweather/v1/700.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <style>
+        /* Font loading states */
+        .fonts-loading body {
+            opacity: 0.8;
+        }
+        
+        .fonts-loaded body {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Font fallbacks */
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        .fonts-loaded body {
+            font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+        
+        .fonts-loaded h1, 
+        .fonts-loaded h2, 
+        .fonts-loaded h3, 
+        .fonts-loaded h4, 
+        .fonts-loaded h5, 
+        .fonts-loaded h6 {
+            font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+    </style>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/600.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/700.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/merriweather/v1/400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/merriweather/v1/700.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <style>
+        /* Font loading states */
+        .fonts-loading body {
+            opacity: 0.8;
+        }
+        
+        .fonts-loaded body {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Font fallbacks */
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        .fonts-loaded body {
+            font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+        
+        .fonts-loaded h1, 
+        .fonts-loaded h2, 
+        .fonts-loaded h3, 
+        .fonts-loaded h4, 
+        .fonts-loaded h5, 
+        .fonts-loaded h6 {
+            font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+    </style>
 </head>
 <body>
     <!-- Skip to content link for accessibility -->
@@ -236,7 +313,11 @@ h2{font-size:1.75rem}
     <header>
         <div class="container header-container">
             <h1 class="site-title"><a href="index.html">San Antonio Philatelic Association</a></h1>
-            <nav>
+            <nav style="display: flex; align-items: center;">
+                <button class="theme-toggle" aria-label="Switch to dark mode">
+                    <i class="fas fa-moon"></i>
+                    <i class="fas fa-sun"></i>
+                </button>
                 <button class="menu-toggle" aria-expanded="false" aria-controls="nav-menu">
                     <i class="fas fa-bars"></i><span class="sr-only">Menu</span>
                 </button>
@@ -853,5 +934,107 @@ h2{font-size:1.75rem}
         }, 1000);
     }
 </script>
+    
+    <script>
+        // Font Face Observer script
+        (function() {
+            class FontFaceObserver {
+                constructor(family, options = {}) {
+                    this.family = family;
+                    this.options = options;
+                }
+                
+                async load() {
+                    try {
+                        await document.fonts.load(`1em ${this.family}`, this.options.text || 'BESbswy');
+                        return true;
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            }
+
+            // Load fonts and mark as loaded
+            async function loadFonts() {
+                document.documentElement.classList.add('fonts-loading');
+                
+                const fontLoaders = [
+                    new FontFaceObserver('Open Sans', { weight: 400 }).load(),
+                    new FontFaceObserver('Open Sans', { weight: 600 }).load(),
+                    new FontFaceObserver('Open Sans', { weight: 700 }).load(),
+                    new FontFaceObserver('Merriweather', { weight: 400 }).load(),
+                    new FontFaceObserver('Merriweather', { weight: 700 }).load()
+                ];
+
+                try {
+                    await Promise.all(fontLoaders);
+                    document.documentElement.classList.remove('fonts-loading');
+                    document.documentElement.classList.add('fonts-loaded');
+                    localStorage.setItem('fonts-loaded', 'true');
+                } catch (err) {
+                    document.documentElement.classList.remove('fonts-loading');
+                    document.documentElement.classList.add('fonts-failed');
+                }
+            }
+
+            // Check if fonts were previously loaded
+            if (localStorage.getItem('fonts-loaded')) {
+                document.documentElement.classList.add('fonts-loaded');
+            } else {
+                loadFonts();
+            }
+        })();
+    </script>
+    
+    <script>
+        // Font Face Observer script
+        (function() {
+            class FontFaceObserver {
+                constructor(family, options = {}) {
+                    this.family = family;
+                    this.options = options;
+                }
+                
+                async load() {
+                    try {
+                        await document.fonts.load(`1em ${this.family}`, this.options.text || 'BESbswy');
+                        return true;
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            }
+
+            // Load fonts and mark as loaded
+            async function loadFonts() {
+                document.documentElement.classList.add('fonts-loading');
+                
+                const fontLoaders = [
+                    new FontFaceObserver('Open Sans', { weight: 400 }).load(),
+                    new FontFaceObserver('Open Sans', { weight: 600 }).load(),
+                    new FontFaceObserver('Open Sans', { weight: 700 }).load(),
+                    new FontFaceObserver('Merriweather', { weight: 400 }).load(),
+                    new FontFaceObserver('Merriweather', { weight: 700 }).load()
+                ];
+
+                try {
+                    await Promise.all(fontLoaders);
+                    document.documentElement.classList.remove('fonts-loading');
+                    document.documentElement.classList.add('fonts-loaded');
+                    localStorage.setItem('fonts-loaded', 'true');
+                } catch (err) {
+                    document.documentElement.classList.remove('fonts-loading');
+                    document.documentElement.classList.add('fonts-failed');
+                }
+            }
+
+            // Check if fonts were previously loaded
+            if (localStorage.getItem('fonts-loaded')) {
+                document.documentElement.classList.add('fonts-loaded');
+            } else {
+                loadFonts();
+            }
+        })();
+    </script>
 </body>
 </html> 

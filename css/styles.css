@@ -52,6 +52,28 @@
     --transition-slow: 0.4s ease;
 }
 
+/* Dark theme variables */
+[data-theme="dark"] {
+    /* Color Palette - Dark Mode */
+    --primary: #5dade2;        /* Lighter blue for dark mode */
+    --primary-light: #85c1e9;  /* Even lighter blue */
+    --primary-dark: #2980b9;   /* Mid blue for dark mode */
+    --secondary: #e67e22;      /* Lighter orange for dark mode */
+    --accent: #f4d03f;         /* Slightly lighter gold */
+    --dark: #ecf0f1;           /* Light text for dark mode */
+    --medium: #bdc3c7;         /* Light gray for dark mode */
+    --light: #34495e;          /* Dark background elements */
+    --white: #1a1a1a;          /* Main dark background */
+    --success: #58d68d;        /* Lighter green */
+    --warning: #f5b041;        /* Lighter orange */
+    --danger: #ec7063;         /* Lighter red */
+    
+    /* Dark mode shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+}
+
 /* ===== RESET & BASE STYLES ===== */
 *, *::before, *::after {
     box-sizing: border-box;
@@ -325,6 +347,63 @@ nav a:hover::after {
     font-size: 1.5rem;
     cursor: pointer;
     color: var(--dark);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: var(--dark);
+    padding: 0.5rem;
+    margin-left: 1rem;
+    border-radius: var(--radius-md);
+    transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.theme-toggle:hover {
+    background-color: var(--light);
+    transform: scale(1.1);
+}
+
+.theme-toggle:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.theme-toggle i {
+    transition: opacity var(--transition-fast);
+}
+
+.theme-toggle .fa-sun {
+    display: none;
+}
+
+[data-theme="dark"] .theme-toggle .fa-sun {
+    display: block;
+}
+
+[data-theme="dark"] .theme-toggle .fa-moon {
+    display: none;
+}
+
+/* Smooth theme transition */
+body,
+header,
+.nav-menu,
+.card,
+.hero,
+.section,
+footer,
+.accordion-header,
+.btn {
+    transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
 @media (max-width: 768px) {

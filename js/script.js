@@ -19,6 +19,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize accordion functionality (if needed)
     setupAccordion();
+    
+    // Initialize theme toggle
+    setupThemeToggle();
 });
 
 /**
@@ -381,4 +384,47 @@ if ('serviceWorker' in navigator) {
         console.log('ServiceWorker registration failed: ', err);
       });
   });
-} 
+}
+
+/**
+ * Theme Toggle Functionality
+ */
+function setupThemeToggle() {
+    // Check for saved theme preference or default to light
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    
+    // Apply saved theme on page load
+    if (currentTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
+    
+    // Theme toggle functionality for all toggle buttons
+    const themeToggles = document.querySelectorAll('.theme-toggle');
+    
+    themeToggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            // Get current theme
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            // Apply new theme
+            if (newTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+            }
+            
+            // Save preference
+            localStorage.setItem('theme', newTheme);
+            
+            // Update button aria-label for accessibility
+            const label = newTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+            themeToggles.forEach(t => t.setAttribute('aria-label', label));
+        });
+        
+        // Set initial aria-label
+        const initialTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+        const initialLabel = initialTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+        toggle.setAttribute('aria-label', initialLabel);
+    });
+}
