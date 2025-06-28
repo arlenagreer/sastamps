@@ -190,25 +190,58 @@ class SearchEngine {
      * Apply filters to search results
      */
     applyFilters(results, filters) {
-        const { types, categories, difficulty } = filters;
+        const { types, categories, difficulty, dateRange, tags, years, quarters } = filters;
 
         return results.filter(result => {
             const doc = result.document;
             if (!doc) return false;
 
             // Filter by type
-            if (types.length > 0 && !types.includes(doc.type)) {
+            if (types && types.length > 0 && !types.includes(doc.type)) {
                 return false;
             }
 
             // Filter by category
-            if (categories.length > 0 && !categories.includes(doc.category)) {
+            if (categories && categories.length > 0 && !categories.includes(doc.category)) {
                 return false;
             }
 
             // Filter by difficulty
-            if (difficulty.length > 0 && doc.difficulty && !difficulty.includes(doc.difficulty)) {
+            if (difficulty && difficulty.length > 0 && doc.difficulty && !difficulty.includes(doc.difficulty)) {
                 return false;
+            }
+
+            // Filter by date range
+            if (dateRange && dateRange.from && dateRange.to && doc.date) {
+                const docDate = new Date(doc.date);
+                const fromDate = new Date(dateRange.from);
+                const toDate = new Date(dateRange.to);
+                if (docDate < fromDate || docDate > toDate) {
+                    return false;
+                }
+            }
+
+            // Filter by tags
+            if (tags && tags.length > 0 && doc.tags) {
+                const hasAnyTag = tags.some(tag => doc.tags.includes(tag));
+                if (!hasAnyTag) {
+                    return false;
+                }
+            }
+
+            // Filter by years (for newsletters and meetings)
+            if (years && years.length > 0 && doc.date) {
+                const docYear = new Date(doc.date).getFullYear();
+                if (!years.includes(docYear.toString())) {
+                    return false;
+                }
+            }
+
+            // Filter by quarters (for newsletters)
+            if (quarters && quarters.length > 0 && doc.quarter) {
+                if (!quarters.includes(doc.quarter)) {
+                    return false;
+                }
             }
 
             return true;
@@ -248,26 +281,43 @@ class SearchEngine {
             return {
                 types: [],
                 categories: [],
-                difficulty: []
+                difficulty: [],
+                years: [],
+                quarters: [],
+                tags: []
             };
         }
 
         const options = {
             types: new Set(),
             categories: new Set(),
-            difficulty: new Set()
+            difficulty: new Set(),
+            years: new Set(),
+            quarters: new Set(),
+            tags: new Set()
         };
 
         this.documents.forEach(doc => {
             if (doc.type) options.types.add(doc.type);
             if (doc.category) options.categories.add(doc.category);
             if (doc.difficulty) options.difficulty.add(doc.difficulty);
+            if (doc.quarter) options.quarters.add(doc.quarter);
+            if (doc.date) {
+                const year = new Date(doc.date).getFullYear();
+                options.years.add(year.toString());
+            }
+            if (doc.tags && Array.isArray(doc.tags)) {
+                doc.tags.forEach(tag => options.tags.add(tag));
+            }
         });
 
         return {
             types: Array.from(options.types).sort(),
             categories: Array.from(options.categories).sort(),
-            difficulty: Array.from(options.difficulty).sort()
+            difficulty: Array.from(options.difficulty).sort(),
+            years: Array.from(options.years).sort().reverse(), // Most recent first
+            quarters: ['First', 'Second', 'Third', 'Fourth'], // Fixed order
+            tags: Array.from(options.tags).sort()
         };
     }
 
@@ -324,25 +374,49 @@ class SearchEngine {
                 
                 ${showFilters ? `
                     <div class="search-filters">
-                        <div class="filter-group">
-                            <label>Type:</label>
-                            <select class="filter-select" data-filter="type">
-                                <option value="">All Types</option>
-                            </select>
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label>Type:</label>
+                                <select class="filter-select" data-filter="type">
+                                    <option value="">All Types</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>Year:</label>
+                                <select class="filter-select" data-filter="year">
+                                    <option value="">All Years</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>Quarter:</label>
+                                <select class="filter-select" data-filter="quarter">
+                                    <option value="">All Quarters</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="filter-group">
-                            <label>Category:</label>
-                            <select class="filter-select" data-filter="category">
-                                <option value="">All Categories</option>
-                            </select>
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label>Date From:</label>
+                                <input type="date" class="filter-input" data-filter="date-from">
+                            </div>
+                            <div class="filter-group">
+                                <label>Date To:</label>
+                                <input type="date" class="filter-input" data-filter="date-to">
+                            </div>
+                            <div class="filter-group">
+                                <label>Tags:</label>
+                                <select class="filter-select" data-filter="tags" multiple>
+                                </select>
+                            </div>
                         </div>
-                        <div class="filter-group">
-                            <label>Difficulty:</label>
-                            <select class="filter-select" data-filter="difficulty">
-                                <option value="">All Levels</option>
-                            </select>
+                        <div class="filter-actions">
+                            <button class="clear-filters-button" type="button">
+                                <i class="fas fa-times"></i> Clear Filters
+                            </button>
+                            <button class="toggle-filters-button" type="button">
+                                <i class="fas fa-chevron-up"></i> Hide Filters
+                            </button>
                         </div>
-                        <button class="clear-filters-button" type="button">Clear Filters</button>
                     </div>
                 ` : ''}
                 
@@ -370,7 +444,9 @@ class SearchEngine {
         const resultsContainer = container.querySelector('.search-results-list');
         const statusContainer = container.querySelector('.search-status');
         const filterSelects = container.querySelectorAll('.filter-select');
+        const filterInputs = container.querySelectorAll('.filter-input');
         const clearFiltersButton = container.querySelector('.clear-filters-button');
+        const toggleFiltersButton = container.querySelector('.toggle-filters-button');
 
         let searchTimeout;
         let currentQuery = '';
@@ -433,12 +509,43 @@ class SearchEngine {
             });
         });
 
+        filterInputs.forEach(input => {
+            input.addEventListener('change', () => {
+                if (currentQuery) {
+                    this.performUISearch(currentQuery, container);
+                }
+            });
+        });
+
         // Clear filters handler
         if (clearFiltersButton) {
             clearFiltersButton.addEventListener('click', () => {
-                filterSelects.forEach(select => select.value = '');
+                filterSelects.forEach(select => {
+                    if (select.hasAttribute('multiple')) {
+                        Array.from(select.options).forEach(option => option.selected = false);
+                    } else {
+                        select.value = '';
+                    }
+                });
+                filterInputs.forEach(input => input.value = '');
                 if (currentQuery) {
                     this.performUISearch(currentQuery, container);
+                }
+            });
+        }
+
+        // Toggle filters handler
+        if (toggleFiltersButton) {
+            toggleFiltersButton.addEventListener('click', () => {
+                const filtersContainer = container.querySelector('.search-filters');
+                const isCollapsed = filtersContainer.classList.contains('collapsed');
+                
+                if (isCollapsed) {
+                    filtersContainer.classList.remove('collapsed');
+                    toggleFiltersButton.innerHTML = '<i class="fas fa-chevron-up"></i> Hide Filters';
+                } else {
+                    filtersContainer.classList.add('collapsed');
+                    toggleFiltersButton.innerHTML = '<i class="fas fa-chevron-down"></i> Show Filters';
                 }
             });
         }
@@ -480,6 +587,24 @@ class SearchEngine {
                         label: this.formatLabel(difficulty)
                     }));
                     break;
+                case 'year':
+                    filterOptions = options.years.map(year => ({
+                        value: year,
+                        label: year
+                    }));
+                    break;
+                case 'quarter':
+                    filterOptions = options.quarters.map(quarter => ({
+                        value: quarter,
+                        label: quarter
+                    }));
+                    break;
+                case 'tags':
+                    filterOptions = options.tags.map(tag => ({
+                        value: tag,
+                        label: this.formatLabel(tag)
+                    }));
+                    break;
             }
 
             // Add options to select
@@ -508,6 +633,7 @@ class SearchEngine {
         const resultsContainer = container.querySelector('.search-results-list');
         const statusContainer = container.querySelector('.search-status');
         const filterSelects = container.querySelectorAll('.filter-select');
+        const filterInputs = container.querySelectorAll('.filter-input');
 
         // Show loading state
         statusContainer.innerHTML = '<div class="search-loading">Searching...</div>';
@@ -515,15 +641,39 @@ class SearchEngine {
 
         // Get filter values
         const filters = {};
+        
+        // Process select filters
         filterSelects.forEach(select => {
             const filterType = select.dataset.filter;
-            const value = select.value;
-            if (value) {
-                if (filterType === 'type') filters.types = [value];
-                else if (filterType === 'category') filters.categories = [value];
-                else if (filterType === 'difficulty') filters.difficulty = [value];
+            
+            if (select.hasAttribute('multiple')) {
+                // Handle multi-select (tags)
+                const selectedValues = Array.from(select.selectedOptions).map(option => option.value);
+                if (selectedValues.length > 0) {
+                    filters[filterType] = selectedValues;
+                }
+            } else {
+                // Handle single select
+                const value = select.value;
+                if (value) {
+                    if (filterType === 'type') filters.types = [value];
+                    else if (filterType === 'category') filters.categories = [value];
+                    else if (filterType === 'difficulty') filters.difficulty = [value];
+                    else if (filterType === 'year') filters.years = [value];
+                    else if (filterType === 'quarter') filters.quarters = [value];
+                }
             }
         });
+
+        // Process date inputs
+        const dateFrom = container.querySelector('[data-filter="date-from"]')?.value;
+        const dateTo = container.querySelector('[data-filter="date-to"]')?.value;
+        if (dateFrom || dateTo) {
+            filters.dateRange = {
+                from: dateFrom || '1900-01-01',
+                to: dateTo || '2099-12-31'
+            };
+        }
 
         try {
             const results = await this.search(query, filters);
@@ -744,13 +894,31 @@ class SearchEngine {
             }
 
             .search-filters {
+                margin-bottom: 1rem;
+                background-color: var(--light, #ecf0f1);
+                border-radius: var(--radius-md, 5px);
+                border: 1px solid #ddd;
+                transition: all var(--transition-normal, 0.25s ease);
+            }
+
+            .search-filters.collapsed .filter-row {
+                display: none;
+            }
+
+            .filter-row {
                 display: flex;
                 flex-wrap: wrap;
                 gap: 1rem;
-                margin-bottom: 1rem;
                 padding: 1rem;
-                background-color: var(--light, #ecf0f1);
-                border-radius: var(--radius-md, 5px);
+                align-items: center;
+            }
+
+            .filter-actions {
+                padding: 0.5rem 1rem;
+                border-top: 1px solid #ddd;
+                background-color: #f8f9fa;
+                display: flex;
+                justify-content: space-between;
                 align-items: center;
             }
 
@@ -766,27 +934,54 @@ class SearchEngine {
                 white-space: nowrap;
             }
 
-            .filter-select {
+            .filter-select,
+            .filter-input {
                 padding: 0.5rem;
                 border: 1px solid var(--medium, #7f8c8d);
                 border-radius: var(--radius-sm, 3px);
                 background-color: var(--white, #fff);
                 font-size: 0.9rem;
+                min-width: 120px;
             }
 
-            .clear-filters-button {
+            .filter-select[multiple] {
+                min-height: 100px;
+                min-width: 160px;
+            }
+
+            .filter-input[type="date"] {
+                min-width: 140px;
+            }
+
+            .clear-filters-button,
+            .toggle-filters-button {
                 padding: 0.5rem 1rem;
-                background-color: var(--warning, #f39c12);
-                color: var(--white, #fff);
                 border: none;
                 border-radius: var(--radius-sm, 3px);
                 cursor: pointer;
                 font-size: 0.9rem;
-                transition: background-color var(--transition-fast, 0.15s ease);
+                transition: all var(--transition-fast, 0.15s ease);
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .clear-filters-button {
+                background-color: var(--warning, #f39c12);
+                color: var(--white, #fff);
             }
 
             .clear-filters-button:hover {
                 background-color: #e67e22;
+            }
+
+            .toggle-filters-button {
+                background-color: var(--primary, #1a5276);
+                color: var(--white, #fff);
+            }
+
+            .toggle-filters-button:hover {
+                background-color: var(--primary-light, #2980b9);
             }
 
             .search-results {
@@ -924,18 +1119,46 @@ class SearchEngine {
 
             /* Mobile responsive */
             @media (max-width: 768px) {
-                .search-filters {
+                .filter-row {
                     flex-direction: column;
                     align-items: stretch;
+                    gap: 0.75rem;
                 }
 
                 .filter-group {
                     justify-content: space-between;
                 }
 
+                .filter-actions {
+                    flex-direction: column;
+                    gap: 0.5rem;
+                }
+
+                .filter-select,
+                .filter-input {
+                    min-width: auto;
+                    width: 100%;
+                }
+
                 .search-result-meta {
                     flex-direction: column;
                     gap: 0.25rem;
+                }
+            }
+
+            @media (max-width: 576px) {
+                .filter-row {
+                    padding: 0.75rem;
+                }
+                
+                .filter-actions {
+                    padding: 0.75rem;
+                }
+                
+                .clear-filters-button,
+                .toggle-filters-button {
+                    width: 100%;
+                    justify-content: center;
                 }
             }
         `;
