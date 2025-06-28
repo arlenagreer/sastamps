@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Engine Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+        .test-section { border: 1px solid #ddd; margin: 20px 0; padding: 15px; border-radius: 5px; }
+        .test-result { background: #f9f9f9; padding: 10px; margin: 10px 0; border-radius: 3px; }
+        button { margin: 5px; padding: 8px 16px; background: #007cba; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        button:hover { background: #005a87; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        .newsletter-card, .meeting-card, .resource-card, .glossary-term {
+            border: 1px solid #ddd; margin: 10px 0; padding: 15px; border-radius: 5px;
+        }
+        .card-header h3 { margin: 0 0 5px 0; color: #1a5276; }
+        .meta span { background: #f1c40f; padding: 2px 6px; margin: 2px; border-radius: 3px; font-size: 0.8em; }
+        .difficulty.beginner { background: #27ae60; color: white; }
+        .difficulty.intermediate { background: #f39c12; color: white; }
+        .difficulty.advanced { background: #c0392b; color: white; }
+        .btn { display: inline-block; padding: 8px 16px; background: #1a5276; color: white; text-decoration: none; border-radius: 3px; }
+        .btn:hover { background: #0e2f44; }
+        .tags .tag { background: #ecf0f1; padding: 2px 6px; margin: 2px; border-radius: 3px; font-size: 0.8em; }
+    </style>
+</head>
+<body>
+    <h1>Template Engine Test Page</h1>
+    
+    <div>
+        <button onclick="testBasicTemplate()">Test Basic Template</button>
+        <button onclick="testConditionals()">Test Conditionals</button>
+        <button onclick="testLoops()">Test Loops</button>
+        <button onclick="testHelpers()">Test Helpers</button>
+        <button onclick="testComponents()">Test Components</button>
+        <button onclick="testNewsletterComponent()">Test Newsletter Component</button>
+        <button onclick="testMeetingComponent()">Test Meeting Component</button>
+    </div>
+    
+    <div id="results"></div>
+
+    <script type="module">
+        import templateEngine from './js/modules/template-engine.js';
+        import dataLoader from './js/modules/data-loader.js';
+        
+        // Make available globally
+        window.templateEngine = templateEngine;
+        window.dataLoader = dataLoader;
+        
+        window.addTestResult = function(title, template, data, result) {
+            const results = document.getElementById('results');
+            const section = document.createElement('div');
+            section.className = 'test-section';
+            section.innerHTML = `
+                <h3>${title}</h3>
+                <div>
+                    <strong>Template:</strong>
+                    <pre>${template}</pre>
+                </div>
+                <div>
+                    <strong>Data:</strong>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                </div>
+                <div>
+                    <strong>Result:</strong>
+                    <div class="test-result">${result}</div>
+                </div>
+            `;
+            results.appendChild(section);
+        };
+        
+        window.testBasicTemplate = function() {
+            const template = `
+                <h2>Welcome, {{name}}!</h2>
+                <p>You have {{messageCount}} messages.</p>
+                <p>Email: {{user.email}}</p>
+            `;
+            
+            const data = {
+                name: 'John Doe',
+                messageCount: 5,
+                user: { email: 'john@example.com' }
+            };
+            
+            const result = templateEngine.render(template, data);
+            addTestResult('Basic Template', template, data, result);
+        };
+        
+        window.testConditionals = function() {
+            const template = `
+                <div>
+                    {{#if user.isAdmin}}
+                        <p>Admin panel available</p>
+                    {{/if}}
+                    {{#if messages}}
+                        <p>You have messages!</p>
+                    {{/if}}
+                    {{#if emptyArray}}
+                        <p>This won't show</p>
+                    {{/if}}
+                </div>
+            `;
+            
+            const data = {
+                user: { isAdmin: true },
+                messages: ['Hello', 'World'],
+                emptyArray: []
+            };
+            
+            const result = templateEngine.render(template, data);
+            addTestResult('Conditionals', template, data, result);
+        };
+        
+        window.testLoops = function() {
+            const template = `
+                <ul>
+                    {{#each items}}
+                        <li>{{@index}}: {{this.name}} ({{this.type}}) 
+                            {{#if @first}}[FIRST]{{/if}}
+                            {{#if @last}}[LAST]{{/if}}
+                        </li>
+                    {{/each}}
+                </ul>
+            `;
+            
+            const data = {
+                items: [
+                    { name: 'Stamp Album', type: 'supplies' },
+                    { name: 'Magnifying Glass', type: 'tools' },
+                    { name: 'Stamp Tongs', type: 'tools' }
+                ]
+            };
+            
+            const result = templateEngine.render(template, data);
+            addTestResult('Loops', template, data, result);
+        };
+        
+        window.testHelpers = function() {
+            const template = `
+                <div>
+                    <p>Date: {{formatDate date "short"}}</p>
+                    <p>Long Date: {{formatDate date "long"}}</p>
+                    <p>Truncated: {{truncate longText 20}}</p>
+                    <p>Tags: {{join tags " | "}}</p>
+                    <p>Upper: {{upper text}}</p>
+                    <p>Default: {{default emptyValue "No value provided"}}</p>
+                    <p>Math: {{add 5 3}} = 8</p>
+                </div>
+            `;
+            
+            const data = {
+                date: '2025-07-15',
+                longText: 'This is a very long text that should be truncated for display purposes',
+                tags: ['stamps', 'collecting', 'philately'],
+                text: 'hello world',
+                emptyValue: null
+            };
+            
+            const result = templateEngine.render(template, data);
+            addTestResult('Helpers', template, data, result);
+        };
+        
+        window.testComponents = function() {
+            // Register a simple test component
+            templateEngine.registerComponent('testCard', (args, context) => {
+                return `<div class="test-card">
+                    <h4>${args.title}</h4>
+                    <p>${args.description}</p>
+                    <small>Count: ${args.count}</small>
+                </div>`;
+            });
+            
+            const template = `
+                <div>
+                    {{component:testCard title="My Card" description="This is a test card" count=42}}
+                </div>
+            `;
+            
+            const data = {};
+            
+            const result = templateEngine.render(template, data);
+            addTestResult('Components', template, data, result);
+        };
+        
+        window.testNewsletterComponent = async function() {
+            try {
+                const newsletterData = await dataLoader.getNewsletters();
+                const newsletter = newsletterData.newsletters[0];
+                
+                const template = `{{component:newsletterCard newsletter=newsletter}}`;
+                const data = { newsletter };
+                
+                const result = templateEngine.render(template, data);
+                addTestResult('Newsletter Component', template, data, result);
+            } catch (error) {
+                console.error('Error testing newsletter component:', error);
+            }
+        };
+        
+        window.testMeetingComponent = async function() {
+            try {
+                const meetingData = await dataLoader.getMeetings();
+                const meeting = meetingData.meetings[0];
+                
+                const template = `{{component:meetingCard meeting=meeting}}`;
+                const data = { meeting };
+                
+                const result = templateEngine.render(template, data);
+                addTestResult('Meeting Component', template, data, result);
+            } catch (error) {
+                console.error('Error testing meeting component:', error);
+            }
+        };
+        
+        console.log('✅ Template Engine test page loaded successfully');
+        console.log('🎨 TemplateEngine instance:', templateEngine);
+    </script>
+</body>
+</html>
