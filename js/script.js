@@ -30,11 +30,20 @@ function setupMobileMenu() {
     
     if (!menuToggle || !navMenu) return;
     
+    // Create overlay element if it doesn't exist
+    let overlay = document.querySelector('.menu-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'menu-overlay';
+        document.body.appendChild(overlay);
+    }
+    
     menuToggle.addEventListener('click', function() {
         const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
         
         menuToggle.setAttribute('aria-expanded', !isExpanded);
         navMenu.classList.toggle('active');
+        overlay.classList.toggle('active');
         
         // Prevent scrolling when menu is open
         document.body.classList.toggle('menu-open');
@@ -47,15 +56,25 @@ function setupMobileMenu() {
             !menuToggle.contains(event.target)) {
             
             navMenu.classList.remove('active');
+            overlay.classList.remove('active');
             menuToggle.setAttribute('aria-expanded', 'false');
             document.body.classList.remove('menu-open');
         }
+    });
+    
+    // Close menu when clicking on overlay
+    overlay.addEventListener('click', function() {
+        navMenu.classList.remove('active');
+        overlay.classList.remove('active');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('menu-open');
     });
     
     // Close menu when pressing ESC key
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape' && navMenu.classList.contains('active')) {
             navMenu.classList.remove('active');
+            overlay.classList.remove('active');
             menuToggle.setAttribute('aria-expanded', 'false');
             document.body.classList.remove('menu-open');
         }

@@ -174,16 +174,29 @@ button, input, select, textarea {
 
 .skip-link {
     position: absolute;
-    top: -40px;
-    left: 0;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
     background: var(--primary);
-    color: white;
-    padding: 8px;
+    color: var(--white);
+    padding: var(--space-sm) var(--space-md);
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    box-shadow: var(--shadow-md);
     z-index: 100;
+    transition: top var(--transition-fast);
 }
 
 .skip-link:focus {
     top: 0;
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.skip-link:hover {
+    background: var(--primary-light);
+    color: var(--white);
 }
 
 /* ===== LAYOUT ===== */
@@ -345,6 +358,30 @@ nav a:hover::after {
     
     nav a::after {
         display: none;
+    }
+    
+    /* Mobile menu overlay */
+    .menu-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 55;
+        opacity: 0;
+        transition: opacity var(--transition-normal);
+    }
+    
+    .menu-overlay.active {
+        display: block;
+        opacity: 1;
+    }
+    
+    /* Prevent body scroll when menu is open */
+    body.menu-open {
+        overflow: hidden;
     }
 }
 
