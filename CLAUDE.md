@@ -65,3 +65,41 @@ The project uses a custom build pipeline (`scripts/build.js`) that orchestrates:
 - The site uses CSS variables for theming and responsive design
 - Calendar event files (ICS format) are generated for meetings
 - Build process updates `package.json` during execution
+
+## Newsletter Update Process
+
+When updating the quarterly newsletter (published January 1, April 1, July 1, October 1):
+
+1. **Upload new PDF** to `/public/` directory with naming format: `SAPA-PHILATEX-[Quarter]-Quarter-[Year].pdf`
+2. **Update index.html**:
+   - Newsletter banner section (lines ~440-450)
+   - Latest issue highlights section (lines ~590-600)
+   - Meeting calendar section if needed (lines ~500-580)
+3. **Update newsletter.html**:
+   - Current issue section (lines ~380-420)
+4. **Update meetings.html**:
+   - Meeting schedule table for current quarter
+   - Calendar download link
+5. **Create calendar ICS files** in `/data/calendar/`:
+   - Individual meeting files: `YYYY-MM-DD-meeting.ics`
+   - Quarterly schedule: `YYYY-Q[#]-schedule.ics`
+6. **Update JSON-LD** structured data for upcoming meetings
+7. **Update sitemap.xml** with current modification dates
+
+## File Locations
+
+- **Newsletter PDFs**: `/public/`
+- **Calendar files**: `/data/calendar/`
+- **Meeting images**: `/images/`
+- **Build output**: `/dist/`
+
+## Known Issues & Improvements
+
+- Critical CSS is duplicated 3 times in each HTML file
+- Google Fonts URL has triple `&display=swap` parameters
+- Images lack alt text for accessibility
+- Consider implementing:
+  - Newsletter archive page
+  - Client-side search functionality
+  - Dark mode toggle
+  - Better mobile menu overlay
