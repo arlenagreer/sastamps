@@ -415,3 +415,37 @@ These commands make AI calls and may take up to a minute:
 ---
 
 _This guide ensures Claude Code has immediate access to Task Master's essential functionality for agentic development workflows._
+
+## Project-Specific Notes
+
+### SAPA Website Implementation Progress
+
+#### Search Functionality
+- **Search Index**: Using Lunr.js for client-side search with pre-built index
+- **Search Data**: Two JSON files in `/dist/data/`:
+  - `search-index.json` - Pre-built Lunr index
+  - `search-documents.json` - Document metadata and content
+- **Search Implementation**: 
+  - Embedded data in search.html for GitHub Pages compatibility
+  - Falls back to fetching JSON files if embedded data not available
+  - Supports file:// protocol for local testing
+
+#### Completed Features (Phase 2)
+1. **Search Result Highlighting** (UFWK-OBPN-JQDQ) ✓
+   - Implemented text highlighting with `<mark>` tags
+   - Added content snippets showing ~100 chars around matches
+   - Visual styling with yellow background (#ffeb3b)
+   - Functions: `highlightText()`, `getContentSnippet()`, `escapeRegExp()`
+
+#### Pending Tasks (Phase 2)
+2. **Advanced Search Filters** (UFWK-OBPN-BWUO)
+3. **Migrate Newsletter Metadata to JSON** (UFWK-OBPN-GXOK)
+4. **Migrate Meeting Data to JSON** (UFWK-OBPN-HDDL)
+5. **Update Newsletter Archive to use JSON** (UFWK-OBPN-UPQA)
+6. **Update Meetings Page to use JSON** (UFWK-OBPN-GTSF)
+
+### Technical Decisions
+- Using static JSON files for GitHub Pages compatibility
+- Client-side rendering for dynamic content
+- Lunr.js for search functionality (no server required)
+- Embedded search data in HTML for better performance
