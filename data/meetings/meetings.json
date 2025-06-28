@@ -1,6 +1,35 @@
 {
   "meetings": [
     {
+      "id": "2025-07-04",
+      "date": "2025-07-04",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "holiday",
+      "title": "No Meeting - Independence Day",
+      "description": "No meeting scheduled due to Independence Day holiday.",
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": true,
+      "tags": ["holiday", "independence-day"]
+    },
+    {
       "id": "2025-07-11",
       "date": "2025-07-11",
       "time": {
@@ -17,21 +46,12 @@
           "city": "San Antonio",
           "state": "TX",
           "zipCode": "78247"
-        },
-        "coordinates": {
-          "latitude": 29.543762,
-          "longitude": -98.481692
         }
       },
-      "type": "regular",
-      "title": "US Air Mail History",
-      "presenter": {
-        "name": "Dr. Robert Johnson",
-        "title": "Postal History Specialist",
-        "bio": "Dr. Johnson has been collecting air mail covers for over 30 years and is an expert on early US air mail routes."
-      },
-      "topic": "The Development of US Air Mail Service 1918-1930",
-      "description": "An in-depth look at the early years of US air mail service, including the pioneering routes, famous pilots, and the stamps that commemorated these historic flights.",
+      "type": "business",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "topic": "Monthly club business and member presentations",
+      "description": "Monthly Board of Governors meeting followed by member show and tell presentations.",
       "agenda": [
         {
           "time": "6:30 PM",
@@ -39,47 +59,30 @@
         },
         {
           "time": "7:00 PM",
-          "item": "Welcome and announcements",
-          "presenter": "President"
+          "item": "Board of Governors meeting",
+          "presenter": "Board Members"
         },
         {
-          "time": "7:15 PM",
-          "item": "Show and Tell",
+          "time": "7:30 PM",
+          "item": "Show and Tell presentations",
           "presenter": "Members"
-        },
-        {
-          "time": "7:45 PM",
-          "item": "Break"
-        },
-        {
-          "time": "8:00 PM",
-          "item": "Main Program: US Air Mail History",
-          "presenter": "Dr. Robert Johnson"
-        },
-        {
-          "time": "8:45 PM",
-          "item": "Q&A and discussion"
         },
         {
           "time": "9:00 PM",
           "item": "Meeting adjournment"
         }
       ],
-      "specialNotes": [
-        "Bring air mail covers for show and tell",
-        "Refreshments will be provided"
-      ],
       "requirements": {
         "rsvpRequired": false,
         "membershipRequired": false,
-        "bringItems": ["Show and tell items related to air mail"]
+        "bringItems": ["Items for show and tell"]
       },
       "contact": {
         "name": "SAPA Secretary",
         "email": "loz33@hotmail.com"
       },
       "cancelled": false,
-      "tags": ["air-mail", "history", "presentation", "show-and-tell"]
+      "tags": ["bog", "business", "show-and-tell"]
     },
     {
       "id": "2025-07-18",
@@ -100,24 +103,601 @@
           "zipCode": "78247"
         }
       },
-      "type": "regular",
-      "title": "Classic Mexican Stamps",
-      "topic": "Mexican Stamps from the Classic Period (1856-1879)",
-      "description": "Explore the fascinating world of early Mexican stamps, including the famous Hidalgo issues and the various printing varieties.",
+      "type": "auction",
+      "title": "Stamp Auction",
+      "topic": "Monthly stamp auction",
+      "description": "Monthly club auction featuring member consignments and donated materials.",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, lot viewing"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Auction preview and announcements"
+        },
+        {
+          "time": "7:15 PM",
+          "item": "Auction begins"
+        },
+        {
+          "time": "8:45 PM",
+          "item": "Auction conclusion and checkout"
+        }
+      ],
       "specialNotes": [
-        "Bring Mexican stamps for discussion",
-        "Light refreshments available"
+        "Cash or check accepted for purchases",
+        "Bring lots for consignment (10% commission)"
       ],
       "requirements": {
         "rsvpRequired": false,
         "membershipRequired": false
       },
       "contact": {
-        "name": "SAPA Secretary", 
+        "name": "SAPA Secretary",
         "email": "loz33@hotmail.com"
       },
       "cancelled": false,
-      "tags": ["mexican-stamps", "classic-period", "hidalgo", "varieties"]
+      "tags": ["auction", "buying", "selling", "consignment"]
+    },
+    {
+      "id": "2025-07-25",
+      "date": "2025-07-25",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "social",
+      "title": "Stamp Bourse",
+      "topic": "Dealer tables and stamp trading",
+      "description": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers.",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, dealer setup"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Bourse officially opens"
+        },
+        {
+          "time": "8:30 PM",
+          "item": "Final sales and trading"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Cleanup and departure"
+        }
+      ],
+      "specialNotes": [
+        "Dealer table rental: $10 for members, $15 for non-members",
+        "Contact secretary to reserve tables"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bourse", "dealers", "trading", "buying", "selling"]
+    },
+    {
+      "id": "2025-08-01",
+      "date": "2025-08-01",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "business",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "topic": "Monthly club business and member presentations",
+      "description": "Monthly Board of Governors meeting followed by member show and tell presentations.",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, social time"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Board of Governors meeting",
+          "presenter": "Board Members"
+        },
+        {
+          "time": "7:30 PM",
+          "item": "Show and Tell presentations",
+          "presenter": "Members"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Meeting adjournment"
+        }
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false,
+        "bringItems": ["Items for show and tell"]
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bog", "business", "show-and-tell"]
+    },
+    {
+      "id": "2025-08-08",
+      "date": "2025-08-08",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "auction",
+      "title": "Stamp Auction",
+      "topic": "Monthly stamp auction",
+      "description": "Monthly club auction featuring member consignments and donated materials.",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, lot viewing"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Auction preview and announcements"
+        },
+        {
+          "time": "7:15 PM",
+          "item": "Auction begins"
+        },
+        {
+          "time": "8:45 PM",
+          "item": "Auction conclusion and checkout"
+        }
+      ],
+      "specialNotes": [
+        "Cash or check accepted for purchases",
+        "Bring lots for consignment (10% commission)"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["auction", "buying", "selling", "consignment"]
+    },
+    {
+      "id": "2025-08-15",
+      "date": "2025-08-15",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "social",
+      "title": "Stamp Bourse",
+      "topic": "Dealer tables and stamp trading",
+      "description": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers.",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, dealer setup"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Bourse officially opens"
+        },
+        {
+          "time": "8:30 PM",
+          "item": "Final sales and trading"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Cleanup and departure"
+        }
+      ],
+      "specialNotes": [
+        "Dealer table rental: $10 for members, $15 for non-members",
+        "Contact secretary to reserve tables"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bourse", "dealers", "trading", "buying", "selling"]
+    },
+    {
+      "id": "2025-08-22",
+      "date": "2025-08-22",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "regular",
+      "title": "The Early History of US Air Mail",
+      "presenter": {
+        "name": "Steve Mabie"
+      },
+      "topic": "The Early History of US Air Mail",
+      "description": "An exploration of the pioneering days of US air mail service, including the brave pilots, early routes, and the stamps that commemorated these historic achievements.",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, social time"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Welcome and announcements",
+          "presenter": "President"
+        },
+        {
+          "time": "7:15 PM",
+          "item": "Brief show and tell"
+        },
+        {
+          "time": "7:30 PM",
+          "item": "Main Program: The Early History of US Air Mail",
+          "presenter": "Steve Mabie"
+        },
+        {
+          "time": "8:45 PM",
+          "item": "Q&A and discussion"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Meeting adjournment"
+        }
+      ],
+      "specialNotes": [
+        "Bring air mail covers for discussion",
+        "Refreshments will be provided"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false,
+        "bringItems": ["Air mail covers or related items for discussion"]
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["air-mail", "history", "presentation", "program"]
+    },
+    {
+      "id": "2025-08-29",
+      "date": "2025-08-29",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "holiday",
+      "title": "No Meeting - Labor Day",
+      "description": "No meeting scheduled due to Labor Day holiday.",
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": true,
+      "tags": ["holiday", "labor-day"]
+    },
+    {
+      "id": "2025-09-05",
+      "date": "2025-09-05",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "business",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "topic": "Monthly club business and member presentations",
+      "description": "Monthly Board of Governors meeting followed by member show and tell presentations.",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, social time"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Board of Governors meeting",
+          "presenter": "Board Members"
+        },
+        {
+          "time": "7:30 PM",
+          "item": "Show and Tell presentations",
+          "presenter": "Members"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Meeting adjournment"
+        }
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false,
+        "bringItems": ["Items for show and tell"]
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bog", "business", "show-and-tell"]
+    },
+    {
+      "id": "2025-09-12",
+      "date": "2025-09-12",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "auction",
+      "title": "Stamp Auction",
+      "topic": "Monthly stamp auction",
+      "description": "Monthly club auction featuring member consignments and donated materials.",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, lot viewing"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Auction preview and announcements"
+        },
+        {
+          "time": "7:15 PM",
+          "item": "Auction begins"
+        },
+        {
+          "time": "8:45 PM",
+          "item": "Auction conclusion and checkout"
+        }
+      ],
+      "specialNotes": [
+        "Cash or check accepted for purchases",
+        "Bring lots for consignment (10% commission)"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["auction", "buying", "selling", "consignment"]
+    },
+    {
+      "id": "2025-09-19",
+      "date": "2025-09-19",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "social",
+      "title": "Stamp Bourse",
+      "topic": "Dealer tables and stamp trading",
+      "description": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers.",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, dealer setup"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Bourse officially opens"
+        },
+        {
+          "time": "8:30 PM",
+          "item": "Final sales and trading"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Cleanup and departure"
+        }
+      ],
+      "specialNotes": [
+        "Dealer table rental: $10 for members, $15 for non-members",
+        "Contact secretary to reserve tables"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bourse", "dealers", "trading", "buying", "selling"]
+    },
+    {
+      "id": "2025-09-26",
+      "date": "2025-09-26",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "regular",
+      "title": "Classic Stamps of Mexico",
+      "presenter": {
+        "name": "Mark Brill"
+      },
+      "topic": "Classic Stamps of Mexico",
+      "description": "An exploration of Mexico's classic stamp period, including the famous Hidalgo issues, printing varieties, and the historical context of early Mexican postal history.",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, social time"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Welcome and announcements",
+          "presenter": "President"
+        },
+        {
+          "time": "7:15 PM",
+          "item": "Brief show and tell"
+        },
+        {
+          "time": "7:30 PM",
+          "item": "Main Program: Classic Stamps of Mexico",
+          "presenter": "Mark Brill"
+        },
+        {
+          "time": "8:45 PM",
+          "item": "Q&A and discussion"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Meeting adjournment"
+        }
+      ],
+      "specialNotes": [
+        "Bring Mexican stamps for discussion",
+        "Refreshments will be provided"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false,
+        "bringItems": ["Mexican stamps or covers for discussion"]
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["mexican-stamps", "classic-period", "hidalgo", "presentation", "program"]
     },
     {
       "id": "2025-06-20",
@@ -184,8 +764,8 @@
   ],
   "metadata": {
     "lastUpdated": "2025-06-28T17:27:00.000Z",
-    "totalMeetings": 3,
-    "upcomingMeetings": 2,
+    "totalMeetings": 15,
+    "upcomingMeetings": 14,
     "version": "1.0",
     "defaultLocation": {
       "name": "MacArthur Park Lutheran Church",
