@@ -5,6 +5,9 @@
 
 // Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
+    // Fix mobile viewport height issues
+    setupMobileViewportHeight();
+    
     // Mobile menu toggle
     setupMobileMenu();
     
@@ -25,6 +28,34 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /**
+ * Fix Mobile Viewport Height Issues
+ */
+function setupMobileViewportHeight() {
+    // Set CSS custom property for real viewport height
+    function setViewportHeight() {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+    
+    setViewportHeight();
+    
+    // Update on resize and orientation change
+    window.addEventListener('resize', setViewportHeight);
+    window.addEventListener('orientationchange', function() {
+        setTimeout(setViewportHeight, 100); // Small delay for iOS
+    });
+    
+    // For iOS Safari - handle viewport changes more aggressively
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+        let timer;
+        window.addEventListener('scroll', function() {
+            clearTimeout(timer);
+            timer = setTimeout(setViewportHeight, 150);
+        });
+    }
+}
+
+/**
  * Mobile Menu Toggle Functionality
  */
 function setupMobileMenu() {
@@ -41,6 +72,14 @@ function setupMobileMenu() {
         document.body.appendChild(overlay);
     }
     
+    // Helper function to close the menu
+    function closeMenu() {
+        navMenu.classList.remove('active');
+        overlay.classList.remove('active');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('menu-open');
+    }
+    
     menuToggle.addEventListener('click', function() {
         const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
         
@@ -52,31 +91,26 @@ function setupMobileMenu() {
         document.body.classList.toggle('menu-open');
     });
     
-    // Close menu when clicking on a link
+    // Close menu when clicking on a link - simplified for better mobile compatibility
     const navLinks = navMenu.querySelectorAll('a');
     navLinks.forEach(link => {
+        // Use a single, reliable event handler
         link.addEventListener('click', function(e) {
-            // Ensure the link navigation happens
             const href = this.getAttribute('href');
             
-            // Close the menu
-            navMenu.classList.remove('active');
-            overlay.classList.remove('active');
-            menuToggle.setAttribute('aria-expanded', 'false');
-            document.body.classList.remove('menu-open');
+            // Close the menu immediately
+            closeMenu();
             
-            // Navigate to the link after a tiny delay to ensure menu closes
-            if (href && href !== '#') {
-                setTimeout(() => {
-                    window.location.href = href;
-                }, 100);
+            // For same-page anchors, prevent default and scroll
+            if (href && href.startsWith('#') && href !== '#') {
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                    history.pushState(null, null, href);
+                }
             }
-        });
-        
-        // Add touch event support for iOS
-        link.addEventListener('touchend', function(e) {
-            e.preventDefault();
-            this.click();
+            // For external links, let the browser handle navigation naturally
         });
     });
     
@@ -85,29 +119,19 @@ function setupMobileMenu() {
         if (navMenu.classList.contains('active') && 
             !navMenu.contains(event.target) && 
             !menuToggle.contains(event.target)) {
-            
-            navMenu.classList.remove('active');
-            overlay.classList.remove('active');
-            menuToggle.setAttribute('aria-expanded', 'false');
-            document.body.classList.remove('menu-open');
+            closeMenu();
         }
     });
     
     // Close menu when clicking on overlay
     overlay.addEventListener('click', function() {
-        navMenu.classList.remove('active');
-        overlay.classList.remove('active');
-        menuToggle.setAttribute('aria-expanded', 'false');
-        document.body.classList.remove('menu-open');
+        closeMenu();
     });
     
     // Close menu when pressing ESC key
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape' && navMenu.classList.contains('active')) {
-            navMenu.classList.remove('active');
-            overlay.classList.remove('active');
-            menuToggle.setAttribute('aria-expanded', 'false');
-            document.body.classList.remove('menu-open');
+            closeMenu();
         }
     });
 }
