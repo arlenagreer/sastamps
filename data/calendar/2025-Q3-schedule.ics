@@ -1,0 +1,126 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//San Antonio Philatelic Association//SAPA Meetings//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:20250711T193000Z-sapa@sastamps.org
+DTSTAMP:20240306T000000Z
+DTSTART:20250711T233000Z
+DTEND:20250712T013000Z
+SUMMARY:SAPA Meeting - BOG and Show & Tell
+DESCRIPTION:San Antonio Philatelic Association meeting featuring Board of Governors meeting (7:15 PM) and Show & Tell session (7:30 PM). Doors open at 6:30 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting
+END:VEVENT
+BEGIN:VEVENT
+UID:20250718T193000Z-sapa@sastamps.org
+DTSTAMP:20240306T000000Z
+DTSTART:20250718T233000Z
+DTEND:20250719T013000Z
+SUMMARY:SAPA Meeting - Auction Night
+DESCRIPTION:San Antonio Philatelic Association auction meeting. Bring items for auction by 7:15 PM. Auction starts at 7:30 PM. Doors open at 6:30 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting,Auction
+END:VEVENT
+BEGIN:VEVENT
+UID:20250725T193000Z-sapa@sastamps.org
+DTSTAMP:20240306T000000Z
+DTSTART:20250725T233000Z
+DTEND:20250726T013000Z
+SUMMARY:SAPA Meeting - Bourse Night
+DESCRIPTION:San Antonio Philatelic Association bourse meeting. Buy\, sell\, and trade stamps with fellow collectors. Doors open at 6:30 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting,Bourse
+END:VEVENT
+BEGIN:VEVENT
+UID:20250801T193000Z-sapa@sastamps.org
+DTSTAMP:20240306T000000Z
+DTSTART:20250801T233000Z
+DTEND:20250802T013000Z
+SUMMARY:SAPA Meeting - BOG and Show & Tell
+DESCRIPTION:San Antonio Philatelic Association meeting featuring Board of Governors meeting (7:15 PM) and Show & Tell session (7:30 PM). Doors open at 6:30 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting
+END:VEVENT
+BEGIN:VEVENT
+UID:20250808T193000Z-sapa@sastamps.org
+DTSTAMP:20240306T000000Z
+DTSTART:20250808T233000Z
+DTEND:20250809T013000Z
+SUMMARY:SAPA Meeting - Auction Night
+DESCRIPTION:San Antonio Philatelic Association auction meeting. Bring items for auction by 7:15 PM. Auction starts at 7:30 PM. Doors open at 6:30 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting,Auction
+END:VEVENT
+BEGIN:VEVENT
+UID:20250815T193000Z-sapa@sastamps.org
+DTSTAMP:20240306T000000Z
+DTSTART:20250815T233000Z
+DTEND:20250816T013000Z
+SUMMARY:SAPA Meeting - Bourse Night
+DESCRIPTION:San Antonio Philatelic Association bourse meeting. Buy\, sell\, and trade stamps with fellow collectors. Doors open at 6:30 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting,Bourse
+END:VEVENT
+BEGIN:VEVENT
+UID:20250822T193000Z-sapa@sastamps.org
+DTSTAMP:20240306T000000Z
+DTSTART:20250822T233000Z
+DTEND:20250823T013000Z
+SUMMARY:SAPA Meeting - "The Early History of US Air Mail" by Steve Mabie
+DESCRIPTION:San Antonio Philatelic Association educational program featuring Steve Mabie's presentation on "The Early History of US Air Mail". Doors open at 6:30 PM\, program starts at 7:30 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting,Program
+END:VEVENT
+BEGIN:VEVENT
+UID:20250905T193000Z-sapa@sastamps.org
+DTSTAMP:20240306T000000Z
+DTSTART:20250905T233000Z
+DTEND:20250906T013000Z
+SUMMARY:SAPA Meeting - BOG and Show & Tell
+DESCRIPTION:San Antonio Philatelic Association meeting featuring Board of Governors meeting (7:15 PM) and Show & Tell session (7:30 PM). Doors open at 6:30 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting
+END:VEVENT
+BEGIN:VEVENT
+UID:20250912T193000Z-sapa@sastamps.org
+DTSTAMP:20240306T000000Z
+DTSTART:20250912T233000Z
+DTEND:20250913T013000Z
+SUMMARY:SAPA Meeting - Auction Night
+DESCRIPTION:San Antonio Philatelic Association auction meeting. Bring items for auction by 7:15 PM. Auction starts at 7:30 PM. Doors open at 6:30 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting,Auction
+END:VEVENT
+BEGIN:VEVENT
+UID:20250919T193000Z-sapa@sastamps.org
+DTSTAMP:20240306T000000Z
+DTSTART:20250919T233000Z
+DTEND:20250920T013000Z
+SUMMARY:SAPA Meeting - Bourse Night
+DESCRIPTION:San Antonio Philatelic Association bourse meeting. Buy\, sell\, and trade stamps with fellow collectors. Doors open at 6:30 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting,Bourse
+END:VEVENT
+BEGIN:VEVENT
+UID:20250926T193000Z-sapa@sastamps.org
+DTSTAMP:20240306T000000Z
+DTSTART:20250926T233000Z
+DTEND:20250927T013000Z
+SUMMARY:SAPA Meeting - "Classic Stamps of Mexico" by Mark Brill
+DESCRIPTION:San Antonio Philatelic Association educational program featuring Mark Brill's presentation on "Classic Stamps of Mexico". Doors open at 6:30 PM\, program starts at 7:30 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting,Program
+END:VEVENT
+END:VCALENDAR
