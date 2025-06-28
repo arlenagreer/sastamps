@@ -414,4 +414,90 @@ These commands make AI calls and may take up to a minute:
 
 ---
 
+## Mobile Development & Debugging Lessons Learned
+
+### Common Mobile Menu Issues & Solutions
+
+**Problem**: Mobile menus not working on iPhone Chrome/Safari
+**Root Causes & Fixes**:
+
+1. **Viewport Height Issues**: 
+   - Replace `height: 100vh` with progressive enhancement: `100vh` → `100dvh` → `calc(var(--vh, 1vh) * 100)`
+   - Add JavaScript to calculate real viewport height: `--vh` CSS custom property
+   - Handle iOS address bar dynamic resizing with scroll/orientation listeners
+
+2. **Touch Event Conflicts**:
+   - Remove conflicting `touchend` + `click` event combinations
+   - Use single `click` event handler for better mobile compatibility  
+   - Add `touch-action: manipulation` CSS property
+
+3. **iOS-Specific Issues**:
+   - Add webkit prefixes: `-webkit-touch-callout: none`, `-webkit-user-select: none`
+   - Use proper tap highlight: `-webkit-tap-highlight-color: rgba(26, 82, 118, 0.2)`
+   - Ensure 44px minimum touch targets for accessibility
+   - Add `overscroll-behavior: contain` for menu containers
+
+4. **Mobile Menu Best Practices**:
+   - Fixed positioning with proper z-index stacking
+   - Overlay with proper touch handling for closing
+   - Body scroll prevention: `overflow: hidden` on menu open
+   - ESC key and click-outside closing functionality
+
+### Mobile Testing Workflow
+
+**Local Development Server**:
+```bash
+python3 -m http.server 8080 --bind 0.0.0.0
+# Access from mobile: http://[LOCAL_IP]:8080
+```
+
+**MCP Browser Tools Testing**:
+```javascript
+// iPhone dimensions for testing
+{ width: 375, height: 667, isMobile: true, hasTouch: true, deviceScaleFactor: 2 } // iPhone SE
+{ width: 390, height: 844, isMobile: true, hasTouch: true, deviceScaleFactor: 3 } // iPhone 13
+```
+
+**Testing Checklist**:
+- ✅ Menu toggle opens/closes correctly
+- ✅ Overlay click closes menu  
+- ✅ Navigation links work and close menu
+- ✅ Touch targets are 44px minimum
+- ✅ No JavaScript console errors
+- ✅ Works across different mobile screen sizes
+- ✅ Viewport height handles address bar changes
+
+### CSS Mobile Debugging Patterns
+
+**Progressive Enhancement for Viewport**:
+```css
+height: 100vh; /* Fallback */  
+height: 100dvh; /* Modern browsers */
+height: calc(var(--vh, 1vh) * 100); /* JS fallback */
+```
+
+**Touch-Friendly Mobile Links**:
+```css
+.mobile-link {
+    min-height: 44px; /* Apple guideline */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(26, 82, 118, 0.2);
+    -webkit-touch-callout: none;
+}
+```
+
+### Debugging Tools & Commands
+
+**Browser Tools**:
+- `mcp__puppeteer__puppeteer_navigate` with mobile viewport
+- `mcp__puppeteer__puppeteer_screenshot` for visual verification  
+- `mcp__browser_tools__getConsoleErrors` for JS debugging
+- `mcp__puppeteer__puppeteer_click` for interaction testing
+
+**Network Testing**:
+- `ifconfig en0 | grep "inet " | awk '{print $2}'` - Get local IP
+- Test on real devices via WiFi connection
+
+---
+
 _This guide ensures Claude Code has immediate access to Task Master's essential functionality for agentic development workflows._
