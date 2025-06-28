@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Fix mobile viewport height issues
     setupMobileViewportHeight();
     
-    // Mobile menu toggle
-    setupMobileMenu();
+    // Mobile menu toggle - REMOVED: Using CSS-only solution now
+    // setupMobileMenu();
     
     // Back to top button functionality
     setupBackToTopButton();
@@ -76,7 +76,9 @@ function setupMobileViewportHeight() {
 
 /**
  * Mobile Menu Toggle Functionality
+ * REMOVED: Using CSS-only solution for better reliability
  */
+/*
 function setupMobileMenu() {
     const menuToggle = document.querySelector('.menu-toggle');
     const navMenu = document.querySelector('.nav-menu');
@@ -158,6 +160,7 @@ function setupMobileMenu() {
         }
     });
 }
+*/
 
 /**
  * Back to Top Button Functionality
