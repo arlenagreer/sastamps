@@ -19,7 +19,9 @@
     "watch:css": "postcss css/styles.css -o dist/css/styles.min.css --watch",
     "watch:js": "esbuild js/script.js --bundle --watch --outfile=dist/js/script.min.js",
     "analyze": "node scripts/analyze-image-savings.js",
-    "monitor": "npm run serve"
+    "monitor": "npm run serve",
+    "build:search": "node scripts/build-search-index.js",
+    "build:search:embed": "node scripts/build-search-embedded.js"
   },
   "repository": {
     "type": "git",

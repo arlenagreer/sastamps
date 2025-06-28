@@ -66,13 +66,19 @@ async function build() {
         console.log('\n3. Optimizing fonts...');
         await runCommand('node', ['scripts/optimize-fonts.js']);
 
-        console.log('\n4. Setting up monitoring...');
+        console.log('\n4. Building search index...');
+        await runCommand('node', ['scripts/build-search-index.js']);
+
+        console.log('\n5. Embedding search data...');
+        await runCommand('node', ['scripts/build-search-embedded.js']);
+
+        console.log('\n6. Setting up monitoring...');
         await runCommand('node', ['scripts/setup-monitoring.js']);
 
-        console.log('\n5. Running performance analysis...');
+        console.log('\n7. Running performance analysis...');
         await runCommand('node', ['scripts/analyze-image-savings.js']);
 
-        console.log('\n6. Generating build info...');
+        console.log('\n8. Generating build info...');
         await generateBuildInfo();
 
         console.log('\nBuild completed successfully! 🎉');
@@ -80,6 +86,8 @@ async function build() {
         console.log('- Critical CSS extraction and inlining');
         console.log('- Image optimization and WebP conversion');
         console.log('- Font optimization and preloading');
+        console.log('- Full-text search with Lunr.js');
+        console.log('- Embedded search data for offline functionality');
         console.log('- Service worker configuration');
         console.log('- Asset minification');
         console.log('- Performance monitoring with Google Analytics');
