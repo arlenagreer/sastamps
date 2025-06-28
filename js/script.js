@@ -52,6 +52,34 @@ function setupMobileMenu() {
         document.body.classList.toggle('menu-open');
     });
     
+    // Close menu when clicking on a link
+    const navLinks = navMenu.querySelectorAll('a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Ensure the link navigation happens
+            const href = this.getAttribute('href');
+            
+            // Close the menu
+            navMenu.classList.remove('active');
+            overlay.classList.remove('active');
+            menuToggle.setAttribute('aria-expanded', 'false');
+            document.body.classList.remove('menu-open');
+            
+            // Navigate to the link after a tiny delay to ensure menu closes
+            if (href && href !== '#') {
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 100);
+            }
+        });
+        
+        // Add touch event support for iOS
+        link.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            this.click();
+        });
+    });
+    
     // Close menu when clicking outside
     document.addEventListener('click', function(event) {
         if (navMenu.classList.contains('active') && 
