@@ -25,6 +25,12 @@
         <priority>0.7</priority>
     </url>
     <url>
+        <loc>https://sastamps.org/archive.html</loc>
+        <lastmod>2025-06-28</lastmod>
+        <changefreq>quarterly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
         <loc>https://sastamps.org/membership.html</loc>
         <lastmod>2025-06-28</lastmod>
         <changefreq>monthly</changefreq>

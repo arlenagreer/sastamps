@@ -12,28 +12,25 @@
 </script>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="description" content="Join SAPA for our weekly meetings featuring educational programs, auctions, and trading sessions. Find our meeting schedule and add events to your calendar.">
-    <meta name="keywords" content="SAPA meetings, San Antonio Philatelic Association meetings, stamp club meetings, philately meetings, San Antonio stamp meetings">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse the complete archive of SAPA PHILATEX newsletters from the San Antonio Philatelic Association. Access past issues with philatelic articles, club news, and stamp collecting resources.">
+    <meta name="keywords" content="SAPA PHILATEX archive, San Antonio Philatelic Association newsletter archive, stamp collecting newsletter archive, philately publication history, past newsletters">
     
-    <title>Meetings - San Antonio Philatelic Association</title>
+    <title>Newsletter Archive - San Antonio Philatelic Association</title>
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://sastamps.org/meetings.html">
-    <meta property="og:title" content="Meetings - San Antonio Philatelic Association">
-    <meta property="og:description" content="Join SAPA for our weekly meetings featuring educational programs, auctions, and trading sessions.">
-    <meta property="og:image" content="dist/images/meetings-page-image.webp">
+    <meta property="og:url" content="https://sastamps.org/archive.html">
+    <meta property="og:title" content="Newsletter Archive - San Antonio Philatelic Association">
+    <meta property="og:description" content="Browse the complete archive of SAPA PHILATEX newsletters from the San Antonio Philatelic Association. Access past issues with philatelic articles, club news, and stamp collecting resources.">
+    <meta property="og:image" content="dist/images/newsletter-page-image.webp">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://sastamps.org/meetings.html">
-    <meta property="twitter:title" content="Meetings - San Antonio Philatelic Association">
-    <meta property="twitter:description" content="Join SAPA for our weekly meetings featuring educational programs, auctions, and trading sessions.">
-    <meta property="twitter:image" content="dist/images/meetings-page-image.webp">
+    <meta property="twitter:url" content="https://sastamps.org/archive.html">
+    <meta property="twitter:title" content="Newsletter Archive - San Antonio Philatelic Association">
+    <meta property="twitter:description" content="Browse the complete archive of SAPA PHILATEX newsletters from the San Antonio Philatelic Association. Access past issues with philatelic articles, club news, and stamp collecting resources.">
+    <meta property="twitter:image" content="dist/images/newsletter-page-image.webp">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -121,7 +118,7 @@ h2{font-size:1.75rem}
     <link rel="manifest" href="site.webmanifest">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://sastamps.org/meetings.html">
+    <link rel="canonical" href="https://sastamps.org/archive.html">
 
     <style id="blur-up-style">
         .blur-up {
@@ -169,6 +166,72 @@ h2{font-size:1.75rem}
         .fonts-loaded h5, 
         .fonts-loaded h6 {
             font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+        
+        /* Archive specific styles */
+        .archive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .archive-item {
+            background-color: var(--white);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+        }
+        
+        .archive-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .archive-item-header {
+            background-color: var(--accent);
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .archive-item-header h3 {
+            margin: 0;
+            color: var(--dark);
+            font-size: 1.25rem;
+        }
+        
+        .archive-item-header p {
+            margin: 0.5rem 0 0;
+            font-weight: bold;
+            font-size: 1rem;
+            color: var(--dark);
+        }
+        
+        .archive-item-content {
+            padding: 1.5rem;
+        }
+        
+        .archive-item-content p {
+            margin-bottom: 1rem;
+            color: var(--medium);
+        }
+        
+        .archive-year-section {
+            margin-bottom: 3rem;
+        }
+        
+        .archive-year-header {
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .archive-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
         }
     </style>
     <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/400.woff2" as="font" type="font/woff2" crossorigin>
@@ -228,7 +291,7 @@ h2{font-size:1.75rem}
                     <li><a href="about.html"><i class="fas fa-info-circle nav-icon"></i>About</a></li>
                     <li><a href="meetings.html"><i class="fas fa-calendar nav-icon"></i>Meetings</a></li>
                     <li><a href="newsletter.html"><i class="fas fa-newspaper nav-icon"></i>Newsletter</a></li>
-                    <li><a href="archive.html"><i class="fas fa-archive nav-icon"></i>Archive</a></li>
+                    <li><a href="archive.html"><i class="fas fa-archive nav-icon"></i>Newsletter Archive</a></li>
                     <li><a href="membership.html"><i class="fas fa-users nav-icon"></i>Membership</a></li>
                     <li><a href="contact.html"><i class="fas fa-envelope nav-icon"></i>Contact</a></li>
                 </ul>
@@ -239,200 +302,60 @@ h2{font-size:1.75rem}
     <!-- Main Content -->
     <main id="main-content">
         <!-- Hero Section -->
-        <section class="hero" style="background-image: linear-gradient(rgba(26, 82, 118, 0.85), rgba(26, 82, 118, 0.85)), url('images/meetings-page-image.png'); background-size: cover; background-position: center;">
+        <section class="hero" style="background-image: linear-gradient(rgba(26, 82, 118, 0.85), rgba(26, 82, 118, 0.85)), url('images/newsletter-page-image.png'); background-size: cover; background-position: center;">
             <div class="container">
-                <h1>SAPA Meetings</h1>
-                <p>Join us for weekly meetings featuring educational programs, auctions, and trading sessions</p>
+                <h1>Newsletter Archive</h1>
+                <p>Browse our collection of SAPA PHILATEX newsletters, documenting our club's rich history and philatelic knowledge since 1954.</p>
             </div>
         </section>
         
-        <!-- Meeting Location Section -->
+        <!-- Archive Info Section -->
         <section class="section">
             <div class="container">
-                <h2 class="section-title">Meeting Location & Times</h2>
-                <div class="card location-card">
+                <div class="card">
                     <div class="card-content">
-                        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-                            <div>
-                                <h3><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i> Location</h3>
-                                <p>MacArthur Park Lutheran Church<br>
-                                Building 1 (facing Nacogdoches Rd)<br>
-                                2903 Nacogdoches Road<br>
-                                San Antonio, TX 78217</p>
-                                
-                                <h3 class="mt-4"><i class="fas fa-clock" style="color: var(--primary);"></i> Times</h3>
-                                <ul class="meeting-times" style="list-style-type: none; padding-left: 0;">
-                                    <li><i class="fas fa-door-open"></i> Doors open at 6:30 PM</li>
-                                    <li><i class="fas fa-gavel"></i> BOG starts at 7:15 PM</li>
-                                    <li><i class="fas fa-users"></i> Meetings begin at 7:30 PM</li>
-                                </ul>
-                            </div>
-                            
-                            <div>
-                                <h3><i class="fas fa-info-circle" style="color: var(--primary);"></i> Meeting Types</h3>
-                                <ul class="meeting-types-list" style="list-style-type: none; padding-left: 0;">
-                                    <li class="mb-3">
-                                        <strong>First Friday:</strong><br>
-                                        Board of Governors Meeting & Show & Tell
-                                    </li>
-                                    <li class="mb-3">
-                                        <strong>Second Friday:</strong><br>
-                                        Auction (items due by 7:15 PM)
-                                    </li>
-                                    <li>
-                                        <strong>Other Fridays:</strong><br>
-                                        Bourse or Educational Programs
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                        <h2 class="section-title">About Our Archive</h2>
+                        <p>Welcome to the SAPA PHILATEX newsletter archive. Here you can access past issues of our quarterly publication, which has been sharing philatelic knowledge, club news, and collecting resources with our members since 1954. Each issue contains valuable information about stamp collecting, upcoming events, member contributions, and highlights from our meetings.</p>
+                        <p>The newsletters are published quarterly on January 1, April 1, July 1, and October 1 of each year. All newsletters are available in PDF format for easy viewing and downloading.</p>
                     </div>
                 </div>
             </div>
         </section>
         
-        <!-- Calendar Section -->
-        <section class="section" style="background-color: var(--light);">
+        <!-- 2025 Archive Section -->
+        <section class="section">
             <div class="container">
-                <h2 class="section-title">Meeting Schedule</h2>
-                <div class="card">
-                    <div class="card-content">
-                        <div style="overflow-x: auto;">
-                            <table class="meeting-table" style="width: 100%; border-collapse: collapse; font-family: var(--font-body); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm);">
-                                <thead>
-                                    <tr style="background-color: var(--primary); color: white; text-align: center;">
-                                        <th style="padding: 1rem; font-size: 1.1rem; background-color: var(--primary-dark); color: var(--accent); font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.3); width: 33.33%; text-align: center;">July 2025</th>
-                                        <th style="padding: 1rem; font-size: 1.1rem; background-color: var(--primary-dark); color: var(--accent); font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.3); width: 33.33%; text-align: center;">August 2025</th>
-                                        <th style="padding: 1rem; font-size: 1.1rem; background-color: var(--primary-dark); color: var(--accent); font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.3); width: 33.33%; text-align: center;">September 2025</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr style="background-color: rgba(255, 255, 255, 0.8);">
-                                        <td style="padding: 0.75rem; border: 1px solid #ddd; font-weight: bold; color: var(--primary);">
-                                            <div class="meeting-entry">
-                                                <span>4 NO MEETING<br><span style="font-size: 0.9rem; font-weight: normal;">Independence Day</span></span>
-                                            </div>
-                                        </td>
-                                        <td style="padding: 0.75rem; border: 1px solid #ddd;">
-                                            <div class="meeting-entry">
-                                                <span>1 BOG; Show & Tell</span>
-                                                <a href="data/calendar/2025-08-01-meeting.ics" class="calendar-link" download>
-                                                    <i class="fas fa-calendar-plus" title="Add to Calendar"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                        <td style="padding: 0.75rem; border: 1px solid #ddd;">
-                                            <div class="meeting-entry">
-                                                <span>5 BOG; Show & Tell</span>
-                                                <a href="data/calendar/2025-09-05-meeting.ics" class="calendar-link" download>
-                                                    <i class="fas fa-calendar-plus" title="Add to Calendar"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr style="background-color: rgba(255, 255, 255, 0.6);">
-                                        <td style="padding: 0.75rem; border: 1px solid #ddd;">
-                                            <div class="meeting-entry">
-                                                <span>11 BOG; Show & Tell</span>
-                                                <a href="data/calendar/2025-07-11-meeting.ics" class="calendar-link" download>
-                                                    <i class="fas fa-calendar-plus" title="Add to Calendar"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                        <td style="padding: 0.75rem; border: 1px solid #ddd;">
-                                            <div class="meeting-entry">
-                                                <span>8 Auction</span>
-                                                <a href="data/calendar/2025-08-08-meeting.ics" class="calendar-link" download>
-                                                    <i class="fas fa-calendar-plus" title="Add to Calendar"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                        <td style="padding: 0.75rem; border: 1px solid #ddd;">
-                                            <div class="meeting-entry">
-                                                <span>12 Auction</span>
-                                                <a href="data/calendar/2025-09-12-meeting.ics" class="calendar-link" download>
-                                                    <i class="fas fa-calendar-plus" title="Add to Calendar"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr style="background-color: rgba(255, 255, 255, 0.8);">
-                                        <td style="padding: 0.75rem; border: 1px solid #ddd;">
-                                            <div class="meeting-entry">
-                                                <span>18 Auction</span>
-                                                <a href="data/calendar/2025-07-18-meeting.ics" class="calendar-link" download>
-                                                    <i class="fas fa-calendar-plus" title="Add to Calendar"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                        <td style="padding: 0.75rem; border: 1px solid #ddd;">
-                                            <div class="meeting-entry">
-                                                <span>15 Bourse</span>
-                                                <a href="data/calendar/2025-08-15-meeting.ics" class="calendar-link" download>
-                                                    <i class="fas fa-calendar-plus" title="Add to Calendar"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                        <td style="padding: 0.75rem; border: 1px solid #ddd;">
-                                            <div class="meeting-entry">
-                                                <span>19 Bourse</span>
-                                                <a href="data/calendar/2025-09-19-meeting.ics" class="calendar-link" download>
-                                                    <i class="fas fa-calendar-plus" title="Add to Calendar"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr style="background-color: rgba(255, 255, 255, 0.6);">
-                                        <td style="padding: 0.75rem; border: 1px solid #ddd;">
-                                            <div class="meeting-entry">
-                                                <span>25 Bourse</span>
-                                                <a href="data/calendar/2025-07-25-meeting.ics" class="calendar-link" download>
-                                                    <i class="fas fa-calendar-plus" title="Add to Calendar"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                        <td style="padding: 0.75rem; border: 1px solid #ddd;">
-                                            <div class="meeting-entry">
-                                                <span>22 Program<br><span style="font-size: 0.9rem;">"The Early History of US Air Mail" by Steve Mabie</span></span>
-                                                <a href="data/calendar/2025-08-22-meeting.ics" class="calendar-link" download>
-                                                    <i class="fas fa-calendar-plus" title="Add to Calendar"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                        <td style="padding: 0.75rem; border: 1px solid #ddd;">
-                                            <div class="meeting-entry">
-                                                <span>26 Program<br><span style="font-size: 0.9rem;">"Classic Stamps of Mexico" by Mark Brill</span></span>
-                                                <a href="data/calendar/2025-09-26-meeting.ics" class="calendar-link" download>
-                                                    <i class="fas fa-calendar-plus" title="Add to Calendar"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr style="background-color: rgba(255, 255, 255, 0.8);">
-                                        <td style="padding: 0.75rem; border: 1px solid #ddd;"></td>
-                                        <td style="padding: 0.75rem; border: 1px solid #ddd; font-weight: bold; color: var(--primary);">
-                                            <div class="meeting-entry">
-                                                <span>29 NO MEETING<br><span style="font-size: 0.9rem; font-weight: normal;">Labor Day</span></span>
-                                            </div>
-                                        </td>
-                                        <td style="padding: 0.75rem; border: 1px solid #ddd;"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                <div class="archive-year-section">
+                    <h2 class="archive-year-header">2025 Newsletter Archive</h2>
+                    
+                    <div class="archive-grid">
+                        <!-- Third Quarter 2025 -->
+                        <div class="archive-item">
+                            <div class="archive-item-header">
+                                <h3>SAPA PHILATEX</h3>
+                                <p>Third Quarter 2025</p>
+                            </div>
+                            <div class="archive-item-content">
+                                <p><strong>Published:</strong> July 1, 2025</p>
+                                <p>Features the July-September meeting calendar, annual "Blue Chip" auction details, Greater Houston Stamp Show information, TSDA show schedule, 2025 membership drive, and programs on US Air Mail History and Classic Mexican Stamps.</p>
+                                <a href="public/SAPA-PHILATEX-Third-Quarter-2025.pdf" class="btn btn-primary" target="_blank">
+                                    <i class="fas fa-file-pdf"></i> Download PDF
+                                </a>
+                            </div>
                         </div>
                         
-                        <!-- Calendar Download Options -->
-                        <div class="calendar-downloads text-center mt-4" style="background-color: var(--light); padding: 1.5rem; border-radius: var(--radius-md);">
-                            <div class="grid" style="grid-template-columns: 1fr auto 1fr; gap: 2rem; align-items: center;">
-                                <div>
-                                    <a href="data/calendar/2025-Q3-schedule.ics" class="btn btn-primary" download style="width: 100%;">
-                                        <i class="fas fa-calendar-alt"></i> Download Complete Q3 2025 Schedule
-                                    </a>
-                                </div>
-                                <div style="color: var(--primary); font-weight: bold;">OR</div>
-                                <div>
-                                    <p style="margin-bottom: 0.5rem;">Click the <i class="fas fa-calendar-plus"></i> icons above for individual meetings</p>
-                                </div>
+                        <!-- Second Quarter 2025 -->
+                        <div class="archive-item">
+                            <div class="archive-item-header">
+                                <h3>SAPA PHILATEX</h3>
+                                <p>Second Quarter 2025</p>
+                            </div>
+                            <div class="archive-item-content">
+                                <p><strong>Published:</strong> April 1, 2025</p>
+                                <p>Contains the April-June meeting schedule, club updates, member spotlights, and special features on recent philatelic discoveries and collecting tips for the spring season.</p>
+                                <a href="public/SAPA PHILATEX Second Quarter 2025.pdf" class="btn btn-primary" target="_blank">
+                                    <i class="fas fa-file-pdf"></i> Download PDF
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -440,19 +363,22 @@ h2{font-size:1.75rem}
             </div>
         </section>
         
-        <!-- Map Section -->
-        <section class="section">
+        <!-- Archive Request Section -->
+        <section class="section" style="background-color: var(--light);">
             <div class="container">
-                <h2 class="section-title">Find Us</h2>
                 <div class="card">
-                    <div class="card-content">
-                        <div class="map-container" style="height: 400px;">
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3472.0321016655396!2d-98.4559878!3d29.5197647!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x865cf5f63c5a9c9f%3A0x7e9017f7d4b5149c!2sMacArthur%20Park%20Lutheran%20Church!5e0!3m2!1sen!2sus!4v1651234567890!5m2!1sen!2sus" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                        </div>
+                    <div class="card-content text-center">
+                        <h2>Looking for Older Issues?</h2>
+                        <p>We are in the process of digitizing our complete newsletter archive dating back to 1954. If you're looking for a specific issue that's not yet available online, please contact our newsletter editor.</p>
+                        <p>Members can also access physical copies of past newsletters at our monthly meetings.</p>
+                        <a href="mailto:nrmabie@gmail.com" class="btn btn-primary">
+                            <i class="fas fa-envelope"></i> Contact Newsletter Editor
+                        </a>
                     </div>
                 </div>
             </div>
         </section>
+
     </main>
     
     <!-- Footer -->
@@ -485,7 +411,7 @@ h2{font-size:1.75rem}
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 San Antonio Philatelic Association. All Rights Reserved.</p>
+                <p>&copy; 2025 San Antonio Philatelic Association. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
@@ -497,22 +423,6 @@ h2{font-size:1.75rem}
     
     <!-- Scripts -->
     <script src="dist/js/script.min.js" defer></script>
-    
-    <style>
-    .meeting-entry {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .calendar-link {
-        color: var(--primary);
-        text-decoration: none;
-        margin-left: 10px;
-    }
-    .calendar-link:hover {
-        color: var(--accent);
-    }
-    </style>
 
     <script id="blur-up-script">
         document.addEventListener('DOMContentLoaded', function() {
@@ -830,4 +740,4 @@ h2{font-size:1.75rem}
     }
 </script>
 </body>
-</html> 
+</html>
