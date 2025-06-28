@@ -12,6 +12,10 @@ import { reminderSystem } from './reminder-system.js';
 
 // Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
+    // Version indicator - Last updated: 2025-06-28 17:57:33
+    console.log('SAPA Site Version: 2025-06-28-1757 (Commit: 4d54a9f)');
+    console.log('Mobile menu debug: Script loaded at', new Date().toISOString());
+    
     // Fix mobile viewport height issues
     setupMobileViewportHeight();
     
