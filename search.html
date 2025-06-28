@@ -204,6 +204,31 @@
             margin-right: 0.5rem;
             margin-bottom: 0.25rem;
         }
+        
+        /* Highlight styling for search results */
+        .search-result mark {
+            background-color: #ffeb3b;
+            color: inherit;
+            padding: 0.1em 0.2em;
+            border-radius: 2px;
+            font-weight: 600;
+        }
+        
+        .result-content-snippet {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background-color: #f5f5f5;
+            border-left: 3px solid #ddd;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .result-content-snippet small {
+            color: #999;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -679,21 +704,28 @@
                 const doc = documents[result.ref];
                 if (!doc) return '';
 
-                return renderSearchResult(doc, result.score);
+                return renderSearchResult(doc, result.score, query);
             }).join('');
         }
 
-        function renderSearchResult(doc, score) {
+        function renderSearchResult(doc, score, query) {
             const typeClass = `type-${doc.type}`;
             const typeIcon = getTypeIcon(doc.type);
             const date = doc.date ? new Date(doc.date).toLocaleDateString() : '';
             const url = getDocumentUrl(doc);
 
+            // Highlight query terms in title and summary
+            const highlightedTitle = highlightText(doc.title, query);
+            const highlightedSummary = highlightText(doc.summary || 'No description available', query);
+            
+            // Get content snippet if available
+            const contentSnippet = getContentSnippet(doc, query);
+
             return `
                 <div class="search-result ${typeClass}">
                     <div class="result-title">
                         <i class="${typeIcon}"></i>
-                        <a href="${url}">${doc.title}</a>
+                        <a href="${url}">${highlightedTitle}</a>
                     </div>
                     <div class="result-meta">
                         <span><i class="fas fa-tag"></i> ${capitalize(doc.type)}</span>
@@ -702,11 +734,17 @@
                         <span><i class="fas fa-chart-bar"></i> ${(score * 100).toFixed(0)}% match</span>
                     </div>
                     <div class="result-summary">
-                        ${doc.summary || 'No description available'}
+                        ${highlightedSummary}
                     </div>
+                    ${contentSnippet ? `
+                        <div class="result-content-snippet">
+                            <small><em>Content match:</em></small><br>
+                            ...${contentSnippet}...
+                        </div>
+                    ` : ''}
                     ${doc.tags && doc.tags.length > 0 ? `
                         <div class="result-tags">
-                            ${doc.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                            ${doc.tags.map(tag => `<span class="tag">${highlightText(tag, query)}</span>`).join('')}
                         </div>
                     ` : ''}
                 </div>
@@ -747,6 +785,72 @@
 
         function formatCategory(category) {
             return category.split('-').map(word => capitalize(word)).join(' ');
+        }
+
+        function highlightText(text, query) {
+            if (!text || !query) return text;
+            
+            // Split query into individual terms
+            const terms = query.toLowerCase().split(/\s+/).filter(term => term.length > 0);
+            
+            // Create a regex pattern for all terms
+            const pattern = terms.map(term => escapeRegExp(term)).join('|');
+            if (!pattern) return text;
+            
+            const regex = new RegExp(`(${pattern})`, 'gi');
+            
+            // Replace matches with highlighted version
+            return text.replace(regex, '<mark>$1</mark>');
+        }
+
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function getContentSnippet(doc, query) {
+            if (!doc.content || !query) return null;
+            
+            const terms = query.toLowerCase().split(/\s+/).filter(term => term.length > 0);
+            const content = doc.content.toLowerCase();
+            
+            // Find the first matching term position
+            let firstMatchIndex = -1;
+            let matchedTerm = '';
+            
+            for (const term of terms) {
+                const index = content.indexOf(term);
+                if (index !== -1 && (firstMatchIndex === -1 || index < firstMatchIndex)) {
+                    firstMatchIndex = index;
+                    matchedTerm = term;
+                }
+            }
+            
+            if (firstMatchIndex === -1) return null;
+            
+            // Extract snippet around the match
+            const snippetRadius = 100; // Characters before and after the match
+            const start = Math.max(0, firstMatchIndex - snippetRadius);
+            const end = Math.min(doc.content.length, firstMatchIndex + matchedTerm.length + snippetRadius);
+            
+            let snippet = doc.content.substring(start, end);
+            
+            // Clean up snippet boundaries
+            if (start > 0) {
+                const firstSpace = snippet.indexOf(' ');
+                if (firstSpace > 0 && firstSpace < 20) {
+                    snippet = snippet.substring(firstSpace + 1);
+                }
+            }
+            
+            if (end < doc.content.length) {
+                const lastSpace = snippet.lastIndexOf(' ');
+                if (lastSpace > snippet.length - 20) {
+                    snippet = snippet.substring(0, lastSpace);
+                }
+            }
+            
+            // Highlight the snippet
+            return highlightText(snippet, query);
         }
     </script>
 </body>
