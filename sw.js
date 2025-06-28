@@ -9,6 +9,7 @@ const CORE_ASSETS = [
     '/meetings.html',
     '/membership.html',
     '/newsletter.html',
+    '/archive.html',
     '/contact.html',
     '/dist/css/styles.min.css',
     '/dist/js/script.min.js'
