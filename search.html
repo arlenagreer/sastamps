@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XW5LFQ52YR"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XW5LFQ52YR');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Search the San Antonio Philatelic Association website for newsletters, meetings, resources, and glossary terms.">
+    <meta name="keywords" content="SAPA search, philatelic search, stamp collecting search, San Antonio stamps">
+    
+    <title>Search - San Antonio Philatelic Association</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sastamps.org/search.html">
+    <meta property="og:title" content="Search - San Antonio Philatelic Association">
+    <meta property="og:description" content="Search SAPA's newsletters, meetings, resources, and philatelic glossary.">
+    <meta property="og:image" content="dist/images/home-page-image.webp">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="dist/css/styles.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="dist/images/favicon.webp">
+    <link rel="apple-touch-icon" sizes="180x180" href="dist/images/favicon.webp">
+    <link rel="manifest" href="site.webmanifest">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://sastamps.org/search.html">
+    
+    <style>
+        .search-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .search-box {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 1rem 3rem 1rem 1rem;
+            font-size: 1.1rem;
+            border: 2px solid var(--light);
+            border-radius: var(--radius-md);
+            transition: border-color var(--transition-fast);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .search-button {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .search-button:hover {
+            background-color: var(--primary-light);
+        }
+        
+        .quick-searches {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .quick-searches button {
+            margin: 0.25rem;
+            padding: 0.5rem 1rem;
+            background: var(--accent);
+            color: var(--dark);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .quick-searches button:hover {
+            background-color: var(--warning);
+        }
+        
+        .search-status {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .search-status.loading {
+            background-color: var(--light);
+            color: var(--medium);
+        }
+        
+        .search-status.success {
+            background-color: #e8f4f8;
+            color: var(--primary);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .search-status.no-results {
+            background-color: #fff3cd;
+            color: #856404;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .search-status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .search-result {
+            background: var(--white);
+            border: 1px solid var(--light);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all var(--transition-fast);
+        }
+        
+        .search-result:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .search-result.type-newsletter { border-left: 4px solid #3498db; }
+        .search-result.type-meeting { border-left: 4px solid #27ae60; }
+        .search-result.type-resource { border-left: 4px solid #e74c3c; }
+        .search-result.type-glossary { border-left: 4px solid #9b59b6; }
+        
+        .result-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .result-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+        
+        .result-title a:hover {
+            text-decoration: underline;
+        }
+        
+        .result-meta {
+            font-size: 0.9rem;
+            color: var(--medium);
+            margin-bottom: 0.75rem;
+        }
+        
+        .result-meta span {
+            margin-right: 1rem;
+        }
+        
+        .result-summary {
+            color: var(--dark);
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
+        }
+        
+        .result-tags {
+            margin-top: 0.75rem;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--dark);
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <h1 class="site-title"><a href="index.html">San Antonio Philatelic Association</a></h1>
+            <nav>
+                <button class="menu-toggle" aria-expanded="false" aria-controls="nav-menu">
+                    <i class="fas fa-bars"></i><span class="sr-only">Menu</span>
+                </button>
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home nav-icon"></i>Home</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle nav-icon"></i>About</a></li>
+                    <li><a href="meetings.html"><i class="fas fa-calendar nav-icon"></i>Meetings</a></li>
+                    <li><a href="newsletter.html"><i class="fas fa-newspaper nav-icon"></i>Newsletter</a></li>
+                    <li><a href="archive.html"><i class="fas fa-archive nav-icon"></i>Archive</a></li>
+                    <li><a href="membership.html"><i class="fas fa-users nav-icon"></i>Membership</a></li>
+                    <li><a href="contact.html"><i class="fas fa-envelope nav-icon"></i>Contact</a></li>
+                    <li class="active"><a href="search.html"><i class="fas fa-search nav-icon"></i>Search</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <h1>Search SAPA</h1>
+                <p>Find newsletters, meetings, resources, and glossary terms</p>
+            </div>
+        </section>
+        
+        <!-- Search Section -->
+        <section class="section">
+            <div class="container">
+                <div class="search-container">
+                    <div class="search-box">
+                        <input type="text" 
+                               id="searchInput" 
+                               class="search-input" 
+                               placeholder="Search newsletters, meetings, resources, glossary..." 
+                               autocomplete="off">
+                        <button onclick="performSearch()" class="search-button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="quick-searches">
+                        <p>Popular searches:</p>
+                        <button onclick="quickSearch('stamp collecting')">Stamp Collecting</button>
+                        <button onclick="quickSearch('meeting')">Meetings</button>
+                        <button onclick="quickSearch('newsletter')">Newsletters</button>
+                        <button onclick="quickSearch('beginner')">Beginners</button>
+                        <button onclick="quickSearch('2025')">2025 Events</button>
+                    </div>
+                    
+                    <div id="searchStatus"></div>
+                    <div id="searchResults"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>San Antonio Philatelic Association</h3>
+                    <p>Founded in 1896</p>
+                    <p>Chapter #3 of the Texas Philatelic Association</p>
+                    <p>Chapter #388 of the American Philatelic Society</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="meetings.html">Meetings</a></li>
+                        <li><a href="newsletter.html">Newsletter</a></li>
+                        <li><a href="archive.html">Newsletter Archive</a></li>
+                        <li><a href="membership.html">Membership</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="search.html">Search</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-envelope"></i> Email: <a href="mailto:loz33@hotmail.com">loz33@hotmail.com</a></p>
+                    <p><i class="fas fa-map-marker-alt"></i> Meeting Location: MacArthur Park Lutheran Church, Building 1</p>
+                    <p><i class="fas fa-clock"></i> Meetings: Most Friday nights, doors open at 6:30 PM</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 San Antonio Philatelic Association. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Back to top button -->
+    <button id="back-to-top" title="Back to Top" style="display: none;">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    
+    <!-- Scripts -->
+    <script src="dist/js/script.min.js"></script>
+    
+    <!-- Load Lunr.js from CDN -->
+    <script src="https://unpkg.com/lunr@2.3.9/lunr.min.js"></script>
+    
+    <!-- Search functionality -->
+    <script>
+        // Search variables
+        let searchIndex = null;
+        let documents = {};
+        let isLoading = false;
+
+        // Initialize search when page loads
+        document.addEventListener('DOMContentLoaded', initializeSearch);
+
+        // Handle Enter key in search input
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        async function initializeSearch() {
+            if (isLoading) return;
+            isLoading = true;
+
+            const statusEl = document.getElementById('searchStatus');
+            statusEl.className = 'search-status loading';
+            statusEl.textContent = 'Loading search index...';
+
+            try {
+                // Load search index and documents with relative paths
+                const [indexResponse, docsResponse] = await Promise.all([
+                    fetch('dist/data/search-index.json'),
+                    fetch('dist/data/search-documents.json')
+                ]);
+
+                if (!indexResponse.ok || !docsResponse.ok) {
+                    throw new Error('Failed to load search data');
+                }
+
+                const indexData = await indexResponse.json();
+                const docsData = await docsResponse.json();
+
+                // Initialize Lunr index
+                searchIndex = lunr.Index.load(indexData);
+
+                // Build documents map
+                docsData.documents.forEach(doc => {
+                    documents[doc.id] = doc;
+                });
+
+                statusEl.style.display = 'none';
+                
+                // Focus on search input
+                document.getElementById('searchInput').focus();
+
+                // Check for search query in URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const query = urlParams.get('q');
+                if (query) {
+                    document.getElementById('searchInput').value = query;
+                    performSearch();
+                }
+
+            } catch (error) {
+                console.error('Search initialization error:', error);
+                statusEl.className = 'search-status error';
+                statusEl.textContent = 'Failed to load search index. Please try again later.';
+            } finally {
+                isLoading = false;
+            }
+        }
+
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) return;
+
+            const statusEl = document.getElementById('searchStatus');
+            const resultsEl = document.getElementById('searchResults');
+
+            if (!searchIndex) {
+                statusEl.className = 'search-status error';
+                statusEl.textContent = 'Search index not loaded yet. Please wait...';
+                statusEl.style.display = 'block';
+                initializeSearch();
+                return;
+            }
+
+            try {
+                // Update URL with search query
+                const url = new URL(window.location);
+                url.searchParams.set('q', query);
+                window.history.pushState({}, '', url);
+
+                // Perform search
+                const results = searchIndex.search(query);
+                displayResults(query, results);
+            } catch (error) {
+                console.error('Search error:', error);
+                statusEl.className = 'search-status error';
+                statusEl.textContent = 'Search error: ' + error.message;
+                statusEl.style.display = 'block';
+            }
+        }
+
+        function quickSearch(query) {
+            document.getElementById('searchInput').value = query;
+            performSearch();
+        }
+
+        function displayResults(query, results) {
+            const statusEl = document.getElementById('searchStatus');
+            const resultsEl = document.getElementById('searchResults');
+
+            if (results.length === 0) {
+                statusEl.className = 'search-status no-results';
+                statusEl.textContent = `No results found for "${query}"`;
+                statusEl.style.display = 'block';
+                resultsEl.innerHTML = '';
+                return;
+            }
+
+            statusEl.className = 'search-status success';
+            statusEl.textContent = `Found ${results.length} result${results.length === 1 ? '' : 's'} for "${query}"`;
+            statusEl.style.display = 'block';
+
+            resultsEl.innerHTML = results.map(result => {
+                const doc = documents[result.ref];
+                if (!doc) return '';
+
+                return renderSearchResult(doc, result.score);
+            }).join('');
+        }
+
+        function renderSearchResult(doc, score) {
+            const typeClass = `type-${doc.type}`;
+            const typeIcon = getTypeIcon(doc.type);
+            const date = doc.date ? new Date(doc.date).toLocaleDateString() : '';
+            const url = getDocumentUrl(doc);
+
+            return `
+                <div class="search-result ${typeClass}">
+                    <div class="result-title">
+                        <i class="${typeIcon}"></i>
+                        <a href="${url}">${doc.title}</a>
+                    </div>
+                    <div class="result-meta">
+                        <span><i class="fas fa-tag"></i> ${capitalize(doc.type)}</span>
+                        ${doc.category ? `<span><i class="fas fa-folder"></i> ${formatCategory(doc.category)}</span>` : ''}
+                        ${date ? `<span><i class="fas fa-calendar"></i> ${date}</span>` : ''}
+                        <span><i class="fas fa-chart-bar"></i> ${(score * 100).toFixed(0)}% match</span>
+                    </div>
+                    <div class="result-summary">
+                        ${doc.summary || 'No description available'}
+                    </div>
+                    ${doc.tags && doc.tags.length > 0 ? `
+                        <div class="result-tags">
+                            ${doc.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function getTypeIcon(type) {
+            const icons = {
+                newsletter: 'fas fa-newspaper',
+                meeting: 'fas fa-calendar',
+                resource: 'fas fa-book',
+                glossary: 'fas fa-book-open'
+            };
+            return icons[type] || 'fas fa-file';
+        }
+
+        function getDocumentUrl(doc) {
+            // Return the URL from the document, or construct based on type
+            if (doc.url) return doc.url;
+            
+            switch (doc.type) {
+                case 'newsletter':
+                    return 'newsletter.html';
+                case 'meeting':
+                    return 'meetings.html';
+                case 'resource':
+                    return 'resources.html';
+                case 'glossary':
+                    return 'glossary.html';
+                default:
+                    return '#';
+            }
+        }
+
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function formatCategory(category) {
+            return category.split('-').map(word => capitalize(word)).join(' ');
+        }
+    </script>
+</body>
+</html>

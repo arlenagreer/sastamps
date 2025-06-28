@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAPA Search Demo</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            line-height: 1.6;
+            background-color: #f8f9fa;
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1a5276;
+            text-align: center;
+        }
+        .search-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 15px;
+            font-size: 16px;
+            border: 2px solid #ecf0f1;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #1a5276;
+        }
+        .search-button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #1a5276;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .search-button:hover {
+            background: #2980b9;
+        }
+        .quick-searches {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .quick-searches button {
+            margin: 5px;
+            padding: 8px 16px;
+            background: #f1c40f;
+            color: #2c3e50;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .quick-searches button:hover {
+            background: #f39c12;
+        }
+        .loading {
+            text-align: center;
+            color: #7f8c8d;
+            padding: 20px;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .results-info {
+            background: #e8f4f8;
+            color: #1a5276;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .no-results {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .search-result {
+            background: white;
+            border: 1px solid #ecf0f1;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 15px 0;
+            transition: box-shadow 0.3s ease;
+        }
+        .search-result:hover {
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .result-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1a5276;
+            margin-bottom: 10px;
+        }
+        .result-meta {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+        .result-meta span {
+            display: inline-block;
+            margin-right: 15px;
+        }
+        .result-summary {
+            color: #2c3e50;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        .result-tags {
+            margin-top: 10px;
+        }
+        .tag {
+            display: inline-block;
+            background: #f1c40f;
+            color: #2c3e50;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+        .type-newsletter { border-left: 4px solid #3498db; }
+        .type-meeting { border-left: 4px solid #27ae60; }
+        .type-resource { border-left: 4px solid #e74c3c; }
+        .type-glossary { border-left: 4px solid #9b59b6; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>San Antonio Philatelic Association - Search Demo</h1>
+        
+        <div class="search-wrapper">
+            <div class="search-box">
+                <input type="text" 
+                       id="searchInput" 
+                       class="search-input" 
+                       placeholder="Search newsletters, meetings, resources, glossary..." 
+                       autocomplete="off">
+                <button onclick="performSearch()" class="search-button">Search</button>
+            </div>
+            
+            <div class="quick-searches">
+                <p>Quick searches:</p>
+                <button onclick="quickSearch('stamp')">Stamps</button>
+                <button onclick="quickSearch('meeting')">Meetings</button>
+                <button onclick="quickSearch('philatelic')">Philatelic</button>
+                <button onclick="quickSearch('collecting')">Collecting</button>
+                <button onclick="quickSearch('2025')">2025</button>
+                <button onclick="quickSearch('beginner')">Beginner</button>
+            </div>
+            
+            <div id="searchStatus"></div>
+            <div id="searchResults"></div>
+        </div>
+    </div>
+
+    <!-- Load Lunr.js from CDN -->
+    <script src="https://unpkg.com/lunr@2.3.9/lunr.min.js"></script>
+    
+    <script>
+        let searchIndex = null;
+        let documents = {};
+        let isLoading = false;
+
+        // Initialize search when page loads
+        window.addEventListener('DOMContentLoaded', initializeSearch);
+
+        // Handle Enter key in search input
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        async function initializeSearch() {
+            if (isLoading) return;
+            isLoading = true;
+
+            const statusEl = document.getElementById('searchStatus');
+            statusEl.innerHTML = '<div class="loading">Loading search index...</div>';
+
+            try {
+                // Load search index and documents
+                const [indexResponse, docsResponse] = await Promise.all([
+                    fetch('/dist/data/search-index.json'),
+                    fetch('/dist/data/search-documents.json')
+                ]);
+
+                if (!indexResponse.ok || !docsResponse.ok) {
+                    throw new Error('Failed to load search data');
+                }
+
+                const indexData = await indexResponse.json();
+                const docsData = await docsResponse.json();
+
+                // Initialize Lunr index
+                searchIndex = lunr.Index.load(indexData);
+
+                // Build documents map
+                docsData.documents.forEach(doc => {
+                    documents[doc.id] = doc;
+                });
+
+                statusEl.innerHTML = `<div class="results-info">Search index loaded! ${docsData.documents.length} documents available.</div>`;
+                
+                // Focus on search input
+                document.getElementById('searchInput').focus();
+
+            } catch (error) {
+                console.error('Search initialization error:', error);
+                statusEl.innerHTML = `<div class="error">Failed to load search index: ${error.message}</div>`;
+            } finally {
+                isLoading = false;
+            }
+        }
+
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) return;
+
+            if (!searchIndex) {
+                document.getElementById('searchStatus').innerHTML = 
+                    '<div class="error">Search index not loaded yet. Please wait...</div>';
+                initializeSearch();
+                return;
+            }
+
+            try {
+                // Perform search
+                const results = searchIndex.search(query);
+                displayResults(query, results);
+            } catch (error) {
+                console.error('Search error:', error);
+                document.getElementById('searchStatus').innerHTML = 
+                    `<div class="error">Search error: ${error.message}</div>`;
+            }
+        }
+
+        function quickSearch(query) {
+            document.getElementById('searchInput').value = query;
+            performSearch();
+        }
+
+        function displayResults(query, results) {
+            const statusEl = document.getElementById('searchStatus');
+            const resultsEl = document.getElementById('searchResults');
+
+            if (results.length === 0) {
+                statusEl.innerHTML = `<div class="no-results">No results found for "${query}"</div>`;
+                resultsEl.innerHTML = '';
+                return;
+            }
+
+            statusEl.innerHTML = `<div class="results-info">Found ${results.length} result${results.length === 1 ? '' : 's'} for "${query}"</div>`;
+
+            resultsEl.innerHTML = results.map(result => {
+                const doc = documents[result.ref];
+                if (!doc) return '';
+
+                const typeClass = `type-${doc.type}`;
+                const typeIcon = getTypeIcon(doc.type);
+                const date = doc.date ? new Date(doc.date).toLocaleDateString() : '';
+
+                return `
+                    <div class="search-result ${typeClass}">
+                        <div class="result-title">
+                            ${typeIcon} ${doc.title}
+                        </div>
+                        <div class="result-meta">
+                            <span>Type: ${capitalize(doc.type)}</span>
+                            ${doc.category ? `<span>Category: ${capitalize(doc.category.replace('-', ' '))}</span>` : ''}
+                            ${date ? `<span>Date: ${date}</span>` : ''}
+                            <span>Score: ${(result.score * 100).toFixed(1)}%</span>
+                        </div>
+                        <div class="result-summary">
+                            ${doc.summary || 'No description available'}
+                        </div>
+                        ${doc.tags && doc.tags.length > 0 ? `
+                            <div class="result-tags">
+                                ${doc.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getTypeIcon(type) {
+            const icons = {
+                newsletter: '📰',
+                meeting: '📅',
+                resource: '📚',
+                glossary: '📖'
+            };
+            return icons[type] || '📄';
+        }
+
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+    </script>
+</body>
+</html>

@@ -123,7 +123,7 @@
         
         // Create search engine instance
         const searchEngine = new SearchEngine({
-            baseUrl: '/dist/data',
+            baseUrl: './dist/data',
             onLoad: (metadata) => {
                 console.log('✅ Search engine loaded:', metadata);
                 addApiResult('Search Engine Loaded', metadata);

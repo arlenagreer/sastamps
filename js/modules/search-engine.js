@@ -9,7 +9,7 @@ class SearchEngine {
         this.documents = new Map();
         this.isLoaded = false;
         this.isLoading = false;
-        this.baseUrl = options.baseUrl || '/dist/data';
+        this.baseUrl = options.baseUrl || './dist/data';
         this.lunrUrl = options.lunrUrl || 'https://unpkg.com/lunr@2.3.9/lunr.min.js';
         this.callbacks = {
             onLoad: options.onLoad || (() => {}),
