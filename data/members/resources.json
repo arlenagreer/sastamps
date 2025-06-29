@@ -77,6 +77,67 @@
       "dateUpdated": "2025-06-28", 
       "version": "1.0",
       "status": "published"
+    },
+    {
+      "id": "storage-preservation-guide",
+      "title": "Stamp Storage and Preservation Guide",
+      "slug": "storage-preservation-guide",
+      "type": "guide",
+      "category": "storage-preservation",
+      "difficulty": "beginner",
+      "summary": "Learn proper techniques for storing and preserving your stamp collection to maintain its condition and value over time.",
+      "content": "# Stamp Storage and Preservation Guide\n\nProper storage is essential for maintaining the condition and value of your stamp collection. This guide covers the best practices for preserving your stamps for generations.\n\n## Environment Control\n\n### Temperature and Humidity\n- **Ideal temperature**: 65-70°F (18-21°C)\n- **Relative humidity**: 45-55%\n- Avoid extreme fluctuations\n- Use dehumidifiers in humid climates\n- Consider climate-controlled storage for valuable collections\n\n### Light Protection\n- Store stamps away from direct sunlight\n- Use UV-filtering materials when possible\n- Avoid fluorescent lighting for extended periods\n- Display copies rather than originals when possible\n\n## Storage Materials\n\n### Albums and Stock Books\n- **Acid-free materials only** - Prevents chemical damage\n- **PVC-free plastics** - Avoid vinyl that can off-gas\n- **Archival quality** - Museum-grade materials preferred\n- **Proper ventilation** - Allow air circulation\n\n### Mounting Options\n\n#### Stamp Hinges\n- Use peelable, acid-free hinges\n- Apply to top back edge only\n- Avoid permanent adhesive hinges\n- Best for less valuable stamps\n\n#### Stamp Mounts\n- Clear, acid-free plastic pockets\n- No adhesive touches the stamp\n- Preferred for valuable stamps\n- Available in various sizes\n\n#### Glassine Envelopes\n- Temporary storage solution\n- Acid-free, transparent paper\n- Good for sorting and organization\n- Not suitable for long-term storage\n\n## Handling Best Practices\n\n### Using Stamp Tongs\n- **Always use tongs** - Never touch stamps with fingers\n- **Smooth-tipped tongs** - Avoid serrated edges\n- **Gentle pressure** - Don't squeeze too hard\n- **Support the stamp** - Hold edges, not the center\n\n### What to Avoid\n- Rubber cement or tape\n- Paper clips or staples\n- Exposure to food or drinks\n- Smoking near stamps\n- Storing in basements or attics\n\n## Organization Systems\n\n### Catalog Numbering\n- Use standard catalog numbers (Scott, Michel)\n- Maintain consistent numbering system\n- Create detailed inventory lists\n- Include condition notes\n\n### Digital Documentation\n- Photograph valuable stamps\n- Create digital inventory\n- Backup files regularly\n- Include purchase information\n\n## Storage Solutions by Collection Size\n\n### Small Collections (under 1,000 stamps)\n- Stock books or small albums\n- Desktop storage boxes\n- Simple organization by country\n\n### Medium Collections (1,000-10,000 stamps)\n- Multiple specialized albums\n- File cabinet storage\n- Detailed catalog system\n\n### Large Collections (10,000+ stamps)\n- Professional storage systems\n- Climate-controlled rooms\n- Insurance documentation\n- Professional appraisals\n\n## Pest Prevention\n\n### Common Threats\n- **Silverfish** - Eat paper and gum\n- **Cockroaches** - Damage stamps and albums\n- **Mice** - Nest in storage materials\n- **Mold/Mildew** - Thrives in humid conditions\n\n### Prevention Strategies\n- Regular inspection\n- Clean storage areas\n- Proper ventilation\n- Pest control measures\n- Quick response to problems\n\n## Disaster Preparedness\n\n### Protection from:\n- **Fire** - Fireproof safes for most valuable items\n- **Water** - Elevated storage, waterproof containers\n- **Theft** - Security systems, insurance\n- **Natural disasters** - Emergency evacuation plans\n\n### Insurance Considerations\n- Document collection value\n- Professional appraisals\n- Specialized philatelic insurance\n- Regular updates to coverage\n\n## Maintenance Schedule\n\n### Monthly\n- Check storage environment\n- Inspect for pest activity\n- Verify security measures\n\n### Quarterly\n- Review and update inventory\n- Check condition of storage materials\n- Rotate displayed items\n\n### Annually\n- Professional assessment of valuable items\n- Update insurance coverage\n- Review and improve storage systems\n\n## When to Seek Professional Help\n\n- Valuable collections (over $10,000)\n- Inherited collections of unknown value\n- Damage assessment and restoration\n- Insurance appraisals\n- Estate planning\n\nRemember: Prevention is always better and cheaper than restoration. Invest in proper storage from the beginning to protect your investment and preserve philatelic history for future generations.",
+      "sections": [
+        {
+          "id": "environment-control",
+          "title": "Environment Control",
+          "content": "Temperature, humidity, and light control for optimal storage conditions.",
+          "order": 1
+        },
+        {
+          "id": "storage-materials",
+          "title": "Storage Materials",
+          "content": "Choosing the right albums, mounts, and protective materials.",
+          "order": 2
+        },
+        {
+          "id": "handling-practices",
+          "title": "Handling Best Practices",
+          "content": "Proper techniques for safely handling stamps.",
+          "order": 3
+        },
+        {
+          "id": "organization",
+          "title": "Organization Systems",
+          "content": "Effective methods for organizing and cataloging your collection.",
+          "order": 4
+        }
+      ],
+      "tags": ["storage", "preservation", "albums", "mounts", "environment", "handling", "organization"],
+      "prerequisites": ["Basic stamp handling knowledge"],
+      "relatedResources": ["beginners-guide", "stamp-grading-guide"],
+      "externalLinks": [
+        {
+          "title": "Library of Congress Preservation",
+          "url": "https://www.loc.gov/preservation/",
+          "description": "Professional preservation guidelines"
+        },
+        {
+          "title": "American Philatelic Society Storage Tips",
+          "url": "https://stamps.org/learn/stamp-collecting-basics",
+          "description": "Expert advice on stamp storage"
+        }
+      ],
+      "author": {
+        "name": "SAPA Preservation Committee",
+        "title": "San Antonio Philatelic Association"
+      },
+      "estimatedReadTime": 25,
+      "featured": false,
+      "dateCreated": "2025-06-29",
+      "dateUpdated": "2025-06-29",
+      "version": "1.0",
+      "status": "published"
     }
   ],
   "categories": [
@@ -100,8 +161,8 @@
     }
   ],
   "metadata": {
-    "lastUpdated": "2025-06-28T17:28:00.000Z",
-    "totalResources": 2,
-    "version": "1.0"
+    "lastUpdated": "2025-06-29T18:30:00.000Z",
+    "totalResources": 3,
+    "version": "1.1"
   }
 }

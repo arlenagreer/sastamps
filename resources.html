@@ -18,6 +18,8 @@
     <!-- Preload critical resources -->
     <link rel="preload" href="css/critical.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="css/critical.css"></noscript>
+    <link rel="preload" href="css/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="css/styles.css"></noscript>
     
     <!-- Icons and manifest -->
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png">
@@ -64,15 +66,25 @@
         .site-title{font-size:1.5rem;margin:0}
         .site-title a{color:var(--primary);text-decoration:none;transition:color var(--transition-fast)}
         .site-title a:hover{color:var(--primary-light)}
-        .nav-list{display:flex;list-style:none;margin:0;padding:0;align-items:center}
-        .nav-item{margin-left:1.5rem}
-        .nav-link{color:var(--dark);font-weight:600;padding:.5rem;position:relative;text-decoration:none;transition:color var(--transition-fast);display:flex;align-items:center;gap:0.5rem}
-        .nav-link:hover{color:var(--primary)}
-        .nav-link.active{color:var(--primary)}
-        .nav-link img{width:20px;height:20px}
-        .nav-icon{color:var(--primary);font-size:1.2rem;height:auto;margin-right:8px;width:auto}
         .theme-toggle{background:none;border:none;cursor:pointer;font-size:1.2rem;padding:0.5rem}
         .mobile-menu-toggle{display:none}
+        
+        /* Active state for current page */
+        nav li.active a {
+            color: var(--primary);
+        }
+        
+        /* Responsive navigation adjustments for 10 items */
+        @media (max-width: 1280px) {
+            nav li { margin-left: 1rem; }
+            nav a { padding: .25rem; font-size: 0.95rem; }
+            .nav-icon { font-size: 1rem; margin-right: 6px; }
+        }
+        
+        @media (max-width: 1024px) {
+            nav li { margin-left: 0.75rem; }
+            nav a { font-size: 0.9rem; }
+        }
         
         .hero {
             background-color: var(--primary);
@@ -96,9 +108,9 @@
         }
         
         @media (max-width:768px){
-            .nav-list{flex-direction:column;position:fixed;top:0;right:-100%;background:white;height:100vh;width:300px;padding:2rem;transition:right 0.3s ease;box-shadow:var(--shadow-lg)}
-            .nav-list.active{right:0}
-            .nav-item{margin:0 0 1rem}
+            nav ul{flex-direction:column;position:fixed;top:0;right:-100%;background:white;height:100vh;width:300px;padding:2rem;transition:right 0.3s ease;box-shadow:var(--shadow-lg)}
+            nav ul.active{right:0}
+            nav li{margin:0 0 1rem}
             .mobile-menu-toggle{display:block;background:none;border:none;cursor:pointer;flex-direction:column;gap:3px}
             .mobile-menu-toggle span{width:25px;height:3px;background:var(--dark);transition:0.3s}
         }
@@ -167,6 +179,121 @@
             gap: 1rem;
             align-items: center;
         }
+        
+        /* Modal styles for resources */
+        .resource-modal-header {
+            border-bottom: 1px solid var(--light);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .resource-modal-meta {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .sections-list {
+            margin: 1.5rem 0;
+        }
+        
+        .section-item {
+            padding: 1rem;
+            border: 1px solid var(--light);
+            border-radius: var(--radius-md);
+            margin-bottom: 1rem;
+        }
+        
+        .section-item h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .resource-modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--light);
+        }
+        
+        .bookmark-feedback {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            animation: fadeInOut 2s ease;
+        }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            20%, 80% { opacity: 1; }
+        }
+        
+        .btn-bookmark.bookmarked {
+            background-color: var(--accent);
+            color: var(--dark);
+        }
+        
+        .resource-actions {
+            position: relative;
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        /* Button styles */
+        .btn-primary, .btn-secondary, .btn-outline {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all var(--transition-fast);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-light);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--accent);
+            color: var(--dark);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -181,63 +308,63 @@
                 </div>
                 
                 <nav class="main-nav" role="navigation" aria-label="Main navigation">
-                    <ul class="nav-list">
-                        <li class="nav-item">
-                            <a href="index.html" class="nav-link">
+                    <ul>
+                        <li>
+                            <a href="index.html">
                                 <i class="nav-icon fas fa-home" aria-hidden="true"></i>
                                 Home
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="about.html" class="nav-link">
+                        <li>
+                            <a href="about.html">
                                 <i class="nav-icon fas fa-info-circle" aria-hidden="true"></i>
                                 About
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="meetings.html" class="nav-link">
+                        <li>
+                            <a href="meetings.html">
                                 <i class="nav-icon fas fa-calendar" aria-hidden="true"></i>
                                 Meetings
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="newsletter.html" class="nav-link">
+                        <li>
+                            <a href="newsletter.html">
                                 <i class="nav-icon fas fa-newspaper" aria-hidden="true"></i>
                                 Newsletter
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="archive.html" class="nav-link">
+                        <li>
+                            <a href="archive.html">
                                 <i class="nav-icon fas fa-archive" aria-hidden="true"></i>
                                 Archive
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="membership.html" class="nav-link">
+                        <li>
+                            <a href="membership.html">
                                 <i class="nav-icon fas fa-users" aria-hidden="true"></i>
                                 Membership
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="resources.html" class="nav-link active" aria-current="page">
+                        <li class="active">
+                            <a href="resources.html" aria-current="page">
                                 <i class="nav-icon fas fa-book" aria-hidden="true"></i>
                                 Resources
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="glossary.html" class="nav-link">
+                        <li>
+                            <a href="glossary.html">
                                 <i class="nav-icon fas fa-spell-check" aria-hidden="true"></i>
                                 Glossary
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="contact.html" class="nav-link">
+                        <li>
+                            <a href="contact.html">
                                 <i class="nav-icon fas fa-envelope" aria-hidden="true"></i>
                                 Contact
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="search.html" class="nav-link">
+                        <li>
+                            <a href="search.html">
                                 <i class="nav-icon fas fa-search" aria-hidden="true"></i>
                                 Search
                             </a>
@@ -326,21 +453,21 @@
                         </div>
                         
                         <div class="link-card">
-                            <h3>🔍 Stamp Identifier</h3>
-                            <p>Help identifying unknown stamps</p>
-                            <a href="identifier.html" class="btn-primary">Use Identifier</a>
+                            <h3>🔍 Stamp Catalog</h3>
+                            <p>Browse stamps by country and year for identification</p>
+                            <a href="https://colnect.com/en/stamps/catalog" target="_blank" rel="noopener" class="btn-primary">Browse Catalog</a>
                         </div>
                         
                         <div class="link-card">
-                            <h3>💰 Valuation Guide</h3>
-                            <p>Understanding stamp values and pricing</p>
-                            <a href="valuation.html" class="btn-primary">Learn More</a>
+                            <h3>💰 Scott Catalog</h3>
+                            <p>Standard catalog for stamp values and identification</p>
+                            <a href="https://www.scottonline.com" target="_blank" rel="noopener" class="btn-primary">View Catalog</a>
                         </div>
                         
                         <div class="link-card">
-                            <h3>🏪 Local Dealers</h3>
-                            <p>Recommended stamp dealers in San Antonio</p>
-                            <a href="dealers.html" class="btn-primary">Find Dealers</a>
+                            <h3>📧 Contact SAPA</h3>
+                            <p>Connect with local collectors and get advice</p>
+                            <a href="contact.html" class="btn-primary">Contact Us</a>
                         </div>
                     </div>
                 </div>
@@ -382,37 +509,47 @@
     </main>
     
     <!-- Footer -->
-    <footer class="footer">
+    <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>San Antonio Philatelic Association</h3>
-                    <p>Dedicated to promoting the hobby of stamp collecting in the San Antonio area since 1950.</p>
+                    <p>Founded in 1896</p>
+                    <p>Chapter #3 of the Texas Philatelic Association</p>
+                    <p>Chapter #388 of the American Philatelic Society</p>
                 </div>
-                
                 <div class="footer-section">
-                    <h4>Quick Links</h4>
+                    <h3>Quick Links</h3>
                     <ul>
-                        <li><a href="membership.html">Join SAPA</a></li>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About</a></li>
                         <li><a href="meetings.html">Meetings</a></li>
                         <li><a href="newsletter.html">Newsletter</a></li>
+                        <li><a href="archive.html">Newsletter Archive</a></li>
+                        <li><a href="membership.html">Membership</a></li>
                         <li><a href="resources.html">Resources</a></li>
+                        <li><a href="glossary.html">Glossary</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="search.html">Search</a></li>
                     </ul>
                 </div>
-                
                 <div class="footer-section">
-                    <h4>Contact</h4>
-                    <p>Email: <a href="mailto:info@sapa.org">info@sapa.org</a></p>
-                    <p>Meeting Location: Central Library</p>
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-envelope"></i> Email: <a href="mailto:loz33@hotmail.com">loz33@hotmail.com</a></p>
+                    <p><i class="fas fa-map-marker-alt"></i> Meeting Location: MacArthur Park Lutheran Church, Building 1</p>
+                    <p><i class="fas fa-clock"></i> Meetings: Most Friday nights, doors open at 6:30 PM</p>
                 </div>
             </div>
-            
             <div class="footer-bottom">
-                <p>&copy; 2025 San Antonio Philatelic Association. All rights reserved.</p>
-                <p>Website optimized for accessibility and performance.</p>
+                <p>&copy; 2025 San Antonio Philatelic Association. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
+    
+    <!-- Back to top button -->
+    <button id="back-to-top" title="Back to Top" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 99; border: none; outline: none; background-color: var(--primary); color: white; cursor: pointer; padding: 15px; border-radius: 50%; font-size: 16px;">
+        <i class="fas fa-arrow-up"></i>
+    </button>
     
     <!-- Load JavaScript -->
     <script src="dist/js/core.min.js" defer></script>

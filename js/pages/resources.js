@@ -10,9 +10,16 @@ import { formatDate } from '../utils/helpers.js';
 
 // Resources-specific functionality
 async function initializeResourcesPage() {
+    console.log('🚀 Initializing resources page...');
+    
     // Load resources data
     const resourcesData = await loadResourcesData();
-    if (!resourcesData) return;
+    if (!resourcesData) {
+        console.error('❌ Failed to load resources data');
+        return;
+    }
+    
+    console.log('✅ Resources data loaded:', resourcesData);
     
     // Initialize featured resources
     displayFeaturedResources(resourcesData.resources);
@@ -26,6 +33,9 @@ async function initializeResourcesPage() {
     // Initialize search and filters
     initializeResourceSearch(resourcesData.resources);
     initializeResourceFilters(resourcesData.resources, resourcesData.categories);
+    
+    // Update bookmark states
+    updateBookmarkStates();
     
     // Track page view
     if (typeof gtag === 'function') {
@@ -300,11 +310,17 @@ function showAllResources() {
 function bindResourceActions(container) {
     // Read resource buttons
     const readButtons = container.querySelectorAll('.btn-read-resource, .resource-link');
+    
     readButtons.forEach(button => {
         addEventListenerWithCleanup(button, 'click', (e) => {
             e.preventDefault();
-            const resourceId = e.target.dataset.resourceId;
-            openResourceModal(resourceId);
+            const btn = e.currentTarget;
+            const resourceId = btn.dataset.resourceId;
+            if (resourceId) {
+                openResourceModal(resourceId);
+            } else {
+                console.error('❌ No resourceId found on button:', btn);
+            }
         });
     });
     
@@ -312,8 +328,12 @@ function bindResourceActions(container) {
     const bookmarkButtons = container.querySelectorAll('.btn-bookmark');
     bookmarkButtons.forEach(button => {
         addEventListenerWithCleanup(button, 'click', (e) => {
-            const resourceId = e.target.dataset.resourceId;
-            toggleBookmark(resourceId, e.target);
+            e.preventDefault();
+            const btn = e.currentTarget;
+            const resourceId = btn.dataset.resourceId;
+            if (resourceId) {
+                toggleBookmark(resourceId, btn);
+            }
         });
     });
     
@@ -321,8 +341,12 @@ function bindResourceActions(container) {
     const sectionsButtons = container.querySelectorAll('.btn-view-sections');
     sectionsButtons.forEach(button => {
         addEventListenerWithCleanup(button, 'click', (e) => {
-            const resourceId = e.target.dataset.resourceId;
-            showResourceSections(resourceId);
+            e.preventDefault();
+            const btn = e.currentTarget;
+            const resourceId = btn.dataset.resourceId;
+            if (resourceId) {
+                showResourceSections(resourceId);
+            }
         });
     });
 }
@@ -333,8 +357,11 @@ function bindCategoryActions(container) {
     resourceLinks.forEach(link => {
         addEventListenerWithCleanup(link, 'click', (e) => {
             e.preventDefault();
-            const resourceId = e.target.dataset.resourceId;
-            openResourceModal(resourceId);
+            const btn = e.currentTarget;
+            const resourceId = btn.dataset.resourceId;
+            if (resourceId) {
+                openResourceModal(resourceId);
+            }
         });
     });
     
@@ -342,8 +369,12 @@ function bindCategoryActions(container) {
     const viewAllButtons = container.querySelectorAll('.btn-view-all-category');
     viewAllButtons.forEach(button => {
         addEventListenerWithCleanup(button, 'click', (e) => {
-            const categoryId = e.target.dataset.category;
-            filterByCategory(categoryId);
+            e.preventDefault();
+            const btn = e.currentTarget;
+            const categoryId = btn.dataset.category;
+            if (categoryId) {
+                filterByCategory(categoryId);
+            }
         });
     });
 }
@@ -404,8 +435,24 @@ async function openResourceModal(resourceId) {
             </div>
         `;
         
-        // Use existing modal system or create simple modal
+        // Show the modal
         showModal(modalContent);
+        
+        // Set initial bookmark state for modal button
+        const bookmarks = JSON.parse(localStorage.getItem('resource_bookmarks') || '[]');
+        const isBookmarked = bookmarks.includes(resourceId);
+        const modalBookmarkButton = document.querySelector('.btn-bookmark-modal');
+        if (modalBookmarkButton) {
+            if (isBookmarked) {
+                modalBookmarkButton.textContent = '🔖 Bookmarked';
+                modalBookmarkButton.setAttribute('aria-label', 'Remove bookmark');
+                modalBookmarkButton.classList.add('bookmarked');
+            } else {
+                modalBookmarkButton.textContent = '🔖 Bookmark';
+                modalBookmarkButton.setAttribute('aria-label', 'Bookmark resource');
+                modalBookmarkButton.classList.remove('bookmarked');
+            }
+        }
         
         // Track resource view
         if (typeof gtag === 'function') {
@@ -423,9 +470,9 @@ async function openResourceModal(resourceId) {
 }
 
 function showModal(content) {
-    // Simple modal implementation
+    // Create modal element
     const modal = document.createElement('div');
-    modal.className = 'modal-overlay';
+    modal.className = 'modal-overlay modal-open';
     modal.innerHTML = `
         <div class="modal-content">
             ${content}
@@ -435,32 +482,151 @@ function showModal(content) {
     document.body.appendChild(modal);
     document.body.style.overflow = 'hidden';
     
+    // Force visible with inline styles to override any CSS conflicts
+    modal.style.display = 'flex !important';
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100%';
+    modal.style.height = '100%';
+    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    modal.style.zIndex = '9999';
+    modal.style.justifyContent = 'center';
+    modal.style.alignItems = 'center';
+    modal.style.opacity = '1';
+    
+    // Style the modal content
+    const modalContent = modal.querySelector('.modal-content');
+    if (modalContent) {
+        modalContent.style.backgroundColor = 'white';
+        modalContent.style.padding = '2rem';
+        modalContent.style.borderRadius = '8px';
+        modalContent.style.maxWidth = '90vw';
+        modalContent.style.maxHeight = '90vh';
+        modalContent.style.overflow = 'auto';
+        modalContent.style.position = 'relative';
+    }
+    
     // Close modal handlers
     const closeButton = modal.querySelector('.btn-close-modal');
     if (closeButton) {
         addEventListenerWithCleanup(closeButton, 'click', () => {
-            modal.remove();
-            document.body.style.overflow = '';
+            closeModal(modal);
+        });
+    }
+    
+    // Bookmark button handler for modal
+    const modalBookmarkButton = modal.querySelector('.btn-bookmark-modal');
+    if (modalBookmarkButton) {
+        addEventListenerWithCleanup(modalBookmarkButton, 'click', (e) => {
+            e.preventDefault();
+            const btn = e.currentTarget;
+            const resourceId = btn.dataset.resourceId;
+            if (resourceId) {
+                toggleBookmark(resourceId, btn);
+                // Update the bookmark state on the main page too
+                updateBookmarkStates();
+            }
         });
     }
     
     // Close on overlay click
     addEventListenerWithCleanup(modal, 'click', (e) => {
         if (e.target === modal) {
-            modal.remove();
-            document.body.style.overflow = '';
+            closeModal(modal);
         }
     });
     
     // Close on escape key
     const handleEscape = (e) => {
         if (e.key === 'Escape') {
-            modal.remove();
-            document.body.style.overflow = '';
+            closeModal(modal);
             document.removeEventListener('keydown', handleEscape);
         }
     };
     document.addEventListener('keydown', handleEscape);
+}
+
+function closeModal(modal) {
+    modal.remove();
+    document.body.style.overflow = '';
+}
+
+async function showResourceSections(resourceId) {
+    try {
+        const { default: resourcesData } = await import('../../data/members/resources.json');
+        const resource = resourcesData.resources.find(r => r.id === resourceId);
+        
+        if (!resource || !resource.sections) {
+            console.error('Resource sections not found:', resourceId);
+            return;
+        }
+        
+        // Create sections modal content
+        const modalContent = `
+            <div class="resource-sections-modal">
+                <div class="resource-modal-header">
+                    <h2>${resource.title} - Sections</h2>
+                    <p class="sections-count">${resource.sections.length} sections available</p>
+                </div>
+                
+                <div class="sections-list">
+                    ${resource.sections.sort((a, b) => a.order - b.order).map(section => `
+                        <div class="section-item">
+                            <h3>${section.order}. ${section.title}</h3>
+                            <p>${section.content}</p>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="resource-modal-actions">
+                    <button class="btn-primary btn-read-full" data-resource-id="${resource.id}">
+                        📖 Read Full Guide
+                    </button>
+                    <button class="btn-secondary btn-close-modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        // Show the modal
+        showModal(modalContent);
+        
+        // Add event listener for read full guide button
+        const readFullButton = document.querySelector('.btn-read-full');
+        if (readFullButton) {
+            addEventListenerWithCleanup(readFullButton, 'click', () => {
+                const currentModal = document.querySelector('.modal-overlay');
+                if (currentModal) {
+                    closeModal(currentModal);
+                }
+                openResourceModal(resourceId);
+            });
+        }
+        
+    } catch (error) {
+        console.error('Failed to load resource sections:', error);
+        alert('Unable to load sections. Please try again.');
+    }
+}
+
+function updateBookmarkStates() {
+    const bookmarks = JSON.parse(localStorage.getItem('resource_bookmarks') || '[]');
+    const bookmarkButtons = document.querySelectorAll('.btn-bookmark');
+    
+    bookmarkButtons.forEach(button => {
+        const resourceId = button.dataset.resourceId;
+        if (bookmarks.includes(resourceId)) {
+            button.textContent = '🔖 Bookmarked';
+            button.setAttribute('aria-label', 'Remove bookmark');
+            button.classList.add('bookmarked');
+        } else {
+            button.textContent = '🔖';
+            button.setAttribute('aria-label', 'Bookmark resource');
+            button.classList.remove('bookmarked');
+        }
+    });
 }
 
 function toggleBookmark(resourceId, button) {
@@ -472,10 +638,12 @@ function toggleBookmark(resourceId, button) {
         bookmarks.splice(index, 1);
         button.textContent = '🔖';
         button.setAttribute('aria-label', 'Bookmark resource');
+        button.classList.remove('bookmarked');
     } else {
         bookmarks.push(resourceId);
         button.textContent = '🔖 Bookmarked';
         button.setAttribute('aria-label', 'Remove bookmark');
+        button.classList.add('bookmarked');
     }
     
     localStorage.setItem('resource_bookmarks', JSON.stringify(bookmarks));
