@@ -355,12 +355,17 @@
             var script = document.createElement('script');
             script.type = 'module';
             script.innerHTML = `
-                import('./js/pages/glossary.js').then(module => {
+                // Load minified glossary script directly
+                const glossaryScript = document.createElement('script');
+                glossaryScript.src = 'dist/js/glossary.min.js';
+                glossaryScript.onload = () => {
                     console.log('✅ Glossary page loaded successfully');
-                }).catch(error => {
-                    console.warn('⚠️ Glossary page module failed to load:', error);
+                };
+                glossaryScript.onerror = () => {
+                    console.warn('⚠️ Glossary page script failed to load');
                     showFallbackContent();
-                });
+                };
+                document.body.appendChild(glossaryScript);
             `;
             document.body.appendChild(script);
         } else {
@@ -382,8 +387,7 @@
     <script>
         if (moduleSupport) {
             var coreScript = document.createElement('script');
-            coreScript.type = 'module';
-            coreScript.src = 'js/script.js';
+            coreScript.src = 'dist/js/core.min.js';
             document.body.appendChild(coreScript);
         }
     </script>
