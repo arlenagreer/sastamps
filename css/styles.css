@@ -1149,6 +1149,86 @@ tr:hover {
     background-color: var(--primary-light);
 }
 
+/* ===== BREADCRUMB NAVIGATION ===== */
+.breadcrumb-navigation {
+    background-color: var(--light);
+    padding: var(--space-sm) 0;
+    margin-bottom: var(--space-lg);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.breadcrumb-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+}
+
+.breadcrumb-item {
+    display: inline;
+    margin: 0;
+}
+
+.breadcrumb-item a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.breadcrumb-item a:hover {
+    color: var(--primary-light);
+    text-decoration: underline;
+}
+
+.breadcrumb-item[aria-current="page"] {
+    color: var(--medium);
+    font-weight: 600;
+}
+
+.breadcrumb-separator {
+    color: var(--medium);
+    margin: 0 var(--space-xs);
+    font-size: 1.1em;
+    user-select: none;
+}
+
+/* Dark mode support */
+.dark-mode .breadcrumb-navigation {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .breadcrumb-item a {
+    color: var(--accent);
+}
+
+.dark-mode .breadcrumb-item a:hover {
+    color: var(--white);
+}
+
+.dark-mode .breadcrumb-item[aria-current="page"] {
+    color: var(--light);
+}
+
+/* Mobile breadcrumb adjustments */
+@media (max-width: 768px) {
+    .breadcrumb-navigation {
+        padding: var(--space-xs) 0;
+        margin-bottom: var(--space-md);
+    }
+    
+    .breadcrumb-list {
+        font-size: 0.85rem;
+    }
+    
+    .breadcrumb-separator {
+        margin: 0 var(--space-xxs);
+    }
+}
+
 /* ===== MOBILE RESPONSIVENESS ===== */
 @media (max-width: 576px) {
     html {
@@ -1190,44 +1270,258 @@ tr:hover {
 
 /* ===== PRINT STYLES ===== */
 @media print {
+    /* Page setup */
+    @page {
+        margin: 0.75in;
+        size: letter;
+    }
+    
+    @page :first {
+        margin-top: 0.5in;
+    }
+    
+    /* Reset base styles for print */
+    * {
+        background: transparent !important;
+        color: black !important;
+        text-shadow: none !important;
+        filter: none !important;
+        -ms-filter: none !important;
+    }
+    
     body {
         background-color: white;
         color: black;
         font-size: 12pt;
+        line-height: 1.5;
+        font-family: Georgia, serif;
     }
     
+    /* Layout adjustments */
     .container {
         max-width: 100%;
         padding: 0;
+        margin: 0;
     }
     
-    header, footer, #back-to-top, .hero {
-        display: none;
+    /* Hide non-essential elements */
+    header, 
+    footer, 
+    nav,
+    #back-to-top, 
+    .hero,
+    .nav-toggle,
+    .mobile-menu,
+    .search-section,
+    .filter-section,
+    .pagination,
+    .modal-overlay,
+    .theme-toggle,
+    .feedback-widget,
+    .social-sharing,
+    .breadcrumb,
+    video,
+    audio,
+    iframe {
+        display: none !important;
     }
     
+    /* Typography optimizations */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid;
+        page-break-inside: avoid;
+        font-family: Georgia, serif;
+        font-weight: bold;
+        margin-top: 20pt;
+        margin-bottom: 10pt;
+    }
+    
+    h1 { font-size: 24pt; }
+    h2 { font-size: 20pt; }
+    h3 { font-size: 16pt; }
+    h4 { font-size: 14pt; }
+    h5, h6 { font-size: 12pt; }
+    
+    p, li, td {
+        font-size: 12pt;
+        line-height: 1.5;
+        orphans: 3;
+        widows: 3;
+    }
+    
+    /* Links */
     a {
         text-decoration: underline;
         color: black;
+        font-weight: normal;
     }
     
-    a[href]::after {
+    /* Show URLs for external links */
+    a[href^="http"]:not([href*="sastamps.org"])::after {
         content: " (" attr(href) ")";
-        font-size: 0.9em;
+        font-size: 0.8em;
+        font-style: italic;
     }
     
+    /* Don't show URLs for internal links */
     a[href^="#"]::after,
-    a[href^="javascript:"]::after {
+    a[href^="javascript:"]::after,
+    a[href^="mailto:"]::after,
+    a[href*="sastamps.org"]::after {
         content: "";
     }
     
-    .card {
-        box-shadow: none;
+    /* Tables */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        page-break-inside: auto;
+    }
+    
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+    
+    thead {
+        display: table-header-group;
+    }
+    
+    tfoot {
+        display: table-footer-group;
+    }
+    
+    th, td {
         border: 1px solid #ddd;
+        padding: 8pt;
+        text-align: left;
+    }
+    
+    th {
+        background-color: #f5f5f5 !important;
+        font-weight: bold;
+    }
+    
+    /* Images */
+    img {
+        max-width: 100% !important;
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+    
+    /* Cards and content blocks */
+    .card,
+    .newsletter-item,
+    .meeting-card,
+    .resource-card {
+        box-shadow: none !important;
+        border: 1px solid #ddd;
+        page-break-inside: avoid;
+        margin-bottom: 12pt;
+        padding: 12pt;
     }
     
     .card:hover {
-        transform: none;
-        box-shadow: none;
+        transform: none !important;
+        box-shadow: none !important;
+    }
+    
+    /* Lists */
+    ul, ol {
+        page-break-inside: avoid;
+    }
+    
+    /* Blockquotes */
+    blockquote {
+        border-left: 3pt solid #ddd;
+        padding-left: 12pt;
+        margin: 12pt 0;
+        font-style: italic;
+    }
+    
+    /* Forms - make them visible but non-interactive */
+    form {
+        border: 1px solid #ddd;
+        padding: 12pt;
+        margin: 12pt 0;
+    }
+    
+    input, textarea, select {
+        border: 1px solid #ddd !important;
+        background: white !important;
+    }
+    
+    button, .btn {
+        border: 1px solid black !important;
+        background: white !important;
+        color: black !important;
+        text-decoration: none !important;
+    }
+    
+    /* Newsletter-specific print styles */
+    .newsletter-content {
+        max-width: 100%;
+    }
+    
+    .newsletter-header {
+        border-bottom: 2pt solid black;
+        margin-bottom: 12pt;
+        padding-bottom: 12pt;
+    }
+    
+    /* Meeting-specific print styles */
+    .meeting-details {
+        border: 1pt solid #ddd;
+        padding: 12pt;
+        margin: 12pt 0;
+    }
+    
+    .meeting-date {
+        font-weight: bold;
+        font-size: 14pt;
+    }
+    
+    /* Glossary-specific print styles */
+    .glossary-term {
+        page-break-inside: avoid;
+        margin-bottom: 12pt;
+    }
+    
+    .glossary-term dt {
+        font-weight: bold;
+        font-size: 14pt;
+        margin-bottom: 4pt;
+    }
+    
+    .glossary-term dd {
+        margin-left: 24pt;
+    }
+    
+    /* Resource guide print styles */
+    .resource-guide {
+        page-break-before: always;
+    }
+    
+    .resource-section {
+        page-break-inside: avoid;
+        margin-bottom: 24pt;
+    }
+    
+    /* Utility classes for print */
+    .print-only {
+        display: block !important;
+    }
+    
+    .no-print {
+        display: none !important;
+    }
+    
+    .page-break {
+        page-break-after: always;
+    }
+    
+    .avoid-break {
+        page-break-inside: avoid;
     }
 }
 
@@ -3647,6 +3941,270 @@ tr:hover {
         background: var(--dark);
         border-color: var(--medium);
         color: var(--white);
+    }
+}
+
+/* ===== LOADING STATES & SKELETON SCREENS ===== */
+
+/* Loading spinner */
+.loading-spinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--light);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.loading-spinner.small {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+}
+
+.loading-spinner.large {
+    width: 60px;
+    height: 60px;
+    border-width: 4px;
+}
+
+/* Loading overlay */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    border-radius: inherit;
+}
+
+.dark-mode .loading-overlay {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Loading container */
+.loading-container {
+    text-align: center;
+    padding: var(--space-xxl);
+}
+
+.loading-container .loading-spinner {
+    margin: 0 auto var(--space-md);
+}
+
+.loading-text {
+    color: var(--medium);
+    font-size: 0.9rem;
+}
+
+/* Skeleton screens */
+.skeleton {
+    background: linear-gradient(90deg, 
+        var(--light) 25%, 
+        rgba(241, 196, 15, 0.1) 50%, 
+        var(--light) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: var(--radius-sm);
+}
+
+.skeleton-text {
+    height: 1em;
+    margin-bottom: var(--space-xs);
+    border-radius: var(--radius-sm);
+}
+
+.skeleton-text.short {
+    width: 30%;
+}
+
+.skeleton-text.medium {
+    width: 60%;
+}
+
+.skeleton-text.long {
+    width: 90%;
+}
+
+.skeleton-heading {
+    height: 1.5em;
+    width: 50%;
+    margin-bottom: var(--space-md);
+}
+
+.skeleton-paragraph {
+    margin-bottom: var(--space-md);
+}
+
+.skeleton-paragraph .skeleton-text:last-child {
+    width: 70%;
+}
+
+.skeleton-image {
+    width: 100%;
+    height: 200px;
+    margin-bottom: var(--space-md);
+}
+
+.skeleton-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--space-md);
+}
+
+.skeleton-card .skeleton-image {
+    height: 150px;
+}
+
+/* Newsletter skeleton */
+.skeleton-newsletter {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-md);
+}
+
+.skeleton-newsletter-cover {
+    width: 150px;
+    height: 200px;
+    background: var(--light);
+    border-radius: var(--radius-md);
+}
+
+/* Meeting skeleton */
+.skeleton-meeting {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-md);
+}
+
+.skeleton-meeting-date {
+    width: 120px;
+    height: 2em;
+    margin-bottom: var(--space-sm);
+}
+
+/* Glossary skeleton */
+.skeleton-glossary-term {
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid var(--light);
+}
+
+.skeleton-glossary-term:last-child {
+    border-bottom: none;
+}
+
+.skeleton-glossary-title {
+    height: 1.2em;
+    width: 200px;
+    margin-bottom: var(--space-xs);
+}
+
+.skeleton-glossary-definition {
+    height: 3em;
+    margin-top: var(--space-sm);
+}
+
+/* Animation */
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* Utility classes */
+.is-loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.is-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    border: 3px solid var(--light);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+/* Button loading states */
+.btn.is-loading {
+    color: transparent;
+}
+
+.btn.is-loading::after {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+}
+
+/* Form loading states */
+.form-group.is-loading input,
+.form-group.is-loading textarea,
+.form-group.is-loading select {
+    background-color: var(--light);
+    cursor: not-allowed;
+}
+
+/* Dark mode adjustments */
+.dark-mode .skeleton {
+    background: linear-gradient(90deg, 
+        var(--dark) 25%, 
+        rgba(241, 196, 15, 0.1) 50%, 
+        var(--dark) 75%
+    );
+}
+
+.dark-mode .skeleton-card {
+    background: var(--dark);
+}
+
+.dark-mode .skeleton-newsletter {
+    background: var(--dark);
+}
+
+.dark-mode .skeleton-meeting {
+    background: var(--dark);
+}
+
+.dark-mode .loading-spinner {
+    border-color: var(--dark);
+    border-top-color: var(--accent);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .skeleton-newsletter {
+        grid-template-columns: 100px 1fr;
+        gap: var(--space-md);
+        padding: var(--space-md);
+    }
+    
+    .skeleton-newsletter-cover {
+        width: 100px;
+        height: 133px;
+    }
+    
+    .loading-container {
+        padding: var(--space-xl);
     }
 }
 

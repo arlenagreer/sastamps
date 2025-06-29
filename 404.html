@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XW5LFQ52YR"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XW5LFQ52YR');
+</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Page not found - San Antonio Philatelic Association">
+    <meta name="robots" content="noindex, follow">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://www.google-analytics.com; connect-src 'self' https://www.google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    
+    <title>404 - Page Not Found | San Antonio Philatelic Association</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Critical CSS -->
+    <link rel="preload" href="css/critical.css" as="style">
+    <link rel="stylesheet" href="css/critical.css">
+    
+    <!-- Full CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Favicon and Web App -->
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a5276">
+    
+    <!-- Custom 404 Styles -->
+    <style>
+        .error-404 {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: var(--space-xxl) var(--space-lg);
+        }
+        
+        .error-404-content {
+            max-width: 600px;
+        }
+        
+        .error-404-icon {
+            font-size: 6rem;
+            color: var(--primary);
+            margin-bottom: var(--space-lg);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .error-404-code {
+            font-size: 8rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: var(--space-md);
+            font-family: var(--font-heading);
+        }
+        
+        .error-404-message {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .error-404-description {
+            font-size: 1.1rem;
+            color: var(--medium);
+            margin-bottom: var(--space-xl);
+            line-height: 1.6;
+        }
+        
+        .error-404-actions {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .suggestions-section {
+            background: var(--light);
+            padding: var(--space-xxl) 0;
+        }
+        
+        .suggestions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+            margin-top: var(--space-xl);
+        }
+        
+        .suggestion-card {
+            background: var(--white);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-normal);
+            text-align: center;
+        }
+        
+        .suggestion-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .suggestion-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: var(--space-md);
+        }
+        
+        .suggestion-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .suggestion-card p {
+            color: var(--medium);
+            margin-bottom: var(--space-md);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* Dark mode support */
+        .dark-mode .error-404-code {
+            color: var(--accent);
+        }
+        
+        .dark-mode .error-404-message {
+            color: var(--white);
+        }
+        
+        .dark-mode .suggestions-section {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .dark-mode .suggestion-card {
+            background: var(--dark);
+            color: var(--white);
+        }
+        
+        .dark-mode .suggestion-card i {
+            color: var(--accent);
+        }
+        
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .error-404-code {
+                font-size: 5rem;
+            }
+            
+            .error-404-message {
+                font-size: 1.5rem;
+            }
+            
+            .error-404-icon {
+                font-size: 4rem;
+            }
+            
+            .error-404-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .error-404-actions .btn {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="container">
+                <!-- Logo and Brand -->
+                <div class="brand">
+                    <a href="/" aria-label="San Antonio Philatelic Association Home">
+                        <h1 class="brand-title">San Antonio Philatelic Association</h1>
+                        <p class="brand-tagline">Celebrating stamp collecting since 1934</p>
+                    </a>
+                </div>
+                
+                <!-- Navigation -->
+                <nav class="main-nav" aria-label="Main navigation">
+                    <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    
+                    <ul class="nav-menu">
+                        <li><a href="/"><i class="fas fa-home nav-icon"></i> Home</a></li>
+                        <li><a href="meetings.html"><i class="fas fa-calendar-alt nav-icon"></i> Meetings</a></li>
+                        <li><a href="newsletter.html"><i class="fas fa-newspaper nav-icon"></i> Newsletter</a></li>
+                        <li><a href="resources.html"><i class="fas fa-book nav-icon"></i> Resources</a></li>
+                        <li><a href="glossary.html"><i class="fas fa-book-open nav-icon"></i> Glossary</a></li>
+                        <li><a href="contact.html"><i class="fas fa-envelope nav-icon"></i> Contact</a></li>
+                        <li><a href="search.html"><i class="fas fa-search nav-icon"></i> Search</a></li>
+                    </ul>
+                </nav>
+                
+                <!-- Theme Toggle -->
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- 404 Error Section -->
+        <section class="error-404">
+            <div class="container">
+                <div class="error-404-content">
+                    <div class="error-404-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h1 class="error-404-code">404</h1>
+                    <h2 class="error-404-message">Page Not Found</h2>
+                    <p class="error-404-description">
+                        Sorry, we couldn't find the page you're looking for. It might have been moved, 
+                        renamed, or removed. Don't worry, we'll help you find what you need!
+                    </p>
+                    <div class="error-404-actions">
+                        <a href="/" class="btn btn-primary">
+                            <i class="fas fa-home"></i> Go to Homepage
+                        </a>
+                        <a href="search.html" class="btn btn-secondary">
+                            <i class="fas fa-search"></i> Search Site
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Suggestions Section -->
+        <section class="suggestions-section">
+            <div class="container">
+                <h2 class="section-title">Helpful Links</h2>
+                <p class="text-center">Here are some popular pages that might help you:</p>
+                
+                <div class="suggestions-grid">
+                    <a href="meetings.html" class="suggestion-card">
+                        <i class="fas fa-calendar-alt"></i>
+                        <h3>Meeting Schedule</h3>
+                        <p>View upcoming meetings and events</p>
+                        <span class="btn btn-sm btn-outline">View Schedule →</span>
+                    </a>
+                    
+                    <a href="newsletter.html" class="suggestion-card">
+                        <i class="fas fa-newspaper"></i>
+                        <h3>Newsletter Archives</h3>
+                        <p>Browse our PHILATEX newsletters</p>
+                        <span class="btn btn-sm btn-outline">View Archives →</span>
+                    </a>
+                    
+                    <a href="resources.html" class="suggestion-card">
+                        <i class="fas fa-book"></i>
+                        <h3>Resources</h3>
+                        <p>Guides and tips for collectors</p>
+                        <span class="btn btn-sm btn-outline">View Resources →</span>
+                    </a>
+                    
+                    <a href="glossary.html" class="suggestion-card">
+                        <i class="fas fa-book-open"></i>
+                        <h3>Glossary</h3>
+                        <p>Learn philatelic terminology</p>
+                        <span class="btn btn-sm btn-outline">View Glossary →</span>
+                    </a>
+                </div>
+                
+                <div class="text-center" style="margin-top: var(--space-xxl);">
+                    <p class="text-muted">Still can't find what you're looking for?</p>
+                    <a href="contact.html" class="btn btn-outline">
+                        <i class="fas fa-envelope"></i> Contact Us
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About SAPA</h3>
+                    <p>The San Antonio Philatelic Association has been serving stamp collectors in South Texas since 1934.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="meetings.html">Meetings</a></li>
+                        <li><a href="newsletter.html">Newsletter</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <p>Email: <a href="mailto:info@sastamps.org">info@sastamps.org</a></p>
+                    <p>Meetings: Second Friday of each month</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 San Antonio Philatelic Association. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Back to Top Button -->
+    <button id="back-to-top" aria-label="Back to top" style="display: none;">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+    
+    <!-- Scripts -->
+    <script src="js/script.js"></script>
+    
+    <!-- 404 Tracking -->
+    <script>
+        // Track 404 errors in Google Analytics
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'exception', {
+                'description': '404 - ' + window.location.pathname,
+                'fatal': false
+            });
+        }
+        
+        // Log the referrer for debugging
+        if (document.referrer) {
+            console.log('User came from:', document.referrer);
+        }
+    </script>
+</body>
+</html>
