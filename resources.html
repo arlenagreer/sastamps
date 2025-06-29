@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Resources - San Antonio Philatelic Association</title>
+    <meta name="description" content="Educational resources for stamp collectors - guides, tutorials, and reference materials from the San Antonio Philatelic Association.">
+    <meta name="keywords" content="stamp collecting, philately, guides, tutorials, resources, education, SAPA">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="css/critical.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="css/critical.css"></noscript>
+    
+    <!-- Icons and manifest -->
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png">
+    <link rel="manifest" href="site.webmanifest">
+    
+    <!-- Theme meta -->
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+    
+    <!-- Open Graph meta tags -->
+    <meta property="og:title" content="Member Resources - SAPA">
+    <meta property="og:description" content="Educational resources for stamp collectors from the San Antonio Philatelic Association">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://arlenagreer.github.io/resources.html">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Member Resources",
+        "description": "Educational resources for stamp collectors",
+        "mainEntity": {
+            "@type": "Organization",
+            "name": "San Antonio Philatelic Association",
+            "alternateName": "SAPA"
+        }
+    }
+    </script>
+    
+    <!-- Critical CSS for resources page -->
+    <style>
+        .resources-hero {
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+        
+        .resources-hero h1 {
+            margin: 0 0 1rem 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        .resources-hero p {
+            font-size: 1.25rem;
+            margin: 0;
+            opacity: 0.9;
+        }
+        
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .category-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .resource-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: #fafafa;
+        }
+        
+        .resource-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #666;
+        }
+        
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        
+        .difficulty-beginner { background: #e3f2fd; color: #1976d2; }
+        .difficulty-intermediate { background: #fff3e0; color: #f57c00; }
+        .difficulty-advanced { background: #fce4ec; color: #c2185b; }
+        
+        .search-filters {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to main content -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="images/banner.png" alt="San Antonio Philatelic Association Logo" width="300" height="80">
+                </div>
+                
+                <nav class="nav" role="navigation" aria-label="Main navigation">
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="index.html" class="nav-link">
+                                <img src="images/navigation-icons/home.png" alt="" width="20" height="20">
+                                Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="about.html" class="nav-link">
+                                <img src="images/navigation-icons/about.png" alt="" width="20" height="20">
+                                About
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="meetings.html" class="nav-link">
+                                <img src="images/navigation-icons/events.png" alt="" width="20" height="20">
+                                Meetings
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="newsletter.html" class="nav-link">
+                                <img src="images/navigation-icons/newsletter.png" alt="" width="20" height="20">
+                                Newsletter
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="resources.html" class="nav-link active" aria-current="page">
+                                📚 Resources
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="contact.html" class="nav-link">
+                                <img src="images/navigation-icons/contact.png" alt="" width="20" height="20">
+                                Contact
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                
+                <!-- Theme toggle -->
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                
+                <!-- Mobile menu toggle -->
+                <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="resources-hero">
+            <div class="container">
+                <h1>Member Resources</h1>
+                <p>Educational guides, tools, and references for stamp collectors of all levels</p>
+            </div>
+        </section>
+        
+        <!-- Search and Filters -->
+        <section class="search-filters">
+            <div class="container">
+                <div class="filter-group">
+                    <label for="resource-search">Search Resources:</label>
+                    <input type="search" id="resource-search" placeholder="Search guides, tutorials..." aria-label="Search resources">
+                    
+                    <label for="category-filter">Category:</label>
+                    <select id="category-filter" aria-label="Filter by category">
+                        <option value="">All Categories</option>
+                        <option value="getting-started">Getting Started</option>
+                        <option value="grading-condition">Grading & Condition</option>
+                        <option value="storage-preservation">Storage & Preservation</option>
+                        <option value="valuation">Valuation</option>
+                        <option value="reference">Reference</option>
+                    </select>
+                    
+                    <label for="difficulty-filter">Difficulty:</label>
+                    <select id="difficulty-filter" aria-label="Filter by difficulty">
+                        <option value="">All Levels</option>
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                    
+                    <button id="clear-filters" class="btn-secondary">Clear Filters</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Resources Content -->
+        <section class="resources-content">
+            <div class="container">
+                <!-- Featured Resources -->
+                <div id="featured-resources" class="featured-section">
+                    <h2>Featured Resources</h2>
+                    <div id="featured-resources-grid" class="category-grid">
+                        <!-- Featured resources will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- All Resources by Category -->
+                <div id="categorized-resources">
+                    <h2>Browse by Category</h2>
+                    <div id="categories-container" class="category-grid">
+                        <!-- Categories will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- All Resources List -->
+                <div id="all-resources" class="resources-list">
+                    <h2>All Resources</h2>
+                    <div id="resources-container">
+                        <!-- All resources will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div class="quick-links">
+                    <h2>Quick Reference</h2>
+                    <div class="links-grid">
+                        <div class="link-card">
+                            <h3>📖 Glossary</h3>
+                            <p>Comprehensive dictionary of philatelic terms</p>
+                            <a href="glossary.html" class="btn-primary">View Glossary</a>
+                        </div>
+                        
+                        <div class="link-card">
+                            <h3>🔍 Stamp Identifier</h3>
+                            <p>Help identifying unknown stamps</p>
+                            <a href="identifier.html" class="btn-primary">Use Identifier</a>
+                        </div>
+                        
+                        <div class="link-card">
+                            <h3>💰 Valuation Guide</h3>
+                            <p>Understanding stamp values and pricing</p>
+                            <a href="valuation.html" class="btn-primary">Learn More</a>
+                        </div>
+                        
+                        <div class="link-card">
+                            <h3>🏪 Local Dealers</h3>
+                            <p>Recommended stamp dealers in San Antonio</p>
+                            <a href="dealers.html" class="btn-primary">Find Dealers</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- External Resources -->
+                <div class="external-resources">
+                    <h2>External Resources</h2>
+                    <div class="external-links">
+                        <div class="external-category">
+                            <h3>Professional Organizations</h3>
+                            <ul>
+                                <li><a href="https://stamps.org" target="_blank" rel="noopener">American Philatelic Society</a></li>
+                                <li><a href="https://www.americanstampdealer.com" target="_blank" rel="noopener">American Stamp Dealers Association</a></li>
+                                <li><a href="https://www.uspcs.org" target="_blank" rel="noopener">United States Postal Service</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="external-category">
+                            <h3>Catalogs & References</h3>
+                            <ul>
+                                <li><a href="https://www.scottonline.com" target="_blank" rel="noopener">Scott Catalog Online</a></li>
+                                <li><a href="https://www.michel.de" target="_blank" rel="noopener">Michel Catalog</a></li>
+                                <li><a href="https://www.colnect.com" target="_blank" rel="noopener">Colnect Database</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="external-category">
+                            <h3>News & Publications</h3>
+                            <ul>
+                                <li><a href="https://www.linns.com" target="_blank" rel="noopener">Linn's Stamp News</a></li>
+                                <li><a href="https://www.stampsmag.com" target="_blank" rel="noopener">Stamps Magazine</a></li>
+                                <li><a href="https://americanphilatelist.org" target="_blank" rel="noopener">American Philatelist</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>San Antonio Philatelic Association</h3>
+                    <p>Dedicated to promoting the hobby of stamp collecting in the San Antonio area since 1950.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="membership.html">Join SAPA</a></li>
+                        <li><a href="meetings.html">Meetings</a></li>
+                        <li><a href="newsletter.html">Newsletter</a></li>
+                        <li><a href="resources.html">Resources</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Email: <a href="mailto:info@sapa.org">info@sapa.org</a></p>
+                    <p>Meeting Location: Central Library</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 San Antonio Philatelic Association. All rights reserved.</p>
+                <p>Website optimized for accessibility and performance.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Load JavaScript -->
+    <script src="dist/js/core.min.js" defer></script>
+    <script src="dist/js/resources.min.js" defer></script>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=MEASUREMENT_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'MEASUREMENT_ID');
+    </script>
+</body>
+</html>

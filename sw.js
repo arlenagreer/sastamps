@@ -95,6 +95,44 @@ self.addEventListener('activate', event => {
     );
 });
 
+// Helper function to check if request is for an image
+function isImageRequest(request) {
+    const url = new URL(request.url);
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.ico'];
+    return imageExtensions.some(ext => url.pathname.toLowerCase().endsWith(ext));
+}
+
+// Helper function to handle image requests with fallback
+function handleImageRequest(request) {
+    return caches.match(request)
+        .then(response => {
+            if (response) {
+                return response;
+            }
+            
+            return fetch(request)
+                .then(response => {
+                    // Don't cache non-successful responses
+                    if (!response || response.status !== 200) {
+                        return response;
+                    }
+                    
+                    // Clone and cache the response
+                    const responseToCache = response.clone();
+                    caches.open(CACHE_NAME)
+                        .then(cache => {
+                            cache.put(request, responseToCache);
+                        });
+                    
+                    return response;
+                })
+                .catch(() => {
+                    // Return a placeholder image if available
+                    return caches.match('/images/placeholder.png');
+                });
+        });
+}
+
 // Fetch event - serve from cache, fall back to network
 self.addEventListener('fetch', event => {
     const request = event.request;

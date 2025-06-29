@@ -1,0 +1,83 @@
+{
+  "buildDate": "2025-06-29T01:56:25.269Z",
+  "totalSize": 242006,
+  "bundles": [
+    {
+      "name": "js/core.min.js",
+      "size": 11255,
+      "sizeFormatted": "10.99 KB",
+      "imports": 0,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "js/home.min.js",
+      "size": 30965,
+      "sizeFormatted": "30.24 KB",
+      "imports": 1,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "js/meetings.min.js",
+      "size": 43136,
+      "sizeFormatted": "42.13 KB",
+      "imports": 1,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "js/newsletter.min.js",
+      "size": 10858,
+      "sizeFormatted": "10.6 KB",
+      "imports": 0,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "js/contact.min.js",
+      "size": 6365,
+      "sizeFormatted": "6.22 KB",
+      "imports": 0,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "js/search.min.js",
+      "size": 35750,
+      "sizeFormatted": "34.91 KB",
+      "imports": 0,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "js/resources.min.js",
+      "size": 21823,
+      "sizeFormatted": "21.31 KB",
+      "imports": 0,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "js/glossary.min.js",
+      "size": 23748,
+      "sizeFormatted": "23.19 KB",
+      "imports": 0,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "js/modules.min.js",
+      "size": 58106,
+      "sizeFormatted": "56.74 KB",
+      "imports": 1,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    }
+  ],
+  "treeshakingStats": {
+    "modulesAnalyzed": 3,
+    "deadCodeEliminated": 0,
+    "bundleCount": 9
+  }
+}

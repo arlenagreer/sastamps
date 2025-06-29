@@ -16,6 +16,13 @@
     <meta name="description" content="Contact the San Antonio Philatelic Association (SAPA) with questions about stamp collecting, membership, or upcoming events. Connect with fellow stamp collectors in San Antonio, Texas.">
     <meta name="keywords" content="contact SAPA, San Antonio Philatelic Association contact, stamp club contact, philately contact, San Antonio stamp collectors">
     
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://www.google-analytics.com; connect-src 'self' https://www.google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    
     <title>Contact Us - San Antonio Philatelic Association</title>
     
     <!-- Open Graph / Facebook -->
@@ -35,84 +42,19 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap&display=swap&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Styles -->
-    
-    <style id="critical-css">
-        :root{--primary:#1a5276;--primary-light:#2980b9;--primary-dark:#0e2f44;--secondary:#d35400;--accent:#f1c40f;--dark:#2c3e50;--medium:#7f8c8d;--light:#ecf0f1;--white:#fff;--success:#27ae60;--warning:#f39c12;--danger:#c0392b;--font-heading:"Merriweather",Georgia,serif;--font-body:"Open Sans",Arial,sans-serif;--space-xxs:0.25rem;--space-xs:0.5rem;--space-sm:0.75rem;--space-md:1rem;--space-lg:1.5rem;--space-xl:2rem;--space-xxl:3rem;--container-sm:640px;--container-md:768px;--container-lg:1024px;--container-xl:1280px;--radius-sm:3px;--radius-md:5px;--radius-lg:8px;--radius-xl:12px;--shadow-sm:0 1px 3px #0000001f;--shadow-md:0 4px 6px #0000001a;--shadow-lg:0 10px 15px -3px #0000001a;--transition-fast:0.15s ease;--transition-normal:0.25s ease;--transition-slow:0.4s ease}
-body{background-color:var(--white);color:var(--dark);font-family:var(--font-body);font-size:1rem;line-height:1.6}
-h1,h2,h3,h4,h5,h6{color:var(--dark);font-family:var(--font-heading);font-weight:700;line-height:1.3;margin-bottom:1rem}
-h1{font-size:2.5rem}
-h2{font-size:2rem}
-h3{font-size:1.75rem}
-img{display:block;height:auto;max-width:100%}
-button,input,select,textarea{font-family:var(--font-body);font-size:1rem}
-.container{margin:0 auto;max-width:var(--container-xl);padding:0 1.5rem;width:100%}
-@media (max-width:768px){.grid-cols-2,.grid-cols-3{grid-template-columns:1fr}
-header{background-color:var(--white);box-shadow:var(--shadow-sm);padding:1rem 0;position:sticky;top:0;z-index:50}
-.header-container{align-items:center;display:flex;justify-content:space-between}
-nav ul{display:flex;list-style:none;margin:0;padding:0}
-nav li{margin-left:1.5rem}
-nav a{color:var(--dark);font-weight:600;padding:.5rem 0;position:relative;text-decoration:none;transition:color var(--transition-fast)}
-nav a:hover{color:var(--primary)}
-nav a:after{background-color:var(--primary);bottom:0;content:"";height:2px;left:0;position:absolute;transition:width var(--transition-normal);width:0}
-nav a:hover:after{width:100%}
-@media (max-width:768px){.menu-toggle{display:block}
-.nav-menu{background-color:var(--white);box-shadow:var(--shadow-lg);flex-direction:column;height:100vh;justify-content:flex-start;max-width:300px;padding:2rem;position:fixed;right:-100%;top:0;transition:right var(--transition-normal);width:80%;z-index:60}
-.nav-menu.active{right:0}
-nav li{margin:0 0 1.5rem}
-nav a:after{display:none}
-.footer-section h3{color:var(--white);font-size:1.2rem;margin-bottom:1rem}
-.hero{background-color:var(--primary);padding:var(--space-xxl) 0;text-align:center}
-.hero,.hero h1{color:var(--white)}
-.hero h1{font-size:2.75rem;margin-bottom:1rem}
-.hero p{font-size:1.25rem;margin:0 auto;max-width:800px}
-.card{background-color:var(--white);border-radius:var(--radius-md);box-shadow:var(--shadow-md);margin-bottom:1.5rem;overflow:hidden;transition:transform var(--transition-normal),box-shadow var(--transition-normal)}
-.card:hover{box-shadow:var(--shadow-lg);transform:translateY(-5px)}
-.card-content{padding:1.5rem}
-.card-title{font-size:1.5rem;margin-bottom:1rem}
-.card-image{height:200px;object-fit:cover;width:100%}
-.text-center{text-align:center}
-.timeline-content h3{color:var(--primary);margin-bottom:.5rem;margin-top:0}
-@media screen and (max-width:768px){.timeline:after{left:20px}
-.officer-img{height:200px;overflow:hidden;width:100%}
-.officer-img img{height:100%;object-fit:cover;width:100%}
-.placeholder-img{align-items:center;background-color:var(--light);color:var(--medium);display:flex;height:100%;justify-content:center;width:100%}
-.accordion-header{align-items:center;background-color:var(--white);border:none;cursor:pointer;display:flex;font-weight:600;justify-content:space-between;padding:1.25rem;text-align:left;transition:background-color var(--transition-fast);width:100%}
-.accordion-header:hover{background-color:var(--light)}
-.accordion-header.active{background-color:var(--primary);color:var(--white)}
-@media (max-width:576px){html{font-size:14px}
-h1{font-size:2rem}
-h2{font-size:1.75rem}
-.hero,.section{padding:var(--space-xl) 0}
-.hero h1{font-size:2.25rem}
-.hero p{font-size:1.125rem}
-.container{padding:0 1rem}
-@media print{body{background-color:#fff;color:#000;font-size:12pt}
-.container{max-width:100%;padding:0}
-#back-to-top,.hero,footer,header{display:none}
-.card{border:1px solid #ddd;box-shadow:none}
-.card:hover{box-shadow:none;transform:none}
-.nav-icon{color:var(--primary);font-size:1.2rem;height:auto;margin-right:8px;width:auto}
-.nav-menu li a:hover .nav-icon,.nav-menu li.active .nav-icon{color:var(--accent)}
-@media (max-width:768px){.nav-icon{font-size:1rem;margin-right:5px}
-.location-card h3{font-size:1.2rem;margin-bottom:.75rem}
-@media screen and (max-width:428px){.meeting-table{font-size:.85rem}
-.location-card h3{font-size:1.1rem}
-.header-container{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
-.container{padding-left:max(1rem,env(safe-area-inset-left));padding-right:max(1rem,env(safe-area-inset-right))}
-@media screen and (max-width:375px){.meeting-table{font-size:.8rem}
-@media screen and (max-height:428px) and (orientation:landscape){.meeting-entry{align-items:center;flex-direction:row;justify-content:space-between}
-    </style>
+    <link rel="preload" href="css/critical.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="css/critical.css"></noscript>
     
     
     
     <style id="critical-css">
-        @import "../node_modules/vanilla-calendar-pro/build/vanilla-calendar.min.css";:root{--primary:#1a5276;--primary-light:#2980b9;--primary-dark:#0e2f44;--secondary:#d35400;--accent:#f1c40f;--dark:#2c3e50;--medium:#7f8c8d;--light:#ecf0f1;--white:#fff;--success:#27ae60;--warning:#f39c12;--danger:#c0392b;--font-heading:"Merriweather",Georgia,serif;--font-body:"Open Sans",Arial,sans-serif;--space-xxs:0.25rem;--space-xs:0.5rem;--space-sm:0.75rem;--space-md:1rem;--space-lg:1.5rem;--space-xl:2rem;--space-xxl:3rem;--container-sm:640px;--container-md:768px;--container-lg:1024px;--container-xl:1280px;--radius-sm:3px;--radius-md:5px;--radius-lg:8px;--radius-xl:12px;--shadow-sm:0 1px 3px #0000001f;--shadow-md:0 4px 6px #0000001a;--shadow-lg:0 10px 15px -3px #0000001a;--transition-fast:0.15s ease;--transition-normal:0.25s ease;--transition-slow:0.4s ease}
+:root{--primary:#1a5276;--primary-light:#2980b9;--primary-dark:#0e2f44;--secondary:#d35400;--accent:#f1c40f;--dark:#2c3e50;--medium:#7f8c8d;--light:#ecf0f1;--white:#fff;--success:#27ae60;--warning:#f39c12;--danger:#c0392b;--font-heading:"Merriweather",Georgia,serif;--font-body:"Open Sans",Arial,sans-serif;--space-xxs:0.25rem;--space-xs:0.5rem;--space-sm:0.75rem;--space-md:1rem;--space-lg:1.5rem;--space-xl:2rem;--space-xxl:3rem;--container-sm:640px;--container-md:768px;--container-lg:1024px;--container-xl:1280px;--radius-sm:3px;--radius-md:5px;--radius-lg:8px;--radius-xl:12px;--shadow-sm:0 1px 3px #0000001f;--shadow-md:0 4px 6px #0000001a;--shadow-lg:0 10px 15px -3px #0000001a;--transition-fast:0.15s ease;--transition-normal:0.25s ease;--transition-slow:0.4s ease}
 body{background-color:var(--white);color:var(--dark);font-family:var(--font-body);font-size:1rem;line-height:1.6}
 h1,h2,h3,h4,h5,h6{color:var(--dark);font-family:var(--font-heading);font-weight:700;line-height:1.3;margin-bottom:1rem}
 h1{font-size:2.5rem}
@@ -604,9 +546,801 @@ header, footer, #back-to-top, .hero {
         align-items: center;
         justify-content: space-between;}
     </style>
+    
+    <style id="critical-css">
+        /* San Antonio Philatelic Association - Main Stylesheet */
+
+/* ===== VARIABLES ===== */
+:root {
+    /* Color Palette */
+    --primary: #1a5276;        /* Deep blue */
+    --primary-light: #2980b9;  /* Mid blue */
+    --primary-dark: #0e2f44;   /* Darker blue */
+    --secondary: #d35400;      /* Warm orange */
+    --accent: #f1c40f;         /* Gold/Yellow */
+    --dark: #2c3e50;           /* Slate dark */
+    --medium: #7f8c8d;         /* Gray */
+    --light: #ecf0f1;          /* Light gray */
+    --white: #ffffff;
+    --success: #27ae60;        /* Green */
+    --warning: #f39c12;        /* Orange */
+    --danger: #c0392b;         /* Red */
+    
+    /* Typography */
+    --font-heading: 'Merriweather', Georgia, serif;
+    --font-body: 'Open Sans', Arial, sans-serif;
+    
+    /* Spacing */
+    --space-xxs: 0.25rem;
+    --space-xs: 0.5rem;
+    --space-sm: 0.75rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-xxl: 3rem;
+    
+    /* Container widths */
+    --container-sm: 640px;
+    --container-md: 768px;
+    --container-lg: 1024px;
+    --container-xl: 1280px;
+    
+    /* Border radius */
+    --radius-sm: 3px;
+    --radius-md: 5px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.25s ease;
+    --transition-slow: 0.4s ease;}
+body {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--dark);
+    background-color: var(--white);}
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    line-height: 1.3;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: var(--dark);}
+h1 {
+    font-size: 2.5rem;}
+h2 {
+    font-size: 2rem;}
+h3 {
+    font-size: 1.75rem;}
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;}
+button, input, select, textarea {
+    font-family: var(--font-body);
+    font-size: 1rem;}
+/* ===== LAYOUT ===== */
+.container {
+    width: 100%;
+    max-width: var(--container-xl);
+    margin: 0 auto;
+    padding: 0 1.5rem;}
+@media (max-width: 768px) {
+    .grid-cols-2, .grid-cols-3 {
+        grid-template-columns: 1fr;}
+/* ===== HEADER STYLES ===== */
+header {
+    background-color: var(--white);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 1rem 0;}
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;}
+nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;}
+nav li {
+    margin-left: 1.5rem;}
+nav a {
+    font-weight: 600;
+    color: var(--dark);
+    text-decoration: none;
+    padding: 0.5rem 0;
+    transition: color var(--transition-fast);
+    position: relative;}
+nav a:hover {
+    color: var(--primary);}
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary);
+    transition: width var(--transition-normal);}
+nav a:hover::after {
+    width: 100%;}
+/* Smooth theme transition */
+body,
+header,
+.nav-menu,
+.card,
+.hero,
+.section,
+footer,
+.accordion-header,
+.btn {
+    transition: background-color var(--transition-normal), color var(--transition-normal);}
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+        touch-action: manipulation;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;}
+.nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh; /* Fallback for older browsers */
+        height: 100dvh; /* Use dynamic viewport height for better mobile support */
+        height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback for iOS */
+        background-color: var(--white);
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 2rem;
+        box-shadow: var(--shadow-lg);
+        transition: right var(--transition-normal);
+        z-index: 60;
+        /* iOS specific fixes */
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;}
+.nav-menu.active {
+        right: 0;}
+nav li {
+        margin: 0 0 1.5rem 0;}
+nav a::after {
+        display: none;}
+/* Ensure mobile nav links are clickable */
+    .nav-menu a {
+        display: block;
+        padding: 0.75rem 1rem;
+        position: relative;
+        z-index: 65;
+        -webkit-tap-highlight-color: rgba(26, 82, 118, 0.2);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: manipulation;
+        cursor: pointer;
+        /* Ensure proper touch target size */
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        /* Improved mobile link styling */
+        color: var(--primary);
+        font-weight: 600;
+        border-radius: var(--radius-md);
+        margin-bottom: 0.25rem;
+        transition: all var(--transition-fast);}
+.nav-menu li {
+        display: block;
+        width: 100%;}
+/* Mobile menu icon styling */
+    .nav-menu .nav-icon {
+        color: var(--primary);
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+        width: 1.5rem;
+        text-align: center;}
+/* iOS specific fixes and hover states */
+    .nav-menu a:active {
+        background-color: rgba(26, 82, 118, 0.15);
+        transform: scale(0.98);
+        transition: all 0.1s ease;
+        color: var(--primary-dark);}
+.nav-menu a:hover {
+        background-color: rgba(26, 82, 118, 0.08);
+        color: var(--primary-dark);
+        transform: translateX(4px);}
+/* Active/current page styling for mobile */
+    .nav-menu a.active,
+    .nav-menu a[aria-current="page"] {
+        background-color: var(--primary);
+        color: var(--white);}
+.nav-menu a.active .nav-icon,
+    .nav-menu a[aria-current="page"] .nav-icon {
+        color: var(--white);}
+/* Prevent body scroll when menu is open */
+    body.menu-open {
+        overflow: hidden;}
+.footer-section h3 {
+    color: var(--white);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;}
+/* ===== HERO SECTION ===== */
+.hero {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: var(--space-xxl) 0;
+    text-align: center;}
+.hero h1 {
+    color: var(--white);
+    font-size: 2.75rem;
+    margin-bottom: 1rem;}
+.hero p {
+    font-size: 1.25rem;
+    max-width: 800px;
+    margin: 0 auto;}
+/* ===== CARDS ===== */
+.card {
+    background-color: var(--white);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 1.5rem;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);}
+.card-content {
+    padding: 1.5rem;}
+.card-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;}
+.card-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;}
+/* ===== UTILITIES ===== */
+.text-center {
+    text-align: center;}
+.timeline-content h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--primary);}
+@media screen and (max-width: 768px) {
+    .timeline::after {
+        left: 20px;}
+.officer-img {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;}
+.officer-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;}
+.placeholder-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--light);
+    color: var(--medium);}
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1.25rem;
+    background-color: var(--white);
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+    font-weight: 600;}
+.accordion-header:hover {
+    background-color: var(--light);}
+.accordion-header.active {
+    background-color: var(--primary);
+    color: var(--white);}
+/* ===== MOBILE RESPONSIVENESS ===== */
+@media (max-width: 576px) {
+    html {
+        font-size: 14px;}
+h1 {
+        font-size: 2rem;}
+h2 {
+        font-size: 1.75rem;}
+.hero {
+        padding: var(--space-xl) 0;}
+.hero h1 {
+        font-size: 2.25rem;}
+.hero p {
+        font-size: 1.125rem;}
+.container {
+        padding: 0 1rem;}
+/* ===== PRINT STYLES ===== */
+@media print {
+    body {
+        background-color: white;
+        color: black;
+        font-size: 12pt;}
+.container {
+        max-width: 100%;
+        padding: 0;}
+header, footer, #back-to-top, .hero {
+        display: none;}
+.card {
+        box-shadow: none;
+        border: 1px solid #ddd;}
+.card:hover {
+        transform: none;
+        box-shadow: none;}
+/* Add these new styles for the banner and navigation icons */
+
+/* Banner Image */
+.banner-container {
+    width: 100%;
+    overflow: hidden;
+    text-align: center;
+    background-color: var(--primary);}
+/* Navigation Icons */
+.nav-icon {
+    width: auto;
+    height: auto;
+    margin-right: 8px;
+    color: var(--primary);
+    font-size: 1.2rem;}
+.nav-menu li.active .nav-icon,
+.nav-menu li a:hover .nav-icon {
+    color: var(--accent);}
+@media (max-width: 768px) {
+    .nav-icon {
+        margin-right: 5px;
+        font-size: 1rem;}
+/* Mobile Calendar Styles */
+@media (max-width: 768px) {
+    .meeting-entry {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;}
+.location-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.75rem;}
+/* iPhone-specific optimizations */
+@media screen and (max-width: 428px) {
+    /* Calendar table optimizations */
+    .meeting-table {
+        font-size: 0.85rem;  /* Slightly smaller font for iPhone */}
+.location-card h3 {
+        font-size: 1.1rem;}
+/* Fix notch interference */
+    .header-container {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);}
+/* Adjust container padding */
+    .container {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));}
+/* iPhone SE specific adjustments */
+@media screen and (max-width: 375px) {
+    .meeting-table {
+        font-size: 0.8rem;}
+/* Fix for iPhone landscape mode */
+@media screen and (max-height: 428px) and (orientation: landscape) {
+    .meeting-entry {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;}
+    </style>
+    
+    <style id="critical-css">
+        /* San Antonio Philatelic Association - Main Stylesheet */
+
+/* ===== VARIABLES ===== */
+:root {
+    /* Color Palette */
+    --primary: #1a5276;        /* Deep blue */
+    --primary-light: #2980b9;  /* Mid blue */
+    --primary-dark: #0e2f44;   /* Darker blue */
+    --secondary: #d35400;      /* Warm orange */
+    --accent: #f1c40f;         /* Gold/Yellow */
+    --dark: #2c3e50;           /* Slate dark */
+    --medium: #7f8c8d;         /* Gray */
+    --light: #ecf0f1;          /* Light gray */
+    --white: #ffffff;
+    --success: #27ae60;        /* Green */
+    --warning: #f39c12;        /* Orange */
+    --danger: #c0392b;         /* Red */
+    
+    /* Typography */
+    --font-heading: 'Merriweather', Georgia, serif;
+    --font-body: 'Open Sans', Arial, sans-serif;
+    
+    /* Spacing */
+    --space-xxs: 0.25rem;
+    --space-xs: 0.5rem;
+    --space-sm: 0.75rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-xxl: 3rem;
+    
+    /* Container widths */
+    --container-sm: 640px;
+    --container-md: 768px;
+    --container-lg: 1024px;
+    --container-xl: 1280px;
+    
+    /* Border radius */
+    --radius-sm: 3px;
+    --radius-md: 5px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.25s ease;
+    --transition-slow: 0.4s ease;}
+body {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--dark);
+    background-color: var(--white);}
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    line-height: 1.3;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: var(--dark);}
+h1 {
+    font-size: 2.5rem;}
+h2 {
+    font-size: 2rem;}
+h3 {
+    font-size: 1.75rem;}
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;}
+button, input, select, textarea {
+    font-family: var(--font-body);
+    font-size: 1rem;}
+/* ===== LAYOUT ===== */
+.container {
+    width: 100%;
+    max-width: var(--container-xl);
+    margin: 0 auto;
+    padding: 0 1.5rem;}
+@media (max-width: 768px) {
+    .grid-cols-2, .grid-cols-3 {
+        grid-template-columns: 1fr;}
+/* ===== HEADER STYLES ===== */
+header {
+    background-color: var(--white);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 1rem 0;}
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;}
+nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;}
+nav li {
+    margin-left: 1.5rem;}
+nav a {
+    font-weight: 600;
+    color: var(--dark);
+    text-decoration: none;
+    padding: 0.5rem 0;
+    transition: color var(--transition-fast);
+    position: relative;}
+nav a:hover {
+    color: var(--primary);}
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary);
+    transition: width var(--transition-normal);}
+nav a:hover::after {
+    width: 100%;}
+/* Smooth theme transition */
+body,
+header,
+.nav-menu,
+.card,
+.hero,
+.section,
+footer,
+.accordion-header,
+.btn {
+    transition: background-color var(--transition-normal), color var(--transition-normal);}
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+        touch-action: manipulation;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;}
+.nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh; /* Fallback for older browsers */
+        height: 100dvh; /* Use dynamic viewport height for better mobile support */
+        height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback for iOS */
+        background-color: var(--white);
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 2rem;
+        box-shadow: var(--shadow-lg);
+        transition: right var(--transition-normal);
+        z-index: 60;
+        /* iOS specific fixes */
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;}
+.nav-menu.active {
+        right: 0;}
+nav li {
+        margin: 0 0 1.5rem 0;}
+nav a::after {
+        display: none;}
+/* Ensure mobile nav links are clickable */
+    .nav-menu a {
+        display: block;
+        padding: 0.75rem 1rem;
+        position: relative;
+        z-index: 65;
+        -webkit-tap-highlight-color: rgba(26, 82, 118, 0.2);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: manipulation;
+        cursor: pointer;
+        /* Ensure proper touch target size */
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        /* Improved mobile link styling */
+        color: var(--primary);
+        font-weight: 600;
+        border-radius: var(--radius-md);
+        margin-bottom: 0.25rem;
+        transition: all var(--transition-fast);}
+.nav-menu li {
+        display: block;
+        width: 100%;}
+/* Mobile menu icon styling */
+    .nav-menu .nav-icon {
+        color: var(--primary);
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+        width: 1.5rem;
+        text-align: center;}
+/* iOS specific fixes and hover states */
+    .nav-menu a:active {
+        background-color: rgba(26, 82, 118, 0.15);
+        transform: scale(0.98);
+        transition: all 0.1s ease;
+        color: var(--primary-dark);}
+.nav-menu a:hover {
+        background-color: rgba(26, 82, 118, 0.08);
+        color: var(--primary-dark);
+        transform: translateX(4px);}
+/* Active/current page styling for mobile */
+    .nav-menu a.active,
+    .nav-menu a[aria-current="page"] {
+        background-color: var(--primary);
+        color: var(--white);}
+.nav-menu a.active .nav-icon,
+    .nav-menu a[aria-current="page"] .nav-icon {
+        color: var(--white);}
+/* Prevent body scroll when menu is open */
+    body.menu-open {
+        overflow: hidden;}
+.footer-section h3 {
+    color: var(--white);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;}
+/* ===== HERO SECTION ===== */
+.hero {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: var(--space-xxl) 0;
+    text-align: center;}
+.hero h1 {
+    color: var(--white);
+    font-size: 2.75rem;
+    margin-bottom: 1rem;}
+.hero p {
+    font-size: 1.25rem;
+    max-width: 800px;
+    margin: 0 auto;}
+/* ===== CARDS ===== */
+.card {
+    background-color: var(--white);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 1.5rem;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);}
+.card-content {
+    padding: 1.5rem;}
+.card-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;}
+.card-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;}
+/* ===== UTILITIES ===== */
+.text-center {
+    text-align: center;}
+.timeline-content h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--primary);}
+@media screen and (max-width: 768px) {
+    .timeline::after {
+        left: 20px;}
+.officer-img {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;}
+.officer-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;}
+.placeholder-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--light);
+    color: var(--medium);}
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1.25rem;
+    background-color: var(--white);
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+    font-weight: 600;}
+.accordion-header:hover {
+    background-color: var(--light);}
+.accordion-header.active {
+    background-color: var(--primary);
+    color: var(--white);}
+/* ===== MOBILE RESPONSIVENESS ===== */
+@media (max-width: 576px) {
+    html {
+        font-size: 14px;}
+h1 {
+        font-size: 2rem;}
+h2 {
+        font-size: 1.75rem;}
+.hero {
+        padding: var(--space-xl) 0;}
+.hero h1 {
+        font-size: 2.25rem;}
+.hero p {
+        font-size: 1.125rem;}
+.container {
+        padding: 0 1rem;}
+/* ===== PRINT STYLES ===== */
+@media print {
+    body {
+        background-color: white;
+        color: black;
+        font-size: 12pt;}
+.container {
+        max-width: 100%;
+        padding: 0;}
+header, footer, #back-to-top, .hero {
+        display: none;}
+.card {
+        box-shadow: none;
+        border: 1px solid #ddd;}
+.card:hover {
+        transform: none;
+        box-shadow: none;}
+/* Add these new styles for the banner and navigation icons */
+
+/* Banner Image */
+.banner-container {
+    width: 100%;
+    overflow: hidden;
+    text-align: center;
+    background-color: var(--primary);}
+/* Navigation Icons */
+.nav-icon {
+    width: auto;
+    height: auto;
+    margin-right: 8px;
+    color: var(--primary);
+    font-size: 1.2rem;}
+.nav-menu li.active .nav-icon,
+.nav-menu li a:hover .nav-icon {
+    color: var(--accent);}
+@media (max-width: 768px) {
+    .nav-icon {
+        margin-right: 5px;
+        font-size: 1rem;}
+/* Mobile Calendar Styles */
+@media (max-width: 768px) {
+    .meeting-entry {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;}
+.location-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.75rem;}
+/* iPhone-specific optimizations */
+@media screen and (max-width: 428px) {
+    /* Calendar table optimizations */
+    .meeting-table {
+        font-size: 0.85rem;  /* Slightly smaller font for iPhone */}
+.location-card h3 {
+        font-size: 1.1rem;}
+/* Fix notch interference */
+    .header-container {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);}
+/* Adjust container padding */
+    .container {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));}
+/* iPhone SE specific adjustments */
+@media screen and (max-width: 375px) {
+    .meeting-table {
+        font-size: 0.8rem;}
+/* Fix for iPhone landscape mode */
+@media screen and (max-height: 428px) and (orientation: landscape) {
+    .meeting-entry {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;}
+    </style>
     <link rel="preload" href="dist/css/styles.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="dist/css/styles.min.css"></noscript>
-    <noscript><link rel="stylesheet" href="dist/css/styles.min.css"></noscript>
     <noscript><link rel="stylesheet" href="dist/css/styles.min.css"></noscript>
             
     <!-- Favicon -->
@@ -861,6 +1595,86 @@ header, footer, #back-to-top, .hero {
             font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
         }
     </style>
+    
+    <style>
+        /* Font loading states */
+        .fonts-loading body {
+            opacity: 0.8;
+        }
+        
+        .fonts-loaded body {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Font fallbacks */
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        .fonts-loaded body {
+            font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+        
+        .fonts-loaded h1, 
+        .fonts-loaded h2, 
+        .fonts-loaded h3, 
+        .fonts-loaded h4, 
+        .fonts-loaded h5, 
+        .fonts-loaded h6 {
+            font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+    </style>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/600.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/700.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/merriweather/v1/400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/merriweather/v1/700.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <style>
+        /* Font loading states */
+        .fonts-loading body {
+            opacity: 0.8;
+        }
+        
+        .fonts-loaded body {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Font fallbacks */
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        .fonts-loaded body {
+            font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+        
+        .fonts-loaded h1, 
+        .fonts-loaded h2, 
+        .fonts-loaded h3, 
+        .fonts-loaded h4, 
+        .fonts-loaded h5, 
+        .fonts-loaded h6 {
+            font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+    </style>
+    
+    <!-- Font Preloads -->
+    <link rel="preload" href="https://fonts.gstatic.com/s/merriweather/v30/u-440qyriQwlOrhSvowK_l5OeyxNV-bnrw.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/merriweather/v30/u-4n0qyriQwlOrhSvowK_l52xwNZWMf6.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v40/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0C4nY1M2xLER.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v40/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsg-1x4taVQUwaEQXjN_mQ.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v40/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsgH1x4taVQUwaEQXjN_mQ.woff2" as="font" type="font/woff2" crossorigin>
 </head>
 <body>
     <!-- Skip to content link for accessibility -->
@@ -943,9 +1757,75 @@ header, footer, #back-to-top, .hero {
             </div>
         </section>
         
-
-        
-
+        <!-- Contact Form Section -->
+        <section class="section" style="background-color: var(--light);">
+            <div class="container">
+                <div class="text-center">
+                    <h2 class="section-title">Send Us a Message</h2>
+                    <p style="max-width: 600px; margin: 0 auto;">Have a question about stamp collecting, want to join our association, or need more information about our meetings? Fill out the form below and we'll get back to you as soon as possible.</p>
+                </div>
+                
+                <div class="card" style="max-width: 800px; margin: 2rem auto 0;">
+                    <div class="card-content">
+                        <form id="contact-form" novalidate>
+                            <input type="hidden" id="csrf-token" name="csrf_token" value="">
+                            
+                            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                                <div class="form-group">
+                                    <label for="name" class="form-label">Full Name <span style="color: var(--danger);">*</span></label>
+                                    <input type="text" id="name" name="name" class="form-control" required>
+                                    <div class="error-message" id="name-error"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="email" class="form-label">Email Address <span style="color: var(--danger);">*</span></label>
+                                    <input type="email" id="email" name="email" class="form-control" required>
+                                    <div class="error-message" id="email-error"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group" style="margin-bottom: 1rem;">
+                                <label for="phone" class="form-label">Phone Number (Optional)</label>
+                                <input type="tel" id="phone" name="phone" class="form-control" placeholder="(210) 555-0123">
+                                <div class="error-message" id="phone-error"></div>
+                            </div>
+                            
+                            <div class="form-group" style="margin-bottom: 1rem;">
+                                <label for="subject" class="form-label">Subject <span style="color: var(--danger);">*</span></label>
+                                <select id="subject" name="subject" class="form-control" required>
+                                    <option value="">Select a topic...</option>
+                                    <option value="General Inquiry">General Inquiry</option>
+                                    <option value="Membership Information">Membership Information</option>
+                                    <option value="Meeting Questions">Meeting Questions</option>
+                                    <option value="Newsletter Inquiry">Newsletter Inquiry</option>
+                                    <option value="Event Information">Event Information</option>
+                                    <option value="Website Feedback">Website Feedback</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <div class="error-message" id="subject-error"></div>
+                            </div>
+                            
+                            <div class="form-group" style="margin-bottom: 1.5rem;">
+                                <label for="message" class="form-label">Message <span style="color: var(--danger);">*</span></label>
+                                <textarea id="message" name="message" class="form-control" rows="6" placeholder="Please share your questions, comments, or how we can help you..." required></textarea>
+                                <div class="error-message" id="message-error"></div>
+                            </div>
+                            
+                            <div class="form-group text-center">
+                                <button type="submit" class="btn btn-primary" id="submit-btn">
+                                    <i class="fas fa-paper-plane"></i> Send Message
+                                </button>
+                                <div class="loading-spinner" id="loading-spinner" style="display: none;">
+                                    <i class="fas fa-spinner fa-spin"></i> Sending...
+                                </div>
+                            </div>
+                            
+                            <div class="form-message" id="form-message"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
         
         <!-- Map Section -->
         <section class="section">
@@ -1120,56 +2000,7 @@ header, footer, #back-to-top, .hero {
         })();
     </script>
     
-    <script>
-        // Font Face Observer script
-        (function() {
-            class FontFaceObserver {
-                constructor(family, options = {}) {
-                    this.family = family;
-                    this.options = options;
-                }
-                
-                async load() {
-                    try {
-                        await document.fonts.load(`1em ${this.family}`, this.options.text || 'BESbswy');
-                        return true;
-                    } catch (e) {
-                        return false;
-                    }
-                }
-            }
-
-            // Load fonts and mark as loaded
-            async function loadFonts() {
-                document.documentElement.classList.add('fonts-loading');
-                
-                const fontLoaders = [
-                    new FontFaceObserver('Open Sans', { weight: 400 }).load(),
-                    new FontFaceObserver('Open Sans', { weight: 600 }).load(),
-                    new FontFaceObserver('Open Sans', { weight: 700 }).load(),
-                    new FontFaceObserver('Merriweather', { weight: 400 }).load(),
-                    new FontFaceObserver('Merriweather', { weight: 700 }).load()
-                ];
-
-                try {
-                    await Promise.all(fontLoaders);
-                    document.documentElement.classList.remove('fonts-loading');
-                    document.documentElement.classList.add('fonts-loaded');
-                    localStorage.setItem('fonts-loaded', 'true');
-                } catch (err) {
-                    document.documentElement.classList.remove('fonts-loading');
-                    document.documentElement.classList.add('fonts-failed');
-                }
-            }
-
-            // Check if fonts were previously loaded
-            if (localStorage.getItem('fonts-loaded')) {
-                document.documentElement.classList.add('fonts-loaded');
-            } else {
-                loadFonts();
-            }
-        })();
-    </script>
+    
 
 <script type="module">
     import {onCLS, onFID, onLCP, onFCP, onTTFB} from 'https://unpkg.com/web-vitals@3/dist/web-vitals.attribution.js';
@@ -1374,208 +2205,8 @@ header, footer, #back-to-top, .hero {
     }
 </script>
     
-    <script>
-        // Font Face Observer script
-        (function() {
-            class FontFaceObserver {
-                constructor(family, options = {}) {
-                    this.family = family;
-                    this.options = options;
-                }
-                
-                async load() {
-                    try {
-                        await document.fonts.load(`1em ${this.family}`, this.options.text || 'BESbswy');
-                        return true;
-                    } catch (e) {
-                        return false;
-                    }
-                }
-            }
-
-            // Load fonts and mark as loaded
-            async function loadFonts() {
-                document.documentElement.classList.add('fonts-loading');
-                
-                const fontLoaders = [
-                    new FontFaceObserver('Open Sans', { weight: 400 }).load(),
-                    new FontFaceObserver('Open Sans', { weight: 600 }).load(),
-                    new FontFaceObserver('Open Sans', { weight: 700 }).load(),
-                    new FontFaceObserver('Merriweather', { weight: 400 }).load(),
-                    new FontFaceObserver('Merriweather', { weight: 700 }).load()
-                ];
-
-                try {
-                    await Promise.all(fontLoaders);
-                    document.documentElement.classList.remove('fonts-loading');
-                    document.documentElement.classList.add('fonts-loaded');
-                    localStorage.setItem('fonts-loaded', 'true');
-                } catch (err) {
-                    document.documentElement.classList.remove('fonts-loading');
-                    document.documentElement.classList.add('fonts-failed');
-                }
-            }
-
-            // Check if fonts were previously loaded
-            if (localStorage.getItem('fonts-loaded')) {
-                document.documentElement.classList.add('fonts-loaded');
-            } else {
-                loadFonts();
-            }
-        })();
-    </script>
     
-    <script>
-        // Font Face Observer script
-        (function() {
-            class FontFaceObserver {
-                constructor(family, options = {}) {
-                    this.family = family;
-                    this.options = options;
-                }
-                
-                async load() {
-                    try {
-                        await document.fonts.load(`1em ${this.family}`, this.options.text || 'BESbswy');
-                        return true;
-                    } catch (e) {
-                        return false;
-                    }
-                }
-            }
-
-            // Load fonts and mark as loaded
-            async function loadFonts() {
-                document.documentElement.classList.add('fonts-loading');
-                
-                const fontLoaders = [
-                    new FontFaceObserver('Open Sans', { weight: 400 }).load(),
-                    new FontFaceObserver('Open Sans', { weight: 600 }).load(),
-                    new FontFaceObserver('Open Sans', { weight: 700 }).load(),
-                    new FontFaceObserver('Merriweather', { weight: 400 }).load(),
-                    new FontFaceObserver('Merriweather', { weight: 700 }).load()
-                ];
-
-                try {
-                    await Promise.all(fontLoaders);
-                    document.documentElement.classList.remove('fonts-loading');
-                    document.documentElement.classList.add('fonts-loaded');
-                    localStorage.setItem('fonts-loaded', 'true');
-                } catch (err) {
-                    document.documentElement.classList.remove('fonts-loading');
-                    document.documentElement.classList.add('fonts-failed');
-                }
-            }
-
-            // Check if fonts were previously loaded
-            if (localStorage.getItem('fonts-loaded')) {
-                document.documentElement.classList.add('fonts-loaded');
-            } else {
-                loadFonts();
-            }
-        })();
-    </script>
     
-    <script>
-        // Font Face Observer script
-        (function() {
-            class FontFaceObserver {
-                constructor(family, options = {}) {
-                    this.family = family;
-                    this.options = options;
-                }
-                
-                async load() {
-                    try {
-                        await document.fonts.load(`1em ${this.family}`, this.options.text || 'BESbswy');
-                        return true;
-                    } catch (e) {
-                        return false;
-                    }
-                }
-            }
-
-            // Load fonts and mark as loaded
-            async function loadFonts() {
-                document.documentElement.classList.add('fonts-loading');
-                
-                const fontLoaders = [
-                    new FontFaceObserver('Open Sans', { weight: 400 }).load(),
-                    new FontFaceObserver('Open Sans', { weight: 600 }).load(),
-                    new FontFaceObserver('Open Sans', { weight: 700 }).load(),
-                    new FontFaceObserver('Merriweather', { weight: 400 }).load(),
-                    new FontFaceObserver('Merriweather', { weight: 700 }).load()
-                ];
-
-                try {
-                    await Promise.all(fontLoaders);
-                    document.documentElement.classList.remove('fonts-loading');
-                    document.documentElement.classList.add('fonts-loaded');
-                    localStorage.setItem('fonts-loaded', 'true');
-                } catch (err) {
-                    document.documentElement.classList.remove('fonts-loading');
-                    document.documentElement.classList.add('fonts-failed');
-                }
-            }
-
-            // Check if fonts were previously loaded
-            if (localStorage.getItem('fonts-loaded')) {
-                document.documentElement.classList.add('fonts-loaded');
-            } else {
-                loadFonts();
-            }
-        })();
-    </script>
     
-    <script>
-        // Font Face Observer script
-        (function() {
-            class FontFaceObserver {
-                constructor(family, options = {}) {
-                    this.family = family;
-                    this.options = options;
-                }
-                
-                async load() {
-                    try {
-                        await document.fonts.load(`1em ${this.family}`, this.options.text || 'BESbswy');
-                        return true;
-                    } catch (e) {
-                        return false;
-                    }
-                }
-            }
-
-            // Load fonts and mark as loaded
-            async function loadFonts() {
-                document.documentElement.classList.add('fonts-loading');
-                
-                const fontLoaders = [
-                    new FontFaceObserver('Open Sans', { weight: 400 }).load(),
-                    new FontFaceObserver('Open Sans', { weight: 600 }).load(),
-                    new FontFaceObserver('Open Sans', { weight: 700 }).load(),
-                    new FontFaceObserver('Merriweather', { weight: 400 }).load(),
-                    new FontFaceObserver('Merriweather', { weight: 700 }).load()
-                ];
-
-                try {
-                    await Promise.all(fontLoaders);
-                    document.documentElement.classList.remove('fonts-loading');
-                    document.documentElement.classList.add('fonts-loaded');
-                    localStorage.setItem('fonts-loaded', 'true');
-                } catch (err) {
-                    document.documentElement.classList.remove('fonts-loading');
-                    document.documentElement.classList.add('fonts-failed');
-                }
-            }
-
-            // Check if fonts were previously loaded
-            if (localStorage.getItem('fonts-loaded')) {
-                document.documentElement.classList.add('fonts-loaded');
-            } else {
-                loadFonts();
-            }
-        })();
-    </script>
 </body>
 </html> 
