@@ -14,7 +14,46 @@ export class CalendarComponent {
         this.meetingsData = meetingsData;
         this.calendar = null;
         this.events = [];
-        this.init();
+        this.isLazyLoaded = false;
+        
+        // Don't initialize immediately if lazy loading is enabled
+        if (!this.isLazyLoaded) {
+            this.init();
+        }
+    }
+
+    /**
+     * Static method for lazy loading calendar
+     * @param {HTMLElement} element - Container element
+     * @param {Object} meetingsData - Meetings data
+     * @returns {Promise<CalendarComponent>} - Calendar instance
+     */
+    static async lazyLoad(element, meetingsData = null) {
+        return new Promise((resolve, reject) => {
+            try {
+                // Load meetings data if not provided
+                if (!meetingsData) {
+                    import('./modules/meeting-loader.js')
+                        .then(({ meetingLoader }) => {
+                            return meetingLoader.loadMeetings();
+                        })
+                        .then(data => {
+                            const calendar = new CalendarComponent(element.id, data);
+                            calendar.isLazyLoaded = true;
+                            calendar.init();
+                            resolve(calendar);
+                        })
+                        .catch(reject);
+                } else {
+                    const calendar = new CalendarComponent(element.id, meetingsData);
+                    calendar.isLazyLoaded = true;
+                    calendar.init();
+                    resolve(calendar);
+                }
+            } catch (error) {
+                reject(error);
+            }
+        });
     }
 
     /**

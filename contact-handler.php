@@ -4,24 +4,15 @@
  * San Antonio Philatelic Association
  */
 
-// Include CSRF token functions
+// Include security headers and CSRF token functions
+require_once 'security-headers.php';
 require_once 'csrf-token.php';
 
-// Security headers
+// Set JSON content type
 header('Content-Type: application/json');
-header('X-Content-Type-Options: nosniff');
-header('X-Frame-Options: DENY');
-header('X-XSS-Protection: 1; mode=block');
 
-// CORS configuration (adjust as needed)
-$allowed_origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-$allowed_origins = ['https://yourdomain.com', 'http://localhost:8080'];
-
-if (in_array($allowed_origin, $allowed_origins)) {
-    header("Access-Control-Allow-Origin: $allowed_origin");
-    header('Access-Control-Allow-Methods: POST, OPTIONS');
-    header('Access-Control-Allow-Headers: Content-Type');
-}
+// Set CORS headers for contact form
+setCORSHeaders();
 
 // Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -63,8 +54,24 @@ function validatePhone($phone) {
     return preg_match('/^[0-9]{10}$/', $cleaned);
 }
 
-function sanitizeInput($input) {
-    return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
+// Rate limiting check
+$clientIP = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+if (!checkRateLimit($clientIP, 3, 3600)) { // 3 submissions per hour
+    $response['errors']['rate_limit'] = 'Too many submissions. Please wait before trying again.';
+    logSecurityEvent('rate_limit_exceeded', 'Contact form rate limit exceeded', ['ip' => $clientIP]);
+}
+
+// Enhanced input safety validation
+foreach ($input as $key => $value) {
+    if (is_string($value) && !validateInputSafety($value)) {
+        $response['errors']['security'] = 'Invalid input detected. Please check your submission.';
+        logSecurityEvent('suspicious_input', 'Potentially malicious input detected', [
+            'field' => $key,
+            'value' => substr($value, 0, 100),
+            'ip' => $clientIP
+        ]);
+        break;
+    }
 }
 
 // CSRF Token Validation
@@ -86,7 +93,7 @@ foreach ($required_fields as $field) {
 
 // Validate and sanitize inputs
 if (!empty($input['name'])) {
-    $name = sanitizeInput($input['name']);
+    $name = sanitizeInput($input['name'], 'text');
     if (strlen($name) < 2) {
         $response['errors']['name'] = 'Name must be at least 2 characters';
     } elseif (strlen($name) > 100) {
@@ -97,7 +104,7 @@ if (!empty($input['name'])) {
 }
 
 if (!empty($input['email'])) {
-    $email = sanitizeInput($input['email']);
+    $email = sanitizeInput($input['email'], 'email');
     if (!validateEmail($email)) {
         $response['errors']['email'] = 'Please provide a valid email address';
     }
@@ -106,7 +113,7 @@ if (!empty($input['email'])) {
 }
 
 if (!empty($input['phone'])) {
-    $phone = sanitizeInput($input['phone']);
+    $phone = sanitizeInput($input['phone'], 'phone');
     if ($phone && !validatePhone($phone)) {
         $response['errors']['phone'] = 'Please provide a valid US phone number';
     }
@@ -115,7 +122,7 @@ if (!empty($input['phone'])) {
 }
 
 if (!empty($input['subject'])) {
-    $subject = sanitizeInput($input['subject']);
+    $subject = sanitizeInput($input['subject'], 'text');
     if (strlen($subject) < 3) {
         $response['errors']['subject'] = 'Subject must be at least 3 characters';
     } elseif (strlen($subject) > 200) {
@@ -126,7 +133,7 @@ if (!empty($input['subject'])) {
 }
 
 if (!empty($input['message'])) {
-    $message = sanitizeInput($input['message']);
+    $message = sanitizeInput($input['message'], 'text');
     if (strlen($message) < 10) {
         $response['errors']['message'] = 'Message must be at least 10 characters';
     } elseif (strlen($message) > 5000) {

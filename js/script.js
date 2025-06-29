@@ -8,6 +8,8 @@ import { Calendar } from 'vanilla-calendar-pro';
 import { calendarAdapter } from './calendar-adapter.js';
 import { modal } from './modal.js';
 import { reminderSystem } from './reminder-system.js';
+import { ErrorBoundary, globalErrorBoundary } from './error-boundary.js';
+import { calendarLazyLoader } from './lazy-loader.js';
 
 // Store references to event listeners for cleanup
 const eventListeners = new Map();
@@ -151,29 +153,55 @@ async function fetchWithRetry(url, options = {}, retries = 3) {
 // Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
     try {
-        // Fix mobile viewport height issues
-        setupMobileViewportHeight();
+        // Create error boundaries for each component
+        const createComponentBoundary = (name, fn, container = null) => {
+            return new ErrorBoundary({
+                componentName: name,
+                container: container,
+                onError: (error, componentName) => {
+                    console.error(`[${componentName}] Component failed:`, error);
+                    // Track component failures
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'exception', {
+                            description: `Component failure: ${componentName}`,
+                            fatal: false
+                        });
+                    }
+                },
+                retryCallback: () => {
+                    try {
+                        fn();
+                    } catch (retryError) {
+                        console.error(`[${name}] Retry failed:`, retryError);
+                    }
+                },
+                maxRetries: 1
+            }).wrap(fn);
+        };
+
+        // Wrap setup functions with error boundaries
+        const mobileViewportSetup = createComponentBoundary('Mobile Viewport', setupMobileViewportHeight);
+        const mobileMenuSetup = createComponentBoundary('Mobile Menu', setupMobileMenu);
+        const backToTopSetup = createComponentBoundary('Back to Top', setupBackToTopButton);
+        const countdownSetup = createComponentBoundary('Event Countdown', setupEventCountdown);
+        const formValidationSetup = createComponentBoundary('Form Validation', setupFormValidation);
+        const accordionSetup = createComponentBoundary('Accordion', setupAccordion);
+        const themeToggleSetup = createComponentBoundary('Theme Toggle', setupThemeToggle);
+        const contactFormSetup = createComponentBoundary('Contact Form', setupContactForm);
+
+        // Initialize components with error isolation
+        mobileViewportSetup();
+        mobileMenuSetup();
+        backToTopSetup();
+        countdownSetup();
+        formValidationSetup();
+        accordionSetup();
+        themeToggleSetup();
+        contactFormSetup();
+
+        // Setup error boundaries for dynamic content containers
+        setupDynamicContentBoundaries();
         
-        // Mobile menu toggle
-        setupMobileMenu();
-        
-        // Back to top button functionality
-        setupBackToTopButton();
-        
-        // Event countdown timer
-        setupEventCountdown();
-        
-        // Form validation
-        setupFormValidation();
-        
-        // Initialize accordion functionality (if needed)
-        setupAccordion();
-        
-        // Initialize theme toggle
-        setupThemeToggle();
-        
-        // Initialize contact form
-        setupContactForm();
     } catch (error) {
         console.error('Error during page initialization:', error);
         // Show user-friendly error message
@@ -922,6 +950,41 @@ function setupContactForm() {
             const formMessage = safeQuerySelector('#form-message');
             
             try {
+                // Check client-side rate limiting
+                if (!checkClientRateLimit('contact_form', 3, 3600000)) { // 3 per hour
+                    if (formMessage) {
+                        formMessage.innerHTML = '<div class="error-message" style="color: var(--danger); background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 1rem; border-radius: var(--radius-md); margin-top: 1rem;"><i class="fas fa-exclamation-triangle"></i> Too many submissions. Please wait before trying again.</div>';
+                    }
+                    return;
+                }
+                
+                // Enhanced client-side validation
+                const inputs = {
+                    name: data.name,
+                    email: data.email,
+                    phone: data.phone,
+                    subject: data.subject,
+                    message: data.message
+                };
+                
+                let validationErrors = {};
+                
+                // Validate each input
+                Object.keys(inputs).forEach(key => {
+                    if (inputs[key]) {
+                        const validation = validateAndSanitizeInput(inputs[key], key);
+                        if (!validation.isValid) {
+                            validationErrors[key] = validation.errors.join(', ');
+                        }
+                    }
+                });
+                
+                // Show validation errors if any
+                if (Object.keys(validationErrors).length > 0) {
+                    displayFormErrors(validationErrors);
+                    return;
+                }
+                
                 // Clear previous messages
                 clearFormErrors();
                 if (formMessage) formMessage.innerHTML = '';
@@ -1041,6 +1104,107 @@ function setupContactForm() {
 }
 
 /**
+ * Client-side rate limiting for form submissions
+ * @param {string} key - Unique key for rate limiting
+ * @param {number} maxRequests - Maximum requests allowed
+ * @param {number} timeWindow - Time window in milliseconds
+ * @returns {boolean} - True if request is allowed
+ */
+function checkClientRateLimit(key, maxRequests = 3, timeWindow = 3600000) { // 1 hour default
+    try {
+        const storageKey = `rate_limit_${key}`;
+        const now = Date.now();
+        
+        const stored = safeLocalStorageGet(storageKey, []);
+        const requests = Array.isArray(stored) ? stored : [];
+        
+        // Remove old requests
+        const validRequests = requests.filter(timestamp => (now - timestamp) < timeWindow);
+        
+        // Check if limit exceeded
+        if (validRequests.length >= maxRequests) {
+            return false;
+        }
+        
+        // Add current request
+        validRequests.push(now);
+        
+        // Save updated requests
+        safeLocalStorageSet(storageKey, validRequests);
+        
+        return true;
+    } catch (error) {
+        console.warn('Rate limiting check failed:', error);
+        return true; // Allow request if rate limiting fails
+    }
+}
+
+/**
+ * Enhanced input validation and sanitization
+ * @param {string} input - Input to validate
+ * @param {string} type - Input type (text, email, phone)
+ * @returns {object} - Validation result
+ */
+function validateAndSanitizeInput(input, type = 'text') {
+    const result = {
+        isValid: true,
+        sanitized: input,
+        errors: []
+    };
+    
+    // Basic safety checks
+    const dangerousPatterns = [
+        /<script[^>]*>.*?<\/script>/gi,
+        /javascript:/gi,
+        /vbscript:/gi,
+        /onload=/gi,
+        /onerror=/gi,
+        /onclick=/gi
+    ];
+    
+    for (const pattern of dangerousPatterns) {
+        if (pattern.test(input)) {
+            result.isValid = false;
+            result.errors.push('Invalid characters detected');
+            break;
+        }
+    }
+    
+    // Type-specific validation
+    switch (type) {
+        case 'email':
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(input)) {
+                result.isValid = false;
+                result.errors.push('Invalid email format');
+            }
+            break;
+            
+        case 'phone':
+            const phonePattern = /^[\d\s\-\(\)\+\.]{10,}$/;
+            if (input && !phonePattern.test(input)) {
+                result.isValid = false;
+                result.errors.push('Invalid phone format');
+            }
+            break;
+            
+        case 'text':
+        default:
+            // Length validation
+            if (input.length > 5000) {
+                result.isValid = false;
+                result.errors.push('Input too long');
+            }
+            break;
+    }
+    
+    // Sanitize output
+    result.sanitized = sanitizeText(input);
+    
+    return result;
+}
+
+/**
  * Fetch CSRF token from server
  */
 async function fetchCSRFToken() {
@@ -1140,6 +1304,202 @@ function sanitizeText(input) {
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#x27;')
         .replace(/\//g, '&#x2F;');
+}
+
+/**
+ * Setup error boundaries for dynamic content containers
+ */
+function setupDynamicContentBoundaries() {
+    try {
+        // Meeting schedule container boundary
+        const meetingContainer = safeQuerySelector('#meeting-schedule-container');
+        if (meetingContainer) {
+            const meetingBoundary = new ErrorBoundary({
+                componentName: 'Meeting Schedule',
+                container: meetingContainer,
+                onError: (error) => {
+                    console.error('[Meeting Schedule] Failed to load:', error);
+                },
+                maxRetries: 2
+            });
+        }
+
+        // Calendar container with lazy loading
+        const calendarContainers = document.querySelectorAll('.calendar-container, #calendar-container, [class*="calendar"], [id*="calendar"]');
+        calendarContainers.forEach((calendarContainer, index) => {
+            if (calendarContainer) {
+                // Set up lazy loading for calendar
+                calendarLazyLoader.observe(
+                    calendarContainer,
+                    async (element) => {
+                        // Dynamic import of calendar component
+                        const { CalendarComponent } = await import('./calendar-component.js');
+                        
+                        // Load calendar with error boundary protection
+                        const calendarBoundary = new ErrorBoundary({
+                            componentName: `Calendar ${index + 1}`,
+                            container: element,
+                            maxRetries: 2
+                        });
+
+                        const loadCalendar = calendarBoundary.wrapAsync(async () => {
+                            return await CalendarComponent.lazyLoad(element);
+                        });
+
+                        return await loadCalendar();
+                    },
+                    {
+                        maxRetries: 2,
+                        fallbackContent: (error) => `
+                            <div class="calendar-error" style="
+                                background-color: #fff3cd;
+                                color: #856404;
+                                border: 1px solid #ffc107;
+                                border-radius: var(--radius-md);
+                                padding: 1rem;
+                                text-align: center;
+                            ">
+                                <h3><i class="fas fa-calendar-times"></i> Calendar Unavailable</h3>
+                                <p>Unable to load the calendar. Please try refreshing the page or contact us for meeting dates.</p>
+                                <p style="font-size: 0.875rem; margin-top: 0.5rem;">
+                                    Email: <a href="mailto:loz33@hotmail.com">loz33@hotmail.com</a>
+                                </p>
+                            </div>
+                        `
+                    }
+                );
+            }
+        });
+
+        // Search container boundary
+        const searchContainer = safeQuerySelector('.search-container, #search-container');
+        if (searchContainer) {
+            const searchBoundary = new ErrorBoundary({
+                componentName: 'Search',
+                container: searchContainer,
+                fallbackUI: (error) => `
+                    <div class="search-error" style="
+                        background-color: #f8d7da;
+                        color: #721c24;
+                        border: 1px solid #f5c6cb;
+                        border-radius: var(--radius-md);
+                        padding: 1rem;
+                        text-align: center;
+                    ">
+                        <h3><i class="fas fa-search-minus"></i> Search Unavailable</h3>
+                        <p>The search feature is temporarily unavailable. Please try browsing our sections instead.</p>
+                        <div style="margin-top: 1rem;">
+                            <a href="newsletter.html" class="btn btn-primary" style="margin-right: 0.5rem;">Newsletters</a>
+                            <a href="meetings.html" class="btn btn-primary">Meetings</a>
+                        </div>
+                    </div>
+                `,
+                maxRetries: 1
+            });
+        }
+
+        // Newsletter content with lazy loading
+        const newsletterContainers = document.querySelectorAll('.newsletter-content, [class*="newsletter"], [id*="newsletter"]');
+        newsletterContainers.forEach((container, index) => {
+            // Only apply to containers that seem to load dynamic content
+            if (container.dataset.lazy === 'true' || 
+                container.classList.contains('dynamic-content') ||
+                container.querySelector('.loading, .spinner')) {
+                
+                calendarLazyLoader.observe(
+                    container,
+                    async (element) => {
+                        // Dynamic import of newsletter loader
+                        const { newsletterLoader } = await import('./modules/newsletter-loader.js');
+                        
+                        const newsletters = await newsletterLoader.loadNewsletters();
+                        
+                        // Render newsletter content
+                        if (newsletters && newsletters.length > 0) {
+                            element.innerHTML = newsletters.map(newsletter => `
+                                <div class="newsletter-item">
+                                    <h4>${newsletter.title}</h4>
+                                    <p>${newsletter.description}</p>
+                                    <a href="${newsletter.url}" target="_blank" class="btn btn-primary">
+                                        <i class="fas fa-file-pdf"></i> View PDF
+                                    </a>
+                                </div>
+                            `).join('');
+                        }
+                    },
+                    {
+                        placeholder: () => `
+                            <div class="newsletter-placeholder" style="
+                                background-color: #f8f9fa;
+                                border: 2px dashed #dee2e6;
+                                border-radius: var(--radius-md);
+                                padding: 2rem;
+                                text-align: center;
+                                color: var(--medium);
+                            ">
+                                <i class="fas fa-newspaper" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                                <p>Newsletter content will load when scrolled into view</p>
+                            </div>
+                        `,
+                        fallbackContent: (error) => `
+                            <div class="newsletter-error" style="
+                                background-color: #e7f3ff;
+                                color: #0066cc;
+                                border: 1px solid #b3d9ff;
+                                border-radius: var(--radius-md);
+                                padding: 1rem;
+                                text-align: center;
+                            ">
+                                <h4><i class="fas fa-newspaper"></i> Newsletter Content Unavailable</h4>
+                                <p>Unable to load newsletter content. Please contact us for the latest issues.</p>
+                            </div>
+                        `,
+                        maxRetries: 1
+                    }
+                );
+            }
+        });
+
+        // Contact form specific boundary (additional protection)
+        const contactForm = safeQuerySelector('#contact-form');
+        if (contactForm) {
+            const formMessageContainer = safeQuerySelector('#form-message');
+            const contactFormBoundary = new ErrorBoundary({
+                componentName: 'Contact Form Component',
+                container: formMessageContainer,
+                fallbackUI: (error) => `
+                    <div class="contact-form-error" style="
+                        background-color: #f8d7da;
+                        color: #721c24;
+                        border: 1px solid #f5c6cb;
+                        border-radius: var(--radius-md);
+                        padding: 1rem;
+                        text-align: center;
+                    ">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Contact Form Error</h4>
+                        <p>The contact form is experiencing issues. Please email us directly:</p>
+                        <p><strong><a href="mailto:loz33@hotmail.com">loz33@hotmail.com</a></strong></p>
+                    </div>
+                `,
+                maxRetries: 2
+            });
+        }
+
+        // Add boundary to any other containers with dynamic content
+        const dynamicContainers = document.querySelectorAll('[id*="schedule"], [id*="events"], [class*="loading"]');
+        dynamicContainers.forEach((container, index) => {
+            const containerBoundary = new ErrorBoundary({
+                componentName: `Dynamic Content ${index + 1}`,
+                container: container,
+                maxRetries: 1
+            });
+        });
+
+        console.log('[Error Boundaries] Dynamic content boundaries initialized successfully');
+        
+    } catch (error) {
+        console.error('Error setting up dynamic content boundaries:', error);
+    }
 }
 
 // Cleanup event listeners on page unload
