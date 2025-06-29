@@ -1,0 +1,48 @@
+/* Vanilla Calendar Pro Placeholder
+ * This is a placeholder file to replace the broken node_modules import
+ * The actual calendar styling should be included here when available
+ */
+
+.vanilla-calendar {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    font-family: inherit;
+}
+
+.vanilla-calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--primary, #1a5276);
+    color: white;
+}
+
+.vanilla-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    padding: 1rem;
+}
+
+.vanilla-calendar-day {
+    padding: 0.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.vanilla-calendar-day:hover {
+    background-color: #f0f0f0;
+}
+
+.vanilla-calendar-day.is-selected {
+    background-color: var(--primary, #1a5276);
+    color: white;
+}
+
+.vanilla-calendar-day.is-today {
+    font-weight: bold;
+    border: 2px solid var(--primary, #1a5276);
+}

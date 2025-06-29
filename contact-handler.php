@@ -1,8 +1,11 @@
 <?php
 /**
- * Contact Form Handler with Server-Side Validation
+ * Contact Form Handler with Server-Side Validation and CSRF Protection
  * San Antonio Philatelic Association
  */
+
+// Include CSRF token functions
+require_once 'csrf-token.php';
 
 // Security headers
 header('Content-Type: application/json');
@@ -62,6 +65,15 @@ function validatePhone($phone) {
 
 function sanitizeInput($input) {
     return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
+}
+
+// CSRF Token Validation
+if (empty($input['csrf_token'])) {
+    $response['errors']['csrf'] = 'Security token missing. Please refresh the page and try again.';
+} else {
+    if (!validateCSRFToken($input['csrf_token'])) {
+        $response['errors']['csrf'] = 'Invalid security token. Please refresh the page and try again.';
+    }
 }
 
 // Validate required fields

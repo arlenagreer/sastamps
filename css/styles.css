@@ -1,7 +1,7 @@
 /* San Antonio Philatelic Association - Main Stylesheet */
 
 /* ===== IMPORTS ===== */
-@import '../node_modules/vanilla-calendar-pro/build/vanilla-calendar.min.css';
+@import './vendor/vanilla-calendar.min.css';
 
 /* ===== VARIABLES ===== */
 :root {

@@ -171,6 +171,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Initialize theme toggle
         setupThemeToggle();
+        
+        // Initialize contact form
+        setupContactForm();
     } catch (error) {
         console.error('Error during page initialization:', error);
         // Show user-friendly error message
@@ -431,7 +434,12 @@ function setupEventCountdown() {
         
         if (isNaN(eventDateTime)) {
             console.error('Invalid event date:', eventDateAttribute);
-            countdownElement.innerHTML = '<span class="countdown-error">Invalid event date</span>';
+            countdownElement.innerHTML = '';
+            const errorSpan = createSafeElement('span', {
+                className: 'countdown-error',
+                textContent: 'Invalid event date'
+            });
+            countdownElement.appendChild(errorSpan);
             return;
         }
         
@@ -444,7 +452,12 @@ function setupEventCountdown() {
                 // If the countdown is over, stop the interval and show event is starting
                 if (distance < 0) {
                     clearInterval(countdownInterval);
-                    countdownElement.innerHTML = '<span class="countdown-complete">Event is happening now!</span>';
+                    countdownElement.innerHTML = '';
+                    const completeSpan = createSafeElement('span', {
+                        className: 'countdown-complete',
+                        textContent: 'Event is happening now!'
+                    });
+                    countdownElement.appendChild(completeSpan);
                     return;
                 }
                 
@@ -454,29 +467,38 @@ function setupEventCountdown() {
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
                 
-                // Display the countdown
-                countdownElement.innerHTML = `
-                    <div class="countdown-unit">
-                        <span class="countdown-number">${days}</span>
-                        <span class="countdown-label">Day${days !== 1 ? 's' : ''}</span>
-                    </div>
-                    <div class="countdown-unit">
-                        <span class="countdown-number">${hours}</span>
-                        <span class="countdown-label">Hour${hours !== 1 ? 's' : ''}</span>
-                    </div>
-                    <div class="countdown-unit">
-                        <span class="countdown-number">${minutes}</span>
-                        <span class="countdown-label">Minute${minutes !== 1 ? 's' : ''}</span>
-                    </div>
-                    <div class="countdown-unit">
-                        <span class="countdown-number">${seconds}</span>
-                        <span class="countdown-label">Second${seconds !== 1 ? 's' : ''}</span>
-                    </div>
-                `;
+                // Display the countdown safely
+                countdownElement.innerHTML = '';
+                
+                // Create countdown units
+                const createCountdownUnit = (value, label) => {
+                    const unit = createSafeElement('div', { className: 'countdown-unit' });
+                    const number = createSafeElement('span', {
+                        className: 'countdown-number',
+                        textContent: String(value)
+                    });
+                    const labelSpan = createSafeElement('span', {
+                        className: 'countdown-label',
+                        textContent: label + (value !== 1 ? 's' : '')
+                    });
+                    unit.appendChild(number);
+                    unit.appendChild(labelSpan);
+                    return unit;
+                };
+                
+                countdownElement.appendChild(createCountdownUnit(days, 'Day'));
+                countdownElement.appendChild(createCountdownUnit(hours, 'Hour'));
+                countdownElement.appendChild(createCountdownUnit(minutes, 'Minute'));
+                countdownElement.appendChild(createCountdownUnit(seconds, 'Second'));
             } catch (error) {
                 console.error('Error updating countdown display:', error);
                 clearInterval(countdownInterval);
-                countdownElement.innerHTML = '<span class="countdown-error">Countdown error</span>';
+                countdownElement.innerHTML = '';
+                const errorSpan = createSafeElement('span', {
+                    className: 'countdown-error',
+                    textContent: 'Countdown error'
+                });
+                countdownElement.appendChild(errorSpan);
             }
         }, 1000);
         
@@ -587,11 +609,22 @@ function setupFormValidation() {
                     // Create and show success message
                     const successMessage = document.createElement('div');
                     successMessage.classList.add('success-message');
-                    successMessage.innerHTML = `
-                        <h3>Thank you for your message!</h3>
-                        <p>${data.message || "We've received your inquiry and will respond as soon as possible."}</p>
-                        <button class="btn btn-primary mt-3" id="send-another">Send Another Message</button>
-                    `;
+                    // Create success message elements safely
+                    const heading = createSafeElement('h3', {
+                        textContent: 'Thank you for your message!'
+                    });
+                    const message = createSafeElement('p', {
+                        textContent: sanitizeText(data.message || "We've received your inquiry and will respond as soon as possible.")
+                    });
+                    const button = createSafeElement('button', {
+                        className: 'btn btn-primary mt-3',
+                        textContent: 'Send Another Message'
+                    });
+                    button.id = 'send-another';
+                    
+                    successMessage.appendChild(heading);
+                    successMessage.appendChild(message);
+                    successMessage.appendChild(button);
                     
                     contactForm.parentNode.appendChild(successMessage);
                     
@@ -870,8 +903,247 @@ function setupThemeToggle() {
     }
 }
 
+/**
+ * Contact Form Setup with CSRF Protection
+ */
+function setupContactForm() {
+    try {
+        const contactForm = safeQuerySelector('#contact-form');
+        if (!contactForm) return;
+
+        // Fetch CSRF token when page loads
+        fetchCSRFToken();
+
+        addEventListenerWithCleanup(contactForm, 'submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = safeQuerySelector('#submit-btn');
+            const loadingSpinner = safeQuerySelector('#loading-spinner');
+            const formMessage = safeQuerySelector('#form-message');
+            
+            try {
+                // Clear previous messages
+                clearFormErrors();
+                if (formMessage) formMessage.innerHTML = '';
+                
+                // Show loading state
+                if (submitBtn) {
+                    submitBtn.style.display = 'none';
+                }
+                if (loadingSpinner) {
+                    loadingSpinner.style.display = 'inline-block';
+                }
+                
+                // Collect form data
+                const formData = new FormData(contactForm);
+                const data = Object.fromEntries(formData.entries());
+                
+                // Submit form - use Netlify function if available, fallback to PHP
+                const endpoint = window.location.hostname.includes('netlify') || window.location.hostname.includes('vercel') 
+                    ? '/.netlify/functions/contact-form'
+                    : 'contact-handler.php';
+                    
+                const response = await fetchWithRetry(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                }, 2);
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Success
+                    if (formMessage) {
+                        formMessage.innerHTML = '';
+                        const successDiv = createSafeElement('div', {
+                            className: 'success-message',
+                            style: {
+                                color: 'var(--success)',
+                                backgroundColor: '#d4edda',
+                                border: '1px solid #c3e6cb',
+                                padding: '1rem',
+                                borderRadius: 'var(--radius-md)',
+                                marginTop: '1rem'
+                            }
+                        });
+                        
+                        const icon = createSafeElement('i', { className: 'fas fa-check-circle' });
+                        successDiv.appendChild(icon);
+                        successDiv.appendChild(document.createTextNode(' ' + sanitizeText(result.message)));
+                        formMessage.appendChild(successDiv);
+                    }
+                    contactForm.reset();
+                    fetchCSRFToken(); // Get new token for next submission
+                } else {
+                    // Handle validation errors
+                    if (result.errors) {
+                        displayFormErrors(result.errors);
+                    }
+                    
+                    if (formMessage && !Object.keys(result.errors || {}).length) {
+                        formMessage.innerHTML = '';
+                        const errorDiv = createSafeElement('div', {
+                            className: 'error-message',
+                            style: {
+                                color: 'var(--danger)',
+                                backgroundColor: '#f8d7da',
+                                border: '1px solid #f5c6cb',
+                                padding: '1rem',
+                                borderRadius: 'var(--radius-md)',
+                                marginTop: '1rem'
+                            }
+                        });
+                        
+                        const icon = createSafeElement('i', { className: 'fas fa-exclamation-triangle' });
+                        errorDiv.appendChild(icon);
+                        errorDiv.appendChild(document.createTextNode(' There was an error sending your message. Please try again.'));
+                        formMessage.appendChild(errorDiv);
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Contact form submission error:', error);
+                if (formMessage) {
+                    formMessage.innerHTML = '';
+                    const errorDiv = createSafeElement('div', {
+                        className: 'error-message',
+                        style: {
+                            color: 'var(--danger)',
+                            backgroundColor: '#f8d7da',
+                            border: '1px solid #f5c6cb',
+                            padding: '1rem',
+                            borderRadius: 'var(--radius-md)',
+                            marginTop: '1rem'
+                        }
+                    });
+                    
+                    const icon = createSafeElement('i', { className: 'fas fa-exclamation-triangle' });
+                    errorDiv.appendChild(icon);
+                    errorDiv.appendChild(document.createTextNode(' Network error. Please check your connection and try again.'));
+                    formMessage.appendChild(errorDiv);
+                }
+            } finally {
+                // Hide loading state
+                if (submitBtn) {
+                    submitBtn.style.display = 'inline-block';
+                }
+                if (loadingSpinner) {
+                    loadingSpinner.style.display = 'none';
+                }
+            }
+        });
+        
+    } catch (error) {
+        console.error('Error setting up contact form:', error);
+    }
+}
+
+/**
+ * Fetch CSRF token from server
+ */
+async function fetchCSRFToken() {
+    try {
+        // Use appropriate endpoint based on hosting environment
+        const endpoint = window.location.hostname.includes('netlify') || window.location.hostname.includes('vercel') 
+            ? '/.netlify/functions/contact-form'
+            : 'csrf-token.php';
+            
+        const response = await fetch(endpoint);
+        const data = await response.json();
+        
+        const csrfTokenField = safeQuerySelector('#csrf-token');
+        if (csrfTokenField && data.csrf_token) {
+            csrfTokenField.value = data.csrf_token;
+        }
+    } catch (error) {
+        console.error('Error fetching CSRF token:', error);
+    }
+}
+
+/**
+ * Display form validation errors
+ */
+function displayFormErrors(errors) {
+    Object.keys(errors).forEach(field => {
+        const errorElement = safeQuerySelector(`#${field}-error`);
+        const inputElement = safeQuerySelector(`#${field}`);
+        
+        if (errorElement) {
+            // Use textContent to prevent XSS, and sanitize the error message
+            errorElement.textContent = sanitizeText(errors[field]);
+            errorElement.style.color = 'var(--danger)';
+            errorElement.style.fontSize = '0.875rem';
+            errorElement.style.marginTop = '0.25rem';
+        }
+        
+        if (inputElement) {
+            inputElement.style.borderColor = 'var(--danger)';
+        }
+    });
+}
+
+/**
+ * Clear form validation errors
+ */
+function clearFormErrors() {
+    const errorElements = document.querySelectorAll('.error-message');
+    const inputs = document.querySelectorAll('#contact-form .form-control');
+    
+    errorElements.forEach(element => {
+        element.textContent = '';
+    });
+    
+    inputs.forEach(input => {
+        input.style.borderColor = '';
+    });
+}
+
+/**
+ * Safely create HTML elements with text content to prevent XSS
+ * @param {string} tagName - The HTML tag name
+ * @param {Object} options - Configuration object
+ * @param {string} options.textContent - Safe text content
+ * @param {string} options.className - CSS class names
+ * @param {Object} options.style - Style properties
+ * @returns {HTMLElement} The created element
+ */
+function createSafeElement(tagName, options = {}) {
+    const element = document.createElement(tagName);
+    
+    if (options.textContent) {
+        element.textContent = options.textContent;
+    }
+    
+    if (options.className) {
+        element.className = options.className;
+    }
+    
+    if (options.style) {
+        Object.assign(element.style, options.style);
+    }
+    
+    return element;
+}
+
+/**
+ * Safely sanitize text input for display
+ * @param {string} input - Raw text input
+ * @returns {string} Sanitized text
+ */
+function sanitizeText(input) {
+    return String(input)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#x27;')
+        .replace(/\//g, '&#x2F;');
+}
+
 // Cleanup event listeners on page unload
 window.addEventListener('beforeunload', cleanupEventListeners);
 
 // Export functions that might be used in the future
-export { setupImageGallery };
+export { setupImageGallery, setupContactForm };

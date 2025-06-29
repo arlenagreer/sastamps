@@ -1,7 +1,12 @@
 /**
  * Netlify Serverless Function for Contact Form
- * With server-side validation
+ * With server-side validation and CSRF protection
  */
+
+const crypto = require('crypto');
+
+// CSRF secret (in production, use environment variable)
+const CSRF_SECRET = process.env.CSRF_SECRET || 'fallback-secret-key-change-in-production';
 
 // Email validation regex
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -63,8 +68,63 @@ function checkRateLimit(ip) {
     return true;
 }
 
+function generateCSRFToken() {
+    const timestamp = Date.now();
+    const payload = `${timestamp}`;
+    const signature = crypto
+        .createHmac('sha256', CSRF_SECRET)
+        .update(payload)
+        .digest('hex');
+    
+    return `${timestamp}.${signature}`;
+}
+
+function validateCSRFToken(token) {
+    if (!token || typeof token !== 'string') {
+        return false;
+    }
+    
+    const parts = token.split('.');
+    if (parts.length !== 2) {
+        return false;
+    }
+    
+    const [timestamp, signature] = parts;
+    const now = Date.now();
+    const tokenTime = parseInt(timestamp, 10);
+    
+    // Check if token is expired (1 hour)
+    if (now - tokenTime > 3600000) {
+        return false;
+    }
+    
+    // Verify signature
+    const expectedSignature = crypto
+        .createHmac('sha256', CSRF_SECRET)
+        .update(timestamp)
+        .digest('hex');
+    
+    return crypto.timingSafeEqual(
+        Buffer.from(signature, 'hex'),
+        Buffer.from(expectedSignature, 'hex')
+    );
+}
+
 exports.handler = async (event, context) => {
-    // Only accept POST requests
+    // Handle GET requests for CSRF token generation
+    if (event.httpMethod === 'GET') {
+        const token = generateCSRFToken();
+        return {
+            statusCode: 200,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Content-Type-Options': 'nosniff'
+            },
+            body: JSON.stringify({ csrf_token: token })
+        };
+    }
+    
+    // Only accept POST requests for form submission
     if (event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
@@ -85,6 +145,13 @@ exports.handler = async (event, context) => {
         const clientIp = event.headers['x-forwarded-for'] || 
                         event.headers['client-ip'] || 
                         'unknown';
+        
+        // CSRF Token Validation
+        if (!data.csrf_token) {
+            errors.csrf = 'Security token missing. Please refresh the page and try again.';
+        } else if (!validateCSRFToken(data.csrf_token)) {
+            errors.csrf = 'Invalid security token. Please refresh the page and try again.';
+        }
         
         // Check rate limit
         if (!checkRateLimit(clientIp)) {
