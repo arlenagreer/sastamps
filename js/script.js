@@ -6,9 +6,58 @@
 // Import calendar library
 import { Calendar } from 'vanilla-calendar-pro';
 import { calendarAdapter } from './calendar-adapter.js';
-import { testCalendarAdapter, testModal, testCalendarComponent, testReminderSystem } from './calendar-test.js';
 import { modal } from './modal.js';
 import { reminderSystem } from './reminder-system.js';
+
+// Store references to event listeners for cleanup
+const eventListeners = new Map();
+
+/**
+ * Debounce utility function to prevent excessive function calls
+ * @param {Function} func - The function to debounce
+ * @param {number} wait - The debounce delay in milliseconds
+ * @returns {Function} The debounced function
+ */
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+/**
+ * Add event listener with cleanup tracking
+ * @param {EventTarget} element - The element to attach the listener to
+ * @param {string} event - The event type
+ * @param {Function} handler - The event handler
+ * @param {Object} options - Additional options for addEventListener
+ */
+function addEventListenerWithCleanup(element, event, handler, options) {
+    element.addEventListener(event, handler, options);
+    
+    if (!eventListeners.has(element)) {
+        eventListeners.set(element, []);
+    }
+    
+    eventListeners.get(element).push({ event, handler, options });
+}
+
+/**
+ * Remove all event listeners for cleanup
+ */
+function cleanupEventListeners() {
+    eventListeners.forEach((listeners, element) => {
+        listeners.forEach(({ event, handler, options }) => {
+            element.removeEventListener(event, handler, options);
+        });
+    });
+    eventListeners.clear();
+}
 
 // Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
@@ -32,14 +81,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize theme toggle
     setupThemeToggle();
-    
-    // Test calendar functionality (development only)
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        testCalendarAdapter();
-        testModal();
-        testCalendarComponent();
-        testReminderSystem();
-    }
 });
 
 /**
@@ -54,19 +95,17 @@ function setupMobileViewportHeight() {
     
     setViewportHeight();
     
-    // Update on resize and orientation change
-    window.addEventListener('resize', setViewportHeight);
-    window.addEventListener('orientationchange', function() {
+    // Update on resize and orientation change with debouncing
+    const debouncedSetViewportHeight = debounce(setViewportHeight, 250);
+    addEventListenerWithCleanup(window, 'resize', debouncedSetViewportHeight);
+    addEventListenerWithCleanup(window, 'orientationchange', function() {
         setTimeout(setViewportHeight, 100); // Small delay for iOS
     });
     
     // For iOS Safari - handle viewport changes more aggressively
     if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-        let timer;
-        window.addEventListener('scroll', function() {
-            clearTimeout(timer);
-            timer = setTimeout(setViewportHeight, 150);
-        });
+        const debouncedScrollHandler = debounce(setViewportHeight, 150);
+        addEventListenerWithCleanup(window, 'scroll', debouncedScrollHandler);
     }
 }
 
@@ -95,7 +134,7 @@ function setupMobileMenu() {
         document.body.classList.remove('menu-open');
     }
     
-    menuToggle.addEventListener('click', function() {
+    addEventListenerWithCleanup(menuToggle, 'click', function() {
         const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
         
         menuToggle.setAttribute('aria-expanded', !isExpanded);
@@ -109,7 +148,7 @@ function setupMobileMenu() {
     // Handle all mobile menu navigation links
     const allNavLinks = navMenu.querySelectorAll('a');
     allNavLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+        addEventListenerWithCleanup(link, 'click', function(e) {
             const href = this.getAttribute('href');
             
             // For same-page anchors, prevent default and scroll
@@ -134,7 +173,7 @@ function setupMobileMenu() {
     });
     
     // Close menu when clicking outside
-    document.addEventListener('click', function(event) {
+    addEventListenerWithCleanup(document, 'click', function(event) {
         if (navMenu.classList.contains('active') && 
             !navMenu.contains(event.target) && 
             !menuToggle.contains(event.target)) {
@@ -143,12 +182,12 @@ function setupMobileMenu() {
     });
     
     // Close menu when clicking on overlay
-    overlay.addEventListener('click', function() {
+    addEventListenerWithCleanup(overlay, 'click', function() {
         closeMenu();
     });
     
     // Close menu when pressing ESC key
-    document.addEventListener('keydown', function(event) {
+    addEventListenerWithCleanup(document, 'keydown', function(event) {
         if (event.key === 'Escape' && navMenu.classList.contains('active')) {
             closeMenu();
         }
@@ -163,17 +202,19 @@ function setupBackToTopButton() {
     
     if (!backToTopButton) return;
     
-    // Show/hide the button based on scroll position
-    window.addEventListener('scroll', function() {
-        if (window.pageYOffset > 300) {
+    // Show/hide the button based on scroll position with debouncing
+    const scrollHandler = debounce(function() {
+        if (window.scrollY > 300) {
             backToTopButton.style.display = 'block';
         } else {
             backToTopButton.style.display = 'none';
         }
-    });
+    }, 100);
+    
+    addEventListenerWithCleanup(window, 'scroll', scrollHandler);
     
     // Smooth scroll to top when clicked
-    backToTopButton.addEventListener('click', function(e) {
+    addEventListenerWithCleanup(backToTopButton, 'click', function(e) {
         e.preventDefault();
         window.scrollTo({
             top: 0,
@@ -244,7 +285,7 @@ function setupFormValidation() {
     
     if (!contactForm) return;
     
-    contactForm.addEventListener('submit', function(e) {
+    addEventListenerWithCleanup(contactForm, 'submit', function(e) {
         e.preventDefault();
         
         // Basic form validation
@@ -289,30 +330,108 @@ function setupFormValidation() {
             }
         }
         
-        // If form is valid, show success message
+        // If form is valid, submit to server
         if (isValid) {
-            // In a real application, you would submit the form data here
-            // For this example, we'll just show a success message
+            // Show loading state
+            const submitButton = contactForm.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.textContent;
+            submitButton.disabled = true;
+            submitButton.textContent = 'Sending...';
             
-            // Hide the form
-            contactForm.style.display = 'none';
+            // Prepare form data
+            const formData = {
+                name: contactForm.querySelector('[name="name"]').value.trim(),
+                email: contactForm.querySelector('[name="email"]').value.trim(),
+                phone: contactForm.querySelector('[name="phone"]')?.value.trim() || '',
+                subject: contactForm.querySelector('[name="subject"]').value.trim(),
+                message: contactForm.querySelector('[name="message"]').value.trim()
+            };
             
-            // Create and show success message
-            const successMessage = document.createElement('div');
-            successMessage.classList.add('success-message');
-            successMessage.innerHTML = `
-                <h3>Thank you for your message!</h3>
-                <p>We've received your inquiry and will respond as soon as possible.</p>
-                <button class="btn btn-primary mt-3" id="send-another">Send Another Message</button>
-            `;
+            // Determine endpoint based on environment
+            let endpoint = '/contact-handler.php';
+            if (window.location.hostname.includes('netlify')) {
+                endpoint = '/.netlify/functions/contact-form';
+            }
             
-            contactForm.parentNode.appendChild(successMessage);
-            
-            // Allow sending another message
-            document.getElementById('send-another').addEventListener('click', function() {
-                contactForm.reset();
-                successMessage.remove();
-                contactForm.style.display = 'block';
+            // Submit to server with validation
+            fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Hide the form
+                    contactForm.style.display = 'none';
+                    
+                    // Create and show success message
+                    const successMessage = document.createElement('div');
+                    successMessage.classList.add('success-message');
+                    successMessage.innerHTML = `
+                        <h3>Thank you for your message!</h3>
+                        <p>${data.message || "We've received your inquiry and will respond as soon as possible."}</p>
+                        <button class="btn btn-primary mt-3" id="send-another">Send Another Message</button>
+                    `;
+                    
+                    contactForm.parentNode.appendChild(successMessage);
+                    
+                    // Allow sending another message
+                    const sendAnotherBtn = document.getElementById('send-another');
+                    if (sendAnotherBtn) {
+                        addEventListenerWithCleanup(sendAnotherBtn, 'click', function() {
+                            contactForm.reset();
+                            successMessage.remove();
+                            contactForm.style.display = 'block';
+                        });
+                    }
+                } else {
+                    // Handle server-side validation errors
+                    if (data.errors) {
+                        Object.keys(data.errors).forEach(fieldName => {
+                            const field = contactForm.querySelector(`[name="${fieldName}"]`);
+                            if (field) {
+                                field.classList.add('error');
+                                
+                                // Remove existing error message if any
+                                const existingError = field.parentNode.querySelector('.error-message');
+                                if (existingError) {
+                                    existingError.remove();
+                                }
+                                
+                                // Add new error message
+                                const errorMessage = document.createElement('p');
+                                errorMessage.classList.add('error-message');
+                                errorMessage.textContent = data.errors[fieldName];
+                                field.parentNode.appendChild(errorMessage);
+                            }
+                        });
+                    }
+                    
+                    // Reset button
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalButtonText;
+                }
+            })
+            .catch(error => {
+                console.error('Form submission error:', error);
+                
+                // Show generic error message
+                const errorDiv = document.createElement('div');
+                errorDiv.classList.add('error-message', 'form-error');
+                errorDiv.textContent = 'An error occurred. Please try again later.';
+                contactForm.insertBefore(errorDiv, contactForm.firstChild);
+                
+                // Reset button
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
+                
+                // Remove error message after 5 seconds
+                setTimeout(() => {
+                    errorDiv.remove();
+                }, 5000);
             });
         }
     });
@@ -327,7 +446,7 @@ function setupAccordion() {
     if (!accordionHeaders.length) return;
     
     accordionHeaders.forEach(header => {
-        header.addEventListener('click', function() {
+        addEventListenerWithCleanup(header, 'click', function() {
             // Toggle active class on the header
             this.classList.toggle('active');
             
@@ -352,7 +471,9 @@ function setupAccordion() {
 /**
  * Image Gallery Functionality
  * (if needed for a gallery page in the future)
+ * @unused - Reserved for future implementation
  */
+// eslint-disable-next-line no-unused-vars
 function setupImageGallery() {
     const galleryImages = document.querySelectorAll('.gallery-image');
     const lightbox = document.querySelector('.lightbox');
@@ -360,7 +481,7 @@ function setupImageGallery() {
     if (!galleryImages.length || !lightbox) return;
     
     galleryImages.forEach(image => {
-        image.addEventListener('click', function() {
+        addEventListenerWithCleanup(image, 'click', function() {
             const imgSrc = this.getAttribute('data-full-img') || this.src;
             const imgCaption = this.getAttribute('alt');
             
@@ -378,14 +499,14 @@ function setupImageGallery() {
     // Close lightbox when clicking the close button
     const closeButton = lightbox.querySelector('.lightbox-close');
     if (closeButton) {
-        closeButton.addEventListener('click', function() {
+        addEventListenerWithCleanup(closeButton, 'click', function() {
             lightbox.classList.remove('active');
             document.body.classList.remove('no-scroll');
         });
     }
     
     // Close lightbox when clicking outside the image
-    lightbox.addEventListener('click', function(e) {
+    addEventListenerWithCleanup(lightbox, 'click', function(e) {
         if (e.target === lightbox) {
             lightbox.classList.remove('active');
             document.body.classList.remove('no-scroll');
@@ -393,7 +514,7 @@ function setupImageGallery() {
     });
     
     // Close lightbox when pressing ESC
-    document.addEventListener('keydown', function(e) {
+    addEventListenerWithCleanup(document, 'keydown', function(e) {
         if (e.key === 'Escape' && lightbox.classList.contains('active')) {
             lightbox.classList.remove('active');
             document.body.classList.remove('no-scroll');
@@ -405,7 +526,7 @@ function setupImageGallery() {
  * Smooth Scrolling for Anchor Links
  */
 document.querySelectorAll('a[href^="#"]:not([href="#"])').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
+    addEventListenerWithCleanup(anchor, 'click', function(e) {
         e.preventDefault();
         
         const targetId = this.getAttribute('href');
@@ -448,7 +569,7 @@ setActiveNavLink();
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
-      .then(registration => {
+      .then(() => {
         console.log('ServiceWorker registration successful');
       })
       .catch(err => {
@@ -473,7 +594,7 @@ function setupThemeToggle() {
     const themeToggles = document.querySelectorAll('.theme-toggle');
     
     themeToggles.forEach(toggle => {
-        toggle.addEventListener('click', function() {
+        addEventListenerWithCleanup(toggle, 'click', function() {
             // Get current theme
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -499,3 +620,9 @@ function setupThemeToggle() {
         toggle.setAttribute('aria-label', initialLabel);
     });
 }
+
+// Cleanup event listeners on page unload
+window.addEventListener('beforeunload', cleanupEventListeners);
+
+// Export functions that might be used in the future
+export { setupImageGallery };
