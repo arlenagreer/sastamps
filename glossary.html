@@ -83,28 +83,74 @@
     <header>
         <div class="container">
             <div class="header-container">
-                <div class="logo">
-                    <a href="index.html">
-                        <img src="images/banner.png" alt="San Antonio Philatelic Association" height="60">
-                    </a>
+                <div class="site-branding">
+                    <h1 class="site-title">
+                        <a href="index.html">San Antonio Philatelic Association</a>
+                    </h1>
                 </div>
                 
-                <button class="menu-toggle" aria-label="Toggle menu" style="display: none;">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                
-                <nav class="nav-menu">
-                    <ul>
-                        <li><a href="index.html"><i class="fas fa-home nav-icon"></i>Home</a></li>
-                        <li><a href="about.html"><i class="fas fa-users nav-icon"></i>About</a></li>
-                        <li><a href="meetings.html"><i class="fas fa-calendar nav-icon"></i>Meetings</a></li>
-                        <li><a href="newsletter.html"><i class="fas fa-newspaper nav-icon"></i>Newsletter</a></li>
-                        <li><a href="resources.html"><i class="fas fa-book nav-icon"></i>Resources</a></li>
-                        <li class="active"><a href="glossary.html"><i class="fas fa-book-open nav-icon"></i>Glossary</a></li>
-                        <li><a href="membership.html"><i class="fas fa-id-card nav-icon"></i>Membership</a></li>
-                        <li><a href="contact.html"><i class="fas fa-envelope nav-icon"></i>Contact</a></li>
+                <nav class="main-nav" role="navigation" aria-label="Main navigation">
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="index.html" class="nav-link">
+                                <i class="nav-icon fas fa-home" aria-hidden="true"></i>
+                                Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="about.html" class="nav-link">
+                                <i class="nav-icon fas fa-info-circle" aria-hidden="true"></i>
+                                About
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="meetings.html" class="nav-link">
+                                <i class="nav-icon fas fa-calendar" aria-hidden="true"></i>
+                                Meetings
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="newsletter.html" class="nav-link">
+                                <i class="nav-icon fas fa-newspaper" aria-hidden="true"></i>
+                                Newsletter
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="archive.html" class="nav-link">
+                                <i class="nav-icon fas fa-archive" aria-hidden="true"></i>
+                                Archive
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="membership.html" class="nav-link">
+                                <i class="nav-icon fas fa-users" aria-hidden="true"></i>
+                                Membership
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="resources.html" class="nav-link">
+                                <i class="nav-icon fas fa-book" aria-hidden="true"></i>
+                                Resources
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="glossary.html" class="nav-link active" aria-current="page">
+                                <i class="nav-icon fas fa-spell-check" aria-hidden="true"></i>
+                                Glossary
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="contact.html" class="nav-link">
+                                <i class="nav-icon fas fa-envelope" aria-hidden="true"></i>
+                                Contact
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="search.html" class="nav-link">
+                                <i class="nav-icon fas fa-search" aria-hidden="true"></i>
+                                Search
+                            </a>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -114,9 +160,9 @@
     <!-- Main Content -->
     <main>
         <!-- Hero Section -->
-        <section class="hero">
+        <section class="hero" style="background-image: linear-gradient(rgba(26, 82, 118, 0.85), rgba(26, 82, 118, 0.85)), url('images/banner.png'); background-size: cover; background-position: center;">
             <div class="container">
-                <h1><i class="fas fa-book-open"></i> Philatelic Glossary</h1>
+                <h1>Philatelic Glossary</h1>
                 <p>Comprehensive guide to stamp collecting terminology and philatelic concepts</p>
             </div>
         </section>
