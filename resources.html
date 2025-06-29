@@ -7,6 +7,14 @@
     <meta name="description" content="Educational resources for stamp collectors - guides, tutorials, and reference materials from the San Antonio Philatelic Association.">
     <meta name="keywords" content="stamp collecting, philately, guides, tutorials, resources, education, SAPA">
     
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <!-- Preload critical resources -->
     <link rel="preload" href="css/critical.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="css/critical.css"></noscript>
@@ -41,7 +49,29 @@
     </script>
     
     <!-- Critical CSS for resources page -->
-    <style>
+    <style id="critical-css">
+        :root{--primary:#1a5276;--primary-light:#2980b9;--primary-dark:#0e2f44;--secondary:#d35400;--accent:#f1c40f;--dark:#2c3e50;--medium:#7f8c8d;--light:#ecf0f1;--white:#fff;--success:#27ae60;--warning:#f39c12;--danger:#c0392b;--font-heading:"Merriweather",Georgia,serif;--font-body:"Open Sans",Arial,sans-serif;--space-xxs:0.25rem;--space-xs:0.5rem;--space-sm:0.75rem;--space-md:1rem;--space-lg:1.5rem;--space-xl:2rem;--space-xxl:3rem;--container-sm:640px;--container-md:768px;--container-lg:1024px;--container-xl:1280px;--radius-sm:3px;--radius-md:5px;--radius-lg:8px;--radius-xl:12px;--shadow-sm:0 1px 3px #0000001f;--shadow-md:0 4px 6px #0000001a;--shadow-lg:0 10px 15px -3px #0000001a;--transition-fast:0.15s ease;--transition-normal:0.25s ease;--transition-slow:0.4s ease}
+        body{background-color:var(--white);color:var(--dark);font-family:var(--font-body);font-size:1rem;line-height:1.6}
+        h1,h2,h3,h4,h5,h6{color:var(--dark);font-family:var(--font-heading);font-weight:700;line-height:1.3;margin-bottom:1rem}
+        h1{font-size:2.5rem}
+        h2{font-size:2rem}
+        h3{font-size:1.75rem}
+        img{display:block;height:auto;max-width:100%}
+        button,input,select,textarea{font-family:var(--font-body);font-size:1rem}
+        .container{margin:0 auto;max-width:var(--container-xl);padding:0 1.5rem;width:100%}
+        header{background-color:var(--white);box-shadow:var(--shadow-sm);padding:1rem 0;position:sticky;top:0;z-index:50}
+        .header-content{align-items:center;display:flex;justify-content:space-between}
+        .logo img{height:auto;max-width:300px;width:100%}
+        .nav-list{display:flex;list-style:none;margin:0;padding:0;align-items:center}
+        .nav-item{margin-left:1.5rem}
+        .nav-link{color:var(--dark);font-weight:600;padding:.5rem;position:relative;text-decoration:none;transition:color var(--transition-fast);display:flex;align-items:center;gap:0.5rem}
+        .nav-link:hover{color:var(--primary)}
+        .nav-link.active{color:var(--primary)}
+        .nav-link img{width:20px;height:20px}
+        .nav-icon{color:var(--primary);font-size:1.2rem;height:auto;margin-right:8px;width:auto}
+        .theme-toggle{background:none;border:none;cursor:pointer;font-size:1.2rem;padding:0.5rem}
+        .mobile-menu-toggle{display:none}
+        
         .resources-hero {
             background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
             color: white;
@@ -53,12 +83,21 @@
             margin: 0 0 1rem 0;
             font-size: 2.5rem;
             font-weight: 700;
+            color: white;
         }
         
         .resources-hero p {
             font-size: 1.25rem;
             margin: 0;
             opacity: 0.9;
+        }
+        
+        @media (max-width:768px){
+            .nav-list{flex-direction:column;position:fixed;top:0;right:-100%;background:white;height:100vh;width:300px;padding:2rem;transition:right 0.3s ease;box-shadow:var(--shadow-lg)}
+            .nav-list.active{right:0}
+            .nav-item{margin:0 0 1rem}
+            .mobile-menu-toggle{display:block;background:none;border:none;cursor:pointer;flex-direction:column;gap:3px}
+            .mobile-menu-toggle span{width:25px;height:3px;background:var(--dark);transition:0.3s}
         }
         
         .category-grid {
@@ -132,47 +171,48 @@
     <a href="#main-content" class="skip-link">Skip to main content</a>
     
     <!-- Header -->
-    <header class="header">
+    <header>
         <div class="container">
             <div class="header-content">
                 <div class="logo">
                     <img src="images/banner.png" alt="San Antonio Philatelic Association Logo" width="300" height="80">
                 </div>
                 
-                <nav class="nav" role="navigation" aria-label="Main navigation">
+                <nav role="navigation" aria-label="Main navigation">
                     <ul class="nav-list">
                         <li class="nav-item">
                             <a href="index.html" class="nav-link">
-                                <img src="images/navigation-icons/home.png" alt="" width="20" height="20">
+                                <i class="nav-icon fas fa-home" aria-hidden="true"></i>
                                 Home
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="about.html" class="nav-link">
-                                <img src="images/navigation-icons/about.png" alt="" width="20" height="20">
+                                <i class="nav-icon fas fa-info-circle" aria-hidden="true"></i>
                                 About
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="meetings.html" class="nav-link">
-                                <img src="images/navigation-icons/events.png" alt="" width="20" height="20">
+                                <i class="nav-icon fas fa-calendar-alt" aria-hidden="true"></i>
                                 Meetings
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="newsletter.html" class="nav-link">
-                                <img src="images/navigation-icons/newsletter.png" alt="" width="20" height="20">
+                                <i class="nav-icon fas fa-newspaper" aria-hidden="true"></i>
                                 Newsletter
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="resources.html" class="nav-link active" aria-current="page">
-                                📚 Resources
+                                <i class="nav-icon fas fa-book" aria-hidden="true"></i>
+                                Resources
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="contact.html" class="nav-link">
-                                <img src="images/navigation-icons/contact.png" alt="" width="20" height="20">
+                                <i class="nav-icon fas fa-envelope" aria-hidden="true"></i>
                                 Contact
                             </a>
                         </li>
