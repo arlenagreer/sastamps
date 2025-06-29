@@ -1,5 +1,5 @@
-const CACHE_NAME = 'sapa-cache-v1';
-const IMAGE_CACHE_NAME = 'sapa-images-v1';
+const CACHE_NAME = 'sapa-cache-v2';
+const IMAGE_CACHE_NAME = 'sapa-images-v2';
 
 // Assets that should be cached immediately
 const CORE_ASSETS = [
@@ -122,6 +122,9 @@ function handleImageRequest(request) {
                     caches.open(CACHE_NAME)
                         .then(cache => {
                             cache.put(request, responseToCache);
+                        })
+                        .catch(error => {
+                            console.warn('Failed to cache image response:', error);
                         });
                     
                     return response;
@@ -133,9 +136,38 @@ function handleImageRequest(request) {
         });
 }
 
+// Helper function to check if request should be handled by service worker
+function shouldHandleRequest(request) {
+    const url = new URL(request.url);
+    
+    // Only handle http/https requests
+    if (!url.protocol.startsWith('http')) {
+        return false;
+    }
+    
+    // Skip chrome-extension and other browser-specific schemes
+    if (url.protocol === 'chrome-extension:' || 
+        url.protocol === 'moz-extension:' || 
+        url.protocol === 'safari-extension:') {
+        return false;
+    }
+    
+    // Skip data URLs and blob URLs
+    if (url.protocol === 'data:' || url.protocol === 'blob:') {
+        return false;
+    }
+    
+    return true;
+}
+
 // Fetch event - serve from cache, fall back to network
 self.addEventListener('fetch', event => {
     const request = event.request;
+
+    // Skip requests that shouldn't be handled by service worker
+    if (!shouldHandleRequest(request)) {
+        return;
+    }
 
     // Handle image requests differently
     if (isImageRequest(request)) {
@@ -167,6 +199,9 @@ self.addEventListener('fetch', event => {
                         caches.open(CACHE_NAME)
                             .then(cache => {
                                 cache.put(request, responseToCache);
+                            })
+                            .catch(error => {
+                                console.warn('Failed to cache response:', error);
                             });
 
                         return response;
