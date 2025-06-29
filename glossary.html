@@ -360,6 +360,22 @@
                 glossaryScript.src = 'dist/js/glossary.min.js';
                 glossaryScript.onload = () => {
                     console.log('✅ Glossary page loaded successfully');
+                    
+                    // Force initialize glossary components after script loads
+                    setTimeout(() => {
+                        if (window.initializeGlossary) {
+                            try {
+                                window.initializeGlossary();
+                                console.log('🔤 Glossary manually initialized');
+                            } catch (error) {
+                                console.warn('Failed to initialize glossary:', error);
+                                showFallbackContent();
+                            }
+                        } else {
+                            console.warn('initializeGlossary function not available');
+                            showFallbackContent();
+                        }
+                    }, 100);
                 };
                 glossaryScript.onerror = () => {
                     console.warn('⚠️ Glossary page script failed to load');

@@ -6,7 +6,7 @@
 import { safeQuerySelector } from '../utils/safe-dom.js';
 
 // Initialize glossary page
-document.addEventListener('DOMContentLoaded', async () => {
+async function initializeGlossary() {
     console.log('🔤 Initializing glossary page...');
 
     // Load glossary data and initialize components
@@ -27,7 +27,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Load stats
     await loadGlossaryStats();
-});
+}
+
+// Auto-initialize if DOM is ready, otherwise wait for DOMContentLoaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeGlossary);
+} else {
+    initializeGlossary();
+}
+
+// Export for manual initialization
+window.initializeGlossary = initializeGlossary;
 
 /**
  * Load glossary search functionality
