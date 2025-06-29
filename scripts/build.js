@@ -31,6 +31,8 @@ async function generateBuildInfo() {
         version: VERSION,
         buildDate: new Date().toISOString(),
         optimizations: [
+            'Tree-shaking enabled with page-specific bundles',
+            'JavaScript code splitting for optimal loading',
             'Critical CSS inlined',
             'Images optimized and converted to WebP',
             'Fonts optimized with preload and fallbacks',
@@ -72,20 +74,19 @@ async function build() {
         console.log('\n5. Embedding search data...');
         await runCommand('node', ['scripts/build-search-embedded.js']);
 
-        console.log('\n6. Building JavaScript...');
-        await runCommand('npm', ['run', 'build:js']);
+        console.log('\n6. Building JavaScript with tree shaking...');
+        await runCommand('node', ['esbuild.config.js']);
 
-        console.log('\n7. Setting up monitoring...');
-        await runCommand('node', ['scripts/setup-monitoring.js']);
-
-        console.log('\n8. Running performance analysis...');
+        console.log('\n7. Running performance analysis...');
         await runCommand('node', ['scripts/analyze-image-savings.js']);
 
-        console.log('\n9. Generating build info...');
+        console.log('\n8. Generating build info...');
         await generateBuildInfo();
 
         console.log('\nBuild completed successfully! 🎉');
         console.log('\nOptimizations applied:');
+        console.log('- Tree-shaking optimized JavaScript bundles');
+        console.log('- Page-specific code splitting for faster loading');
         console.log('- Critical CSS extraction and inlining');
         console.log('- Image optimization and WebP conversion');
         console.log('- Font optimization and preloading');

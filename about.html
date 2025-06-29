@@ -35,7 +35,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap&display=swap&display=swap&display=swap&display=swap" rel="stylesheet">
     
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -205,7 +205,1201 @@ h2{font-size:1.75rem}
 .detail-section h3{font-size:1.1rem}
 @media (prefers-color-scheme:dark){.modal-container{background:var(--dark);border:1px solid var(--medium)}
     </style>
+    
+    <style id="critical-css">
+        /* San Antonio Philatelic Association - Main Stylesheet */
+
+/* ===== VARIABLES ===== */
+:root {
+    /* Color Palette */
+    --primary: #1a5276;        /* Deep blue */
+    --primary-light: #2980b9;  /* Mid blue */
+    --primary-dark: #0e2f44;   /* Darker blue */
+    --secondary: #d35400;      /* Warm orange */
+    --accent: #f1c40f;         /* Gold/Yellow */
+    --dark: #2c3e50;           /* Slate dark */
+    --medium: #7f8c8d;         /* Gray */
+    --light: #ecf0f1;          /* Light gray */
+    --white: #ffffff;
+    --success: #27ae60;        /* Green */
+    --warning: #f39c12;        /* Orange */
+    --danger: #c0392b;         /* Red */
+    
+    /* Typography */
+    --font-heading: 'Merriweather', Georgia, serif;
+    --font-body: 'Open Sans', Arial, sans-serif;
+    
+    /* Spacing */
+    --space-xxs: 0.25rem;
+    --space-xs: 0.5rem;
+    --space-sm: 0.75rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-xxl: 3rem;
+    
+    /* Container widths */
+    --container-sm: 640px;
+    --container-md: 768px;
+    --container-lg: 1024px;
+    --container-xl: 1280px;
+    
+    /* Border radius */
+    --radius-sm: 3px;
+    --radius-md: 5px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.25s ease;
+    --transition-slow: 0.4s ease;}
+body {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--dark);
+    background-color: var(--white);}
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    line-height: 1.3;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: var(--dark);}
+h1 {
+    font-size: 2.5rem;}
+h2 {
+    font-size: 2rem;}
+h3 {
+    font-size: 1.75rem;}
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;}
+button, input, select, textarea {
+    font-family: var(--font-body);
+    font-size: 1rem;}
+/* ===== LAYOUT ===== */
+.container {
+    width: 100%;
+    max-width: var(--container-xl);
+    margin: 0 auto;
+    padding: 0 1.5rem;}
+@media (max-width: 768px) {
+    .grid-cols-2, .grid-cols-3 {
+        grid-template-columns: 1fr;}
+/* ===== HEADER STYLES ===== */
+header {
+    background-color: var(--white);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 1rem 0;}
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;}
+nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;}
+nav li {
+    margin-left: 1.5rem;}
+nav a {
+    font-weight: 600;
+    color: var(--dark);
+    text-decoration: none;
+    padding: 0.5rem 0;
+    transition: color var(--transition-fast);
+    position: relative;}
+nav a:hover {
+    color: var(--primary);}
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary);
+    transition: width var(--transition-normal);}
+nav a:hover::after {
+    width: 100%;}
+/* Smooth theme transition */
+body,
+header,
+.nav-menu,
+.card,
+.hero,
+.section,
+footer,
+.accordion-header,
+.btn {
+    transition: background-color var(--transition-normal), color var(--transition-normal);}
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+        touch-action: manipulation;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;}
+.nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh; /* Fallback for older browsers */
+        height: 100dvh; /* Use dynamic viewport height for better mobile support */
+        height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback for iOS */
+        background-color: var(--white);
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 2rem;
+        box-shadow: var(--shadow-lg);
+        transition: right var(--transition-normal);
+        z-index: 60;
+        /* iOS specific fixes */
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;}
+.nav-menu.active {
+        right: 0;}
+nav li {
+        margin: 0 0 1.5rem 0;}
+nav a::after {
+        display: none;}
+/* Ensure mobile nav links are clickable */
+    .nav-menu a {
+        display: block;
+        padding: 0.75rem 1rem;
+        position: relative;
+        z-index: 65;
+        -webkit-tap-highlight-color: rgba(26, 82, 118, 0.2);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: manipulation;
+        cursor: pointer;
+        /* Ensure proper touch target size */
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        /* Improved mobile link styling */
+        color: var(--primary);
+        font-weight: 600;
+        border-radius: var(--radius-md);
+        margin-bottom: 0.25rem;
+        transition: all var(--transition-fast);}
+.nav-menu li {
+        display: block;
+        width: 100%;}
+/* Mobile menu icon styling */
+    .nav-menu .nav-icon {
+        color: var(--primary);
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+        width: 1.5rem;
+        text-align: center;}
+/* iOS specific fixes and hover states */
+    .nav-menu a:active {
+        background-color: rgba(26, 82, 118, 0.15);
+        transform: scale(0.98);
+        transition: all 0.1s ease;
+        color: var(--primary-dark);}
+.nav-menu a:hover {
+        background-color: rgba(26, 82, 118, 0.08);
+        color: var(--primary-dark);
+        transform: translateX(4px);}
+/* Active/current page styling for mobile */
+    .nav-menu a.active,
+    .nav-menu a[aria-current="page"] {
+        background-color: var(--primary);
+        color: var(--white);}
+.nav-menu a.active .nav-icon,
+    .nav-menu a[aria-current="page"] .nav-icon {
+        color: var(--white);}
+/* Prevent body scroll when menu is open */
+    body.menu-open {
+        overflow: hidden;}
+.footer-section h3 {
+    color: var(--white);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;}
+/* ===== HERO SECTION ===== */
+.hero {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: var(--space-xxl) 0;
+    text-align: center;}
+.hero h1 {
+    color: var(--white);
+    font-size: 2.75rem;
+    margin-bottom: 1rem;}
+.hero p {
+    font-size: 1.25rem;
+    max-width: 800px;
+    margin: 0 auto;}
+/* ===== CARDS ===== */
+.card {
+    background-color: var(--white);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 1.5rem;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);}
+.card-content {
+    padding: 1.5rem;}
+.card-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;}
+.card-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;}
+/* ===== UTILITIES ===== */
+.text-center {
+    text-align: center;}
+.timeline-content h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--primary);}
+@media screen and (max-width: 768px) {
+    .timeline::after {
+        left: 20px;}
+.officer-img {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;}
+.officer-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;}
+.placeholder-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--light);
+    color: var(--medium);}
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1.25rem;
+    background-color: var(--white);
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+    font-weight: 600;}
+.accordion-header:hover {
+    background-color: var(--light);}
+.accordion-header.active {
+    background-color: var(--primary);
+    color: var(--white);}
+/* ===== MOBILE RESPONSIVENESS ===== */
+@media (max-width: 576px) {
+    html {
+        font-size: 14px;}
+h1 {
+        font-size: 2rem;}
+h2 {
+        font-size: 1.75rem;}
+.hero {
+        padding: var(--space-xl) 0;}
+.hero h1 {
+        font-size: 2.25rem;}
+.hero p {
+        font-size: 1.125rem;}
+.container {
+        padding: 0 1rem;}
+/* ===== PRINT STYLES ===== */
+@media print {
+    body {
+        background-color: white;
+        color: black;
+        font-size: 12pt;}
+.container {
+        max-width: 100%;
+        padding: 0;}
+header, footer, #back-to-top, .hero {
+        display: none;}
+.card {
+        box-shadow: none;
+        border: 1px solid #ddd;}
+.card:hover {
+        transform: none;
+        box-shadow: none;}
+/* Add these new styles for the banner and navigation icons */
+
+/* Banner Image */
+.banner-container {
+    width: 100%;
+    overflow: hidden;
+    text-align: center;
+    background-color: var(--primary);}
+/* Navigation Icons */
+.nav-icon {
+    width: auto;
+    height: auto;
+    margin-right: 8px;
+    color: var(--primary);
+    font-size: 1.2rem;}
+.nav-menu li.active .nav-icon,
+.nav-menu li a:hover .nav-icon {
+    color: var(--accent);}
+@media (max-width: 768px) {
+    .nav-icon {
+        margin-right: 5px;
+        font-size: 1rem;}
+/* Mobile Calendar Styles */
+@media (max-width: 768px) {
+    .meeting-entry {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;}
+.location-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.75rem;}
+/* iPhone-specific optimizations */
+@media screen and (max-width: 428px) {
+    /* Calendar table optimizations */
+    .meeting-table {
+        font-size: 0.85rem;  /* Slightly smaller font for iPhone */}
+.location-card h3 {
+        font-size: 1.1rem;}
+/* Fix notch interference */
+    .header-container {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);}
+/* Adjust container padding */
+    .container {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));}
+/* iPhone SE specific adjustments */
+@media screen and (max-width: 375px) {
+    .meeting-table {
+        font-size: 0.8rem;}
+/* Fix for iPhone landscape mode */
+@media screen and (max-height: 428px) and (orientation: landscape) {
+    .meeting-entry {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;}
+    </style>
+    
+    <style id="critical-css">
+        /* San Antonio Philatelic Association - Main Stylesheet */
+
+/* ===== VARIABLES ===== */
+:root {
+    /* Color Palette */
+    --primary: #1a5276;        /* Deep blue */
+    --primary-light: #2980b9;  /* Mid blue */
+    --primary-dark: #0e2f44;   /* Darker blue */
+    --secondary: #d35400;      /* Warm orange */
+    --accent: #f1c40f;         /* Gold/Yellow */
+    --dark: #2c3e50;           /* Slate dark */
+    --medium: #7f8c8d;         /* Gray */
+    --light: #ecf0f1;          /* Light gray */
+    --white: #ffffff;
+    --success: #27ae60;        /* Green */
+    --warning: #f39c12;        /* Orange */
+    --danger: #c0392b;         /* Red */
+    
+    /* Typography */
+    --font-heading: 'Merriweather', Georgia, serif;
+    --font-body: 'Open Sans', Arial, sans-serif;
+    
+    /* Spacing */
+    --space-xxs: 0.25rem;
+    --space-xs: 0.5rem;
+    --space-sm: 0.75rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-xxl: 3rem;
+    
+    /* Container widths */
+    --container-sm: 640px;
+    --container-md: 768px;
+    --container-lg: 1024px;
+    --container-xl: 1280px;
+    
+    /* Border radius */
+    --radius-sm: 3px;
+    --radius-md: 5px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.25s ease;
+    --transition-slow: 0.4s ease;}
+body {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--dark);
+    background-color: var(--white);}
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    line-height: 1.3;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: var(--dark);}
+h1 {
+    font-size: 2.5rem;}
+h2 {
+    font-size: 2rem;}
+h3 {
+    font-size: 1.75rem;}
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;}
+button, input, select, textarea {
+    font-family: var(--font-body);
+    font-size: 1rem;}
+/* ===== LAYOUT ===== */
+.container {
+    width: 100%;
+    max-width: var(--container-xl);
+    margin: 0 auto;
+    padding: 0 1.5rem;}
+@media (max-width: 768px) {
+    .grid-cols-2, .grid-cols-3 {
+        grid-template-columns: 1fr;}
+/* ===== HEADER STYLES ===== */
+header {
+    background-color: var(--white);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 1rem 0;}
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;}
+nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;}
+nav li {
+    margin-left: 1.5rem;}
+nav a {
+    font-weight: 600;
+    color: var(--dark);
+    text-decoration: none;
+    padding: 0.5rem 0;
+    transition: color var(--transition-fast);
+    position: relative;}
+nav a:hover {
+    color: var(--primary);}
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary);
+    transition: width var(--transition-normal);}
+nav a:hover::after {
+    width: 100%;}
+/* Smooth theme transition */
+body,
+header,
+.nav-menu,
+.card,
+.hero,
+.section,
+footer,
+.accordion-header,
+.btn {
+    transition: background-color var(--transition-normal), color var(--transition-normal);}
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+        touch-action: manipulation;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;}
+.nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh; /* Fallback for older browsers */
+        height: 100dvh; /* Use dynamic viewport height for better mobile support */
+        height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback for iOS */
+        background-color: var(--white);
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 2rem;
+        box-shadow: var(--shadow-lg);
+        transition: right var(--transition-normal);
+        z-index: 60;
+        /* iOS specific fixes */
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;}
+.nav-menu.active {
+        right: 0;}
+nav li {
+        margin: 0 0 1.5rem 0;}
+nav a::after {
+        display: none;}
+/* Ensure mobile nav links are clickable */
+    .nav-menu a {
+        display: block;
+        padding: 0.75rem 1rem;
+        position: relative;
+        z-index: 65;
+        -webkit-tap-highlight-color: rgba(26, 82, 118, 0.2);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: manipulation;
+        cursor: pointer;
+        /* Ensure proper touch target size */
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        /* Improved mobile link styling */
+        color: var(--primary);
+        font-weight: 600;
+        border-radius: var(--radius-md);
+        margin-bottom: 0.25rem;
+        transition: all var(--transition-fast);}
+.nav-menu li {
+        display: block;
+        width: 100%;}
+/* Mobile menu icon styling */
+    .nav-menu .nav-icon {
+        color: var(--primary);
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+        width: 1.5rem;
+        text-align: center;}
+/* iOS specific fixes and hover states */
+    .nav-menu a:active {
+        background-color: rgba(26, 82, 118, 0.15);
+        transform: scale(0.98);
+        transition: all 0.1s ease;
+        color: var(--primary-dark);}
+.nav-menu a:hover {
+        background-color: rgba(26, 82, 118, 0.08);
+        color: var(--primary-dark);
+        transform: translateX(4px);}
+/* Active/current page styling for mobile */
+    .nav-menu a.active,
+    .nav-menu a[aria-current="page"] {
+        background-color: var(--primary);
+        color: var(--white);}
+.nav-menu a.active .nav-icon,
+    .nav-menu a[aria-current="page"] .nav-icon {
+        color: var(--white);}
+/* Prevent body scroll when menu is open */
+    body.menu-open {
+        overflow: hidden;}
+.footer-section h3 {
+    color: var(--white);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;}
+/* ===== HERO SECTION ===== */
+.hero {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: var(--space-xxl) 0;
+    text-align: center;}
+.hero h1 {
+    color: var(--white);
+    font-size: 2.75rem;
+    margin-bottom: 1rem;}
+.hero p {
+    font-size: 1.25rem;
+    max-width: 800px;
+    margin: 0 auto;}
+/* ===== CARDS ===== */
+.card {
+    background-color: var(--white);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 1.5rem;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);}
+.card-content {
+    padding: 1.5rem;}
+.card-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;}
+.card-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;}
+/* ===== UTILITIES ===== */
+.text-center {
+    text-align: center;}
+.timeline-content h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--primary);}
+@media screen and (max-width: 768px) {
+    .timeline::after {
+        left: 20px;}
+.officer-img {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;}
+.officer-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;}
+.placeholder-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--light);
+    color: var(--medium);}
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1.25rem;
+    background-color: var(--white);
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+    font-weight: 600;}
+.accordion-header:hover {
+    background-color: var(--light);}
+.accordion-header.active {
+    background-color: var(--primary);
+    color: var(--white);}
+/* ===== MOBILE RESPONSIVENESS ===== */
+@media (max-width: 576px) {
+    html {
+        font-size: 14px;}
+h1 {
+        font-size: 2rem;}
+h2 {
+        font-size: 1.75rem;}
+.hero {
+        padding: var(--space-xl) 0;}
+.hero h1 {
+        font-size: 2.25rem;}
+.hero p {
+        font-size: 1.125rem;}
+.container {
+        padding: 0 1rem;}
+/* ===== PRINT STYLES ===== */
+@media print {
+    body {
+        background-color: white;
+        color: black;
+        font-size: 12pt;}
+.container {
+        max-width: 100%;
+        padding: 0;}
+header, footer, #back-to-top, .hero {
+        display: none;}
+.card {
+        box-shadow: none;
+        border: 1px solid #ddd;}
+.card:hover {
+        transform: none;
+        box-shadow: none;}
+/* Add these new styles for the banner and navigation icons */
+
+/* Banner Image */
+.banner-container {
+    width: 100%;
+    overflow: hidden;
+    text-align: center;
+    background-color: var(--primary);}
+/* Navigation Icons */
+.nav-icon {
+    width: auto;
+    height: auto;
+    margin-right: 8px;
+    color: var(--primary);
+    font-size: 1.2rem;}
+.nav-menu li.active .nav-icon,
+.nav-menu li a:hover .nav-icon {
+    color: var(--accent);}
+@media (max-width: 768px) {
+    .nav-icon {
+        margin-right: 5px;
+        font-size: 1rem;}
+/* Mobile Calendar Styles */
+@media (max-width: 768px) {
+    .meeting-entry {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;}
+.location-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.75rem;}
+/* iPhone-specific optimizations */
+@media screen and (max-width: 428px) {
+    /* Calendar table optimizations */
+    .meeting-table {
+        font-size: 0.85rem;  /* Slightly smaller font for iPhone */}
+.location-card h3 {
+        font-size: 1.1rem;}
+/* Fix notch interference */
+    .header-container {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);}
+/* Adjust container padding */
+    .container {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));}
+/* iPhone SE specific adjustments */
+@media screen and (max-width: 375px) {
+    .meeting-table {
+        font-size: 0.8rem;}
+/* Fix for iPhone landscape mode */
+@media screen and (max-height: 428px) and (orientation: landscape) {
+    .meeting-entry {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;}
+    </style>
+    
+    <style id="critical-css">
+        /* San Antonio Philatelic Association - Main Stylesheet */
+
+/* ===== VARIABLES ===== */
+:root {
+    /* Color Palette */
+    --primary: #1a5276;        /* Deep blue */
+    --primary-light: #2980b9;  /* Mid blue */
+    --primary-dark: #0e2f44;   /* Darker blue */
+    --secondary: #d35400;      /* Warm orange */
+    --accent: #f1c40f;         /* Gold/Yellow */
+    --dark: #2c3e50;           /* Slate dark */
+    --medium: #7f8c8d;         /* Gray */
+    --light: #ecf0f1;          /* Light gray */
+    --white: #ffffff;
+    --success: #27ae60;        /* Green */
+    --warning: #f39c12;        /* Orange */
+    --danger: #c0392b;         /* Red */
+    
+    /* Typography */
+    --font-heading: 'Merriweather', Georgia, serif;
+    --font-body: 'Open Sans', Arial, sans-serif;
+    
+    /* Spacing */
+    --space-xxs: 0.25rem;
+    --space-xs: 0.5rem;
+    --space-sm: 0.75rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-xxl: 3rem;
+    
+    /* Container widths */
+    --container-sm: 640px;
+    --container-md: 768px;
+    --container-lg: 1024px;
+    --container-xl: 1280px;
+    
+    /* Border radius */
+    --radius-sm: 3px;
+    --radius-md: 5px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.25s ease;
+    --transition-slow: 0.4s ease;}
+body {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--dark);
+    background-color: var(--white);}
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    line-height: 1.3;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: var(--dark);}
+h1 {
+    font-size: 2.5rem;}
+h2 {
+    font-size: 2rem;}
+h3 {
+    font-size: 1.75rem;}
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;}
+button, input, select, textarea {
+    font-family: var(--font-body);
+    font-size: 1rem;}
+/* ===== LAYOUT ===== */
+.container {
+    width: 100%;
+    max-width: var(--container-xl);
+    margin: 0 auto;
+    padding: 0 1.5rem;}
+@media (max-width: 768px) {
+    .grid-cols-2, .grid-cols-3 {
+        grid-template-columns: 1fr;}
+/* ===== HEADER STYLES ===== */
+header {
+    background-color: var(--white);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 1rem 0;}
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;}
+nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;}
+nav li {
+    margin-left: 1.5rem;}
+nav a {
+    font-weight: 600;
+    color: var(--dark);
+    text-decoration: none;
+    padding: 0.5rem 0;
+    transition: color var(--transition-fast);
+    position: relative;}
+nav a:hover {
+    color: var(--primary);}
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary);
+    transition: width var(--transition-normal);}
+nav a:hover::after {
+    width: 100%;}
+/* Smooth theme transition */
+body,
+header,
+.nav-menu,
+.card,
+.hero,
+.section,
+footer,
+.accordion-header,
+.btn {
+    transition: background-color var(--transition-normal), color var(--transition-normal);}
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+        touch-action: manipulation;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;}
+.nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh; /* Fallback for older browsers */
+        height: 100dvh; /* Use dynamic viewport height for better mobile support */
+        height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback for iOS */
+        background-color: var(--white);
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 2rem;
+        box-shadow: var(--shadow-lg);
+        transition: right var(--transition-normal);
+        z-index: 60;
+        /* iOS specific fixes */
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;}
+.nav-menu.active {
+        right: 0;}
+nav li {
+        margin: 0 0 1.5rem 0;}
+nav a::after {
+        display: none;}
+/* Ensure mobile nav links are clickable */
+    .nav-menu a {
+        display: block;
+        padding: 0.75rem 1rem;
+        position: relative;
+        z-index: 65;
+        -webkit-tap-highlight-color: rgba(26, 82, 118, 0.2);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: manipulation;
+        cursor: pointer;
+        /* Ensure proper touch target size */
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        /* Improved mobile link styling */
+        color: var(--primary);
+        font-weight: 600;
+        border-radius: var(--radius-md);
+        margin-bottom: 0.25rem;
+        transition: all var(--transition-fast);}
+.nav-menu li {
+        display: block;
+        width: 100%;}
+/* Mobile menu icon styling */
+    .nav-menu .nav-icon {
+        color: var(--primary);
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+        width: 1.5rem;
+        text-align: center;}
+/* iOS specific fixes and hover states */
+    .nav-menu a:active {
+        background-color: rgba(26, 82, 118, 0.15);
+        transform: scale(0.98);
+        transition: all 0.1s ease;
+        color: var(--primary-dark);}
+.nav-menu a:hover {
+        background-color: rgba(26, 82, 118, 0.08);
+        color: var(--primary-dark);
+        transform: translateX(4px);}
+/* Active/current page styling for mobile */
+    .nav-menu a.active,
+    .nav-menu a[aria-current="page"] {
+        background-color: var(--primary);
+        color: var(--white);}
+.nav-menu a.active .nav-icon,
+    .nav-menu a[aria-current="page"] .nav-icon {
+        color: var(--white);}
+/* Prevent body scroll when menu is open */
+    body.menu-open {
+        overflow: hidden;}
+.footer-section h3 {
+    color: var(--white);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;}
+/* ===== HERO SECTION ===== */
+.hero {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: var(--space-xxl) 0;
+    text-align: center;}
+.hero h1 {
+    color: var(--white);
+    font-size: 2.75rem;
+    margin-bottom: 1rem;}
+.hero p {
+    font-size: 1.25rem;
+    max-width: 800px;
+    margin: 0 auto;}
+/* ===== CARDS ===== */
+.card {
+    background-color: var(--white);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 1.5rem;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);}
+.card-content {
+    padding: 1.5rem;}
+.card-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;}
+.card-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;}
+/* ===== UTILITIES ===== */
+.text-center {
+    text-align: center;}
+.timeline-content h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--primary);}
+@media screen and (max-width: 768px) {
+    .timeline::after {
+        left: 20px;}
+.officer-img {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;}
+.officer-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;}
+.placeholder-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--light);
+    color: var(--medium);}
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1.25rem;
+    background-color: var(--white);
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+    font-weight: 600;}
+.accordion-header:hover {
+    background-color: var(--light);}
+.accordion-header.active {
+    background-color: var(--primary);
+    color: var(--white);}
+/* ===== MOBILE RESPONSIVENESS ===== */
+@media (max-width: 576px) {
+    html {
+        font-size: 14px;}
+h1 {
+        font-size: 2rem;}
+h2 {
+        font-size: 1.75rem;}
+.hero {
+        padding: var(--space-xl) 0;}
+.hero h1 {
+        font-size: 2.25rem;}
+.hero p {
+        font-size: 1.125rem;}
+.container {
+        padding: 0 1rem;}
+/* ===== PRINT STYLES ===== */
+@media print {
+    body {
+        background-color: white;
+        color: black;
+        font-size: 12pt;}
+.container {
+        max-width: 100%;
+        padding: 0;}
+header, footer, #back-to-top, .hero {
+        display: none;}
+.card {
+        box-shadow: none;
+        border: 1px solid #ddd;}
+.card:hover {
+        transform: none;
+        box-shadow: none;}
+/* Add these new styles for the banner and navigation icons */
+
+/* Banner Image */
+.banner-container {
+    width: 100%;
+    overflow: hidden;
+    text-align: center;
+    background-color: var(--primary);}
+/* Navigation Icons */
+.nav-icon {
+    width: auto;
+    height: auto;
+    margin-right: 8px;
+    color: var(--primary);
+    font-size: 1.2rem;}
+.nav-menu li.active .nav-icon,
+.nav-menu li a:hover .nav-icon {
+    color: var(--accent);}
+@media (max-width: 768px) {
+    .nav-icon {
+        margin-right: 5px;
+        font-size: 1rem;}
+/* Mobile Calendar Styles */
+@media (max-width: 768px) {
+    .meeting-entry {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;}
+.location-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.75rem;}
+/* iPhone-specific optimizations */
+@media screen and (max-width: 428px) {
+    /* Calendar table optimizations */
+    .meeting-table {
+        font-size: 0.85rem;  /* Slightly smaller font for iPhone */}
+.location-card h3 {
+        font-size: 1.1rem;}
+/* Fix notch interference */
+    .header-container {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);}
+/* Adjust container padding */
+    .container {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));}
+/* iPhone SE specific adjustments */
+@media screen and (max-width: 375px) {
+    .meeting-table {
+        font-size: 0.8rem;}
+/* Fix for iPhone landscape mode */
+@media screen and (max-height: 428px) and (orientation: landscape) {
+    .meeting-entry {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;}
+    </style>
     <link rel="preload" href="dist/css/styles.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="dist/css/styles.min.css"></noscript>
+    <noscript><link rel="stylesheet" href="dist/css/styles.min.css"></noscript>
+    <noscript><link rel="stylesheet" href="dist/css/styles.min.css"></noscript>
     <noscript><link rel="stylesheet" href="dist/css/styles.min.css"></noscript>
     <noscript><link rel="stylesheet" href="dist/css/styles.min.css"></noscript>
     
@@ -255,6 +1449,123 @@ h2{font-size:1.75rem}
         }
         .blur-up.loaded {
             filter: blur(0);
+        }
+    </style>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/600.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/700.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/merriweather/v1/400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/merriweather/v1/700.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <style>
+        /* Font loading states */
+        .fonts-loading body {
+            opacity: 0.8;
+        }
+        
+        .fonts-loaded body {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Font fallbacks */
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        .fonts-loaded body {
+            font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+        
+        .fonts-loaded h1, 
+        .fonts-loaded h2, 
+        .fonts-loaded h3, 
+        .fonts-loaded h4, 
+        .fonts-loaded h5, 
+        .fonts-loaded h6 {
+            font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+    </style>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/600.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/700.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/merriweather/v1/400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/merriweather/v1/700.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <style>
+        /* Font loading states */
+        .fonts-loading body {
+            opacity: 0.8;
+        }
+        
+        .fonts-loaded body {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Font fallbacks */
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        .fonts-loaded body {
+            font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+        
+        .fonts-loaded h1, 
+        .fonts-loaded h2, 
+        .fonts-loaded h3, 
+        .fonts-loaded h4, 
+        .fonts-loaded h5, 
+        .fonts-loaded h6 {
+            font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+    </style>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/600.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/700.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/merriweather/v1/400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/merriweather/v1/700.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <style>
+        /* Font loading states */
+        .fonts-loading body {
+            opacity: 0.8;
+        }
+        
+        .fonts-loaded body {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Font fallbacks */
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        .fonts-loaded body {
+            font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+        
+        .fonts-loaded h1, 
+        .fonts-loaded h2, 
+        .fonts-loaded h3, 
+        .fonts-loaded h4, 
+        .fonts-loaded h5, 
+        .fonts-loaded h6 {
+            font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
         }
     </style>
     <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/400.woff2" as="font" type="font/woff2" crossorigin>
@@ -1146,6 +2457,159 @@ h2{font-size:1.75rem}
         }, 1000);
     }
 </script>
+    
+    <script>
+        // Font Face Observer script
+        (function() {
+            class FontFaceObserver {
+                constructor(family, options = {}) {
+                    this.family = family;
+                    this.options = options;
+                }
+                
+                async load() {
+                    try {
+                        await document.fonts.load(`1em ${this.family}`, this.options.text || 'BESbswy');
+                        return true;
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            }
+
+            // Load fonts and mark as loaded
+            async function loadFonts() {
+                document.documentElement.classList.add('fonts-loading');
+                
+                const fontLoaders = [
+                    new FontFaceObserver('Open Sans', { weight: 400 }).load(),
+                    new FontFaceObserver('Open Sans', { weight: 600 }).load(),
+                    new FontFaceObserver('Open Sans', { weight: 700 }).load(),
+                    new FontFaceObserver('Merriweather', { weight: 400 }).load(),
+                    new FontFaceObserver('Merriweather', { weight: 700 }).load()
+                ];
+
+                try {
+                    await Promise.all(fontLoaders);
+                    document.documentElement.classList.remove('fonts-loading');
+                    document.documentElement.classList.add('fonts-loaded');
+                    localStorage.setItem('fonts-loaded', 'true');
+                } catch (err) {
+                    document.documentElement.classList.remove('fonts-loading');
+                    document.documentElement.classList.add('fonts-failed');
+                }
+            }
+
+            // Check if fonts were previously loaded
+            if (localStorage.getItem('fonts-loaded')) {
+                document.documentElement.classList.add('fonts-loaded');
+            } else {
+                loadFonts();
+            }
+        })();
+    </script>
+    
+    <script>
+        // Font Face Observer script
+        (function() {
+            class FontFaceObserver {
+                constructor(family, options = {}) {
+                    this.family = family;
+                    this.options = options;
+                }
+                
+                async load() {
+                    try {
+                        await document.fonts.load(`1em ${this.family}`, this.options.text || 'BESbswy');
+                        return true;
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            }
+
+            // Load fonts and mark as loaded
+            async function loadFonts() {
+                document.documentElement.classList.add('fonts-loading');
+                
+                const fontLoaders = [
+                    new FontFaceObserver('Open Sans', { weight: 400 }).load(),
+                    new FontFaceObserver('Open Sans', { weight: 600 }).load(),
+                    new FontFaceObserver('Open Sans', { weight: 700 }).load(),
+                    new FontFaceObserver('Merriweather', { weight: 400 }).load(),
+                    new FontFaceObserver('Merriweather', { weight: 700 }).load()
+                ];
+
+                try {
+                    await Promise.all(fontLoaders);
+                    document.documentElement.classList.remove('fonts-loading');
+                    document.documentElement.classList.add('fonts-loaded');
+                    localStorage.setItem('fonts-loaded', 'true');
+                } catch (err) {
+                    document.documentElement.classList.remove('fonts-loading');
+                    document.documentElement.classList.add('fonts-failed');
+                }
+            }
+
+            // Check if fonts were previously loaded
+            if (localStorage.getItem('fonts-loaded')) {
+                document.documentElement.classList.add('fonts-loaded');
+            } else {
+                loadFonts();
+            }
+        })();
+    </script>
+    
+    <script>
+        // Font Face Observer script
+        (function() {
+            class FontFaceObserver {
+                constructor(family, options = {}) {
+                    this.family = family;
+                    this.options = options;
+                }
+                
+                async load() {
+                    try {
+                        await document.fonts.load(`1em ${this.family}`, this.options.text || 'BESbswy');
+                        return true;
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            }
+
+            // Load fonts and mark as loaded
+            async function loadFonts() {
+                document.documentElement.classList.add('fonts-loading');
+                
+                const fontLoaders = [
+                    new FontFaceObserver('Open Sans', { weight: 400 }).load(),
+                    new FontFaceObserver('Open Sans', { weight: 600 }).load(),
+                    new FontFaceObserver('Open Sans', { weight: 700 }).load(),
+                    new FontFaceObserver('Merriweather', { weight: 400 }).load(),
+                    new FontFaceObserver('Merriweather', { weight: 700 }).load()
+                ];
+
+                try {
+                    await Promise.all(fontLoaders);
+                    document.documentElement.classList.remove('fonts-loading');
+                    document.documentElement.classList.add('fonts-loaded');
+                    localStorage.setItem('fonts-loaded', 'true');
+                } catch (err) {
+                    document.documentElement.classList.remove('fonts-loading');
+                    document.documentElement.classList.add('fonts-failed');
+                }
+            }
+
+            // Check if fonts were previously loaded
+            if (localStorage.getItem('fonts-loaded')) {
+                document.documentElement.classList.add('fonts-loaded');
+            } else {
+                loadFonts();
+            }
+        })();
+    </script>
     
     <script>
         // Font Face Observer script
