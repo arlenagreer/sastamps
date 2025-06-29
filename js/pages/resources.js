@@ -483,28 +483,40 @@ function showModal(content) {
     document.body.style.overflow = 'hidden';
     
     // Force visible with inline styles to override any CSS conflicts
-    modal.style.display = 'flex !important';
-    modal.style.position = 'fixed';
-    modal.style.top = '0';
-    modal.style.left = '0';
-    modal.style.width = '100%';
-    modal.style.height = '100%';
-    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-    modal.style.zIndex = '9999';
-    modal.style.justifyContent = 'center';
-    modal.style.alignItems = 'center';
-    modal.style.opacity = '1';
+    modal.style.cssText = `
+        display: flex !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background-color: rgba(0, 0, 0, 0.8) !important;
+        z-index: 99999 !important;
+        justify-content: center !important;
+        align-items: center !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+    `;
     
     // Style the modal content
     const modalContent = modal.querySelector('.modal-content');
     if (modalContent) {
-        modalContent.style.backgroundColor = 'white';
-        modalContent.style.padding = '2rem';
-        modalContent.style.borderRadius = '8px';
-        modalContent.style.maxWidth = '90vw';
-        modalContent.style.maxHeight = '90vh';
-        modalContent.style.overflow = 'auto';
-        modalContent.style.position = 'relative';
+        modalContent.style.cssText = `
+            background-color: white !important;
+            padding: 2rem !important;
+            border-radius: 8px !important;
+            max-width: 90vw !important;
+            max-height: 90vh !important;
+            overflow: auto !important;
+            position: relative !important;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25) !important;
+            transform: none !important;
+            visibility: visible !important;
+            display: block !important;
+        `;
     }
     
     // Close modal handlers

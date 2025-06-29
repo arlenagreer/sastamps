@@ -1,6 +1,6 @@
 {
-  "buildDate": "2025-06-29T16:02:34.109Z",
-  "totalSize": 253133,
+  "buildDate": "2025-06-29T16:03:28.507Z",
+  "totalSize": 253740,
   "bundles": [
     {
       "name": "js/core.min.js",
@@ -52,8 +52,8 @@
     },
     {
       "name": "js/resources.min.js",
-      "size": 30769,
-      "sizeFormatted": "30.05 KB",
+      "size": 31376,
+      "sizeFormatted": "30.64 KB",
       "imports": 0,
       "exports": 0,
       "compressionRatio": "0.77"
