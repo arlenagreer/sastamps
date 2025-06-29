@@ -1,6 +1,6 @@
 {
-  "buildDate": "2025-06-29T01:56:25.269Z",
-  "totalSize": 242006,
+  "buildDate": "2025-06-29T16:02:34.109Z",
+  "totalSize": 253133,
   "bundles": [
     {
       "name": "js/core.min.js",
@@ -28,8 +28,8 @@
     },
     {
       "name": "js/newsletter.min.js",
-      "size": 10858,
-      "sizeFormatted": "10.6 KB",
+      "size": 13039,
+      "sizeFormatted": "12.73 KB",
       "imports": 0,
       "exports": 0,
       "compressionRatio": "0.77"
@@ -52,8 +52,8 @@
     },
     {
       "name": "js/resources.min.js",
-      "size": 21823,
-      "sizeFormatted": "21.31 KB",
+      "size": 30769,
+      "sizeFormatted": "30.05 KB",
       "imports": 0,
       "exports": 0,
       "compressionRatio": "0.77"

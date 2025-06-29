@@ -17,10 +17,8 @@
     <meta name="keywords" content="philatelic glossary, stamp collecting terms, philately definitions, stamp terminology, SAPA glossary, postal terms">
     
     <!-- Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://www.google-analytics.com; connect-src 'self' https://www.google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://www.google-analytics.com; connect-src 'self' https://www.google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="DENY">
-    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     
     <title>Philatelic Glossary - San Antonio Philatelic Association</title>
@@ -55,7 +53,7 @@
     
     <!-- Service Worker -->
     <script>
-        if ('serviceWorker' in navigator) {
+        if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
                     .then((registration) => {
@@ -316,16 +314,11 @@
     </footer>
 
     <!-- Scripts -->
-    <script type="module">
-        // Import page-specific modules
-        import('./js/pages/glossary.js').then(module => {
-            console.log('✅ Glossary page loaded successfully');
-        }).catch(error => {
-            console.warn('⚠️ Glossary page module failed to load:', error);
-            showFallbackContent();
-        });
-
-        // Fallback content if module loading fails
+    <script>
+        // Check if we can use modules (will fail on file:// protocol)
+        var moduleSupport = 'noModule' in HTMLScriptElement.prototype && window.location.protocol !== 'file:';
+        
+        // Fallback content function
         function showFallbackContent() {
             const containers = [
                 '#glossary-search-container',
@@ -345,15 +338,38 @@
                             padding: 1rem;
                             text-align: center;
                         ">
-                            <h3><i class="fas fa-exclamation-triangle"></i> Content Unavailable</h3>
-                            <p>Unable to load glossary content. Please try refreshing the page or contact us for assistance.</p>
+                            <h3><i class="fas fa-exclamation-triangle"></i> Development Mode</h3>
+                            <p>The glossary content requires a web server to load properly.</p>
+                            <p>To view this page locally, please use a local development server or visit the live site.</p>
                             <p style="font-size: 0.875rem; margin-top: 0.5rem;">
-                                Email: <a href="mailto:loz33@hotmail.com">loz33@hotmail.com</a>
+                                For assistance: <a href="mailto:loz33@hotmail.com">loz33@hotmail.com</a>
                             </p>
                         </div>
                     `;
                 }
             });
+        }
+        
+        if (moduleSupport) {
+            // Use modules if supported
+            var script = document.createElement('script');
+            script.type = 'module';
+            script.innerHTML = `
+                import('./js/pages/glossary.js').then(module => {
+                    console.log('✅ Glossary page loaded successfully');
+                }).catch(error => {
+                    console.warn('⚠️ Glossary page module failed to load:', error);
+                    showFallbackContent();
+                });
+            `;
+            document.body.appendChild(script);
+        } else {
+            // Show fallback for file:// protocol
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', showFallbackContent);
+            } else {
+                showFallbackContent();
+            }
         }
     </script>
 
@@ -363,6 +379,13 @@
     </button>
 
     <!-- Core JavaScript -->
-    <script type="module" src="js/script.js"></script>
+    <script>
+        if (moduleSupport) {
+            var coreScript = document.createElement('script');
+            coreScript.type = 'module';
+            coreScript.src = 'js/script.js';
+            document.body.appendChild(coreScript);
+        }
+    </script>
 </body>
 </html>
