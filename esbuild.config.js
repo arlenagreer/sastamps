@@ -19,6 +19,7 @@ const entryPoints = {
   'js/contact.min.js': 'js/pages/contact.js',
   'js/search.min.js': 'js/pages/search.js',
   'js/resources.min.js': 'js/pages/resources.js',
+  'js/glossary.min.js': 'js/pages/glossary.js',
   
   // Modules bundle (for dynamic imports)
   'js/modules.min.js': 'js/modules/index.js'

@@ -1,6 +1,6 @@
 {
-  "buildDate": "2025-06-29T01:42:42.921Z",
-  "totalSize": 218258,
+  "buildDate": "2025-06-29T01:56:25.269Z",
+  "totalSize": 242006,
   "bundles": [
     {
       "name": "js/core.min.js",
@@ -59,6 +59,14 @@
       "compressionRatio": "0.77"
     },
     {
+      "name": "js/glossary.min.js",
+      "size": 23748,
+      "sizeFormatted": "23.19 KB",
+      "imports": 0,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
       "name": "js/modules.min.js",
       "size": 58106,
       "sizeFormatted": "56.74 KB",
@@ -70,6 +78,6 @@
   "treeshakingStats": {
     "modulesAnalyzed": 3,
     "deadCodeEliminated": 0,
-    "bundleCount": 8
+    "bundleCount": 9
   }
 }
