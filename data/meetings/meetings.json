@@ -700,6 +700,682 @@
       "tags": ["mexican-stamps", "classic-period", "hidalgo", "presentation", "program"]
     },
     {
+      "id": "2025-10-03",
+      "date": "2025-10-03",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "business",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "topic": "Monthly club business and member presentations",
+      "description": "Monthly Board of Governors meeting followed by member show and tell presentations.",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, social time"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Board of Governors meeting",
+          "presenter": "Board Members"
+        },
+        {
+          "time": "7:30 PM",
+          "item": "Show and Tell presentations",
+          "presenter": "Members"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Meeting adjournment"
+        }
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false,
+        "bringItems": ["Items for show and tell"]
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bog", "business", "show-and-tell"]
+    },
+    {
+      "id": "2025-10-10",
+      "date": "2025-10-10",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "auction",
+      "title": "Year-End Stamp Auction",
+      "topic": "Special year-end auction with premium lots",
+      "description": "Special year-end auction featuring premium lots, collections, and donated materials for club fundraising.",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, lot viewing"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Auction preview and announcements"
+        },
+        {
+          "time": "7:15 PM",
+          "item": "Auction begins"
+        },
+        {
+          "time": "8:45 PM",
+          "item": "Auction conclusion and checkout"
+        }
+      ],
+      "specialNotes": [
+        "Cash or check accepted for purchases",
+        "Premium year-end lots available",
+        "All proceeds support club activities"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["auction", "year-end", "fundraising", "premium-lots"]
+    },
+    {
+      "id": "2025-10-17",
+      "date": "2025-10-17",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "social",
+      "title": "Stamp Bourse",
+      "topic": "Dealer tables and stamp trading",
+      "description": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers.",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, setup begins"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Trading and sales begin"
+        },
+        {
+          "time": "8:45 PM",
+          "item": "Cleanup begins"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Meeting concludes"
+        }
+      ],
+      "specialNotes": [
+        "Tables available for dealers and members",
+        "Bring stamps for trading or selling"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false,
+        "bringItems": ["Stamps for trading or selling"]
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bourse", "trading", "dealers", "buying", "selling"]
+    },
+    {
+      "id": "2025-10-24",
+      "date": "2025-10-24",
+      "time": {
+        "doorsOpen": "5:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "social",
+      "title": "Stamp Bourse",
+      "topic": "Dealer tables and stamp trading",
+      "description": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers.",
+      "agenda": [
+        {
+          "time": "5:30 PM",
+          "item": "Doors open, dealer setup"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Bourse officially opens"
+        },
+        {
+          "time": "8:30 PM",
+          "item": "Final sales and trading"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Cleanup and departure"
+        }
+      ],
+      "specialNotes": [
+        "Dealer table rental: $10 for members, $15 for non-members",
+        "Contact secretary to reserve tables"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bourse", "dealers", "trading", "buying", "selling"]
+    },
+    {
+      "id": "2025-10-31",
+      "date": "2025-10-31",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "holiday",
+      "title": "NO MEETING - HALLOWEEN",
+      "description": "No meeting scheduled due to Halloween holiday.",
+      "agenda": [],
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": true,
+      "tags": ["holiday", "halloween"]
+    },
+    {
+      "id": "2025-11-07",
+      "date": "2025-11-07",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "business",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "topic": "Monthly club business and member presentations",
+      "description": "Monthly Board of Governors meeting followed by member show and tell presentations.",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, social time"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Board of Governors meeting"
+        },
+        {
+          "time": "7:30 PM",
+          "item": "Show and Tell presentations by members"
+        },
+        {
+          "time": "8:30 PM",
+          "item": "Circuit books and trading"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Meeting adjournment"
+        }
+      ],
+      "specialNotes": [
+        "Bring items for Show and Tell",
+        "Circuit books available for purchase",
+        "Nominations open for 2026 board positions"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["business", "show-and-tell", "board-meeting", "trading"]
+    },
+    {
+      "id": "2025-11-14",
+      "date": "2025-11-14",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "auction",
+      "title": "Auction",
+      "topic": "Monthly stamp auction",
+      "description": "Monthly club auction featuring member consignments and donated materials.",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, lot viewing"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Auction preview and announcements"
+        },
+        {
+          "time": "7:15 PM",
+          "item": "Auction begins"
+        },
+        {
+          "time": "8:45 PM",
+          "item": "Auction conclusion and checkout"
+        }
+      ],
+      "specialNotes": [
+        "Cash or check accepted for purchases",
+        "Bring lots for consignment (10% commission)"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["auction", "buying", "selling", "consignment"]
+    },
+    {
+      "id": "2025-11-21",
+      "date": "2025-11-21",
+      "time": {
+        "doorsOpen": "5:30 PM",
+        "meetingStart": "6:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "bourse",
+      "title": "November Stamp Bourse",
+      "topic": "Monthly stamp and cover trading event",
+      "description": "Monthly bourse featuring multiple dealers with stamps, covers, supplies, and philatelic literature. Great opportunity for buying, selling, and trading.",
+      "agenda": [
+        {
+          "time": "5:30 PM",
+          "item": "Doors open, dealer setup"
+        },
+        {
+          "time": "6:00 PM",
+          "item": "Bourse opens to all attendees"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Door prizes drawing"
+        },
+        {
+          "time": "8:45 PM",
+          "item": "Last call for transactions"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Cleanup and departure"
+        }
+      ],
+      "specialNotes": [
+        "Early holiday shopping opportunity",
+        "Special discounts from participating dealers",
+        "Dealer table rental: $10 for members, $15 for non-members"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bourse", "dealers", "trading", "buying", "selling"]
+    },
+    {
+      "id": "2025-11-28",
+      "date": "2025-11-28",
+      "time": {
+        "doorsOpen": "N/A",
+        "meetingStart": "N/A",
+        "meetingEnd": "N/A"
+      },
+      "location": {
+        "name": "N/A",
+        "building": "",
+        "room": "",
+        "address": {
+          "street": "",
+          "city": "",
+          "state": "",
+          "zipCode": ""
+        }
+      },
+      "type": "holiday",
+      "title": "Meeting Cancelled - Thanksgiving Holiday",
+      "topic": "No meeting due to Thanksgiving weekend",
+      "description": "Regular meeting cancelled due to Thanksgiving holiday weekend. Happy Thanksgiving to all members!",
+      "agenda": [],
+      "specialNotes": [
+        "Meeting cancelled for Thanksgiving",
+        "Next meeting: December 5, 2025",
+        "Happy Thanksgiving to all SAPA members!"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": true,
+      "tags": ["cancelled", "holiday", "thanksgiving"]
+    },
+    {
+      "id": "2025-12-05",
+      "date": "2025-12-05",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "business",
+      "title": "Board of Governors Meeting & Blue Chip Auction",
+      "topic": "Annual elections and club business",
+      "description": "Annual Board of Governors elections for 2026 officers, followed by member presentations and holiday season preparation.",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, ballot distribution"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Board of Governors meeting"
+        },
+        {
+          "time": "7:30 PM",
+          "item": "2026 Officer elections"
+        },
+        {
+          "time": "8:00 PM",
+          "item": "Election results and acceptance speeches"
+        },
+        {
+          "time": "8:30 PM",
+          "item": "Circuit books and trading"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Meeting adjournment"
+        }
+      ],
+      "specialNotes": [
+        "Annual elections for 2026 board positions",
+        "All members encouraged to vote",
+        "Holiday party planning discussion"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": true,
+        "bringItems": ["Membership card for voting"]
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["business", "elections", "board-meeting", "annual"]
+    },
+    {
+      "id": "2025-12-12",
+      "date": "2025-12-12",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "holiday",
+      "title": "Christmas Party & Silent Auction",
+      "topic": "Holiday celebration and philatelic gift exchange",
+      "description": "Annual SAPA holiday party featuring a potluck dinner, philatelic gift exchange, and special recognition of volunteers and long-time members.",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, potluck setup"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Holiday dinner begins"
+        },
+        {
+          "time": "7:45 PM",
+          "item": "Volunteer recognition and awards"
+        },
+        {
+          "time": "8:15 PM",
+          "item": "Philatelic gift exchange ($15 limit)"
+        },
+        {
+          "time": "8:45 PM",
+          "item": "Holiday raffle and door prizes"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Cleanup and departure"
+        }
+      ],
+      "specialNotes": [
+        "Potluck dinner - bring a dish to share",
+        "Philatelic gift exchange - $15 maximum value",
+        "Spouses and family members welcome",
+        "Special recognition for 2025 volunteers"
+      ],
+      "requirements": {
+        "rsvpRequired": true,
+        "membershipRequired": false,
+        "bringItems": ["Potluck dish", "Philatelic gift for exchange (optional)"]
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["holiday", "party", "social", "gift-exchange", "potluck"]
+    },
+    {
+      "id": "2025-12-19",
+      "date": "2025-12-19",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "13030 Jones Maltsberger Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78247"
+        }
+      },
+      "type": "holiday",
+      "title": "NO MEETING - CHRISTMAS",
+      "description": "No meeting scheduled due to Christmas holiday.",
+      "agenda": [],
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": true,
+      "tags": ["holiday", "christmas"]
+    },
+    {
+      "id": "2025-12-26",
+      "date": "2025-12-26",
+      "time": {
+        "doorsOpen": "N/A",
+        "meetingStart": "N/A",
+        "meetingEnd": "N/A"
+      },
+      "location": {
+        "name": "N/A",
+        "building": "",
+        "room": "",
+        "address": {
+          "street": "",
+          "city": "",
+          "state": "",
+          "zipCode": ""
+        }
+      },
+      "type": "holiday",
+      "title": "Meeting Cancelled - Holiday Week",
+      "topic": "No meeting due to Christmas holiday week",
+      "description": "Regular meeting cancelled due to Christmas holiday week. Wishing all members a wonderful holiday season and Happy New Year!",
+      "agenda": [],
+      "specialNotes": [
+        "Meeting cancelled for Christmas holiday week",
+        "Next meeting: January 2, 2026",
+        "Happy Holidays and Happy New Year!"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": true,
+      "tags": ["cancelled", "holiday", "christmas"]
+    },
+    {
       "id": "2025-06-20",
       "date": "2025-06-20",
       "time": {
