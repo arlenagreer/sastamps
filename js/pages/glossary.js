@@ -136,7 +136,8 @@ async function loadGlossarySearch(container) {
  */
 async function loadGlossaryFilters(container) {
   try {
-    const { default: glossaryData } = await import('../../data/glossary/glossary.json');
+    const response = await fetch('/data/glossary/glossary.json');
+    const glossaryData = await response.json();
     const terms = glossaryData.terms || [];
 
     // Extract unique categories and difficulties
@@ -236,7 +237,8 @@ async function loadGlossaryFilters(container) {
  */
 async function loadGlossaryContent(container) {
   try {
-    const { default: glossaryData } = await import('../../data/glossary/glossary.json');
+    const response = await fetch('/data/glossary/glossary.json');
+    const glossaryData = await response.json();
     const terms = glossaryData.terms || [];
 
     if (terms.length === 0) {
@@ -425,7 +427,8 @@ function renderTermCard(term) {
  */
 async function performSearch(query, resultsContainer) {
   try {
-    const { default: glossaryData } = await import('../../data/glossary/glossary.json');
+    const response = await fetch('/data/glossary/glossary.json');
+    const glossaryData = await response.json();
     const terms = glossaryData.terms || [];
 
     const lowerQuery = query.toLowerCase();
@@ -582,7 +585,8 @@ function scrollToTerm(termId) {
  */
 async function loadGlossaryStats() {
   try {
-    const { default: glossaryData } = await import('../../data/glossary/glossary.json');
+    const response = await fetch('/data/glossary/glossary.json');
+    const glossaryData = await response.json();
     const terms = glossaryData.terms || [];
 
     const totalTerms = terms.length;
