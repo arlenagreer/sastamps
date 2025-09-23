@@ -3,24 +3,28 @@
  * Tree-shakable analytics integration
  */
 
+import { ANALYTICS } from '../constants/index.js';
+
+const GA_MEASUREMENT_ID = ANALYTICS.GA_MEASUREMENT_ID;
+
 /**
  * Initialize Google Analytics if configured
  */
 function initializeGoogleAnalytics() {
-    // Check if gtag is already loaded
-    if (typeof gtag === 'function') {
-        console.log('Google Analytics already initialized');
-        return;
-    }
-    
-    // Look for measurement ID in HTML
-    const gaScript = document.querySelector('script[src*="googletagmanager.com"]');
-    if (!gaScript) {
-        console.log('Google Analytics not configured');
-        return;
-    }
-    
-    console.log('Google Analytics initialized via HTML script tags');
+  // Check if gtag is already loaded
+  if (typeof gtag === 'function') {
+    // Google Analytics already initialized
+    return;
+  }
+
+  // Look for measurement ID in HTML
+  const gaScript = document.querySelector('script[src*="googletagmanager.com"]');
+  if (!gaScript) {
+    // Google Analytics not configured
+    return;
+  }
+
+  // Google Analytics initialized via HTML script tags
 }
 
 /**
@@ -29,11 +33,11 @@ function initializeGoogleAnalytics() {
  * @param {Object} parameters - Event parameters
  */
 export function trackEvent(eventName, parameters = {}) {
-    if (typeof gtag === 'function') {
-        gtag('event', eventName, parameters);
-    } else {
-        console.log('Analytics event:', eventName, parameters);
-    }
+  if (typeof gtag === 'function') {
+    gtag('event', eventName, parameters);
+  } else {
+    // Analytics event tracked in development mode only
+  }
 }
 
 /**
@@ -42,14 +46,14 @@ export function trackEvent(eventName, parameters = {}) {
  * @param {string} pageTitle - Title of the page
  */
 export function trackPageView(pagePath, pageTitle) {
-    if (typeof gtag === 'function') {
-        gtag('config', GA_MEASUREMENT_ID, {
-            page_path: pagePath,
-            page_title: pageTitle
-        });
-    } else {
-        console.log('Analytics page view:', pagePath, pageTitle);
-    }
+  if (typeof gtag === 'function') {
+    gtag('config', GA_MEASUREMENT_ID, {
+      page_path: pagePath,
+      page_title: pageTitle
+    });
+  } else {
+    // Analytics page view tracked in development mode only
+  }
 }
 
 /**
@@ -57,9 +61,9 @@ export function trackPageView(pagePath, pageTitle) {
  * @param {number} timeOnPage - Time spent on page in seconds
  */
 export function trackEngagement(timeOnPage) {
-    trackEvent('user_engagement', {
-        engagement_time_msec: timeOnPage * 1000
-    });
+  trackEvent('user_engagement', {
+    engagement_time_msec: timeOnPage * 1000
+  });
 }
 
 /**
@@ -68,11 +72,11 @@ export function trackEngagement(timeOnPage) {
  * @param {string} errorSource - Source of the error
  */
 export function trackError(errorMessage, errorSource = 'javascript') {
-    trackEvent('exception', {
-        description: errorMessage,
-        fatal: false,
-        source: errorSource
-    });
+  trackEvent('exception', {
+    description: errorMessage,
+    fatal: false,
+    source: errorSource
+  });
 }
 
 // Initialize analytics when module loads

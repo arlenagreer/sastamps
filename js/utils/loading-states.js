@@ -10,9 +10,9 @@
  * @param {string} text - Optional loading text
  */
 export function showLoadingSpinner(element, size = 'medium', text = '') {
-    const sizeClass = size === 'small' ? 'small' : size === 'large' ? 'large' : '';
-    
-    element.innerHTML = `
+  const sizeClass = size === 'small' ? 'small' : size === 'large' ? 'large' : '';
+
+  element.innerHTML = `
         <div class="loading-container">
             <div class="loading-spinner ${sizeClass}"></div>
             ${text ? `<p class="loading-text">${text}</p>` : ''}
@@ -25,13 +25,13 @@ export function showLoadingSpinner(element, size = 'medium', text = '') {
  * @param {HTMLElement} element - Element to add overlay to
  */
 export function showLoadingOverlay(element) {
-    element.style.position = 'relative';
-    
-    const overlay = document.createElement('div');
-    overlay.className = 'loading-overlay';
-    overlay.innerHTML = '<div class="loading-spinner"></div>';
-    
-    element.appendChild(overlay);
+  element.style.position = 'relative';
+
+  const overlay = document.createElement('div');
+  overlay.className = 'loading-overlay';
+  overlay.innerHTML = '<div class="loading-spinner"></div>';
+
+  element.appendChild(overlay);
 }
 
 /**
@@ -39,10 +39,10 @@ export function showLoadingOverlay(element) {
  * @param {HTMLElement} element - Element to remove overlay from
  */
 export function hideLoadingOverlay(element) {
-    const overlay = element.querySelector('.loading-overlay');
-    if (overlay) {
-        overlay.remove();
-    }
+  const overlay = element.querySelector('.loading-overlay');
+  if (overlay) {
+    overlay.remove();
+  }
 }
 
 /**
@@ -51,7 +51,7 @@ export function hideLoadingOverlay(element) {
  * @param {number} count - Number of skeleton items
  */
 export function showNewsletterSkeleton(container, count = 3) {
-    const skeletons = Array(count).fill(0).map(() => `
+  const skeletons = Array(count).fill(0).map(() => `
         <div class="skeleton-newsletter">
             <div class="skeleton skeleton-newsletter-cover"></div>
             <div>
@@ -62,8 +62,8 @@ export function showNewsletterSkeleton(container, count = 3) {
             </div>
         </div>
     `).join('');
-    
-    container.innerHTML = skeletons;
+
+  container.innerHTML = skeletons;
 }
 
 /**
@@ -72,7 +72,7 @@ export function showNewsletterSkeleton(container, count = 3) {
  * @param {number} count - Number of skeleton items
  */
 export function showMeetingSkeleton(container, count = 3) {
-    const skeletons = Array(count).fill(0).map(() => `
+  const skeletons = Array(count).fill(0).map(() => `
         <div class="skeleton-meeting">
             <div class="skeleton skeleton-meeting-date"></div>
             <div class="skeleton skeleton-text long"></div>
@@ -80,8 +80,8 @@ export function showMeetingSkeleton(container, count = 3) {
             <div class="skeleton skeleton-text short" style="margin-top: 1rem;"></div>
         </div>
     `).join('');
-    
-    container.innerHTML = skeletons;
+
+  container.innerHTML = skeletons;
 }
 
 /**
@@ -90,14 +90,14 @@ export function showMeetingSkeleton(container, count = 3) {
  * @param {number} count - Number of skeleton items
  */
 export function showGlossarySkeleton(container, count = 5) {
-    const skeletons = Array(count).fill(0).map(() => `
+  const skeletons = Array(count).fill(0).map(() => `
         <div class="skeleton-glossary-term">
             <div class="skeleton skeleton-glossary-title"></div>
             <div class="skeleton skeleton-glossary-definition"></div>
         </div>
     `).join('');
-    
-    container.innerHTML = `<div class="card"><div class="card-content">${skeletons}</div></div>`;
+
+  container.innerHTML = `<div class="card"><div class="card-content">${skeletons}</div></div>`;
 }
 
 /**
@@ -106,7 +106,7 @@ export function showGlossarySkeleton(container, count = 5) {
  * @param {number} count - Number of skeleton items
  */
 export function showCardSkeleton(container, count = 3) {
-    const skeletons = Array(count).fill(0).map(() => `
+  const skeletons = Array(count).fill(0).map(() => `
         <div class="skeleton-card">
             <div class="skeleton skeleton-image"></div>
             <div class="skeleton skeleton-heading"></div>
@@ -117,8 +117,8 @@ export function showCardSkeleton(container, count = 3) {
             </div>
         </div>
     `).join('');
-    
-    container.innerHTML = skeletons;
+
+  container.innerHTML = skeletons;
 }
 
 /**
@@ -126,9 +126,9 @@ export function showCardSkeleton(container, count = 3) {
  * @param {HTMLButtonElement} button - Button element
  */
 export function setButtonLoading(button) {
-    button.classList.add('is-loading');
-    button.disabled = true;
-    button.dataset.originalText = button.textContent;
+  button.classList.add('is-loading');
+  button.disabled = true;
+  button.dataset.originalText = button.textContent;
 }
 
 /**
@@ -136,12 +136,12 @@ export function setButtonLoading(button) {
  * @param {HTMLButtonElement} button - Button element
  */
 export function removeButtonLoading(button) {
-    button.classList.remove('is-loading');
-    button.disabled = false;
-    if (button.dataset.originalText) {
-        button.textContent = button.dataset.originalText;
-        delete button.dataset.originalText;
-    }
+  button.classList.remove('is-loading');
+  button.disabled = false;
+  if (button.dataset.originalText) {
+    button.textContent = button.dataset.originalText;
+    delete button.dataset.originalText;
+  }
 }
 
 /**
@@ -149,19 +149,19 @@ export function removeButtonLoading(button) {
  * @param {HTMLFormElement} form - Form element
  */
 export function setFormLoading(form) {
-    form.classList.add('is-loading');
-    
-    // Disable all inputs
-    const inputs = form.querySelectorAll('input, textarea, select, button');
-    inputs.forEach(input => {
-        input.disabled = true;
-    });
-    
-    // Add loading state to submit button
-    const submitBtn = form.querySelector('[type="submit"]');
-    if (submitBtn) {
-        setButtonLoading(submitBtn);
-    }
+  form.classList.add('is-loading');
+
+  // Disable all inputs
+  const inputs = form.querySelectorAll('input, textarea, select, button');
+  inputs.forEach(input => {
+    input.disabled = true;
+  });
+
+  // Add loading state to submit button
+  const submitBtn = form.querySelector('[type="submit"]');
+  if (submitBtn) {
+    setButtonLoading(submitBtn);
+  }
 }
 
 /**
@@ -169,19 +169,19 @@ export function setFormLoading(form) {
  * @param {HTMLFormElement} form - Form element
  */
 export function removeFormLoading(form) {
-    form.classList.remove('is-loading');
-    
-    // Enable all inputs
-    const inputs = form.querySelectorAll('input, textarea, select, button');
-    inputs.forEach(input => {
-        input.disabled = false;
-    });
-    
-    // Remove loading state from submit button
-    const submitBtn = form.querySelector('[type="submit"]');
-    if (submitBtn) {
-        removeButtonLoading(submitBtn);
-    }
+  form.classList.remove('is-loading');
+
+  // Enable all inputs
+  const inputs = form.querySelectorAll('input, textarea, select, button');
+  inputs.forEach(input => {
+    input.disabled = false;
+  });
+
+  // Remove loading state from submit button
+  const submitBtn = form.querySelector('[type="submit"]');
+  if (submitBtn) {
+    removeButtonLoading(submitBtn);
+  }
 }
 
 /**
@@ -190,7 +190,7 @@ export function removeFormLoading(form) {
  * @param {string} content - Custom loading content HTML
  */
 export function showCustomLoading(element, content) {
-    element.innerHTML = `
+  element.innerHTML = `
         <div class="loading-container">
             ${content}
         </div>
@@ -202,7 +202,7 @@ export function showCustomLoading(element, content) {
  * @param {HTMLElement} element - Element to add loading class to
  */
 export function addLoadingClass(element) {
-    element.classList.add('is-loading');
+  element.classList.add('is-loading');
 }
 
 /**
@@ -210,5 +210,5 @@ export function addLoadingClass(element) {
  * @param {HTMLElement} element - Element to remove loading class from
  */
 export function removeLoadingClass(element) {
-    element.classList.remove('is-loading');
+  element.classList.remove('is-loading');
 }

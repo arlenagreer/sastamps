@@ -1,0 +1,15 @@
+#!/bin/sh
+# Pre-commit hook to run quick tests before committing
+
+echo "Running pre-commit tests..."
+
+# Run quick validation tests
+npm run test:quick
+
+if [ $? -ne 0 ]; then
+    echo "❌ Tests failed! Please fix errors before committing."
+    exit 1
+fi
+
+echo "✅ All tests passed!"
+exit 0

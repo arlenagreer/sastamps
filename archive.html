@@ -15,33 +15,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Browse the complete archive of SAPA PHILATEX newsletters from the San Antonio Philatelic Association. Access past issues with philatelic articles, club news, and stamp collecting resources.">
     <meta name="keywords" content="SAPA PHILATEX archive, San Antonio Philatelic Association newsletter archive, stamp collecting newsletter archive, philately publication history, past newsletters">
-    
+
     <title>Newsletter Archive - San Antonio Philatelic Association</title>
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sastamps.org/archive.html">
     <meta property="og:title" content="Newsletter Archive - San Antonio Philatelic Association">
     <meta property="og:description" content="Browse the complete archive of SAPA PHILATEX newsletters from the San Antonio Philatelic Association. Access past issues with philatelic articles, club news, and stamp collecting resources.">
     <meta property="og:image" content="dist/images/newsletter-page-image.webp">
-    
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://sastamps.org/archive.html">
     <meta property="twitter:title" content="Newsletter Archive - San Antonio Philatelic Association">
     <meta property="twitter:description" content="Browse the complete archive of SAPA PHILATEX newsletters from the San Antonio Philatelic Association. Access past issues with philatelic articles, club news, and stamp collecting resources.">
     <meta property="twitter:image" content="dist/images/newsletter-page-image.webp">
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&amp;family=Open+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet">
+
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Styles -->
-    
+
     <style id="critical-css">
         :root{--primary:#1a5276;--primary-light:#2980b9;--primary-dark:#0e2f44;--secondary:#d35400;--accent:#f1c40f;--dark:#2c3e50;--medium:#7f8c8d;--light:#ecf0f1;--white:#fff;--success:#27ae60;--warning:#f39c12;--danger:#c0392b;--font-heading:"Merriweather",Georgia,serif;--font-body:"Open Sans",Arial,sans-serif;--space-xxs:0.25rem;--space-xs:0.5rem;--space-sm:0.75rem;--space-md:1rem;--space-lg:1.5rem;--space-xl:2rem;--space-xxl:3rem;--container-sm:640px;--container-md:768px;--container-lg:1024px;--container-xl:1280px;--radius-sm:3px;--radius-md:5px;--radius-lg:8px;--radius-xl:12px;--shadow-sm:0 1px 3px #0000001f;--shadow-md:0 4px 6px #0000001a;--shadow-lg:0 10px 15px -3px #0000001a;--transition-fast:0.15s ease;--transition-normal:0.25s ease;--transition-slow:0.4s ease}
 body{background-color:var(--white);color:var(--dark);font-family:var(--font-body);font-size:1rem;line-height:1.6}
@@ -110,13 +110,13 @@ h2{font-size:1.75rem}
     </style>
     <link rel="preload" href="dist/css/styles.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="dist/css/styles.min.css"></noscript>
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="dist/images/favicon.webp">
     <link rel="icon" type="image/png" sizes="16x16" href="dist/images/favicon.webp">
     <link rel="apple-touch-icon" sizes="180x180" href="dist/images/favicon.webp">
     <link rel="manifest" href="site.webmanifest">
-    
+
     <!-- Canonical URL -->
     <link rel="canonical" href="https://sastamps.org/archive.html">
 
@@ -139,7 +139,7 @@ h2{font-size:1.75rem}
         .fonts-loading body {
             opacity: 0.8;
         }
-        
+
         .fonts-loaded body {
             opacity: 1;
             transition: opacity 0.3s ease;
@@ -149,7 +149,7 @@ h2{font-size:1.75rem}
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
-        
+
         .fonts-loaded body {
             font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
@@ -157,16 +157,16 @@ h2{font-size:1.75rem}
         h1, h2, h3, h4, h5, h6 {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
         }
-        
-        .fonts-loaded h1, 
-        .fonts-loaded h2, 
-        .fonts-loaded h3, 
-        .fonts-loaded h4, 
-        .fonts-loaded h5, 
+
+        .fonts-loaded h1,
+        .fonts-loaded h2,
+        .fonts-loaded h3,
+        .fonts-loaded h4,
+        .fonts-loaded h5,
         .fonts-loaded h6 {
             font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
         }
-        
+
         /* Archive specific styles */
         .archive-grid {
             display: grid;
@@ -174,7 +174,7 @@ h2{font-size:1.75rem}
             gap: 2rem;
             margin-top: 2rem;
         }
-        
+
         .archive-item {
             background-color: var(--white);
             border-radius: var(--radius-md);
@@ -182,50 +182,50 @@ h2{font-size:1.75rem}
             overflow: hidden;
             transition: transform var(--transition-normal), box-shadow var(--transition-normal);
         }
-        
+
         .archive-item:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow-lg);
         }
-        
+
         .archive-item-header {
             background-color: var(--accent);
             padding: 1.5rem;
             text-align: center;
         }
-        
+
         .archive-item-header h3 {
             margin: 0;
             color: var(--dark);
             font-size: 1.25rem;
         }
-        
+
         .archive-item-header p {
             margin: 0.5rem 0 0;
             font-weight: bold;
             font-size: 1rem;
             color: var(--dark);
         }
-        
+
         .archive-item-content {
             padding: 1.5rem;
         }
-        
+
         .archive-item-content p {
             margin-bottom: 1rem;
             color: var(--medium);
         }
-        
+
         .archive-year-section {
             margin-bottom: 3rem;
         }
-        
+
         .archive-year-header {
             border-bottom: 2px solid var(--primary);
             padding-bottom: 0.5rem;
             margin-bottom: 1.5rem;
         }
-        
+
         @media (max-width: 768px) {
             .archive-grid {
                 grid-template-columns: 1fr;
@@ -243,7 +243,7 @@ h2{font-size:1.75rem}
         .fonts-loading body {
             opacity: 0.8;
         }
-        
+
         .fonts-loaded body {
             opacity: 1;
             transition: opacity 0.3s ease;
@@ -253,7 +253,7 @@ h2{font-size:1.75rem}
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
-        
+
         .fonts-loaded body {
             font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
@@ -261,12 +261,12 @@ h2{font-size:1.75rem}
         h1, h2, h3, h4, h5, h6 {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
         }
-        
-        .fonts-loaded h1, 
-        .fonts-loaded h2, 
-        .fonts-loaded h3, 
-        .fonts-loaded h4, 
-        .fonts-loaded h5, 
+
+        .fonts-loaded h1,
+        .fonts-loaded h2,
+        .fonts-loaded h3,
+        .fonts-loaded h4,
+        .fonts-loaded h5,
         .fonts-loaded h6 {
             font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
         }
@@ -275,7 +275,7 @@ h2{font-size:1.75rem}
 <body>
     <!-- Skip to content link for accessibility -->
     <a href="#main-content" class="skip-link">Skip to content</a>
-    
+
     <!-- Header -->
     <header>
         <div class="container header-container">
@@ -299,7 +299,7 @@ h2{font-size:1.75rem}
             </nav>
         </div>
     </header>
-    
+
     <!-- Main Content -->
     <main id="main-content">
         <!-- Hero Section -->
@@ -309,7 +309,7 @@ h2{font-size:1.75rem}
                 <p>Browse our collection of SAPA PHILATEX newsletters, documenting our club's rich history and philatelic knowledge since 1954.</p>
             </div>
         </section>
-        
+
         <!-- Archive Info Section -->
         <section class="section">
             <div class="container">
@@ -322,7 +322,7 @@ h2{font-size:1.75rem}
                 </div>
             </div>
         </section>
-        
+
         <!-- Dynamic Newsletter Archive Section -->
         <section class="section">
             <div class="container">
@@ -333,7 +333,7 @@ h2{font-size:1.75rem}
                 </div>
             </div>
         </section>
-        
+
         <!-- Archive Request Section -->
         <section class="section" style="background-color: var(--light);">
             <div class="container">
@@ -351,7 +351,7 @@ h2{font-size:1.75rem}
         </section>
 
     </main>
-    
+
     <!-- Footer -->
     <footer>
         <div class="container">
@@ -382,16 +382,16 @@ h2{font-size:1.75rem}
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 San Antonio Philatelic Association. All Rights Reserved.</p>
+                <p>&amp;copy; 2025 San Antonio Philatelic Association. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
-    
+
     <!-- Back to top button -->
     <button id="back-to-top" title="Back to Top" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 99; border: none; outline: none; background-color: var(--primary); color: white; cursor: pointer; padding: 15px; border-radius: 50%; font-size: 16px;">
         <i class="fas fa-arrow-up"></i>
     </button>
-    
+
     <!-- Scripts -->
     <script src="dist/js/script.min.js" defer></script>
 
@@ -405,7 +405,7 @@ h2{font-size:1.75rem}
             });
         });
     </script>
-    
+
     <script>
         // Font Face Observer script
         (function() {
@@ -414,7 +414,7 @@ h2{font-size:1.75rem}
                     this.family = family;
                     this.options = options;
                 }
-                
+
                 async load() {
                     try {
                         await document.fonts.load(`1em ${this.family}`, this.options.text || 'BESbswy');
@@ -428,7 +428,7 @@ h2{font-size:1.75rem}
             // Load fonts and mark as loaded
             async function loadFonts() {
                 document.documentElement.classList.add('fonts-loading');
-                
+
                 const fontLoaders = [
                     new FontFaceObserver('Open Sans', { weight: 400 }).load(),
                     new FontFaceObserver('Open Sans', { weight: 600 }).load(),
@@ -456,7 +456,7 @@ h2{font-size:1.75rem}
             }
         })();
     </script>
-    
+
     <script>
         // Font Face Observer script
         (function() {
@@ -465,7 +465,7 @@ h2{font-size:1.75rem}
                     this.family = family;
                     this.options = options;
                 }
-                
+
                 async load() {
                     try {
                         await document.fonts.load(`1em ${this.family}`, this.options.text || 'BESbswy');
@@ -479,7 +479,7 @@ h2{font-size:1.75rem}
             // Load fonts and mark as loaded
             async function loadFonts() {
                 document.documentElement.classList.add('fonts-loading');
-                
+
                 const fontLoaders = [
                     new FontFaceObserver('Open Sans', { weight: 400 }).load(),
                     new FontFaceObserver('Open Sans', { weight: 600 }).load(),
@@ -626,7 +626,7 @@ h2{font-size:1.75rem}
     function saveMetrics() {
         try {
             localStorage.setItem('performance_metrics', JSON.stringify(metrics));
-            
+
             // Send to server if available
             if (typeof sendMetricsToServer === 'function') {
                 sendMetricsToServer(metrics);
@@ -685,7 +685,7 @@ h2{font-size:1.75rem}
         setInterval(() => {
             const metrics = JSON.parse(localStorage.getItem('performance_metrics') || '{}');
             const vitals = metrics.vitals || {};
-            
+
             panel.innerHTML = `
                 <h3>Performance Metrics</h3>
                 <div>
@@ -718,7 +718,7 @@ h2{font-size:1.75rem}
         try {
             // Check if we can use ES modules
             const NewsletterLoader = (await import('./js/modules/newsletter-loader.js')).default;
-            
+
             const loader = new NewsletterLoader({
                 dataUrl: './data/newsletters/newsletters.json',
                 onLoad: (data) => {
@@ -732,14 +732,14 @@ h2{font-size:1.75rem}
 
             // Load newsletter data
             await loader.loadData();
-            
+
             // Render the archive with filters
             loader.renderArchive('#newsletter-archive-container', {
                 groupByYear: true,
                 showFilters: true,
                 sortOrder: 'desc'
             });
-            
+
         } catch (error) {
             console.warn('⚠️ Module loading failed, using fallback:', error);
             showFallbackContent();
@@ -753,8 +753,34 @@ h2{font-size:1.75rem}
             container.innerHTML = `
                 <div class="archive-year-section">
                     <h2 class="archive-year-header">2025 Newsletter Archive</h2>
-                    
+
                     <div class="archive-grid">
+                        <!-- Fourth Quarter 2025 -->
+                        <div class="archive-item">
+                            <div class="archive-item-header">
+                                <h3>SAPA PHILATEX</h3>
+                                <p>Fourth Quarter 2025</p>
+                            </div>
+                            <div class="archive-item-content">
+                                <p><strong>Published:</strong> October 1, 2025</p>
+                                <p>Features the October-December meeting calendar, year-end activities, holiday schedule adjustments, 2026 membership renewal information, upcoming stamp shows, and special programs on postal history and rare stamp collections.</p>
+                                <div class="newsletter-tags">
+                                    <span class="tag">2025</span>
+                                    <span class="tag">Q4</span>
+                                    <span class="tag">Holidays</span>
+                                    <span class="tag">Year-End</span>
+                                    <span class="tag">Membership</span>
+                                </div>
+                                <div class="newsletter-meta">
+                                    <span class="meta-item"><i class="fas fa-file-alt"></i> 12 pages</span>
+                                    <span class="meta-item"><i class="fas fa-download"></i> 2.5 MB</span>
+                                </div>
+                                <a href="public/SAPA-PHILATEX-Fourth-Quarter-2025.pdf" class="btn btn-primary" target="_blank">
+                                    <i class="fas fa-file-pdf"></i> Download PDF
+                                </a>
+                            </div>
+                        </div>
+
                         <!-- Third Quarter 2025 -->
                         <div class="archive-item">
                             <div class="archive-item-header">
@@ -780,7 +806,7 @@ h2{font-size:1.75rem}
                                 </a>
                             </div>
                         </div>
-                        
+
                         <!-- Second Quarter 2025 -->
                         <div class="archive-item">
                             <div class="archive-item-header">

@@ -4,34 +4,32 @@
  */
 
 export class Modal {
-    constructor() {
-        this.modal = null;
-        this.isOpen = false;
-        this.focusableElements = null;
-        this.previousFocus = null;
-        this.init();
-    }
+  constructor() {
+    this.modal = null;
+    this.isOpen = false;
+    this.focusableElements = null;
+    this.previousFocus = null;
+    this.init();
+  }
 
-    /**
+  /**
      * Initialize modal component
      */
-    init() {
-        this.createModal();
-        this.bindEvents();
-    }
+  init() {
+    this.createModal();
+    this.bindEvents();
+  }
 
-    /**
+  /**
      * Create modal HTML structure
      */
-    createModal() {
-        // Remove existing modal if it exists
-        const existingModal = document.getElementById('event-modal');
-        if (existingModal) {
-            existingModal.remove();
-        }
+  createModal() {
+    const existingModal = document.getElementById('event-modal');
+    if (existingModal) {
+      existingModal.remove();
+    }
 
-        // Create modal structure
-        const modalHTML = `
+    const modalHTML = `
             <div id="event-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
                 <div class="modal-container">
                     <div class="modal-header">
@@ -52,128 +50,128 @@ export class Modal {
             </div>
         `;
 
-        // Insert modal into DOM
-        document.body.insertAdjacentHTML('beforeend', modalHTML);
-        this.modal = document.getElementById('event-modal');
-    }
+    // Insert modal into DOM
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    this.modal = document.getElementById('event-modal');
+  }
 
-    /**
+  /**
      * Bind event listeners
      */
-    bindEvents() {
-        // Close button clicks
-        const closeButtons = this.modal.querySelectorAll('.modal-close, .modal-close-btn');
-        closeButtons.forEach(button => {
-            button.addEventListener('click', () => this.close());
-        });
+  bindEvents() {
+    // Close button clicks
+    const closeButtons = this.modal.querySelectorAll('.modal-close, .modal-close-btn');
+    closeButtons.forEach(button => {
+      button.addEventListener('click', () => this.close());
+    });
 
-        // Overlay click
-        this.modal.addEventListener('click', (e) => {
-            if (e.target === this.modal) {
-                this.close();
-            }
-        });
+    // Overlay click
+    this.modal.addEventListener('click', (e) => {
+      if (e.target === this.modal) {
+        this.close();
+      }
+    });
 
-        // Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.isOpen) {
-                this.close();
-            }
-        });
+    // Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.isOpen) {
+        this.close();
+      }
+    });
 
-        // Tab key (focus trap)
-        this.modal.addEventListener('keydown', (e) => {
-            if (e.key === 'Tab' && this.isOpen) {
-                this.trapFocus(e);
-            }
-        });
-    }
+    // Tab key (focus trap)
+    this.modal.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab' && this.isOpen) {
+        this.trapFocus(e);
+      }
+    });
+  }
 
-    /**
+  /**
      * Open modal with content
      * @param {Object} meetingData - Meeting data object
      */
-    open(meetingData) {
-        if (this.isOpen) return;
+  open(meetingData) {
+    if (this.isOpen) return;
 
-        this.previousFocus = document.activeElement;
-        this.populateContent(meetingData);
-        
-        this.modal.style.display = 'flex';
-        this.modal.setAttribute('aria-hidden', 'false');
-        
-        // Small delay for smooth animation
-        setTimeout(() => {
-            this.modal.classList.add('modal-open');
-            this.isOpen = true;
-            
-            // Focus first focusable element
-            this.setFocusableElements();
-            if (this.focusableElements.length > 0) {
-                this.focusableElements[0].focus();
-            }
-        }, 10);
+    this.previousFocus = document.activeElement;
+    this.populateContent(meetingData);
 
-        // Prevent body scroll
-        document.body.style.overflow = 'hidden';
-    }
+    this.modal.style.display = 'flex';
+    this.modal.setAttribute('aria-hidden', 'false');
 
-    /**
+    // Small delay for smooth animation
+    setTimeout(() => {
+      this.modal.classList.add('modal-open');
+      this.isOpen = true;
+
+      // Focus first focusable element
+      this.setFocusableElements();
+      if (this.focusableElements.length > 0) {
+        this.focusableElements[0].focus();
+      }
+    }, 10);
+
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+  }
+
+  /**
      * Close modal
      */
-    close() {
-        if (!this.isOpen) return;
+  close() {
+    if (!this.isOpen) return;
 
-        this.modal.classList.remove('modal-open');
-        this.modal.setAttribute('aria-hidden', 'true');
-        
-        setTimeout(() => {
-            this.modal.style.display = 'none';
-            this.isOpen = false;
-        }, 300);
+    this.modal.classList.remove('modal-open');
+    this.modal.setAttribute('aria-hidden', 'true');
 
-        // Restore body scroll
-        document.body.style.overflow = '';
-        
-        // Restore focus
-        if (this.previousFocus) {
-            this.previousFocus.focus();
-        }
+    setTimeout(() => {
+      this.modal.style.display = 'none';
+      this.isOpen = false;
+    }, 300);
+
+    // Restore body scroll
+    document.body.style.overflow = '';
+
+    // Restore focus
+    if (this.previousFocus) {
+      this.previousFocus.focus();
     }
+  }
 
-    /**
+  /**
      * Populate modal content with meeting data
      * @param {Object} meeting - Meeting data object
      */
-    populateContent(meeting) {
-        const modalTitle = this.modal.querySelector('#modal-title');
-        const modalBody = this.modal.querySelector('#modal-body');
+  populateContent(meeting) {
+    const modalTitle = this.modal.querySelector('#modal-title');
+    const modalBody = this.modal.querySelector('#modal-body');
 
-        modalTitle.textContent = meeting.title;
+    modalTitle.textContent = meeting.title;
 
-        // Build detailed content
-        const content = this.buildMeetingContent(meeting);
-        modalBody.innerHTML = content;
-    }
+    // Build detailed content
+    const content = this.buildMeetingContent(meeting);
+    modalBody.innerHTML = content;
+  }
 
-    /**
+  /**
      * Build meeting content HTML
      * @param {Object} meeting - Meeting data object
      * @returns {string} HTML content
      */
-    buildMeetingContent(meeting) {
-        const eventDate = new Date(meeting.date);
-        const formattedDate = eventDate.toLocaleDateString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
+  buildMeetingContent(meeting) {
+    const eventDate = new Date(meeting.date);
+    const formattedDate = eventDate.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
 
-        const eventTypeClass = `event-type-${meeting.type}`;
-        const cancelledClass = meeting.cancelled ? 'event-cancelled' : '';
+    const eventTypeClass = `event-type-${meeting.type}`;
+    const cancelledClass = meeting.cancelled ? 'event-cancelled' : '';
 
-        let content = `
+    let content = `
             <div class="event-details ${eventTypeClass} ${cancelledClass}">
                 ${meeting.cancelled ? '<div class="cancelled-banner"><i class="fas fa-exclamation-triangle"></i> This event has been cancelled</div>' : ''}
                 
@@ -199,16 +197,16 @@ export class Modal {
             </div>
         `;
 
-        return content;
-    }
+    return content;
+  }
 
-    /**
+  /**
      * Build time section
      * @param {Object} time - Time object
      * @returns {string} HTML content
      */
-    buildTimeSection(time) {
-        return `
+  buildTimeSection(time) {
+    return `
             <div class="detail-section">
                 <h3><i class="fas fa-clock"></i> Schedule</h3>
                 <div class="time-details">
@@ -218,19 +216,19 @@ export class Modal {
                 </div>
             </div>
         `;
-    }
+  }
 
-    /**
+  /**
      * Build location section
      * @param {Object} location - Location object
      * @returns {string} HTML content
      */
-    buildLocationSection(location) {
-        const address = location.address;
-        const fullAddress = address ? 
-            `${address.street}, ${address.city}, ${address.state} ${address.zipCode}` : '';
+  buildLocationSection(location) {
+    const address = location.address;
+    const fullAddress = address ?
+      `${address.street}, ${address.city}, ${address.state} ${address.zipCode}` : '';
 
-        return `
+    return `
             <div class="detail-section">
                 <h3><i class="fas fa-map-marker-alt"></i> Location</h3>
                 <div class="location-details">
@@ -241,15 +239,15 @@ export class Modal {
                 </div>
             </div>
         `;
-    }
+  }
 
-    /**
+  /**
      * Build presenter section
      * @param {Object} presenter - Presenter object
      * @returns {string} HTML content
      */
-    buildPresenterSection(presenter) {
-        return `
+  buildPresenterSection(presenter) {
+    return `
             <div class="detail-section">
                 <h3><i class="fas fa-user"></i> Presenter</h3>
                 <div class="presenter-details">
@@ -258,15 +256,15 @@ export class Modal {
                 </div>
             </div>
         `;
-    }
+  }
 
-    /**
+  /**
      * Build description section
      * @param {string} description - Event description
      * @returns {string} HTML content
      */
-    buildDescriptionSection(description) {
-        return `
+  buildDescriptionSection(description) {
+    return `
             <div class="detail-section">
                 <h3><i class="fas fa-info-circle"></i> Description</h3>
                 <div class="description-content">
@@ -274,15 +272,15 @@ export class Modal {
                 </div>
             </div>
         `;
-    }
+  }
 
-    /**
+  /**
      * Build agenda section
      * @param {Array} agenda - Agenda items array
      * @returns {string} HTML content
      */
-    buildAgendaSection(agenda) {
-        const agendaItems = agenda.map(item => `
+  buildAgendaSection(agenda) {
+    const agendaItems = agenda.map(item => `
             <div class="agenda-item">
                 <div class="agenda-time">${item.time}</div>
                 <div class="agenda-content">
@@ -292,7 +290,7 @@ export class Modal {
             </div>
         `).join('');
 
-        return `
+    return `
             <div class="detail-section">
                 <h3><i class="fas fa-list"></i> Agenda</h3>
                 <div class="agenda-list">
@@ -300,17 +298,17 @@ export class Modal {
                 </div>
             </div>
         `;
-    }
+  }
 
-    /**
+  /**
      * Build special notes section
      * @param {Array} notes - Special notes array
      * @returns {string} HTML content
      */
-    buildSpecialNotesSection(notes) {
-        const noteItems = notes.map(note => `<li>${note}</li>`).join('');
-        
-        return `
+  buildSpecialNotesSection(notes) {
+    const noteItems = notes.map(note => `<li>${note}</li>`).join('');
+
+    return `
             <div class="detail-section">
                 <h3><i class="fas fa-exclamation-circle"></i> Special Notes</h3>
                 <ul class="special-notes">
@@ -318,53 +316,53 @@ export class Modal {
                 </ul>
             </div>
         `;
-    }
+  }
 
-    /**
+  /**
      * Build requirements section
      * @param {Object} requirements - Requirements object
      * @returns {string} HTML content
      */
-    buildRequirementsSection(requirements) {
-        let content = `
+  buildRequirementsSection(requirements) {
+    let content = `
             <div class="detail-section">
                 <h3><i class="fas fa-clipboard-check"></i> Requirements</h3>
                 <div class="requirements-list">
         `;
 
-        if (requirements.rsvpRequired !== undefined) {
-            content += `<div class="requirement-item">
+    if (requirements.rsvpRequired !== undefined) {
+      content += `<div class="requirement-item">
                 <i class="fas fa-${requirements.rsvpRequired ? 'check' : 'times'}"></i>
                 RSVP ${requirements.rsvpRequired ? 'Required' : 'Not Required'}
             </div>`;
-        }
+    }
 
-        if (requirements.membershipRequired !== undefined) {
-            content += `<div class="requirement-item">
+    if (requirements.membershipRequired !== undefined) {
+      content += `<div class="requirement-item">
                 <i class="fas fa-${requirements.membershipRequired ? 'check' : 'times'}"></i>
                 Membership ${requirements.membershipRequired ? 'Required' : 'Not Required'}
             </div>`;
-        }
+    }
 
-        if (requirements.bringItems && requirements.bringItems.length > 0) {
-            const items = requirements.bringItems.map(item => `<li>${item}</li>`).join('');
-            content += `<div class="requirement-item">
+    if (requirements.bringItems && requirements.bringItems.length > 0) {
+      const items = requirements.bringItems.map(item => `<li>${item}</li>`).join('');
+      content += `<div class="requirement-item">
                 <strong>Bring:</strong>
                 <ul>${items}</ul>
             </div>`;
-        }
-
-        content += `</div></div>`;
-        return content;
     }
 
-    /**
+    content += `</div></div>`;
+    return content;
+  }
+
+  /**
      * Build contact section
      * @param {Object} contact - Contact object
      * @returns {string} HTML content
      */
-    buildContactSection(contact) {
-        return `
+  buildContactSection(contact) {
+    return `
             <div class="detail-section">
                 <h3><i class="fas fa-envelope"></i> Contact</h3>
                 <div class="contact-details">
@@ -382,57 +380,57 @@ export class Modal {
                 </div>
             </div>
         `;
-    }
+  }
 
-    /**
+  /**
      * Set focusable elements for accessibility
      */
-    setFocusableElements() {
-        const focusableSelectors = [
-            'button',
-            '[href]',
-            'input',
-            'select',
-            'textarea',
-            '[tabindex]:not([tabindex="-1"])'
-        ];
+  setFocusableElements() {
+    const focusableSelectors = [
+      'button',
+      '[href]',
+      'input',
+      'select',
+      'textarea',
+      '[tabindex]:not([tabindex="-1"])'
+    ];
 
-        this.focusableElements = Array.from(
-            this.modal.querySelectorAll(focusableSelectors.join(','))
-        ).filter(el => !el.disabled && !el.hidden);
-    }
+    this.focusableElements = Array.from(
+      this.modal.querySelectorAll(focusableSelectors.join(','))
+    ).filter(el => !el.disabled && !el.hidden);
+  }
 
-    /**
+  /**
      * Trap focus within modal
      * @param {Event} e - Keyboard event
      */
-    trapFocus(e) {
-        if (this.focusableElements.length === 0) return;
+  trapFocus(e) {
+    if (this.focusableElements.length === 0) return;
 
-        const firstElement = this.focusableElements[0];
-        const lastElement = this.focusableElements[this.focusableElements.length - 1];
+    const firstElement = this.focusableElements[0];
+    const lastElement = this.focusableElements[this.focusableElements.length - 1];
 
-        if (e.shiftKey) {
-            if (document.activeElement === firstElement) {
-                lastElement.focus();
-                e.preventDefault();
-            }
-        } else {
-            if (document.activeElement === lastElement) {
-                firstElement.focus();
-                e.preventDefault();
-            }
-        }
+    if (e.shiftKey) {
+      if (document.activeElement === firstElement) {
+        lastElement.focus();
+        e.preventDefault();
+      }
+    } else {
+      if (document.activeElement === lastElement) {
+        firstElement.focus();
+        e.preventDefault();
+      }
     }
+  }
 
-    /**
+  /**
      * Capitalize first letter of string
      * @param {string} str - String to capitalize
      * @returns {string} Capitalized string
      */
-    capitalizeFirst(str) {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    }
+  capitalizeFirst(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 }
 
 // Export singleton instance

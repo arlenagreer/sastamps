@@ -1,6 +1,23 @@
 {
   "documents": [
     {
+      "id": "newsletter-2025-Q4",
+      "type": "newsletter",
+      "title": "SAPA PHILATEX Fourth Quarter 2025",
+      "summary": "Features the October-December meeting calendar, year-end activities, holiday schedule adjustments, 2026 membership renewal information, upcoming stamp shows, and special programs on postal history and rare stamp collections.",
+      "url": "/newsletter.html#2025-Q4",
+      "date": "2025-10-01",
+      "tags": [
+        "2025",
+        "Q4",
+        "holidays",
+        "year-end",
+        "membership",
+        "meetings"
+      ],
+      "category": "newsletter"
+    },
+    {
       "id": "newsletter-2025-Q3",
       "type": "newsletter",
       "title": "SAPA PHILATEX Third Quarter 2025",
@@ -278,6 +295,25 @@
       "difficulty": "intermediate"
     },
     {
+      "id": "resource-storage-preservation-guide",
+      "type": "resource",
+      "title": "Stamp Storage and Preservation Guide",
+      "summary": "Learn proper techniques for storing and preserving your stamp collection to maintain its condition and value over time.",
+      "url": "/resources.html#storage-preservation-guide",
+      "date": "2025-06-29",
+      "tags": [
+        "storage",
+        "preservation",
+        "albums",
+        "mounts",
+        "environment",
+        "handling",
+        "organization"
+      ],
+      "category": "storage-preservation",
+      "difficulty": "beginner"
+    },
+    {
       "id": "glossary-philately",
       "type": "glossary",
       "title": "Philately",
@@ -364,13 +400,13 @@
     }
   ],
   "metadata": {
-    "totalDocuments": 23,
+    "totalDocuments": 25,
     "types": {
-      "newsletter": 2,
+      "newsletter": 3,
       "meeting": 14,
-      "resource": 2,
+      "resource": 3,
       "glossary": 5
     },
-    "buildDate": "2025-06-29T01:42:42.798Z"
+    "buildDate": "2025-09-23T15:25:59.028Z"
   }
 }

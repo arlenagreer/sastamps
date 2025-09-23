@@ -1,0 +1,26 @@
+{
+  "defaults": {
+    "runners": ["axe"],
+    "standard": "WCAG2AA",
+    "timeout": 60000,
+    "wait": 2000,
+    "chromeLaunchConfig": {
+      "headless": true,
+      "ignoreHTTPSErrors": true
+    },
+    "ignore": [
+      "color-contrast"
+    ]
+  },
+  "urls": [
+    "http://localhost:3000/",
+    "http://localhost:3000/about.html",
+    "http://localhost:3000/meetings.html",
+    "http://localhost:3000/newsletter.html",
+    "http://localhost:3000/contact.html",
+    "http://localhost:3000/membership.html",
+    "http://localhost:3000/resources.html",
+    "http://localhost:3000/glossary.html",
+    "http://localhost:3000/search.html"
+  ]
+}

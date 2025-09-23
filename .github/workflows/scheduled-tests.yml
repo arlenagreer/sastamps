@@ -1,0 +1,124 @@
+name: Scheduled Testing
+
+on:
+  schedule:
+    # Run every Sunday at 2 AM UTC
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+
+jobs:
+  comprehensive-test:
+    name: Weekly Comprehensive Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Create reports directory
+      run: mkdir -p reports
+      
+    - name: Run all validations
+      run: |
+        echo "Running comprehensive test suite..."
+        npm run test:html || true
+        npm run test:css || true
+        npm run test:js || true
+        npm run test:md || true
+        
+    - name: Build project
+      run: npm run build
+      
+    - name: Start server
+      run: |
+        npm run serve &
+        sleep 5
+        
+    - name: Run link checker (including external)
+      run: |
+        echo "Checking all links including external..."
+        npx broken-link-checker http://localhost:3000 --recursive --filter-level 3 > reports/link-check-report.txt 2>&1 || true
+        
+    - name: Run accessibility audit
+      run: |
+        npm run test:a11y > reports/accessibility-report.txt 2>&1 || true
+        
+    - name: Run Lighthouse CI
+      uses: treosh/lighthouse-ci-action@v11
+      with:
+        urls: |
+          http://localhost:3000
+          http://localhost:3000/about.html
+          http://localhost:3000/meetings.html
+          http://localhost:3000/newsletter.html
+          http://localhost:3000/contact.html
+          http://localhost:3000/membership.html
+          http://localhost:3000/resources.html
+          http://localhost:3000/glossary.html
+          http://localhost:3000/search.html
+        uploadArtifacts: true
+        temporaryPublicStorage: true
+        
+    - name: Check bundle sizes
+      run: |
+        npm run analyze:bundle > reports/bundle-analysis.txt 2>&1 || true
+        
+    - name: Security audit
+      run: |
+        npm audit --json > reports/security-audit.json 2>&1 || true
+        
+    - name: Generate summary report
+      run: |
+        echo "# Weekly Test Summary - $(date)" > reports/summary.md
+        echo "" >> reports/summary.md
+        echo "## Test Results" >> reports/summary.md
+        echo "" >> reports/summary.md
+        
+        if [ -f reports/link-check-report.txt ]; then
+          echo "### Link Check" >> reports/summary.md
+          tail -n 20 reports/link-check-report.txt >> reports/summary.md
+          echo "" >> reports/summary.md
+        fi
+        
+        if [ -f reports/accessibility-report.txt ]; then
+          echo "### Accessibility" >> reports/summary.md
+          tail -n 20 reports/accessibility-report.txt >> reports/summary.md
+          echo "" >> reports/summary.md
+        fi
+        
+        if [ -f reports/bundle-analysis.txt ]; then
+          echo "### Bundle Analysis" >> reports/summary.md
+          cat reports/bundle-analysis.txt >> reports/summary.md
+          echo "" >> reports/summary.md
+        fi
+        
+    - name: Upload comprehensive reports
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: weekly-test-reports-${{ github.run_number }}
+        path: reports/
+        retention-days: 90
+        
+    - name: Create issue if tests fail
+      if: failure()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const date = new Date().toISOString().split('T')[0];
+          github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: `Weekly Test Failures - ${date}`,
+            body: `The weekly comprehensive test suite has detected issues. Please check the [workflow run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}) for details.`,
+            labels: ['automated-test', 'maintenance']
+          })

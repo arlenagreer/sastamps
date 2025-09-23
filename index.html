@@ -15,42 +15,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="San Antonio Philatelic Association (SAPA) is a community of stamp collectors in San Antonio, Texas, dedicated to the hobby of philately since 1896. Join us for meetings, exhibitions, and educational opportunities.">
     <meta name="keywords" content="SAPA, San Antonio Philatelic Association, stamp collecting, philately, stamp club, San Antonio stamps, Texas philately">
-    
+
     <!-- Security Headers -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://www.google-analytics.com; connect-src 'self' https://www.google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests;">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-    
+
     <title>San Antonio Philatelic Association - Stamp Collecting Club in San Antonio, TX</title>
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sastamps.org/">
     <meta property="og:title" content="San Antonio Philatelic Association - Stamp Collecting Club">
     <meta property="og:description" content="A vibrant community of stamp collectors in San Antonio, Texas, dedicated to the hobby of philately since 1896.">
     <meta property="og:image" content="dist/images/home-page-image.webp">
-    
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://sastamps.org/">
     <meta property="twitter:title" content="San Antonio Philatelic Association - Stamp Collecting Club">
     <meta property="twitter:description" content="A vibrant community of stamp collectors in San Antonio, Texas, dedicated to the hobby of philately since 1896.">
     <meta property="twitter:image" content="dist/images/home-page-image.webp">
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&amp;family=Open+Sans:wght@400;600;700&amp;display=swap&display=swap" rel="stylesheet">
+
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Styles -->
     <link rel="preload" href="css/critical.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="css/critical.css"></noscript>
-    
+
     <style id="critical-css">
         /* San Antonio Philatelic Association - Main Stylesheet */
 
@@ -69,11 +69,11 @@
     --success: #27ae60;        /* Green */
     --warning: #f39c12;        /* Orange */
     --danger: #c0392b;         /* Red */
-    
+
     /* Typography */
     --font-heading: 'Merriweather', Georgia, serif;
     --font-body: 'Open Sans', Arial, sans-serif;
-    
+
     /* Spacing */
     --space-xxs: 0.25rem;
     --space-xs: 0.5rem;
@@ -82,24 +82,1215 @@
     --space-lg: 1.5rem;
     --space-xl: 2rem;
     --space-xxl: 3rem;
-    
+
     /* Container widths */
     --container-sm: 640px;
     --container-md: 768px;
     --container-lg: 1024px;
     --container-xl: 1280px;
-    
+
     /* Border radius */
     --radius-sm: 3px;
     --radius-md: 5px;
     --radius-lg: 8px;
     --radius-xl: 12px;
-    
+
     /* Shadows */
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
     --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    
+
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.25s ease;
+    --transition-slow: 0.4s ease;}
+body {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--dark);
+    background-color: var(--white);}
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    line-height: 1.3;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: var(--dark);}
+h1 {
+    font-size: 2.5rem;}
+h2 {
+    font-size: 2rem;}
+h3 {
+    font-size: 1.75rem;}
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;}
+button, input, select, textarea {
+    font-family: var(--font-body);
+    font-size: 1rem;}
+/* ===== LAYOUT ===== */
+.container {
+    width: 100%;
+    max-width: var(--container-xl);
+    margin: 0 auto;
+    padding: 0 1.5rem;}
+@media (max-width: 768px) {
+    .grid-cols-2, .grid-cols-3 {
+        grid-template-columns: 1fr;}
+/* ===== HEADER STYLES ===== */
+header {
+    background-color: var(--white);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 1rem 0;}
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;}
+nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;}
+nav li {
+    margin-left: 1.5rem;}
+nav a {
+    font-weight: 600;
+    color: var(--dark);
+    text-decoration: none;
+    padding: 0.5rem 0;
+    transition: color var(--transition-fast);
+    position: relative;}
+nav a:hover {
+    color: var(--primary);}
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary);
+    transition: width var(--transition-normal);}
+nav a:hover::after {
+    width: 100%;}
+/* Smooth theme transition */
+body,
+header,
+.nav-menu,
+.card,
+.hero,
+.section,
+footer,
+.accordion-header,
+.btn {
+    transition: background-color var(--transition-normal), color var(--transition-normal);}
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+        touch-action: manipulation;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;}
+.nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh; /* Fallback for older browsers */
+        height: 100dvh; /* Use dynamic viewport height for better mobile support */
+        height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback for iOS */
+        background-color: var(--white);
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 2rem;
+        box-shadow: var(--shadow-lg);
+        transition: right var(--transition-normal);
+        z-index: 60;
+        /* iOS specific fixes */
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;}
+.nav-menu.active {
+        right: 0;}
+nav li {
+        margin: 0 0 1.5rem 0;}
+nav a::after {
+        display: none;}
+/* Ensure mobile nav links are clickable */
+    .nav-menu a {
+        display: block;
+        padding: 0.75rem 1rem;
+        position: relative;
+        z-index: 65;
+        -webkit-tap-highlight-color: rgba(26, 82, 118, 0.2);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: manipulation;
+        cursor: pointer;
+        /* Ensure proper touch target size */
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        /* Improved mobile link styling */
+        color: var(--primary);
+        font-weight: 600;
+        border-radius: var(--radius-md);
+        margin-bottom: 0.25rem;
+        transition: all var(--transition-fast);}
+.nav-menu li {
+        display: block;
+        width: 100%;}
+/* Mobile menu icon styling */
+    .nav-menu .nav-icon {
+        color: var(--primary);
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+        width: 1.5rem;
+        text-align: center;}
+/* iOS specific fixes and hover states */
+    .nav-menu a:active {
+        background-color: rgba(26, 82, 118, 0.15);
+        transform: scale(0.98);
+        transition: all 0.1s ease;
+        color: var(--primary-dark);}
+.nav-menu a:hover {
+        background-color: rgba(26, 82, 118, 0.08);
+        color: var(--primary-dark);
+        transform: translateX(4px);}
+/* Active/current page styling for mobile */
+    .nav-menu a.active,
+    .nav-menu a[aria-current="page"] {
+        background-color: var(--primary);
+        color: var(--white);}
+.nav-menu a.active .nav-icon,
+    .nav-menu a[aria-current="page"] .nav-icon {
+        color: var(--white);}
+/* Prevent body scroll when menu is open */
+    body.menu-open {
+        overflow: hidden;}
+.footer-section h3 {
+    color: var(--white);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;}
+/* ===== HERO SECTION ===== */
+.hero {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: var(--space-xxl) 0;
+    text-align: center;}
+.hero h1 {
+    color: var(--white);
+    font-size: 2.75rem;
+    margin-bottom: 1rem;}
+.hero p {
+    font-size: 1.25rem;
+    max-width: 800px;
+    margin: 0 auto;}
+/* ===== CARDS ===== */
+.card {
+    background-color: var(--white);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 1.5rem;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);}
+.card-content {
+    padding: 1.5rem;}
+.card-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;}
+.card-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;}
+/* ===== UTILITIES ===== */
+.text-center {
+    text-align: center;}
+.timeline-content h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--primary);}
+@media screen and (max-width: 768px) {
+    .timeline::after {
+        left: 20px;}
+.officer-img {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;}
+.officer-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;}
+.placeholder-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--light);
+    color: var(--medium);}
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1.25rem;
+    background-color: var(--white);
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+    font-weight: 600;}
+.accordion-header:hover {
+    background-color: var(--light);}
+.accordion-header.active {
+    background-color: var(--primary);
+    color: var(--white);}
+/* ===== MOBILE RESPONSIVENESS ===== */
+@media (max-width: 576px) {
+    html {
+        font-size: 14px;}
+h1 {
+        font-size: 2rem;}
+h2 {
+        font-size: 1.75rem;}
+.hero {
+        padding: var(--space-xl) 0;}
+.hero h1 {
+        font-size: 2.25rem;}
+.hero p {
+        font-size: 1.125rem;}
+.container {
+        padding: 0 1rem;}
+/* ===== PRINT STYLES ===== */
+@media print {
+    body {
+        background-color: white;
+        color: black;
+        font-size: 12pt;}
+.container {
+        max-width: 100%;
+        padding: 0;}
+header, footer, #back-to-top, .hero {
+        display: none;}
+.card {
+        box-shadow: none;
+        border: 1px solid #ddd;}
+.card:hover {
+        transform: none;
+        box-shadow: none;}
+/* Add these new styles for the banner and navigation icons */
+
+/* Banner Image */
+.banner-container {
+    width: 100%;
+    overflow: hidden;
+    text-align: center;
+    background-color: var(--primary);}
+/* Navigation Icons */
+.nav-icon {
+    width: auto;
+    height: auto;
+    margin-right: 8px;
+    color: var(--primary);
+    font-size: 1.2rem;}
+.nav-menu li.active .nav-icon,
+.nav-menu li a:hover .nav-icon {
+    color: var(--accent);}
+@media (max-width: 768px) {
+    .nav-icon {
+        margin-right: 5px;
+        font-size: 1rem;}
+/* Mobile Calendar Styles */
+@media (max-width: 768px) {
+    .meeting-entry {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;}
+.location-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.75rem;}
+/* iPhone-specific optimizations */
+@media screen and (max-width: 428px) {
+    /* Calendar table optimizations */
+    .meeting-table {
+        font-size: 0.85rem;  /* Slightly smaller font for iPhone */}
+.location-card h3 {
+        font-size: 1.1rem;}
+/* Fix notch interference */
+    .header-container {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);}
+/* Adjust container padding */
+    .container {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));}
+/* iPhone SE specific adjustments */
+@media screen and (max-width: 375px) {
+    .meeting-table {
+        font-size: 0.8rem;}
+/* Fix for iPhone landscape mode */
+@media screen and (max-height: 428px) and (orientation: landscape) {
+    .meeting-entry {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;}
+    </style>
+
+    <style >
+        /* San Antonio Philatelic Association - Main Stylesheet */
+
+/* ===== VARIABLES ===== */
+:root {
+    /* Color Palette */
+    --primary: #1a5276;        /* Deep blue */
+    --primary-light: #2980b9;  /* Mid blue */
+    --primary-dark: #0e2f44;   /* Darker blue */
+    --secondary: #d35400;      /* Warm orange */
+    --accent: #f1c40f;         /* Gold/Yellow */
+    --dark: #2c3e50;           /* Slate dark */
+    --medium: #7f8c8d;         /* Gray */
+    --light: #ecf0f1;          /* Light gray */
+    --white: #ffffff;
+    --success: #27ae60;        /* Green */
+    --warning: #f39c12;        /* Orange */
+    --danger: #c0392b;         /* Red */
+
+    /* Typography */
+    --font-heading: 'Merriweather', Georgia, serif;
+    --font-body: 'Open Sans', Arial, sans-serif;
+
+    /* Spacing */
+    --space-xxs: 0.25rem;
+    --space-xs: 0.5rem;
+    --space-sm: 0.75rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-xxl: 3rem;
+
+    /* Container widths */
+    --container-sm: 640px;
+    --container-md: 768px;
+    --container-lg: 1024px;
+    --container-xl: 1280px;
+
+    /* Border radius */
+    --radius-sm: 3px;
+    --radius-md: 5px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.25s ease;
+    --transition-slow: 0.4s ease;}
+body {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--dark);
+    background-color: var(--white);}
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    line-height: 1.3;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: var(--dark);}
+h1 {
+    font-size: 2.5rem;}
+h2 {
+    font-size: 2rem;}
+h3 {
+    font-size: 1.75rem;}
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;}
+button, input, select, textarea {
+    font-family: var(--font-body);
+    font-size: 1rem;}
+/* ===== LAYOUT ===== */
+.container {
+    width: 100%;
+    max-width: var(--container-xl);
+    margin: 0 auto;
+    padding: 0 1.5rem;}
+@media (max-width: 768px) {
+    .grid-cols-2, .grid-cols-3 {
+        grid-template-columns: 1fr;}
+/* ===== HEADER STYLES ===== */
+header {
+    background-color: var(--white);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 1rem 0;}
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;}
+nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;}
+nav li {
+    margin-left: 1.5rem;}
+nav a {
+    font-weight: 600;
+    color: var(--dark);
+    text-decoration: none;
+    padding: 0.5rem 0;
+    transition: color var(--transition-fast);
+    position: relative;}
+nav a:hover {
+    color: var(--primary);}
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary);
+    transition: width var(--transition-normal);}
+nav a:hover::after {
+    width: 100%;}
+/* Smooth theme transition */
+body,
+header,
+.nav-menu,
+.card,
+.hero,
+.section,
+footer,
+.accordion-header,
+.btn {
+    transition: background-color var(--transition-normal), color var(--transition-normal);}
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+        touch-action: manipulation;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;}
+.nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh; /* Fallback for older browsers */
+        height: 100dvh; /* Use dynamic viewport height for better mobile support */
+        height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback for iOS */
+        background-color: var(--white);
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 2rem;
+        box-shadow: var(--shadow-lg);
+        transition: right var(--transition-normal);
+        z-index: 60;
+        /* iOS specific fixes */
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;}
+.nav-menu.active {
+        right: 0;}
+nav li {
+        margin: 0 0 1.5rem 0;}
+nav a::after {
+        display: none;}
+/* Ensure mobile nav links are clickable */
+    .nav-menu a {
+        display: block;
+        padding: 0.75rem 1rem;
+        position: relative;
+        z-index: 65;
+        -webkit-tap-highlight-color: rgba(26, 82, 118, 0.2);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: manipulation;
+        cursor: pointer;
+        /* Ensure proper touch target size */
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        /* Improved mobile link styling */
+        color: var(--primary);
+        font-weight: 600;
+        border-radius: var(--radius-md);
+        margin-bottom: 0.25rem;
+        transition: all var(--transition-fast);}
+.nav-menu li {
+        display: block;
+        width: 100%;}
+/* Mobile menu icon styling */
+    .nav-menu .nav-icon {
+        color: var(--primary);
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+        width: 1.5rem;
+        text-align: center;}
+/* iOS specific fixes and hover states */
+    .nav-menu a:active {
+        background-color: rgba(26, 82, 118, 0.15);
+        transform: scale(0.98);
+        transition: all 0.1s ease;
+        color: var(--primary-dark);}
+.nav-menu a:hover {
+        background-color: rgba(26, 82, 118, 0.08);
+        color: var(--primary-dark);
+        transform: translateX(4px);}
+/* Active/current page styling for mobile */
+    .nav-menu a.active,
+    .nav-menu a[aria-current="page"] {
+        background-color: var(--primary);
+        color: var(--white);}
+.nav-menu a.active .nav-icon,
+    .nav-menu a[aria-current="page"] .nav-icon {
+        color: var(--white);}
+/* Prevent body scroll when menu is open */
+    body.menu-open {
+        overflow: hidden;}
+.footer-section h3 {
+    color: var(--white);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;}
+/* ===== HERO SECTION ===== */
+.hero {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: var(--space-xxl) 0;
+    text-align: center;}
+.hero h1 {
+    color: var(--white);
+    font-size: 2.75rem;
+    margin-bottom: 1rem;}
+.hero p {
+    font-size: 1.25rem;
+    max-width: 800px;
+    margin: 0 auto;}
+/* ===== CARDS ===== */
+.card {
+    background-color: var(--white);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 1.5rem;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);}
+.card-content {
+    padding: 1.5rem;}
+.card-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;}
+.card-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;}
+/* ===== UTILITIES ===== */
+.text-center {
+    text-align: center;}
+.timeline-content h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--primary);}
+@media screen and (max-width: 768px) {
+    .timeline::after {
+        left: 20px;}
+.officer-img {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;}
+.officer-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;}
+.placeholder-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--light);
+    color: var(--medium);}
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1.25rem;
+    background-color: var(--white);
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+    font-weight: 600;}
+.accordion-header:hover {
+    background-color: var(--light);}
+.accordion-header.active {
+    background-color: var(--primary);
+    color: var(--white);}
+/* ===== MOBILE RESPONSIVENESS ===== */
+@media (max-width: 576px) {
+    html {
+        font-size: 14px;}
+h1 {
+        font-size: 2rem;}
+h2 {
+        font-size: 1.75rem;}
+.hero {
+        padding: var(--space-xl) 0;}
+.hero h1 {
+        font-size: 2.25rem;}
+.hero p {
+        font-size: 1.125rem;}
+.container {
+        padding: 0 1rem;}
+/* ===== PRINT STYLES ===== */
+@media print {
+    body {
+        background-color: white;
+        color: black;
+        font-size: 12pt;}
+.container {
+        max-width: 100%;
+        padding: 0;}
+header, footer, #back-to-top, .hero {
+        display: none;}
+.card {
+        box-shadow: none;
+        border: 1px solid #ddd;}
+.card:hover {
+        transform: none;
+        box-shadow: none;}
+/* Add these new styles for the banner and navigation icons */
+
+/* Banner Image */
+.banner-container {
+    width: 100%;
+    overflow: hidden;
+    text-align: center;
+    background-color: var(--primary);}
+/* Navigation Icons */
+.nav-icon {
+    width: auto;
+    height: auto;
+    margin-right: 8px;
+    color: var(--primary);
+    font-size: 1.2rem;}
+.nav-menu li.active .nav-icon,
+.nav-menu li a:hover .nav-icon {
+    color: var(--accent);}
+@media (max-width: 768px) {
+    .nav-icon {
+        margin-right: 5px;
+        font-size: 1rem;}
+/* Mobile Calendar Styles */
+@media (max-width: 768px) {
+    .meeting-entry {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;}
+.location-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.75rem;}
+/* iPhone-specific optimizations */
+@media screen and (max-width: 428px) {
+    /* Calendar table optimizations */
+    .meeting-table {
+        font-size: 0.85rem;  /* Slightly smaller font for iPhone */}
+.location-card h3 {
+        font-size: 1.1rem;}
+/* Fix notch interference */
+    .header-container {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);}
+/* Adjust container padding */
+    .container {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));}
+/* iPhone SE specific adjustments */
+@media screen and (max-width: 375px) {
+    .meeting-table {
+        font-size: 0.8rem;}
+/* Fix for iPhone landscape mode */
+@media screen and (max-height: 428px) and (orientation: landscape) {
+    .meeting-entry {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;}
+    </style>
+
+    <style >
+        /* San Antonio Philatelic Association - Main Stylesheet */
+
+/* ===== VARIABLES ===== */
+:root {
+    /* Color Palette */
+    --primary: #1a5276;        /* Deep blue */
+    --primary-light: #2980b9;  /* Mid blue */
+    --primary-dark: #0e2f44;   /* Darker blue */
+    --secondary: #d35400;      /* Warm orange */
+    --accent: #f1c40f;         /* Gold/Yellow */
+    --dark: #2c3e50;           /* Slate dark */
+    --medium: #7f8c8d;         /* Gray */
+    --light: #ecf0f1;          /* Light gray */
+    --white: #ffffff;
+    --success: #27ae60;        /* Green */
+    --warning: #f39c12;        /* Orange */
+    --danger: #c0392b;         /* Red */
+
+    /* Typography */
+    --font-heading: 'Merriweather', Georgia, serif;
+    --font-body: 'Open Sans', Arial, sans-serif;
+
+    /* Spacing */
+    --space-xxs: 0.25rem;
+    --space-xs: 0.5rem;
+    --space-sm: 0.75rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-xxl: 3rem;
+
+    /* Container widths */
+    --container-sm: 640px;
+    --container-md: 768px;
+    --container-lg: 1024px;
+    --container-xl: 1280px;
+
+    /* Border radius */
+    --radius-sm: 3px;
+    --radius-md: 5px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.25s ease;
+    --transition-slow: 0.4s ease;}
+body {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--dark);
+    background-color: var(--white);}
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    line-height: 1.3;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: var(--dark);}
+h1 {
+    font-size: 2.5rem;}
+h2 {
+    font-size: 2rem;}
+h3 {
+    font-size: 1.75rem;}
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;}
+button, input, select, textarea {
+    font-family: var(--font-body);
+    font-size: 1rem;}
+/* ===== LAYOUT ===== */
+.container {
+    width: 100%;
+    max-width: var(--container-xl);
+    margin: 0 auto;
+    padding: 0 1.5rem;}
+@media (max-width: 768px) {
+    .grid-cols-2, .grid-cols-3 {
+        grid-template-columns: 1fr;}
+/* ===== HEADER STYLES ===== */
+header {
+    background-color: var(--white);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 1rem 0;}
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;}
+nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;}
+nav li {
+    margin-left: 1.5rem;}
+nav a {
+    font-weight: 600;
+    color: var(--dark);
+    text-decoration: none;
+    padding: 0.5rem 0;
+    transition: color var(--transition-fast);
+    position: relative;}
+nav a:hover {
+    color: var(--primary);}
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary);
+    transition: width var(--transition-normal);}
+nav a:hover::after {
+    width: 100%;}
+/* Smooth theme transition */
+body,
+header,
+.nav-menu,
+.card,
+.hero,
+.section,
+footer,
+.accordion-header,
+.btn {
+    transition: background-color var(--transition-normal), color var(--transition-normal);}
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+        touch-action: manipulation;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;}
+.nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh; /* Fallback for older browsers */
+        height: 100dvh; /* Use dynamic viewport height for better mobile support */
+        height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback for iOS */
+        background-color: var(--white);
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 2rem;
+        box-shadow: var(--shadow-lg);
+        transition: right var(--transition-normal);
+        z-index: 60;
+        /* iOS specific fixes */
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;}
+.nav-menu.active {
+        right: 0;}
+nav li {
+        margin: 0 0 1.5rem 0;}
+nav a::after {
+        display: none;}
+/* Ensure mobile nav links are clickable */
+    .nav-menu a {
+        display: block;
+        padding: 0.75rem 1rem;
+        position: relative;
+        z-index: 65;
+        -webkit-tap-highlight-color: rgba(26, 82, 118, 0.2);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: manipulation;
+        cursor: pointer;
+        /* Ensure proper touch target size */
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        /* Improved mobile link styling */
+        color: var(--primary);
+        font-weight: 600;
+        border-radius: var(--radius-md);
+        margin-bottom: 0.25rem;
+        transition: all var(--transition-fast);}
+.nav-menu li {
+        display: block;
+        width: 100%;}
+/* Mobile menu icon styling */
+    .nav-menu .nav-icon {
+        color: var(--primary);
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+        width: 1.5rem;
+        text-align: center;}
+/* iOS specific fixes and hover states */
+    .nav-menu a:active {
+        background-color: rgba(26, 82, 118, 0.15);
+        transform: scale(0.98);
+        transition: all 0.1s ease;
+        color: var(--primary-dark);}
+.nav-menu a:hover {
+        background-color: rgba(26, 82, 118, 0.08);
+        color: var(--primary-dark);
+        transform: translateX(4px);}
+/* Active/current page styling for mobile */
+    .nav-menu a.active,
+    .nav-menu a[aria-current="page"] {
+        background-color: var(--primary);
+        color: var(--white);}
+.nav-menu a.active .nav-icon,
+    .nav-menu a[aria-current="page"] .nav-icon {
+        color: var(--white);}
+/* Prevent body scroll when menu is open */
+    body.menu-open {
+        overflow: hidden;}
+.footer-section h3 {
+    color: var(--white);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;}
+/* ===== HERO SECTION ===== */
+.hero {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: var(--space-xxl) 0;
+    text-align: center;}
+.hero h1 {
+    color: var(--white);
+    font-size: 2.75rem;
+    margin-bottom: 1rem;}
+.hero p {
+    font-size: 1.25rem;
+    max-width: 800px;
+    margin: 0 auto;}
+/* ===== CARDS ===== */
+.card {
+    background-color: var(--white);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 1.5rem;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);}
+.card-content {
+    padding: 1.5rem;}
+.card-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;}
+.card-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;}
+/* ===== UTILITIES ===== */
+.text-center {
+    text-align: center;}
+.timeline-content h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--primary);}
+@media screen and (max-width: 768px) {
+    .timeline::after {
+        left: 20px;}
+.officer-img {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;}
+.officer-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;}
+.placeholder-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--light);
+    color: var(--medium);}
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1.25rem;
+    background-color: var(--white);
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+    font-weight: 600;}
+.accordion-header:hover {
+    background-color: var(--light);}
+.accordion-header.active {
+    background-color: var(--primary);
+    color: var(--white);}
+/* ===== MOBILE RESPONSIVENESS ===== */
+@media (max-width: 576px) {
+    html {
+        font-size: 14px;}
+h1 {
+        font-size: 2rem;}
+h2 {
+        font-size: 1.75rem;}
+.hero {
+        padding: var(--space-xl) 0;}
+.hero h1 {
+        font-size: 2.25rem;}
+.hero p {
+        font-size: 1.125rem;}
+.container {
+        padding: 0 1rem;}
+/* ===== PRINT STYLES ===== */
+@media print {
+    body {
+        background-color: white;
+        color: black;
+        font-size: 12pt;}
+.container {
+        max-width: 100%;
+        padding: 0;}
+header, footer, #back-to-top, .hero {
+        display: none;}
+.card {
+        box-shadow: none;
+        border: 1px solid #ddd;}
+.card:hover {
+        transform: none;
+        box-shadow: none;}
+/* Add these new styles for the banner and navigation icons */
+
+/* Banner Image */
+.banner-container {
+    width: 100%;
+    overflow: hidden;
+    text-align: center;
+    background-color: var(--primary);}
+/* Navigation Icons */
+.nav-icon {
+    width: auto;
+    height: auto;
+    margin-right: 8px;
+    color: var(--primary);
+    font-size: 1.2rem;}
+.nav-menu li.active .nav-icon,
+.nav-menu li a:hover .nav-icon {
+    color: var(--accent);}
+@media (max-width: 768px) {
+    .nav-icon {
+        margin-right: 5px;
+        font-size: 1rem;}
+/* Mobile Calendar Styles */
+@media (max-width: 768px) {
+    .meeting-entry {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;}
+.location-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.75rem;}
+/* iPhone-specific optimizations */
+@media screen and (max-width: 428px) {
+    /* Calendar table optimizations */
+    .meeting-table {
+        font-size: 0.85rem;  /* Slightly smaller font for iPhone */}
+.location-card h3 {
+        font-size: 1.1rem;}
+/* Fix notch interference */
+    .header-container {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);}
+/* Adjust container padding */
+    .container {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));}
+/* iPhone SE specific adjustments */
+@media screen and (max-width: 375px) {
+    .meeting-table {
+        font-size: 0.8rem;}
+/* Fix for iPhone landscape mode */
+@media screen and (max-height: 428px) and (orientation: landscape) {
+    .meeting-entry {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;}
+    </style>
+
+    <style >
+        /* San Antonio Philatelic Association - Main Stylesheet */
+
+/* ===== VARIABLES ===== */
+:root {
+    /* Color Palette */
+    --primary: #1a5276;        /* Deep blue */
+    --primary-light: #2980b9;  /* Mid blue */
+    --primary-dark: #0e2f44;   /* Darker blue */
+    --secondary: #d35400;      /* Warm orange */
+    --accent: #f1c40f;         /* Gold/Yellow */
+    --dark: #2c3e50;           /* Slate dark */
+    --medium: #7f8c8d;         /* Gray */
+    --light: #ecf0f1;          /* Light gray */
+    --white: #ffffff;
+    --success: #27ae60;        /* Green */
+    --warning: #f39c12;        /* Orange */
+    --danger: #c0392b;         /* Red */
+
+    /* Typography */
+    --font-heading: 'Merriweather', Georgia, serif;
+    --font-body: 'Open Sans', Arial, sans-serif;
+
+    /* Spacing */
+    --space-xxs: 0.25rem;
+    --space-xs: 0.5rem;
+    --space-sm: 0.75rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-xxl: 3rem;
+
+    /* Container widths */
+    --container-sm: 640px;
+    --container-md: 768px;
+    --container-lg: 1024px;
+    --container-xl: 1280px;
+
+    /* Border radius */
+    --radius-sm: 3px;
+    --radius-md: 5px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
     /* Transitions */
     --transition-fast: 0.15s ease;
     --transition-normal: 0.25s ease;
@@ -449,1207 +1640,123 @@ header, footer, #back-to-top, .hero {
     </style>
     
     <style id="critical-css">
-        /* San Antonio Philatelic Association - Main Stylesheet */
-
-/* ===== VARIABLES ===== */
-:root {
-    /* Color Palette */
-    --primary: #1a5276;        /* Deep blue */
-    --primary-light: #2980b9;  /* Mid blue */
-    --primary-dark: #0e2f44;   /* Darker blue */
-    --secondary: #d35400;      /* Warm orange */
-    --accent: #f1c40f;         /* Gold/Yellow */
-    --dark: #2c3e50;           /* Slate dark */
-    --medium: #7f8c8d;         /* Gray */
-    --light: #ecf0f1;          /* Light gray */
-    --white: #ffffff;
-    --success: #27ae60;        /* Green */
-    --warning: #f39c12;        /* Orange */
-    --danger: #c0392b;         /* Red */
-    
-    /* Typography */
-    --font-heading: 'Merriweather', Georgia, serif;
-    --font-body: 'Open Sans', Arial, sans-serif;
-    
-    /* Spacing */
-    --space-xxs: 0.25rem;
-    --space-xs: 0.5rem;
-    --space-sm: 0.75rem;
-    --space-md: 1rem;
-    --space-lg: 1.5rem;
-    --space-xl: 2rem;
-    --space-xxl: 3rem;
-    
-    /* Container widths */
-    --container-sm: 640px;
-    --container-md: 768px;
-    --container-lg: 1024px;
-    --container-xl: 1280px;
-    
-    /* Border radius */
-    --radius-sm: 3px;
-    --radius-md: 5px;
-    --radius-lg: 8px;
-    --radius-xl: 12px;
-    
-    /* Shadows */
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    
-    /* Transitions */
-    --transition-fast: 0.15s ease;
-    --transition-normal: 0.25s ease;
-    --transition-slow: 0.4s ease;}
-body {
-    font-family: var(--font-body);
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--dark);
-    background-color: var(--white);}
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
-    line-height: 1.3;
-    margin-bottom: 1rem;
-    font-weight: 700;
-    color: var(--dark);}
-h1 {
-    font-size: 2.5rem;}
-h2 {
-    font-size: 2rem;}
-h3 {
-    font-size: 1.75rem;}
-img {
-    max-width: 100%;
-    height: auto;
-    display: block;}
-button, input, select, textarea {
-    font-family: var(--font-body);
-    font-size: 1rem;}
-/* ===== LAYOUT ===== */
-.container {
-    width: 100%;
-    max-width: var(--container-xl);
-    margin: 0 auto;
-    padding: 0 1.5rem;}
-@media (max-width: 768px) {
-    .grid-cols-2, .grid-cols-3 {
-        grid-template-columns: 1fr;}
-/* ===== HEADER STYLES ===== */
-header {
-    background-color: var(--white);
-    box-shadow: var(--shadow-sm);
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    padding: 1rem 0;}
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;}
-nav ul {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;}
-nav li {
-    margin-left: 1.5rem;}
-nav a {
-    font-weight: 600;
-    color: var(--dark);
-    text-decoration: none;
-    padding: 0.5rem 0;
-    transition: color var(--transition-fast);
-    position: relative;}
-nav a:hover {
-    color: var(--primary);}
-nav a::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: var(--primary);
-    transition: width var(--transition-normal);}
-nav a:hover::after {
-    width: 100%;}
-/* Smooth theme transition */
-body,
-header,
-.nav-menu,
-.card,
-.hero,
-.section,
-footer,
-.accordion-header,
-.btn {
-    transition: background-color var(--transition-normal), color var(--transition-normal);}
-@media (max-width: 768px) {
-    .menu-toggle {
-        display: block;
-        touch-action: manipulation;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        user-select: none;}
-.nav-menu {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 80%;
-        max-width: 300px;
-        height: 100vh; /* Fallback for older browsers */
-        height: 100dvh; /* Use dynamic viewport height for better mobile support */
-        height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback for iOS */
-        background-color: var(--white);
-        flex-direction: column;
-        justify-content: flex-start;
-        padding: 2rem;
-        box-shadow: var(--shadow-lg);
-        transition: right var(--transition-normal);
-        z-index: 60;
-        /* iOS specific fixes */
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior: contain;}
-.nav-menu.active {
-        right: 0;}
-nav li {
-        margin: 0 0 1.5rem 0;}
-nav a::after {
-        display: none;}
-/* Ensure mobile nav links are clickable */
-    .nav-menu a {
-        display: block;
-        padding: 0.75rem 1rem;
-        position: relative;
-        z-index: 65;
-        -webkit-tap-highlight-color: rgba(26, 82, 118, 0.2);
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        user-select: none;
-        touch-action: manipulation;
-        cursor: pointer;
-        /* Ensure proper touch target size */
-        min-height: 44px;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        box-sizing: border-box;
-        /* Improved mobile link styling */
-        color: var(--primary);
-        font-weight: 600;
-        border-radius: var(--radius-md);
-        margin-bottom: 0.25rem;
-        transition: all var(--transition-fast);}
-.nav-menu li {
-        display: block;
-        width: 100%;}
-/* Mobile menu icon styling */
-    .nav-menu .nav-icon {
-        color: var(--primary);
-        margin-right: 0.75rem;
-        font-size: 1.1rem;
-        width: 1.5rem;
-        text-align: center;}
-/* iOS specific fixes and hover states */
-    .nav-menu a:active {
-        background-color: rgba(26, 82, 118, 0.15);
-        transform: scale(0.98);
-        transition: all 0.1s ease;
-        color: var(--primary-dark);}
-.nav-menu a:hover {
-        background-color: rgba(26, 82, 118, 0.08);
-        color: var(--primary-dark);
-        transform: translateX(4px);}
-/* Active/current page styling for mobile */
-    .nav-menu a.active,
-    .nav-menu a[aria-current="page"] {
-        background-color: var(--primary);
-        color: var(--white);}
-.nav-menu a.active .nav-icon,
-    .nav-menu a[aria-current="page"] .nav-icon {
-        color: var(--white);}
-/* Prevent body scroll when menu is open */
-    body.menu-open {
-        overflow: hidden;}
-.footer-section h3 {
-    color: var(--white);
-    margin-bottom: 1rem;
-    font-size: 1.2rem;}
-/* ===== HERO SECTION ===== */
-.hero {
-    background-color: var(--primary);
-    color: var(--white);
-    padding: var(--space-xxl) 0;
-    text-align: center;}
-.hero h1 {
-    color: var(--white);
-    font-size: 2.75rem;
-    margin-bottom: 1rem;}
-.hero p {
-    font-size: 1.25rem;
-    max-width: 800px;
-    margin: 0 auto;}
-/* ===== CARDS ===== */
-.card {
-    background-color: var(--white);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-    margin-bottom: 1.5rem;
-    transition: transform var(--transition-normal), box-shadow var(--transition-normal);}
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);}
-.card-content {
-    padding: 1.5rem;}
-.card-title {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;}
-.card-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;}
-/* ===== UTILITIES ===== */
-.text-center {
-    text-align: center;}
-.timeline-content h3 {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-    color: var(--primary);}
-@media screen and (max-width: 768px) {
-    .timeline::after {
-        left: 20px;}
-.officer-img {
-    width: 100%;
-    height: 200px;
-    overflow: hidden;}
-.officer-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;}
-.placeholder-img {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--light);
-    color: var(--medium);}
-.accordion-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 1.25rem;
-    background-color: var(--white);
-    border: none;
-    text-align: left;
-    cursor: pointer;
-    transition: background-color var(--transition-fast);
-    font-weight: 600;}
-.accordion-header:hover {
-    background-color: var(--light);}
-.accordion-header.active {
-    background-color: var(--primary);
-    color: var(--white);}
-/* ===== MOBILE RESPONSIVENESS ===== */
-@media (max-width: 576px) {
-    html {
-        font-size: 14px;}
-h1 {
-        font-size: 2rem;}
-h2 {
-        font-size: 1.75rem;}
-.hero {
-        padding: var(--space-xl) 0;}
-.hero h1 {
-        font-size: 2.25rem;}
-.hero p {
-        font-size: 1.125rem;}
-.container {
-        padding: 0 1rem;}
-/* ===== PRINT STYLES ===== */
-@media print {
-    body {
-        background-color: white;
-        color: black;
-        font-size: 12pt;}
-.container {
-        max-width: 100%;
-        padding: 0;}
-header, footer, #back-to-top, .hero {
-        display: none;}
-.card {
-        box-shadow: none;
-        border: 1px solid #ddd;}
-.card:hover {
-        transform: none;
-        box-shadow: none;}
-/* Add these new styles for the banner and navigation icons */
-
-/* Banner Image */
-.banner-container {
-    width: 100%;
-    overflow: hidden;
-    text-align: center;
-    background-color: var(--primary);}
-/* Navigation Icons */
-.nav-icon {
-    width: auto;
-    height: auto;
-    margin-right: 8px;
-    color: var(--primary);
-    font-size: 1.2rem;}
-.nav-menu li.active .nav-icon,
-.nav-menu li a:hover .nav-icon {
-    color: var(--accent);}
-@media (max-width: 768px) {
-    .nav-icon {
-        margin-right: 5px;
-        font-size: 1rem;}
-/* Mobile Calendar Styles */
-@media (max-width: 768px) {
-    .meeting-entry {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;}
-.location-card h3 {
-        font-size: 1.2rem;
-        margin-bottom: 0.75rem;}
-/* iPhone-specific optimizations */
-@media screen and (max-width: 428px) {
-    /* Calendar table optimizations */
-    .meeting-table {
-        font-size: 0.85rem;  /* Slightly smaller font for iPhone */}
-.location-card h3 {
-        font-size: 1.1rem;}
-/* Fix notch interference */
-    .header-container {
-        padding-left: env(safe-area-inset-left);
-        padding-right: env(safe-area-inset-right);}
-/* Adjust container padding */
-    .container {
-        padding-left: max(1rem, env(safe-area-inset-left));
-        padding-right: max(1rem, env(safe-area-inset-right));}
-/* iPhone SE specific adjustments */
-@media screen and (max-width: 375px) {
-    .meeting-table {
-        font-size: 0.8rem;}
-/* Fix for iPhone landscape mode */
-@media screen and (max-height: 428px) and (orientation: landscape) {
-    .meeting-entry {
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;}
-    </style>
-    
-    <style id="critical-css">
-        /* San Antonio Philatelic Association - Main Stylesheet */
-
-/* ===== VARIABLES ===== */
-:root {
-    /* Color Palette */
-    --primary: #1a5276;        /* Deep blue */
-    --primary-light: #2980b9;  /* Mid blue */
-    --primary-dark: #0e2f44;   /* Darker blue */
-    --secondary: #d35400;      /* Warm orange */
-    --accent: #f1c40f;         /* Gold/Yellow */
-    --dark: #2c3e50;           /* Slate dark */
-    --medium: #7f8c8d;         /* Gray */
-    --light: #ecf0f1;          /* Light gray */
-    --white: #ffffff;
-    --success: #27ae60;        /* Green */
-    --warning: #f39c12;        /* Orange */
-    --danger: #c0392b;         /* Red */
-    
-    /* Typography */
-    --font-heading: 'Merriweather', Georgia, serif;
-    --font-body: 'Open Sans', Arial, sans-serif;
-    
-    /* Spacing */
-    --space-xxs: 0.25rem;
-    --space-xs: 0.5rem;
-    --space-sm: 0.75rem;
-    --space-md: 1rem;
-    --space-lg: 1.5rem;
-    --space-xl: 2rem;
-    --space-xxl: 3rem;
-    
-    /* Container widths */
-    --container-sm: 640px;
-    --container-md: 768px;
-    --container-lg: 1024px;
-    --container-xl: 1280px;
-    
-    /* Border radius */
-    --radius-sm: 3px;
-    --radius-md: 5px;
-    --radius-lg: 8px;
-    --radius-xl: 12px;
-    
-    /* Shadows */
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    
-    /* Transitions */
-    --transition-fast: 0.15s ease;
-    --transition-normal: 0.25s ease;
-    --transition-slow: 0.4s ease;}
-body {
-    font-family: var(--font-body);
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--dark);
-    background-color: var(--white);}
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
-    line-height: 1.3;
-    margin-bottom: 1rem;
-    font-weight: 700;
-    color: var(--dark);}
-h1 {
-    font-size: 2.5rem;}
-h2 {
-    font-size: 2rem;}
-h3 {
-    font-size: 1.75rem;}
-img {
-    max-width: 100%;
-    height: auto;
-    display: block;}
-button, input, select, textarea {
-    font-family: var(--font-body);
-    font-size: 1rem;}
-/* ===== LAYOUT ===== */
-.container {
-    width: 100%;
-    max-width: var(--container-xl);
-    margin: 0 auto;
-    padding: 0 1.5rem;}
-@media (max-width: 768px) {
-    .grid-cols-2, .grid-cols-3 {
-        grid-template-columns: 1fr;}
-/* ===== HEADER STYLES ===== */
-header {
-    background-color: var(--white);
-    box-shadow: var(--shadow-sm);
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    padding: 1rem 0;}
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;}
-nav ul {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;}
-nav li {
-    margin-left: 1.5rem;}
-nav a {
-    font-weight: 600;
-    color: var(--dark);
-    text-decoration: none;
-    padding: 0.5rem 0;
-    transition: color var(--transition-fast);
-    position: relative;}
-nav a:hover {
-    color: var(--primary);}
-nav a::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: var(--primary);
-    transition: width var(--transition-normal);}
-nav a:hover::after {
-    width: 100%;}
-/* Smooth theme transition */
-body,
-header,
-.nav-menu,
-.card,
-.hero,
-.section,
-footer,
-.accordion-header,
-.btn {
-    transition: background-color var(--transition-normal), color var(--transition-normal);}
-@media (max-width: 768px) {
-    .menu-toggle {
-        display: block;
-        touch-action: manipulation;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        user-select: none;}
-.nav-menu {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 80%;
-        max-width: 300px;
-        height: 100vh; /* Fallback for older browsers */
-        height: 100dvh; /* Use dynamic viewport height for better mobile support */
-        height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback for iOS */
-        background-color: var(--white);
-        flex-direction: column;
-        justify-content: flex-start;
-        padding: 2rem;
-        box-shadow: var(--shadow-lg);
-        transition: right var(--transition-normal);
-        z-index: 60;
-        /* iOS specific fixes */
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior: contain;}
-.nav-menu.active {
-        right: 0;}
-nav li {
-        margin: 0 0 1.5rem 0;}
-nav a::after {
-        display: none;}
-/* Ensure mobile nav links are clickable */
-    .nav-menu a {
-        display: block;
-        padding: 0.75rem 1rem;
-        position: relative;
-        z-index: 65;
-        -webkit-tap-highlight-color: rgba(26, 82, 118, 0.2);
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        user-select: none;
-        touch-action: manipulation;
-        cursor: pointer;
-        /* Ensure proper touch target size */
-        min-height: 44px;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        box-sizing: border-box;
-        /* Improved mobile link styling */
-        color: var(--primary);
-        font-weight: 600;
-        border-radius: var(--radius-md);
-        margin-bottom: 0.25rem;
-        transition: all var(--transition-fast);}
-.nav-menu li {
-        display: block;
-        width: 100%;}
-/* Mobile menu icon styling */
-    .nav-menu .nav-icon {
-        color: var(--primary);
-        margin-right: 0.75rem;
-        font-size: 1.1rem;
-        width: 1.5rem;
-        text-align: center;}
-/* iOS specific fixes and hover states */
-    .nav-menu a:active {
-        background-color: rgba(26, 82, 118, 0.15);
-        transform: scale(0.98);
-        transition: all 0.1s ease;
-        color: var(--primary-dark);}
-.nav-menu a:hover {
-        background-color: rgba(26, 82, 118, 0.08);
-        color: var(--primary-dark);
-        transform: translateX(4px);}
-/* Active/current page styling for mobile */
-    .nav-menu a.active,
-    .nav-menu a[aria-current="page"] {
-        background-color: var(--primary);
-        color: var(--white);}
-.nav-menu a.active .nav-icon,
-    .nav-menu a[aria-current="page"] .nav-icon {
-        color: var(--white);}
-/* Prevent body scroll when menu is open */
-    body.menu-open {
-        overflow: hidden;}
-.footer-section h3 {
-    color: var(--white);
-    margin-bottom: 1rem;
-    font-size: 1.2rem;}
-/* ===== HERO SECTION ===== */
-.hero {
-    background-color: var(--primary);
-    color: var(--white);
-    padding: var(--space-xxl) 0;
-    text-align: center;}
-.hero h1 {
-    color: var(--white);
-    font-size: 2.75rem;
-    margin-bottom: 1rem;}
-.hero p {
-    font-size: 1.25rem;
-    max-width: 800px;
-    margin: 0 auto;}
-/* ===== CARDS ===== */
-.card {
-    background-color: var(--white);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-    margin-bottom: 1.5rem;
-    transition: transform var(--transition-normal), box-shadow var(--transition-normal);}
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);}
-.card-content {
-    padding: 1.5rem;}
-.card-title {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;}
-.card-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;}
-/* ===== UTILITIES ===== */
-.text-center {
-    text-align: center;}
-.timeline-content h3 {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-    color: var(--primary);}
-@media screen and (max-width: 768px) {
-    .timeline::after {
-        left: 20px;}
-.officer-img {
-    width: 100%;
-    height: 200px;
-    overflow: hidden;}
-.officer-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;}
-.placeholder-img {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--light);
-    color: var(--medium);}
-.accordion-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 1.25rem;
-    background-color: var(--white);
-    border: none;
-    text-align: left;
-    cursor: pointer;
-    transition: background-color var(--transition-fast);
-    font-weight: 600;}
-.accordion-header:hover {
-    background-color: var(--light);}
-.accordion-header.active {
-    background-color: var(--primary);
-    color: var(--white);}
-/* ===== MOBILE RESPONSIVENESS ===== */
-@media (max-width: 576px) {
-    html {
-        font-size: 14px;}
-h1 {
-        font-size: 2rem;}
-h2 {
-        font-size: 1.75rem;}
-.hero {
-        padding: var(--space-xl) 0;}
-.hero h1 {
-        font-size: 2.25rem;}
-.hero p {
-        font-size: 1.125rem;}
-.container {
-        padding: 0 1rem;}
-/* ===== PRINT STYLES ===== */
-@media print {
-    body {
-        background-color: white;
-        color: black;
-        font-size: 12pt;}
-.container {
-        max-width: 100%;
-        padding: 0;}
-header, footer, #back-to-top, .hero {
-        display: none;}
-.card {
-        box-shadow: none;
-        border: 1px solid #ddd;}
-.card:hover {
-        transform: none;
-        box-shadow: none;}
-/* Add these new styles for the banner and navigation icons */
-
-/* Banner Image */
-.banner-container {
-    width: 100%;
-    overflow: hidden;
-    text-align: center;
-    background-color: var(--primary);}
-/* Navigation Icons */
-.nav-icon {
-    width: auto;
-    height: auto;
-    margin-right: 8px;
-    color: var(--primary);
-    font-size: 1.2rem;}
-.nav-menu li.active .nav-icon,
-.nav-menu li a:hover .nav-icon {
-    color: var(--accent);}
-@media (max-width: 768px) {
-    .nav-icon {
-        margin-right: 5px;
-        font-size: 1rem;}
-/* Mobile Calendar Styles */
-@media (max-width: 768px) {
-    .meeting-entry {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;}
-.location-card h3 {
-        font-size: 1.2rem;
-        margin-bottom: 0.75rem;}
-/* iPhone-specific optimizations */
-@media screen and (max-width: 428px) {
-    /* Calendar table optimizations */
-    .meeting-table {
-        font-size: 0.85rem;  /* Slightly smaller font for iPhone */}
-.location-card h3 {
-        font-size: 1.1rem;}
-/* Fix notch interference */
-    .header-container {
-        padding-left: env(safe-area-inset-left);
-        padding-right: env(safe-area-inset-right);}
-/* Adjust container padding */
-    .container {
-        padding-left: max(1rem, env(safe-area-inset-left));
-        padding-right: max(1rem, env(safe-area-inset-right));}
-/* iPhone SE specific adjustments */
-@media screen and (max-width: 375px) {
-    .meeting-table {
-        font-size: 0.8rem;}
-/* Fix for iPhone landscape mode */
-@media screen and (max-height: 428px) and (orientation: landscape) {
-    .meeting-entry {
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;}
-    </style>
-    
-    <style id="critical-css">
-        /* San Antonio Philatelic Association - Main Stylesheet */
-
-/* ===== VARIABLES ===== */
-:root {
-    /* Color Palette */
-    --primary: #1a5276;        /* Deep blue */
-    --primary-light: #2980b9;  /* Mid blue */
-    --primary-dark: #0e2f44;   /* Darker blue */
-    --secondary: #d35400;      /* Warm orange */
-    --accent: #f1c40f;         /* Gold/Yellow */
-    --dark: #2c3e50;           /* Slate dark */
-    --medium: #7f8c8d;         /* Gray */
-    --light: #ecf0f1;          /* Light gray */
-    --white: #ffffff;
-    --success: #27ae60;        /* Green */
-    --warning: #f39c12;        /* Orange */
-    --danger: #c0392b;         /* Red */
-    
-    /* Typography */
-    --font-heading: 'Merriweather', Georgia, serif;
-    --font-body: 'Open Sans', Arial, sans-serif;
-    
-    /* Spacing */
-    --space-xxs: 0.25rem;
-    --space-xs: 0.5rem;
-    --space-sm: 0.75rem;
-    --space-md: 1rem;
-    --space-lg: 1.5rem;
-    --space-xl: 2rem;
-    --space-xxl: 3rem;
-    
-    /* Container widths */
-    --container-sm: 640px;
-    --container-md: 768px;
-    --container-lg: 1024px;
-    --container-xl: 1280px;
-    
-    /* Border radius */
-    --radius-sm: 3px;
-    --radius-md: 5px;
-    --radius-lg: 8px;
-    --radius-xl: 12px;
-    
-    /* Shadows */
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    
-    /* Transitions */
-    --transition-fast: 0.15s ease;
-    --transition-normal: 0.25s ease;
-    --transition-slow: 0.4s ease;}
-body {
-    font-family: var(--font-body);
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--dark);
-    background-color: var(--white);}
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
-    line-height: 1.3;
-    margin-bottom: 1rem;
-    font-weight: 700;
-    color: var(--dark);}
-h1 {
-    font-size: 2.5rem;}
-h2 {
-    font-size: 2rem;}
-h3 {
-    font-size: 1.75rem;}
-img {
-    max-width: 100%;
-    height: auto;
-    display: block;}
-button, input, select, textarea {
-    font-family: var(--font-body);
-    font-size: 1rem;}
-/* ===== LAYOUT ===== */
-.container {
-    width: 100%;
-    max-width: var(--container-xl);
-    margin: 0 auto;
-    padding: 0 1.5rem;}
-@media (max-width: 768px) {
-    .grid-cols-2, .grid-cols-3 {
-        grid-template-columns: 1fr;}
-/* ===== HEADER STYLES ===== */
-header {
-    background-color: var(--white);
-    box-shadow: var(--shadow-sm);
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    padding: 1rem 0;}
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;}
-nav ul {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;}
-nav li {
-    margin-left: 1.5rem;}
-nav a {
-    font-weight: 600;
-    color: var(--dark);
-    text-decoration: none;
-    padding: 0.5rem 0;
-    transition: color var(--transition-fast);
-    position: relative;}
-nav a:hover {
-    color: var(--primary);}
-nav a::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: var(--primary);
-    transition: width var(--transition-normal);}
-nav a:hover::after {
-    width: 100%;}
-/* Smooth theme transition */
-body,
-header,
-.nav-menu,
-.card,
-.hero,
-.section,
-footer,
-.accordion-header,
-.btn {
-    transition: background-color var(--transition-normal), color var(--transition-normal);}
-@media (max-width: 768px) {
-    .menu-toggle {
-        display: block;
-        touch-action: manipulation;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        user-select: none;}
-.nav-menu {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 80%;
-        max-width: 300px;
-        height: 100vh; /* Fallback for older browsers */
-        height: 100dvh; /* Use dynamic viewport height for better mobile support */
-        height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback for iOS */
-        background-color: var(--white);
-        flex-direction: column;
-        justify-content: flex-start;
-        padding: 2rem;
-        box-shadow: var(--shadow-lg);
-        transition: right var(--transition-normal);
-        z-index: 60;
-        /* iOS specific fixes */
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior: contain;}
-.nav-menu.active {
-        right: 0;}
-nav li {
-        margin: 0 0 1.5rem 0;}
-nav a::after {
-        display: none;}
-/* Ensure mobile nav links are clickable */
-    .nav-menu a {
-        display: block;
-        padding: 0.75rem 1rem;
-        position: relative;
-        z-index: 65;
-        -webkit-tap-highlight-color: rgba(26, 82, 118, 0.2);
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        user-select: none;
-        touch-action: manipulation;
-        cursor: pointer;
-        /* Ensure proper touch target size */
-        min-height: 44px;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        box-sizing: border-box;
-        /* Improved mobile link styling */
-        color: var(--primary);
-        font-weight: 600;
-        border-radius: var(--radius-md);
-        margin-bottom: 0.25rem;
-        transition: all var(--transition-fast);}
-.nav-menu li {
-        display: block;
-        width: 100%;}
-/* Mobile menu icon styling */
-    .nav-menu .nav-icon {
-        color: var(--primary);
-        margin-right: 0.75rem;
-        font-size: 1.1rem;
-        width: 1.5rem;
-        text-align: center;}
-/* iOS specific fixes and hover states */
-    .nav-menu a:active {
-        background-color: rgba(26, 82, 118, 0.15);
-        transform: scale(0.98);
-        transition: all 0.1s ease;
-        color: var(--primary-dark);}
-.nav-menu a:hover {
-        background-color: rgba(26, 82, 118, 0.08);
-        color: var(--primary-dark);
-        transform: translateX(4px);}
-/* Active/current page styling for mobile */
-    .nav-menu a.active,
-    .nav-menu a[aria-current="page"] {
-        background-color: var(--primary);
-        color: var(--white);}
-.nav-menu a.active .nav-icon,
-    .nav-menu a[aria-current="page"] .nav-icon {
-        color: var(--white);}
-/* Prevent body scroll when menu is open */
-    body.menu-open {
-        overflow: hidden;}
-.footer-section h3 {
-    color: var(--white);
-    margin-bottom: 1rem;
-    font-size: 1.2rem;}
-/* ===== HERO SECTION ===== */
-.hero {
-    background-color: var(--primary);
-    color: var(--white);
-    padding: var(--space-xxl) 0;
-    text-align: center;}
-.hero h1 {
-    color: var(--white);
-    font-size: 2.75rem;
-    margin-bottom: 1rem;}
-.hero p {
-    font-size: 1.25rem;
-    max-width: 800px;
-    margin: 0 auto;}
-/* ===== CARDS ===== */
-.card {
-    background-color: var(--white);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-    margin-bottom: 1.5rem;
-    transition: transform var(--transition-normal), box-shadow var(--transition-normal);}
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);}
-.card-content {
-    padding: 1.5rem;}
-.card-title {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;}
-.card-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;}
-/* ===== UTILITIES ===== */
-.text-center {
-    text-align: center;}
-.timeline-content h3 {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-    color: var(--primary);}
-@media screen and (max-width: 768px) {
-    .timeline::after {
-        left: 20px;}
-.officer-img {
-    width: 100%;
-    height: 200px;
-    overflow: hidden;}
-.officer-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;}
-.placeholder-img {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--light);
-    color: var(--medium);}
-.accordion-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 1.25rem;
-    background-color: var(--white);
-    border: none;
-    text-align: left;
-    cursor: pointer;
-    transition: background-color var(--transition-fast);
-    font-weight: 600;}
-.accordion-header:hover {
-    background-color: var(--light);}
-.accordion-header.active {
-    background-color: var(--primary);
-    color: var(--white);}
-/* ===== MOBILE RESPONSIVENESS ===== */
-@media (max-width: 576px) {
-    html {
-        font-size: 14px;}
-h1 {
-        font-size: 2rem;}
-h2 {
-        font-size: 1.75rem;}
-.hero {
-        padding: var(--space-xl) 0;}
-.hero h1 {
-        font-size: 2.25rem;}
-.hero p {
-        font-size: 1.125rem;}
-.container {
-        padding: 0 1rem;}
-/* ===== PRINT STYLES ===== */
-@media print {
-    body {
-        background-color: white;
-        color: black;
-        font-size: 12pt;}
-.container {
-        max-width: 100%;
-        padding: 0;}
-header, footer, #back-to-top, .hero {
-        display: none;}
-.card {
-        box-shadow: none;
-        border: 1px solid #ddd;}
-.card:hover {
-        transform: none;
-        box-shadow: none;}
-/* Add these new styles for the banner and navigation icons */
-
-/* Banner Image */
-.banner-container {
-    width: 100%;
-    overflow: hidden;
-    text-align: center;
-    background-color: var(--primary);}
-/* Navigation Icons */
-.nav-icon {
-    width: auto;
-    height: auto;
-    margin-right: 8px;
-    color: var(--primary);
-    font-size: 1.2rem;}
-.nav-menu li.active .nav-icon,
-.nav-menu li a:hover .nav-icon {
-    color: var(--accent);}
-@media (max-width: 768px) {
-    .nav-icon {
-        margin-right: 5px;
-        font-size: 1rem;}
-/* Mobile Calendar Styles */
-@media (max-width: 768px) {
-    .meeting-entry {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;}
-.location-card h3 {
-        font-size: 1.2rem;
-        margin-bottom: 0.75rem;}
-/* iPhone-specific optimizations */
-@media screen and (max-width: 428px) {
-    /* Calendar table optimizations */
-    .meeting-table {
-        font-size: 0.85rem;  /* Slightly smaller font for iPhone */}
-.location-card h3 {
-        font-size: 1.1rem;}
-/* Fix notch interference */
-    .header-container {
-        padding-left: env(safe-area-inset-left);
-        padding-right: env(safe-area-inset-right);}
-/* Adjust container padding */
-    .container {
-        padding-left: max(1rem, env(safe-area-inset-left));
-        padding-right: max(1rem, env(safe-area-inset-right));}
-/* iPhone SE specific adjustments */
-@media screen and (max-width: 375px) {
-    .meeting-table {
-        font-size: 0.8rem;}
-/* Fix for iPhone landscape mode */
-@media screen and (max-height: 428px) and (orientation: landscape) {
-    .meeting-entry {
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;}
+        @import "../node_modules/vanilla-calendar-pro/build/vanilla-calendar.min.css";:root{--primary:#1a5276;--primary-light:#2980b9;--primary-dark:#0e2f44;--secondary:#d35400;--accent:#f1c40f;--dark:#2c3e50;--medium:#7f8c8d;--light:#ecf0f1;--white:#fff;--success:#27ae60;--warning:#f39c12;--danger:#c0392b;--font-heading:"Merriweather",Georgia,serif;--font-body:"Open Sans",Arial,sans-serif;--space-xxs:0.25rem;--space-xs:0.5rem;--space-sm:0.75rem;--space-md:1rem;--space-lg:1.5rem;--space-xl:2rem;--space-xxl:3rem;--container-sm:640px;--container-md:768px;--container-lg:1024px;--container-xl:1280px;--radius-sm:3px;--radius-md:5px;--radius-lg:8px;--radius-xl:12px;--shadow-sm:0 1px 3px #0000001f;--shadow-md:0 4px 6px #0000001a;--shadow-lg:0 10px 15px -3px #0000001a;--transition-fast:0.15s ease;--transition-normal:0.25s ease;--transition-slow:0.4s ease}
+body{background-color:var(--white);color:var(--dark);font-family:var(--font-body);font-size:1rem;line-height:1.6}
+h1,h2,h3,h4,h5,h6{color:var(--dark);font-family:var(--font-heading);font-weight:700;line-height:1.3;margin-bottom:1rem}
+h1{font-size:2.5rem}
+h2{font-size:2rem}
+h3{font-size:1.75rem}
+img{display:block;height:auto;max-width:100%}
+button,input,select,textarea{font-family:var(--font-body);font-size:1rem}
+.container{margin:0 auto;max-width:var(--container-xl);padding:0 1.5rem;width:100%}
+@media (max-width:768px){.grid-cols-2,.grid-cols-3{grid-template-columns:1fr}
+header{background-color:var(--white);box-shadow:var(--shadow-sm);padding:1rem 0;position:sticky;top:0;z-index:50}
+.header-container{align-items:center;display:flex;justify-content:space-between}
+nav ul{display:flex;list-style:none;margin:0;padding:0}
+nav li{margin-left:1.5rem}
+nav a{color:var(--dark);font-weight:600;padding:.5rem 0;position:relative;text-decoration:none;transition:color var(--transition-fast)}
+nav a:hover{color:var(--primary)}
+nav a:after{background-color:var(--primary);bottom:0;content:"";height:2px;left:0;position:absolute;transition:width var(--transition-normal);width:0}
+nav a:hover:after{width:100%}
+.accordion-header,.btn,.card,.hero,.nav-menu,.section,body,footer,header{transition:background-color var(--transition-normal),color var(--transition-normal)}
+@media (max-width:768px){.menu-toggle{display:block;touch-action:manipulation;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.nav-menu{background-color:var(--white);box-shadow:var(--shadow-lg);flex-direction:column;height:100vh;height:100dvh;height:calc(var(--vh, 1vh)*100);justify-content:flex-start;max-width:300px;padding:2rem;position:fixed;right:-100%;top:0;transition:right var(--transition-normal);width:80%;z-index:60;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.menu-toggle-checkbox:checked~.nav-menu{right:0}
+nav li{margin:0 0 1.5rem}
+nav a:after{display:none}
+.nav-menu a{display:block;padding:.75rem 1rem;position:relative;z-index:65;-webkit-tap-highlight-color:rgba(26,82,118,.2);-webkit-touch-callout:none;align-items:center;border-radius:var(--radius-md);box-sizing:border-box;color:var(--primary);cursor:pointer;display:flex;font-weight:600;margin-bottom:.25rem;min-height:44px;touch-action:manipulation;transition:all var(--transition-fast);-webkit-user-select:none;user-select:none;width:100%}
+.nav-menu li{display:block;width:100%}
+.nav-menu .nav-icon{color:var(--primary);font-size:1.1rem;margin-right:.75rem;text-align:center;width:1.5rem}
+.nav-menu a:active{background-color:#1a527626;color:var(--primary-dark);transform:scale(.98);transition:all .1s ease}
+.nav-menu a:hover{background-color:#1a527614;color:var(--primary-dark);transform:translateX(4px)}
+.nav-menu a.active,.nav-menu a[aria-current=page]{background-color:var(--primary);color:var(--white)}
+.nav-menu a.active .nav-icon,.nav-menu a[aria-current=page] .nav-icon{color:var(--white)}
+.footer-section h3{color:var(--white);font-size:1.2rem;margin-bottom:1rem}
+.hero{background-color:var(--primary);padding:var(--space-xxl) 0;text-align:center}
+.hero,.hero h1{color:var(--white)}
+.hero h1{font-size:2.75rem;margin-bottom:1rem}
+.hero p{font-size:1.25rem;margin:0 auto;max-width:800px}
+.card{background-color:var(--white);border-radius:var(--radius-md);box-shadow:var(--shadow-md);margin-bottom:1.5rem;overflow:hidden;transition:transform var(--transition-normal),box-shadow var(--transition-normal)}
+.card:hover{box-shadow:var(--shadow-lg);transform:translateY(-5px)}
+.card-content{padding:1.5rem}
+.card-title{font-size:1.5rem;margin-bottom:1rem}
+.card-image{height:200px;object-fit:cover;width:100%}
+.text-center{text-align:center}
+.timeline-content h3{color:var(--primary);margin-bottom:.5rem;margin-top:0}
+@media screen and (max-width:768px){.timeline:after{left:20px}
+.officer-img{height:200px;overflow:hidden;width:100%}
+.officer-img img{height:100%;object-fit:cover;width:100%}
+.placeholder-img{align-items:center;background-color:var(--light);color:var(--medium);display:flex;height:100%;justify-content:center;width:100%}
+.accordion-header{align-items:center;background-color:var(--white);border:none;cursor:pointer;display:flex;font-weight:600;justify-content:space-between;padding:1.25rem;text-align:left;transition:background-color var(--transition-fast);width:100%}
+.accordion-header:hover{background-color:var(--light)}
+.accordion-header.active{background-color:var(--primary);color:var(--white)}
+@media (max-width:576px){html{font-size:14px}
+h1{font-size:2rem}
+h2{font-size:1.75rem}
+.hero,.section{padding:var(--space-xl) 0}
+.hero h1{font-size:2.25rem}
+.hero p{font-size:1.125rem}
+.container{padding:0 1rem}
+@media print{body{background-color:#fff;color:#000;font-size:12pt}
+.container{max-width:100%;padding:0}
+#back-to-top,.hero,footer,header{display:none}
+.card{border:1px solid #ddd;box-shadow:none}
+.card:hover{box-shadow:none;transform:none}
+.nav-icon{color:var(--primary);font-size:1.2rem;height:auto;margin-right:8px;width:auto}
+.nav-menu li a:hover .nav-icon,.nav-menu li.active .nav-icon{color:var(--accent)}
+@media (max-width:768px){.nav-icon{font-size:1rem;margin-right:5px}
+.location-card h3{font-size:1.2rem;margin-bottom:.75rem}
+@media screen and (max-width:428px){.meeting-table{font-size:.85rem}
+.location-card h3{font-size:1.1rem}
+.header-container{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+.container{padding-left:max(1rem,env(safe-area-inset-left));padding-right:max(1rem,env(safe-area-inset-right))}
+@media screen and (max-width:375px){.meeting-table{font-size:.8rem}
+@media screen and (max-height:428px) and (orientation:landscape){.meeting-entry{align-items:center;flex-direction:row;justify-content:space-between}
+.vanilla-calendar{--vc-font-family:var(--font-body);--vc-border-radius:var(--radius-md);--vc-primary:var(--primary);--vc-primary-dark:var(--primary-dark);--vc-primary-light:var(--primary-light);--vc-secondary:var(--secondary);--vc-white:var(--white);--vc-black:var(--dark);--vc-gray:var(--medium);--vc-gray-light:var(--light);max-width:100%;width:100%}
+.vanilla-calendar .vc-header{background:var(--primary);border-radius:var(--radius-lg) var(--radius-lg) 0 0;color:var(--white);padding:var(--space-md)}
+.vanilla-calendar .vc-header button{background:#0000;border:1px solid #ffffff4d;border-radius:var(--radius-sm);color:var(--white);padding:var(--space-xs) var(--space-sm);transition:all .2s ease}
+.vanilla-calendar .vc-header button:hover{background:#ffffff1a;border-color:#ffffff80}
+.meeting-popover{font-family:var(--font-body);max-width:300px}
+@media (max-width:768px){.calendar-container{border-radius:var(--radius-md);margin:var(--space-md) 0}
+.vanilla-calendar .vc-header{flex-direction:column;gap:var(--space-sm);padding:var(--space-sm)}
+@media (max-width:480px){.vanilla-calendar .vc-date{font-size:.8rem;min-height:35px}
+@media (prefers-color-scheme:dark){.calendar-container{background:var(--dark);border:1px solid var(--medium)}
+.calendar-error h3{color:var(--danger);font-family:var(--font-heading);margin-bottom:var(--space-sm)}
+.vanilla-calendar .vc-header button:focus{outline:2px solid var(--white);outline-offset:2px}
+@media print{.calendar-container{border:1px solid #ccc;box-shadow:none}
+.vanilla-calendar .vc-header{background:#fff!important;border-bottom:2px solid #ccc;color:#000!important}
+.modal-header{align-items:center;background:var(--primary);border-radius:var(--radius-lg) var(--radius-lg) 0 0;color:var(--white);display:flex;justify-content:space-between;padding:var(--space-lg)}
+.modal-body{padding:var(--space-lg)}
+.detail-section h3{align-items:center;color:var(--primary);display:flex;font-family:var(--font-heading);font-size:1.2rem;gap:var(--space-sm);margin-bottom:var(--space-md)}
+.detail-section h3 i{color:var(--primary);width:20px}
+@media (max-width:768px){.modal-container{margin:var(--space-sm);max-height:95vh;width:95vw}
+.modal-header{padding:var(--space-md)}
+.modal-body{padding:var(--space-md)}
+@media (max-width:480px){.modal-container{border-radius:0;height:100vh;margin:0;max-height:100vh;max-width:100vw;width:100vw}
+.modal-header{border-radius:0}
+.detail-section h3{font-size:1.1rem}
+@media (prefers-color-scheme:dark){.modal-container{background:var(--dark);border:1px solid var(--medium)}
+.reminder-header{align-items:flex-start;display:flex;justify-content:space-between;margin-bottom:var(--space-sm)}
+.reminder-header strong{color:var(--primary);font-family:var(--font-heading);font-size:1.1rem}
+.reminder-settings h3{align-items:center;color:var(--primary);display:flex;font-family:var(--font-heading);gap:var(--space-sm);margin-bottom:var(--space-md)}
+.reminder-settings h3:before{content:"🔔";font-size:1.2rem}
+@media (max-width:768px){.reminder-notification{right:10px;top:10px;width:320px}
+@media (max-width:480px){.reminder-notification{left:10px;right:10px;width:calc(100vw - 20px)}
+@media (prefers-color-scheme:dark){.reminder-notification{background:var(--dark);border-color:var(--accent)}
     </style>
     <link rel="preload" href="dist/css/styles.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="dist/css/styles.min.css"></noscript>
-    
+    <noscript><link rel="stylesheet" href="dist/css/styles.min.css"></noscript>
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="dist/images/favicon.webp">
     <link rel="icon" type="image/png" sizes="16x16" href="dist/images/favicon.webp">
     <link rel="apple-touch-icon" sizes="180x180" href="dist/images/favicon.webp">
     <link rel="manifest" href="site.webmanifest">
-    
+
     <!-- Canonical URL -->
     <link rel="canonical" href="https://sastamps.org/">
-    
+
     <!-- JSON-LD structured data -->
     <script type="application/ld+json">
     {
@@ -1727,7 +1834,7 @@ header, footer, #back-to-top, .hero {
         .fonts-loading body {
             opacity: 0.8;
         }
-        
+
         .fonts-loaded body {
             opacity: 1;
             transition: opacity 0.3s ease;
@@ -1737,7 +1844,7 @@ header, footer, #back-to-top, .hero {
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
-        
+
         .fonts-loaded body {
             font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
@@ -1745,12 +1852,12 @@ header, footer, #back-to-top, .hero {
         h1, h2, h3, h4, h5, h6 {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
         }
-        
-        .fonts-loaded h1, 
-        .fonts-loaded h2, 
-        .fonts-loaded h3, 
-        .fonts-loaded h4, 
-        .fonts-loaded h5, 
+
+        .fonts-loaded h1,
+        .fonts-loaded h2,
+        .fonts-loaded h3,
+        .fonts-loaded h4,
+        .fonts-loaded h5,
         .fonts-loaded h6 {
             font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
         }
@@ -1760,6 +1867,164 @@ header, footer, #back-to-top, .hero {
 
 
 
+    <style>
+        /* Font loading states */
+        .fonts-loading body {
+            opacity: 0.8;
+        }
+
+        .fonts-loaded body {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Font fallbacks */
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .fonts-loaded body {
+            font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+
+        .fonts-loaded h1,
+        .fonts-loaded h2,
+        .fonts-loaded h3,
+        .fonts-loaded h4,
+        .fonts-loaded h5,
+        .fonts-loaded h6 {
+            font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+    </style>
+
+
+
+
+
+    <style>
+        /* Font loading states */
+        .fonts-loading body {
+            opacity: 0.8;
+        }
+
+        .fonts-loaded body {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Font fallbacks */
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .fonts-loaded body {
+            font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+
+        .fonts-loaded h1,
+        .fonts-loaded h2,
+        .fonts-loaded h3,
+        .fonts-loaded h4,
+        .fonts-loaded h5,
+        .fonts-loaded h6 {
+            font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+    </style>
+
+
+
+
+
+    <style>
+        /* Font loading states */
+        .fonts-loading body {
+            opacity: 0.8;
+        }
+
+        .fonts-loaded body {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Font fallbacks */
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .fonts-loaded body {
+            font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+
+        .fonts-loaded h1,
+        .fonts-loaded h2,
+        .fonts-loaded h3,
+        .fonts-loaded h4,
+        .fonts-loaded h5,
+        .fonts-loaded h6 {
+            font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+    </style>
+
+
+
+
+
+    <style>
+        /* Font loading states */
+        .fonts-loading body {
+            opacity: 0.8;
+        }
+
+        .fonts-loaded body {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Font fallbacks */
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .fonts-loaded body {
+            font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+
+        .fonts-loaded h1,
+        .fonts-loaded h2,
+        .fonts-loaded h3,
+        .fonts-loaded h4,
+        .fonts-loaded h5,
+        .fonts-loaded h6 {
+            font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+        }
+    </style>
+
+
+
+
+
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/600.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v1/700.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/merriweather/v1/400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/merriweather/v1/700.woff2" as="font" type="font/woff2" crossorigin>
+    
     <style>
         /* Font loading states */
         .fonts-loading body {
@@ -1793,130 +2058,11 @@ header, footer, #back-to-top, .hero {
             font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
         }
     </style>
-
-
-
-
-
-    <style>
-        /* Font loading states */
-        .fonts-loading body {
-            opacity: 0.8;
-        }
-        
-        .fonts-loaded body {
-            opacity: 1;
-            transition: opacity 0.3s ease;
-        }
-
-        /* Font fallbacks */
-        body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        }
-        
-        .fonts-loaded body {
-            font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
-        }
-        
-        .fonts-loaded h1, 
-        .fonts-loaded h2, 
-        .fonts-loaded h3, 
-        .fonts-loaded h4, 
-        .fonts-loaded h5, 
-        .fonts-loaded h6 {
-            font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
-        }
-    </style>
-
-
-
-
-
-    <style>
-        /* Font loading states */
-        .fonts-loading body {
-            opacity: 0.8;
-        }
-        
-        .fonts-loaded body {
-            opacity: 1;
-            transition: opacity 0.3s ease;
-        }
-
-        /* Font fallbacks */
-        body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        }
-        
-        .fonts-loaded body {
-            font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
-        }
-        
-        .fonts-loaded h1, 
-        .fonts-loaded h2, 
-        .fonts-loaded h3, 
-        .fonts-loaded h4, 
-        .fonts-loaded h5, 
-        .fonts-loaded h6 {
-            font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
-        }
-    </style>
-
-
-
-
-
-    <style>
-        /* Font loading states */
-        .fonts-loading body {
-            opacity: 0.8;
-        }
-        
-        .fonts-loaded body {
-            opacity: 1;
-            transition: opacity 0.3s ease;
-        }
-
-        /* Font fallbacks */
-        body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        }
-        
-        .fonts-loaded body {
-            font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
-        }
-        
-        .fonts-loaded h1, 
-        .fonts-loaded h2, 
-        .fonts-loaded h3, 
-        .fonts-loaded h4, 
-        .fonts-loaded h5, 
-        .fonts-loaded h6 {
-            font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
-        }
-    </style>
-
-
-
-
-
 </head>
 <body>
     <!-- Skip to content link for accessibility -->
     <a href="#main-content" class="skip-link">Skip to content</a>
-    
+
     <!-- Header -->
     <header>
         <div class="container header-container">
@@ -1942,7 +2088,7 @@ header, footer, #back-to-top, .hero {
             </nav>
         </div>
     </header>
-    
+
     <!-- Main Content -->
     <main id="main-content">
         <!-- Hero Section -->
@@ -1952,29 +2098,29 @@ header, footer, #back-to-top, .hero {
                 <p>A vibrant community of stamp collectors <br />celebrating over 125 years of philately in San Antonio, Texas</p>
             </div>
         </section>
-        
+
         <!-- Newsletter Banner -->
         <section class="section" style="padding-top: 0; padding-bottom: 0;">
             <div class="container">
                 <div style="background-color: var(--accent); color: var(--dark); padding: 1.5rem; border-radius: var(--radius-lg); margin-top: -2rem; box-shadow: var(--shadow-md); position: relative; z-index: 2; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
                     <div style="margin-right: 1rem;">
-                        <h2 style="margin-bottom: 0.5rem; font-size: 1.5rem;">SAPA PHILATEX - Third Quarter 2025</h2>
-                        <p style="margin-bottom: 0;"><i class="fas fa-newspaper"></i> Our latest newsletter is available! &bull; <i class="fas fa-calendar-alt"></i> Publish Date: July 1, 2025</p>
+                        <h2 style="margin-bottom: 0.5rem; font-size: 1.5rem;">SAPA PHILATEX - Fourth Quarter 2025</h2>
+                        <p style="margin-bottom: 0;"><i class="fas fa-newspaper"></i> Our latest newsletter is available! &amp;bull; <i class="fas fa-calendar-alt"></i> Publish Date: October 1, 2025</p>
                     </div>
                     <div>
-                        <a href="public/SAPA-PHILATEX-Third-Quarter-2025.pdf" class="btn" style="background-color: var(--dark); color: white;" target="_blank">Download PDF <i class="fas fa-file-pdf"></i></a>
+                        <a href="public/SAPA-PHILATEX-Fourth-Quarter-2025.pdf" class="btn" style="background-color: var(--dark); color: white;" target="_blank">Download PDF <i class="fas fa-file-pdf"></i></a>
                     </div>
                 </div>
             </div>
         </section>
 
-  
-        
+
+
         <!-- About Us Section -->
         <section class="section">
             <div class="container">
                 <h2 class="section-title">Celebrating Our Philatelic Heritage</h2>
-                
+
                 <div class="grid" style="grid-template-columns: 2fr 3fr; gap: 3rem;">
                     <div>
                         <div style="text-align: center; background-color: var(--primary); color: white; padding: 1.5rem; border-radius: var(--radius-md);">
@@ -1982,14 +2128,14 @@ header, footer, #back-to-top, .hero {
                             <p>One of America's oldest continuously operating stamp collecting clubs</p>
                         </div>
                     </div>
-                    
+
                     <div>
                         <p class="lead" style="font-size: 1.2rem; color: var(--primary); font-family: var(--font-heading); margin-bottom: 1.5rem;">The San Antonio Philatelic Association (SAPA) has been bringing together stamp collectors from all walks of life for more than 125 years.</p>
-                        
+
                         <p>Our organization provides a welcoming environment for philatelists of all experience levels, from beginners to advanced collectors. Whether you're interested in classic stamps, postal history, topical collecting, or any other aspect of the hobby, you'll find kindred spirits at SAPA.</p>
-                        
+
                         <p>Our weekly meetings feature educational presentations, trading sessions, auctions, and plenty of opportunities to share knowledge and stories. We also organize special events and exhibitions throughout the year, including our annual SAPA EXPO.</p>
-                        
+
                         <div class="grid" style="grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 2rem;">
                             <div class="card" style="margin-bottom: 0;">
                                 <div class="card-content text-center">
@@ -2006,7 +2152,7 @@ header, footer, #back-to-top, .hero {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div style="margin-top: 2rem;">
                             <a href="about.html" class="btn btn-primary">Learn More About SAPA</a>
                         </div>
@@ -2026,30 +2172,30 @@ header, footer, #back-to-top, .hero {
     <div class="card">
       <div class="card-content">
         <p class="text-center" style="color: var(--primary); font-weight: bold; margin-bottom: 1.5rem;">
-          <i class="fas fa-door-open" style="margin-right: 0.5rem;"></i> Doors open at 6:30 PM 
-          <span style="margin: 0 0.75rem;">•</span> 
-          <i class="fas fa-gavel" style="margin-right: 0.5rem;"></i> BOG starts at 7:15 PM 
-          <span style="margin: 0 0.75rem;">•</span> 
+          <i class="fas fa-door-open" style="margin-right: 0.5rem;"></i> Doors open at 6:30 PM
+          <span style="margin: 0 0.75rem;">•</span>
+          <i class="fas fa-gavel" style="margin-right: 0.5rem;"></i> BOG starts at 7:15 PM
+          <span style="margin: 0 0.75rem;">•</span>
           <i class="fas fa-users" style="margin-right: 0.5rem;"></i> Meetings begin at 7:30 PM
         </p>
-        
+
         <div style="overflow-x: auto;">
           <table class="meeting-table" style="width: 100%; border-collapse: collapse; font-family: var(--font-body); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm);">
             <thead>
               <tr style="background-color: var(--primary); color: white; text-align: center;">
-                <th style="padding: 1rem; font-size: 1.1rem; background-color: var(--primary-dark); color: var(--accent); font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.3); width: 33.33%; text-align: center;">July 2025</th>
-                <th style="padding: 1rem; font-size: 1.1rem; background-color: var(--primary-dark); color: var(--accent); font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.3); width: 33.33%; text-align: center;">August 2025</th>
-                <th style="padding: 1rem; font-size: 1.1rem; background-color: var(--primary-dark); color: var(--accent); font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.3); width: 33.33%; text-align: center;">September 2025</th>
+                <th style="padding: 1rem; font-size: 1.1rem; background-color: var(--primary-dark); color: var(--accent); font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.3); width: 33.33%; text-align: center;">October 2025</th>
+                <th style="padding: 1rem; font-size: 1.1rem; background-color: var(--primary-dark); color: var(--accent); font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.3); width: 33.33%; text-align: center;">November 2025</th>
+                <th style="padding: 1rem; font-size: 1.1rem; background-color: var(--primary-dark); color: var(--accent); font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.3); width: 33.33%; text-align: center;">December 2025</th>
               </tr>
             </thead>
             <tbody>
               <tr style="background-color: rgba(255, 255, 255, 0.8);">
                 <td style="padding: 0.75rem; border: 1px solid #ddd; font-weight: bold; color: var(--primary);"><i class="fas fa-times-circle" style="margin-right: 0.5rem;"></i>4 NO MEETING<br><span style="font-size: 0.9rem; font-weight: normal;">Independence Day</span></td>
-                <td style="padding: 0.75rem; border: 1px solid #ddd;"><i class="fas fa-calendar-day" style="color: var(--primary); margin-right: 0.5rem;"></i>1 BOG; Show & Tell</td>
-                <td style="padding: 0.75rem; border: 1px solid #ddd;"><i class="fas fa-calendar-day" style="color: var(--primary); margin-right: 0.5rem;"></i>5 BOG; Show & Tell</td>
+                <td style="padding: 0.75rem; border: 1px solid #ddd;"><i class="fas fa-calendar-day" style="color: var(--primary); margin-right: 0.5rem;"></i>1 BOG; Show &amp; Tell</td>
+                <td style="padding: 0.75rem; border: 1px solid #ddd;"><i class="fas fa-calendar-day" style="color: var(--primary); margin-right: 0.5rem;"></i>5 BOG; Show &amp; Tell</td>
               </tr>
               <tr style="background-color: rgba(255, 255, 255, 0.6);">
-                <td style="padding: 0.75rem; border: 1px solid #ddd;"><i class="fas fa-calendar-day" style="color: var(--primary); margin-right: 0.5rem;"></i>11 BOG; Show & Tell</td>
+                <td style="padding: 0.75rem; border: 1px solid #ddd;"><i class="fas fa-calendar-day" style="color: var(--primary); margin-right: 0.5rem;"></i>11 BOG; Show &amp; Tell</td>
                 <td style="padding: 0.75rem; border: 1px solid #ddd;"><i class="fas fa-gavel" style="color: var(--primary); margin-right: 0.5rem;"></i>8 Auction</td>
                 <td style="padding: 0.75rem; border: 1px solid #ddd;"><i class="fas fa-gavel" style="color: var(--primary); margin-right: 0.5rem;"></i>12 Auction</td>
               </tr>
@@ -2071,7 +2217,7 @@ header, footer, #back-to-top, .hero {
             </tbody>
           </table>
         </div>
-        
+
         <!-- Calendar Download Options -->
         <div class="calendar-downloads text-center mt-4" style="background-color: var(--light); padding: 1.5rem; border-radius: var(--radius-md);">
           <div class="grid" style="grid-template-columns: 1fr auto 1fr; gap: 2rem; align-items: center;">
@@ -2092,30 +2238,30 @@ header, footer, #back-to-top, .hero {
     </div>
   </div>
 </section>
-        
-        
+
+
         <!-- Newsletter Section -->
         <section class="section" style="background-color: var(--primary); color: white;">
             <div class="container">
                 <h2 class="section-title" style="color: white;">The PHILATEX Newsletter</h2>
                 <p class="text-center mb-4">Our quarterly publication featuring philatelic articles, club news, and member stories</p>
-                
+
                 <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
                     <div class="card" style="background-color: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.2);">
                         <div class="card-content">
                             <h3 style="color: var(--accent);">Latest Issue Highlights</h3>
                             <ul style="list-style-type: none; padding-left: 0;">
-                                <li style="margin-bottom: 0.75rem;"><i class="fas fa-bookmark" style="color: var(--accent); margin-right: 0.5rem;"></i> Meeting Calendar for July – September 2025</li>
-                                <li style="margin-bottom: 0.75rem;"><i class="fas fa-bookmark" style="color: var(--accent); margin-right: 0.5rem;"></i> Annual "Blue Chip" Auction – Submit by Sept 26</li>
-                                <li style="margin-bottom: 0.75rem;"><i class="fas fa-bookmark" style="color: var(--accent); margin-right: 0.5rem;"></i> Greater Houston Stamp Show – September 19-21</li>
-                                <li style="margin-bottom: 0.75rem;"><i class="fas fa-bookmark" style="color: var(--accent); margin-right: 0.5rem;"></i> TSDA Shows: Houston, Dallas, San Antonio</li>
-                                <li style="margin-bottom: 0.75rem;"><i class="fas fa-bookmark" style="color: var(--accent); margin-right: 0.5rem;"></i> 2025 Membership Drive: Bring a Friend, Get Free Dues</li>
-                                <li><i class="fas fa-bookmark" style="color: var(--accent); margin-right: 0.5rem;"></i> Programs: US Air Mail History & Classic Mexican Stamps</li>
+                                <li style="margin-bottom: 0.75rem;"><i class="fas fa-bookmark" style="color: var(--accent); margin-right: 0.5rem;"></i> Meeting Calendar for October – December 2025</li>
+                                <li style="margin-bottom: 0.75rem;"><i class="fas fa-bookmark" style="color: var(--accent); margin-right: 0.5rem;"></i> Holiday Schedule Adjustments</li>
+                                <li style="margin-bottom: 0.75rem;"><i class="fas fa-bookmark" style="color: var(--accent); margin-right: 0.5rem;"></i> 2026 Membership Renewal Information</li>
+                                <li style="margin-bottom: 0.75rem;"><i class="fas fa-bookmark" style="color: var(--accent); margin-right: 0.5rem;"></i> Year-End Auction Details</li>
+                                <li style="margin-bottom: 0.75rem;"><i class="fas fa-bookmark" style="color: var(--accent); margin-right: 0.5rem;"></i> Year in Review: 2025 Club Highlights</li>
+                                <li><i class="fas fa-bookmark" style="color: var(--accent); margin-right: 0.5rem;"></i> Holiday Collecting Guide</li>
                             </ul>
-                            <a href="public/SAPA-PHILATEX-Third-Quarter-2025.pdf" class="btn" style="background-color: var(--accent); color: var(--dark); margin-top: 1rem;" target="_blank">Read Latest Issue</a>
+                            <a href="public/SAPA-PHILATEX-Fourth-Quarter-2025.pdf" class="btn" style="background-color: var(--accent); color: var(--dark); margin-top: 1rem;" target="_blank">Read Latest Issue</a>
                         </div>
                     </div>
-                    
+
                     <div class="card" style="background-color: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.2);">
                         <div class="card-content">
                             <h3 style="color: var(--accent);">Subscribe Today</h3>
@@ -2136,12 +2282,12 @@ header, footer, #back-to-top, .hero {
                 </div>
             </div>
         </section>
-        
+
         <!-- Join Us Section -->
         <section class="section">
             <div class="container">
                 <h2 class="section-title">Join Our Philatelic Community</h2>
-                
+
                 <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
                     <div class="card">
                         <div class="card-content text-center">
@@ -2151,7 +2297,7 @@ header, footer, #back-to-top, .hero {
                             <a href="membership.html" class="btn btn-primary mt-2">Join SAPA Today</a>
                         </div>
                     </div>
-                    
+
                     <div class="card">
                         <div class="card-content text-center">
                             <i class="fas fa-calendar-check fa-3x mb-3" style="color: var(--primary);"></i>
@@ -2160,7 +2306,7 @@ header, footer, #back-to-top, .hero {
                             <a href="#meeting-schedule" class="btn btn-primary mt-2">Meeting Schedule</a>
                         </div>
                     </div>
-                    
+
                     <div class="card">
                         <div class="card-content text-center">
                             <i class="fas fa-envelope fa-3x mb-3" style="color: var(--primary);"></i>
@@ -2169,7 +2315,7 @@ header, footer, #back-to-top, .hero {
                             <a href="contact.html" class="btn btn-primary mt-2">Get in Touch</a>
                         </div>
                     </div>
-                    
+
                     <div class="card">
                         <div class="card-content text-center">
                             <i class="fas fa-newspaper fa-3x mb-3" style="color: var(--primary);"></i>
@@ -2181,10 +2327,10 @@ header, footer, #back-to-top, .hero {
                 </div>
             </div>
         </section>
-        
- 
+
+
     </main>
-    
+
     <!-- Footer -->
     <footer>
         <div class="container">
@@ -2216,16 +2362,16 @@ header, footer, #back-to-top, .hero {
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 San Antonio Philatelic Association. All Rights Reserved.</p>
+                <p>&amp;copy; 2025 San Antonio Philatelic Association. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
-    
+
     <!-- Back to top button -->
     <button id="back-to-top" title="Back to Top" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 99; border: none; outline: none; background-color: var(--primary); color: white; cursor: pointer; padding: 15px; border-radius: 50%; font-size: 16px;">
         <i class="fas fa-arrow-up"></i>
     </button>
-    
+
     <!-- Scripts -->
     <script src="dist/js/script.min.js" defer></script>
 
@@ -2239,7 +2385,7 @@ header, footer, #back-to-top, .hero {
             });
         });
     </script>
-    
+
     <script>
         // Font Face Observer script
         (function() {
@@ -2248,7 +2394,7 @@ header, footer, #back-to-top, .hero {
                     this.family = family;
                     this.options = options;
                 }
-                
+
                 async load() {
                     try {
                         await document.fonts.load(`1em ${this.family}`, this.options.text || 'BESbswy');
@@ -2262,7 +2408,7 @@ header, footer, #back-to-top, .hero {
             // Load fonts and mark as loaded
             async function loadFonts() {
                 document.documentElement.classList.add('fonts-loading');
-                
+
                 const fontLoaders = [
                     new FontFaceObserver('Open Sans', { weight: 400 }).load(),
                     new FontFaceObserver('Open Sans', { weight: 600 }).load(),
@@ -2290,7 +2436,7 @@ header, footer, #back-to-top, .hero {
             }
         })();
     </script>
-    
+
     <script>
         // Font Face Observer script
         (function() {
@@ -2299,7 +2445,7 @@ header, footer, #back-to-top, .hero {
                     this.family = family;
                     this.options = options;
                 }
-                
+
                 async load() {
                     try {
                         await document.fonts.load(`1em ${this.family}`, this.options.text || 'BESbswy');
@@ -2313,7 +2459,7 @@ header, footer, #back-to-top, .hero {
             // Load fonts and mark as loaded
             async function loadFonts() {
                 document.documentElement.classList.add('fonts-loading');
-                
+
                 const fontLoaders = [
                     new FontFaceObserver('Open Sans', { weight: 400 }).load(),
                     new FontFaceObserver('Open Sans', { weight: 600 }).load(),
@@ -2460,7 +2606,7 @@ header, footer, #back-to-top, .hero {
     function saveMetrics() {
         try {
             localStorage.setItem('performance_metrics', JSON.stringify(metrics));
-            
+
             // Send to server if available
             if (typeof sendMetricsToServer === 'function') {
                 sendMetricsToServer(metrics);
@@ -2519,7 +2665,7 @@ header, footer, #back-to-top, .hero {
         setInterval(() => {
             const metrics = JSON.parse(localStorage.getItem('performance_metrics') || '{}');
             const vitals = metrics.vitals || {};
-            
+
             panel.innerHTML = `
                 <h3>Performance Metrics</h3>
                 <div>
@@ -2544,7 +2690,7 @@ header, footer, #back-to-top, .hero {
         }, 1000);
     }
 </script>
-    
+
     <script>
         // Font Face Observer script
         (function() {
@@ -2553,7 +2699,7 @@ header, footer, #back-to-top, .hero {
                     this.family = family;
                     this.options = options;
                 }
-                
+
                 async load() {
                     try {
                         await document.fonts.load(`1em ${this.family}`, this.options.text || 'BESbswy');
@@ -2567,7 +2713,7 @@ header, footer, #back-to-top, .hero {
             // Load fonts and mark as loaded
             async function loadFonts() {
                 document.documentElement.classList.add('fonts-loading');
-                
+
                 const fontLoaders = [
                     new FontFaceObserver('Open Sans', { weight: 400 }).load(),
                     new FontFaceObserver('Open Sans', { weight: 600 }).load(),
@@ -2595,7 +2741,7 @@ header, footer, #back-to-top, .hero {
             }
         })();
     </script>
-    
+
     <script>
         // Font Face Observer script
         (function() {
@@ -2604,7 +2750,7 @@ header, footer, #back-to-top, .hero {
                     this.family = family;
                     this.options = options;
                 }
-                
+
                 async load() {
                     try {
                         await document.fonts.load(`1em ${this.family}`, this.options.text || 'BESbswy');
@@ -2618,7 +2764,7 @@ header, footer, #back-to-top, .hero {
             // Load fonts and mark as loaded
             async function loadFonts() {
                 document.documentElement.classList.add('fonts-loading');
-                
+
                 const fontLoaders = [
                     new FontFaceObserver('Open Sans', { weight: 400 }).load(),
                     new FontFaceObserver('Open Sans', { weight: 600 }).load(),
@@ -2646,7 +2792,7 @@ header, footer, #back-to-top, .hero {
             }
         })();
     </script>
-    
+
     <script>
         // Font Face Observer script
         (function() {
@@ -2655,7 +2801,7 @@ header, footer, #back-to-top, .hero {
                     this.family = family;
                     this.options = options;
                 }
-                
+
                 async load() {
                     try {
                         await document.fonts.load(`1em ${this.family}`, this.options.text || 'BESbswy');
@@ -2669,7 +2815,58 @@ header, footer, #back-to-top, .hero {
             // Load fonts and mark as loaded
             async function loadFonts() {
                 document.documentElement.classList.add('fonts-loading');
-                
+
+                const fontLoaders = [
+                    new FontFaceObserver('Open Sans', { weight: 400 }).load(),
+                    new FontFaceObserver('Open Sans', { weight: 600 }).load(),
+                    new FontFaceObserver('Open Sans', { weight: 700 }).load(),
+                    new FontFaceObserver('Merriweather', { weight: 400 }).load(),
+                    new FontFaceObserver('Merriweather', { weight: 700 }).load()
+                ];
+
+                try {
+                    await Promise.all(fontLoaders);
+                    document.documentElement.classList.remove('fonts-loading');
+                    document.documentElement.classList.add('fonts-loaded');
+                    localStorage.setItem('fonts-loaded', 'true');
+                } catch (err) {
+                    document.documentElement.classList.remove('fonts-loading');
+                    document.documentElement.classList.add('fonts-failed');
+                }
+            }
+
+            // Check if fonts were previously loaded
+            if (localStorage.getItem('fonts-loaded')) {
+                document.documentElement.classList.add('fonts-loaded');
+            } else {
+                loadFonts();
+            }
+        })();
+    </script>
+
+    <script>
+        // Font Face Observer script
+        (function() {
+            class FontFaceObserver {
+                constructor(family, options = {}) {
+                    this.family = family;
+                    this.options = options;
+                }
+
+                async load() {
+                    try {
+                        await document.fonts.load(`1em ${this.family}`, this.options.text || 'BESbswy');
+                        return true;
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            }
+
+            // Load fonts and mark as loaded
+            async function loadFonts() {
+                document.documentElement.classList.add('fonts-loading');
+
                 const fontLoaders = [
                     new FontFaceObserver('Open Sans', { weight: 400 }).load(),
                     new FontFaceObserver('Open Sans', { weight: 600 }).load(),
@@ -2749,4 +2946,4 @@ header, footer, #back-to-top, .hero {
         })();
     </script>
 </body>
-</html> 
+</html>

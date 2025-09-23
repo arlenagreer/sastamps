@@ -14,18 +14,18 @@ const eventListeners = new Map();
  * @param {Object} options - Additional options for addEventListener
  */
 export function addEventListenerWithCleanup(element, event, handler, options) {
-    if (!element || typeof element.addEventListener !== 'function') {
-        console.warn('Invalid element provided to addEventListenerWithCleanup');
-        return;
-    }
-    
-    element.addEventListener(event, handler, options);
-    
-    if (!eventListeners.has(element)) {
-        eventListeners.set(element, []);
-    }
-    
-    eventListeners.get(element).push({ event, handler, options });
+  if (!element || typeof element.addEventListener !== 'function') {
+    console.warn('Invalid element provided to addEventListenerWithCleanup');
+    return;
+  }
+
+  element.addEventListener(event, handler, options);
+
+  if (!eventListeners.has(element)) {
+    eventListeners.set(element, []);
+  }
+
+  eventListeners.get(element).push({ event, handler, options });
 }
 
 /**
@@ -35,24 +35,24 @@ export function addEventListenerWithCleanup(element, event, handler, options) {
  * @param {Function} handler - The event handler
  */
 export function removeEventListenerWithCleanup(element, event, handler) {
-    if (!element || typeof element.removeEventListener !== 'function') {
-        console.warn('Invalid element provided to removeEventListenerWithCleanup');
-        return;
+  if (!element || typeof element.removeEventListener !== 'function') {
+    console.warn('Invalid element provided to removeEventListenerWithCleanup');
+    return;
+  }
+
+  element.removeEventListener(event, handler);
+
+  const listeners = eventListeners.get(element);
+  if (listeners) {
+    const index = listeners.findIndex(l => l.event === event && l.handler === handler);
+    if (index > -1) {
+      listeners.splice(index, 1);
     }
-    
-    element.removeEventListener(event, handler);
-    
-    const listeners = eventListeners.get(element);
-    if (listeners) {
-        const index = listeners.findIndex(l => l.event === event && l.handler === handler);
-        if (index > -1) {
-            listeners.splice(index, 1);
-        }
-        
-        if (listeners.length === 0) {
-            eventListeners.delete(element);
-        }
+
+    if (listeners.length === 0) {
+      eventListeners.delete(element);
     }
+  }
 }
 
 /**
@@ -60,27 +60,27 @@ export function removeEventListenerWithCleanup(element, event, handler) {
  * @param {EventTarget} specificElement - Optional: clean up only this element
  */
 export function cleanupEventListeners(specificElement = null) {
-    if (specificElement) {
-        const listeners = eventListeners.get(specificElement);
-        if (listeners) {
-            listeners.forEach(({ event, handler, options }) => {
-                specificElement.removeEventListener(event, handler, options);
-            });
-            eventListeners.delete(specificElement);
-        }
-    } else {
-        // Clean up all tracked listeners
-        eventListeners.forEach((listeners, element) => {
-            listeners.forEach(({ event, handler, options }) => {
-                try {
-                    element.removeEventListener(event, handler, options);
-                } catch (error) {
-                    console.warn('Failed to remove event listener:', error);
-                }
-            });
-        });
-        eventListeners.clear();
+  if (specificElement) {
+    const listeners = eventListeners.get(specificElement);
+    if (listeners) {
+      listeners.forEach(({ event, handler, options }) => {
+        specificElement.removeEventListener(event, handler, options);
+      });
+      eventListeners.delete(specificElement);
     }
+  } else {
+    // Clean up all tracked listeners
+    eventListeners.forEach((listeners, element) => {
+      listeners.forEach(({ event, handler, options }) => {
+        try {
+          element.removeEventListener(event, handler, options);
+        } catch (error) {
+          console.warn('Failed to remove event listener:', error);
+        }
+      });
+    });
+    eventListeners.clear();
+  }
 }
 
 /**
@@ -88,12 +88,12 @@ export function cleanupEventListeners(specificElement = null) {
  * @returns {number} Number of elements with tracked listeners
  */
 export function getEventListenerCount() {
-    return eventListeners.size;
+  return eventListeners.size;
 }
 
 // Automatic cleanup on page unload
 if (typeof window !== 'undefined') {
-    window.addEventListener('beforeunload', () => {
-        cleanupEventListeners();
-    });
+  window.addEventListener('beforeunload', () => {
+    cleanupEventListeners();
+  });
 }

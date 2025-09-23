@@ -1,6 +1,43 @@
 {
   "newsletters": [
     {
+      "id": "2025-Q4",
+      "title": "SAPA PHILATEX Fourth Quarter 2025",
+      "quarter": "Fourth",
+      "year": 2025,
+      "publishDate": "2025-10-01",
+      "filePath": "public/SAPA-PHILATEX-Fourth-Quarter-2025.pdf",
+      "description": "Features the October-December meeting calendar, year-end activities, holiday schedule adjustments, 2026 membership renewal information, upcoming stamp shows, and special programs on postal history and rare stamp collections.",
+      "featuredArticles": [
+        {
+          "title": "Year in Review",
+          "category": "Annual Report",
+          "page": 3
+        },
+        {
+          "title": "Holiday Collecting Guide",
+          "category": "Feature",
+          "page": 5
+        },
+        {
+          "title": "2026 Membership Information",
+          "category": "News",
+          "page": 8
+        }
+      ],
+      "highlights": [
+        "October-December meeting calendar",
+        "Holiday schedule adjustments",
+        "2026 membership renewal",
+        "Year-end auction information",
+        "Upcoming stamp shows and exhibitions"
+      ],
+      "tags": ["2025", "Q4", "holidays", "year-end", "membership", "meetings"],
+      "pageCount": 12,
+      "fileSize": "2.5 MB",
+      "status": "published"
+    },
+    {
       "id": "2025-Q3",
       "title": "SAPA PHILATEX Third Quarter 2025",
       "quarter": "Third",
@@ -76,9 +113,9 @@
     }
   ],
   "metadata": {
-    "lastUpdated": "2025-06-28T17:26:00.000Z",
-    "totalIssues": 2,
-    "latestIssue": "2025-Q3",
+    "lastUpdated": "2025-10-01T00:00:00.000Z",
+    "totalIssues": 3,
+    "latestIssue": "2025-Q4",
     "version": "1.0"
   }
 }

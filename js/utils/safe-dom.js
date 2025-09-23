@@ -10,12 +10,12 @@
  * @returns {Element|null} The found element or null
  */
 export function safeQuerySelector(selector, context = document) {
-    try {
-        return context.querySelector(selector);
-    } catch (error) {
-        console.warn(`Failed to query selector "${selector}":`, error);
-        return null;
-    }
+  try {
+    return context.querySelector(selector);
+  } catch (error) {
+    console.warn(`Failed to query selector "${selector}":`, error);
+    return null;
+  }
 }
 
 /**
@@ -25,12 +25,12 @@ export function safeQuerySelector(selector, context = document) {
  * @returns {NodeList|Array} The found elements or empty array
  */
 export function safeQuerySelectorAll(selector, context = document) {
-    try {
-        return context.querySelectorAll(selector);
-    } catch (error) {
-        console.warn(`Failed to query selector all "${selector}":`, error);
-        return [];
-    }
+  try {
+    return context.querySelectorAll(selector);
+  } catch (error) {
+    console.warn(`Failed to query selector all "${selector}":`, error);
+    return [];
+  }
 }
 
 /**
@@ -40,13 +40,13 @@ export function safeQuerySelectorAll(selector, context = document) {
  * @returns {*} The stored value or default value
  */
 export function safeLocalStorageGet(key, defaultValue = null) {
-    try {
-        const item = localStorage.getItem(key);
-        return item !== null ? JSON.parse(item) : defaultValue;
-    } catch (error) {
-        console.warn(`Failed to get localStorage item "${key}":`, error);
-        return defaultValue;
-    }
+  try {
+    const item = localStorage.getItem(key);
+    return item !== null ? JSON.parse(item) : defaultValue;
+  } catch (error) {
+    console.warn(`Failed to get localStorage item "${key}":`, error);
+    return defaultValue;
+  }
 }
 
 /**
@@ -56,13 +56,13 @@ export function safeLocalStorageGet(key, defaultValue = null) {
  * @returns {boolean} Success status
  */
 export function safeLocalStorageSet(key, value) {
-    try {
-        localStorage.setItem(key, JSON.stringify(value));
-        return true;
-    } catch (error) {
-        console.warn(`Failed to set localStorage item "${key}":`, error);
-        return false;
-    }
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+    return true;
+  } catch (error) {
+    console.warn(`Failed to set localStorage item "${key}":`, error);
+    return false;
+  }
 }
 
 /**
@@ -71,11 +71,11 @@ export function safeLocalStorageSet(key, value) {
  * @returns {boolean} Success status
  */
 export function safeLocalStorageRemove(key) {
-    try {
-        localStorage.removeItem(key);
-        return true;
-    } catch (error) {
-        console.warn(`Failed to remove localStorage item "${key}":`, error);
-        return false;
-    }
+  try {
+    localStorage.removeItem(key);
+    return true;
+  } catch (error) {
+    console.warn(`Failed to remove localStorage item "${key}":`, error);
+    return false;
+  }
 }

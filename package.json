@@ -23,7 +23,20 @@
     "analyze": "node scripts/analyze-image-savings.js",
     "monitor": "npm run serve",
     "build:search": "node scripts/build-search-index.js",
-    "build:search:embed": "node scripts/build-search-embedded.js"
+    "build:search:embed": "node scripts/build-search-embedded.js",
+    "test": "npm run test:html && npm run test:links && npm run test:js && npm run test:css && npm run test:md",
+    "test:html": "html-validate '*.html' --config .htmlvalidate.json",
+    "test:links": "echo 'Run npm run test:links:server in a separate terminal first' && broken-link-checker http://localhost:3000 --recursive --exclude-external",
+    "test:links:server": "echo 'Starting server for link checking...' && npm run serve",
+    "test:js": "eslint js/**/*.js",
+    "test:css": "stylelint 'css/**/*.css' --config .stylelintrc.json",
+    "test:md": "markdownlint '**/*.md' --ignore node_modules --config .markdownlintrc.json",
+    "test:a11y": "pa11y-ci --config .pa11yrc.json",
+    "audit": "npm run audit:lighthouse && npm run audit:security",
+    "audit:lighthouse": "lighthouse http://localhost:3000 --output html --output-path ./reports/lighthouse.html --view",
+    "audit:security": "npm audit",
+    "test:quick": "npm run test:html && npm run test:js && npm run test:css",
+    "pretest": "mkdir -p reports"
   },
   "repository": {
     "type": "git",
@@ -45,13 +58,21 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.17",
+    "broken-link-checker": "^0.7.8",
     "cssnano": "^6.0.3",
     "esbuild": "^0.20.1",
+    "eslint": "^9.30.1",
+    "html-validate": "^9.7.1",
     "http-server": "^14.1.1",
+    "lighthouse": "^12.7.1",
+    "markdownlint-cli": "^0.45.0",
     "npm-run-all": "^4.1.5",
+    "pa11y": "^9.0.0",
     "postcss": "^8.4.35",
     "postcss-cli": "^11.0.0",
-    "sharp-cli": "^4.1.1"
+    "sharp-cli": "^4.2.0",
+    "stylelint": "^16.21.1",
+    "stylelint-config-standard": "^38.0.0"
   },
   "browserslist": [
     ">0.2%",

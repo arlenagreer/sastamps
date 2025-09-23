@@ -1,0 +1,18 @@
+{
+  "extends": ["html-validate:recommended"],
+  "rules": {
+    "void-style": "off",
+    "no-inline-style": "off",
+    "prefer-native-element": ["error", {
+      "exclude": ["button"]
+    }],
+    "require-sri": "off",
+    "no-implicit-button-type": "off",
+    "valid-id": ["error", {
+      "relaxed": true
+    }]
+  },
+  "elements": [
+    "html5"
+  ]
+}

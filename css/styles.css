@@ -1,10 +1,13 @@
 /* San Antonio Philatelic Association - Main Stylesheet */
 
+
 /* ===== IMPORTS ===== */
 @import './vendor/vanilla-calendar.min.css';
 
+
 /* ===== VARIABLES ===== */
 :root {
+
     /* Color Palette */
     --primary: #1a5276;        /* Deep blue */
     --primary-light: #2980b9;  /* Mid blue */
@@ -18,10 +21,12 @@
     --success: #27ae60;        /* Green */
     --warning: #f39c12;        /* Orange */
     --danger: #c0392b;         /* Red */
+
     
     /* Typography */
     --font-heading: 'Merriweather', Georgia, serif;
     --font-body: 'Open Sans', Arial, sans-serif;
+
     
     /* Spacing */
     --space-xxs: 0.25rem;
@@ -31,23 +36,27 @@
     --space-lg: 1.5rem;
     --space-xl: 2rem;
     --space-xxl: 3rem;
+
     
     /* Container widths */
     --container-sm: 640px;
     --container-md: 768px;
     --container-lg: 1024px;
     --container-xl: 1280px;
+
     
     /* Border radius */
     --radius-sm: 3px;
     --radius-md: 5px;
     --radius-lg: 8px;
     --radius-xl: 12px;
+
     
     /* Shadows */
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
     --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
     
     /* Transitions */
     --transition-fast: 0.15s ease;
@@ -55,8 +64,10 @@
     --transition-slow: 0.4s ease;
 }
 
+
 /* Dark theme variables */
 [data-theme="dark"] {
+
     /* Color Palette - Dark Mode */
     --primary: #5dade2;        /* Lighter blue for dark mode */
     --primary-light: #85c1e9;  /* Even lighter blue */
@@ -70,12 +81,14 @@
     --success: #58d68d;        /* Lighter green */
     --warning: #f5b041;        /* Lighter orange */
     --danger: #ec7063;         /* Lighter red */
+
     
     /* Dark mode shadows */
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
 }
+
 
 /* ===== RESET & BASE STYLES ===== */
 *, *::before, *::after {
@@ -184,6 +197,7 @@ button, input, select, textarea {
     font-size: 1rem;
 }
 
+
 /* Accessibility */
 .sr-only {
     position: absolute;
@@ -224,6 +238,7 @@ button, input, select, textarea {
     color: var(--white);
 }
 
+
 /* ===== LAYOUT ===== */
 .container {
     width: 100%;
@@ -235,6 +250,7 @@ button, input, select, textarea {
 .section {
     padding: var(--space-xxl) 0;
 }
+
 
 /* Grid System */
 .grid {
@@ -257,6 +273,7 @@ button, input, select, textarea {
     }
 }
 
+
 /* Flexbox Helpers */
 .flex {
     display: flex;
@@ -277,6 +294,7 @@ button, input, select, textarea {
 .justify-center {
     justify-content: center;
 }
+
 
 /* ===== HEADER STYLES ===== */
 header {
@@ -343,6 +361,7 @@ nav a:hover::after {
     width: 100%;
 }
 
+
 /* CSS-only mobile menu checkbox (hidden) */
 .menu-toggle-checkbox {
     display: none;
@@ -358,6 +377,7 @@ nav a:hover::after {
     padding: 0.5rem;
     touch-action: manipulation;
 }
+
 
 /* Theme toggle button */
 .theme-toggle {
@@ -403,6 +423,7 @@ nav a:hover::after {
     display: none;
 }
 
+
 /* Smooth theme transition */
 body,
 header,
@@ -441,10 +462,12 @@ footer,
         box-shadow: var(--shadow-lg);
         transition: right var(--transition-normal);
         z-index: 60;
+
         /* iOS specific fixes */
         -webkit-overflow-scrolling: touch;
         overscroll-behavior: contain;
     }
+
     
     /* CSS-only menu toggle using checkbox */
     .menu-toggle-checkbox:checked ~ .nav-menu {
@@ -459,6 +482,7 @@ footer,
     nav a::after {
         display: none;
     }
+
     
     /* Ensure mobile nav links are clickable */
     .nav-menu a {
@@ -472,12 +496,14 @@ footer,
         user-select: none;
         touch-action: manipulation;
         cursor: pointer;
+
         /* Ensure proper touch target size */
         min-height: 44px;
         display: flex;
         align-items: center;
         width: 100%;
         box-sizing: border-box;
+
         /* Improved mobile link styling */
         color: var(--primary);
         font-weight: 600;
@@ -490,6 +516,7 @@ footer,
         display: block;
         width: 100%;
     }
+
     
     /* Mobile menu icon styling */
     .nav-menu .nav-icon {
@@ -499,6 +526,7 @@ footer,
         width: 1.5rem;
         text-align: center;
     }
+
     
     /* iOS specific fixes and hover states */
     .nav-menu a:active {
@@ -513,6 +541,7 @@ footer,
         color: var(--primary-dark);
         transform: translateX(4px);
     }
+
     
     /* Active/current page styling for mobile */
     .nav-menu a.active,
@@ -527,6 +556,7 @@ footer,
     }
     
 }
+
 
 /* ===== FOOTER STYLES ===== */
 footer {
@@ -576,6 +606,7 @@ footer {
     color: var(--light);
 }
 
+
 /* ===== HERO SECTION ===== */
 .hero {
     background-color: var(--primary);
@@ -595,6 +626,7 @@ footer {
     max-width: 800px;
     margin: 0 auto;
 }
+
 
 /* ===== BUTTONS ===== */
 .btn {
@@ -660,6 +692,7 @@ footer {
     font-size: 1.125rem;
 }
 
+
 /* ===== CARDS ===== */
 .card {
     background-color: var(--white);
@@ -689,6 +722,7 @@ footer {
     height: 200px;
     object-fit: cover;
 }
+
 
 /* ===== UTILITIES ===== */
 .text-center {
@@ -771,6 +805,7 @@ footer {
     padding-right: 1.5rem;
 }
 
+
 /* ===== SECTION TITLES ===== */
 .section-title {
     text-align: center;
@@ -788,6 +823,7 @@ footer {
     margin: 1rem auto 0;
     border-radius: 2px;
 }
+
 
 /* ===== FORMS ===== */
 .form-group {
@@ -838,6 +874,7 @@ textarea {
     margin-bottom: 0;
 }
 
+
 /* Contact form specific */
 .contact-form {
     max-width: 800px;
@@ -851,6 +888,7 @@ textarea {
     margin-top: 0.5rem;
     font-size: 1.1rem;
 }
+
 
 /* ===== TABLES ===== */
 .table-responsive {
@@ -878,7 +916,9 @@ tr:hover {
     background-color: rgba(236, 240, 241, 0.5);
 }
 
+
 /* ===== COMPONENT SPECIFIC STYLES ===== */
+
 
 /* Timeline */
 .timeline {
@@ -938,7 +978,7 @@ tr:hover {
     color: var(--primary);
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (width <= 768px) {
     .timeline::after {
         left: 20px;
     }
@@ -953,6 +993,7 @@ tr:hover {
         left: 0;
     }
 }
+
 
 /* Officer/Team Cards */
 .officer-card {
@@ -1015,6 +1056,7 @@ tr:hover {
     font-size: 0.9375rem;
 }
 
+
 /* Affiliations Cards */
 .affiliation-card {
     display: flex;
@@ -1046,6 +1088,7 @@ tr:hover {
     font-size: 0.9375rem;
 }
 
+
 /* Social Links */
 .social-links {
     display: flex;
@@ -1069,6 +1112,7 @@ tr:hover {
 .social-link i {
     margin-bottom: 0.5rem;
 }
+
 
 /* Accordion */
 .accordion {
@@ -1120,6 +1164,7 @@ tr:hover {
     padding-bottom: 1.25rem;
 }
 
+
 /* Back to top button */
 #back-to-top {
     border-radius: 50%;
@@ -1130,6 +1175,7 @@ tr:hover {
 #back-to-top:hover {
     background-color: var(--primary-light);
 }
+
 
 /* ===== BREADCRUMB NAVIGATION ===== */
 .breadcrumb-navigation {
@@ -1177,6 +1223,7 @@ tr:hover {
     user-select: none;
 }
 
+
 /* Dark mode support */
 .dark-mode .breadcrumb-navigation {
     background-color: rgba(255, 255, 255, 0.05);
@@ -1195,6 +1242,7 @@ tr:hover {
     color: var(--light);
 }
 
+
 /* Mobile breadcrumb adjustments */
 @media (max-width: 768px) {
     .breadcrumb-navigation {
@@ -1210,6 +1258,7 @@ tr:hover {
         margin: 0 var(--space-xxs);
     }
 }
+
 
 /* ===== MOBILE RESPONSIVENESS ===== */
 @media (max-width: 576px) {
@@ -1250,8 +1299,10 @@ tr:hover {
     }
 }
 
+
 /* ===== PRINT STYLES ===== */
 @media print {
+
     /* Page setup */
     @page {
         margin: 0.75in;
@@ -1261,6 +1312,7 @@ tr:hover {
     @page :first {
         margin-top: 0.5in;
     }
+
     
     /* Reset base styles for print */
     * {
@@ -1278,6 +1330,7 @@ tr:hover {
         line-height: 1.5;
         font-family: Georgia, serif;
     }
+
     
     /* Layout adjustments */
     .container {
@@ -1285,6 +1338,7 @@ tr:hover {
         padding: 0;
         margin: 0;
     }
+
     
     /* Hide non-essential elements */
     header, 
@@ -1307,6 +1361,7 @@ tr:hover {
     iframe {
         display: none !important;
     }
+
     
     /* Typography optimizations */
     h1, h2, h3, h4, h5, h6 {
@@ -1330,6 +1385,7 @@ tr:hover {
         orphans: 3;
         widows: 3;
     }
+
     
     /* Links */
     a {
@@ -1337,6 +1393,7 @@ tr:hover {
         color: black;
         font-weight: normal;
     }
+
     
     /* Show URLs for external links */
     a[href^="http"]:not([href*="sastamps.org"])::after {
@@ -1344,6 +1401,7 @@ tr:hover {
         font-size: 0.8em;
         font-style: italic;
     }
+
     
     /* Don't show URLs for internal links */
     a[href^="#"]::after,
@@ -1352,6 +1410,7 @@ tr:hover {
     a[href*="sastamps.org"]::after {
         content: "";
     }
+
     
     /* Tables */
     table {
@@ -1383,6 +1442,7 @@ tr:hover {
         background-color: #f5f5f5 !important;
         font-weight: bold;
     }
+
     
     /* Images */
     img {
@@ -1390,6 +1450,7 @@ tr:hover {
         page-break-inside: avoid;
         page-break-after: auto;
     }
+
     
     /* Cards and content blocks */
     .card,
@@ -1407,11 +1468,13 @@ tr:hover {
         transform: none !important;
         box-shadow: none !important;
     }
+
     
     /* Lists */
     ul, ol {
         page-break-inside: avoid;
     }
+
     
     /* Blockquotes */
     blockquote {
@@ -1420,6 +1483,7 @@ tr:hover {
         margin: 12pt 0;
         font-style: italic;
     }
+
     
     /* Forms - make them visible but non-interactive */
     form {
@@ -1439,6 +1503,7 @@ tr:hover {
         color: black !important;
         text-decoration: none !important;
     }
+
     
     /* Newsletter-specific print styles */
     .newsletter-content {
@@ -1450,6 +1515,7 @@ tr:hover {
         margin-bottom: 12pt;
         padding-bottom: 12pt;
     }
+
     
     /* Meeting-specific print styles */
     .meeting-details {
@@ -1462,6 +1528,7 @@ tr:hover {
         font-weight: bold;
         font-size: 14pt;
     }
+
     
     /* Glossary-specific print styles */
     .glossary-term {
@@ -1478,6 +1545,7 @@ tr:hover {
     .glossary-term dd {
         margin-left: 24pt;
     }
+
     
     /* Resource guide print styles */
     .resource-guide {
@@ -1488,6 +1556,7 @@ tr:hover {
         page-break-inside: avoid;
         margin-bottom: 24pt;
     }
+
     
     /* Utility classes for print */
     .print-only {
@@ -1507,7 +1576,9 @@ tr:hover {
     }
 }
 
+
 /* Add these new styles for the banner and navigation icons */
+
 
 /* Banner Image */
 .banner-container {
@@ -1524,6 +1595,7 @@ tr:hover {
     display: block;
     margin: 0 auto;
 }
+
 
 /* Navigation Icons */
 .nav-icon {
@@ -1546,6 +1618,7 @@ tr:hover {
     }
 }
 
+
 /* Mobile Calendar Styles */
 @media (max-width: 768px) {
     .meeting-entry {
@@ -1567,6 +1640,7 @@ tr:hover {
         color: var(--white);
     }
 
+
     /* Calendar Download Options */
     .calendar-downloads .grid {
         grid-template-columns: 1fr !important;
@@ -1576,6 +1650,7 @@ tr:hover {
     .calendar-downloads .grid > div:nth-child(2) {
         display: none; /* Hide the "OR" divider on mobile */
     }
+
 
     /* Improve table readability on mobile */
     .meeting-table {
@@ -1590,6 +1665,7 @@ tr:hover {
         display: none; /* Hide icons in table cells on mobile to save space */
     }
 
+
     /* Make download buttons more touch-friendly */
     .btn {
         padding: 0.75rem 1rem;
@@ -1599,6 +1675,7 @@ tr:hover {
         justify-content: center;
         gap: 0.5rem;
     }
+
 
     /* Meeting Times Display */
     .meeting-times {
@@ -1619,6 +1696,7 @@ tr:hover {
         margin-right: 0.5rem;
     }
 
+
     /* Location Card */
     .location-card {
         padding: 1rem;
@@ -1632,6 +1710,7 @@ tr:hover {
         font-size: 1.2rem;
         margin-bottom: 0.75rem;
     }
+
 
     /* Meeting Types List */
     .meeting-types-list {
@@ -1648,8 +1727,10 @@ tr:hover {
     }
 }
 
+
 /* iPhone-specific optimizations */
-@media screen and (max-width: 428px) {
+@media screen and (width <= 428px) {
+
     /* Calendar table optimizations */
     .meeting-table {
         font-size: 0.85rem;  /* Slightly smaller font for iPhone */
@@ -1665,6 +1746,7 @@ tr:hover {
         padding: 0.5rem 0.25rem;
     }
 
+
     /* Improve tap targets for calendar links */
     .calendar-link {
         padding: 0.75rem;
@@ -1678,6 +1760,7 @@ tr:hover {
         border-radius: var(--radius-md);
     }
 
+
     /* Meeting entry layout */
     .meeting-entry {
         flex-direction: column;
@@ -1690,6 +1773,7 @@ tr:hover {
         text-align: center;
         width: 100%;
     }
+
 
     /* Calendar download section */
     .calendar-downloads {
@@ -1708,6 +1792,7 @@ tr:hover {
         line-height: 1.2;
     }
 
+
     /* Meeting times and info */
     .meeting-times li {
         padding: 0.75rem;
@@ -1723,6 +1808,7 @@ tr:hover {
         margin-bottom: 0.5rem;
     }
 
+
     /* Location card */
     .location-card {
         margin: 0 -1rem;  /* Full width on iPhone */
@@ -1733,17 +1819,20 @@ tr:hover {
         font-size: 1.1rem;
     }
 
+
     /* Fix notch interference */
     .header-container {
         padding-left: env(safe-area-inset-left);
         padding-right: env(safe-area-inset-right);
     }
 
+
     /* Adjust container padding */
     .container {
         padding-left: max(1rem, env(safe-area-inset-left));
         padding-right: max(1rem, env(safe-area-inset-right));
     }
+
 
     /* Improve scrolling */
     .table-responsive {
@@ -1752,8 +1841,9 @@ tr:hover {
     }
 }
 
+
 /* iPhone SE specific adjustments */
-@media screen and (max-width: 375px) {
+@media screen and (width <= 375px) {
     .meeting-table {
         font-size: 0.8rem;
     }
@@ -1767,6 +1857,7 @@ tr:hover {
         padding: 0.6rem;
     }
 }
+
 
 /* Fix for iPhone landscape mode */
 @media screen and (max-height: 428px) and (orientation: landscape) {
@@ -1785,7 +1876,9 @@ tr:hover {
     }
 }
 
+
 /* ===== CALENDAR STYLES ===== */
+
 
 /* Calendar Container */
 .calendar-container {
@@ -1795,6 +1888,7 @@ tr:hover {
     overflow: hidden;
     margin: var(--space-lg) 0;
 }
+
 
 /* Override Vanilla Calendar styles with SAPA theme */
 .vanilla-calendar {
@@ -1811,6 +1905,7 @@ tr:hover {
     width: 100%;
     max-width: 100%;
 }
+
 
 /* Calendar header styling */
 .vanilla-calendar .vc-header {
@@ -1833,6 +1928,7 @@ tr:hover {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.5);
 }
+
 
 /* Calendar grid styling */
 .vanilla-calendar .vc-content {
@@ -1870,6 +1966,7 @@ tr:hover {
     background: var(--primary);
     color: var(--white);
 }
+
 
 /* Calendar Event Styles */
 .calendar-event {
@@ -1911,6 +2008,7 @@ tr:hover {
     filter: grayscale(50%);
 }
 
+
 /* Event type indicators */
 .event-indicators {
     display: flex;
@@ -1935,6 +2033,7 @@ tr:hover {
     height: 8px;
     border-radius: 50%;
 }
+
 
 /* Event Popover Styles */
 .meeting-popover {
@@ -1976,6 +2075,7 @@ tr:hover {
     text-align: center;
     font-weight: 600;
 }
+
 
 /* Calendar responsive design */
 @media (max-width: 768px) {
@@ -2038,6 +2138,7 @@ tr:hover {
     }
 }
 
+
 /* Dark theme support */
 @media (prefers-color-scheme: dark) {
     .calendar-container {
@@ -2078,6 +2179,7 @@ tr:hover {
     }
 }
 
+
 /* Calendar loading states */
 .calendar-loading {
     display: flex;
@@ -2106,6 +2208,7 @@ tr:hover {
     100% { transform: rotate(360deg); }
 }
 
+
 /* Calendar error states */
 .calendar-error {
     padding: var(--space-lg);
@@ -2122,6 +2225,7 @@ tr:hover {
     font-family: var(--font-heading);
 }
 
+
 /* Accessibility improvements */
 .vanilla-calendar .vc-date:focus {
     outline: 2px solid var(--accent);
@@ -2132,6 +2236,7 @@ tr:hover {
     outline: 2px solid var(--white);
     outline-offset: 2px;
 }
+
 
 /* Print styles */
 @media print {
@@ -2151,7 +2256,9 @@ tr:hover {
     }
 }
 
+
 /* ===== MODAL STYLES ===== */
+
 
 /* Modal Overlay */
 .modal-overlay {
@@ -2174,6 +2281,7 @@ tr:hover {
     opacity: 1;
 }
 
+
 /* Modal Container */
 .modal-container {
     background: var(--white);
@@ -2192,6 +2300,7 @@ tr:hover {
 .modal-overlay.modal-open .modal-container {
     transform: scale(1) translateY(0);
 }
+
 
 /* Modal Header */
 .modal-header {
@@ -2236,6 +2345,7 @@ tr:hover {
     outline-offset: 2px;
 }
 
+
 /* Modal Content */
 .modal-content {
     flex: 1;
@@ -2247,6 +2357,7 @@ tr:hover {
     padding: var(--space-lg);
 }
 
+
 /* Modal Footer */
 .modal-footer {
     padding: var(--space-md) var(--space-lg);
@@ -2256,6 +2367,7 @@ tr:hover {
     gap: var(--space-sm);
     background: var(--light);
 }
+
 
 /* Event Details Styles */
 .event-details {
@@ -2283,6 +2395,7 @@ tr:hover {
 .cancelled-banner i {
     font-size: 1.2rem;
 }
+
 
 /* Event Meta */
 .event-meta {
@@ -2346,6 +2459,7 @@ tr:hover {
     color: var(--dark);
 }
 
+
 /* Detail Sections */
 .detail-section {
     margin-bottom: var(--space-lg);
@@ -2374,6 +2488,7 @@ tr:hover {
     color: var(--primary);
 }
 
+
 /* Time Details */
 .time-details {
     display: flex;
@@ -2390,6 +2505,7 @@ tr:hover {
 .time-item strong {
     color: var(--primary-dark);
 }
+
 
 /* Location Details */
 .location-details {
@@ -2415,6 +2531,7 @@ tr:hover {
     font-style: italic;
 }
 
+
 /* Presenter Details */
 .presenter-details {
     display: flex;
@@ -2433,11 +2550,13 @@ tr:hover {
     line-height: 1.5;
 }
 
+
 /* Description Content */
 .description-content {
     color: var(--dark);
     line-height: 1.6;
 }
+
 
 /* Agenda List */
 .agenda-list {
@@ -2478,6 +2597,7 @@ tr:hover {
     font-style: italic;
 }
 
+
 /* Special Notes */
 .special-notes {
     list-style: none;
@@ -2494,7 +2614,7 @@ tr:hover {
     border-left: 4px solid #e67e22;
 }
 
-.special-notes li:before {
+.special-notes li::before {
     content: "⚠️ ";
     margin-right: var(--space-xs);
 }
@@ -2502,6 +2622,7 @@ tr:hover {
 .special-notes li:last-child {
     margin-bottom: 0;
 }
+
 
 /* Requirements */
 .requirements-list {
@@ -2533,6 +2654,7 @@ tr:hover {
     margin: var(--space-xs) 0 0 0;
     padding-left: var(--space-md);
 }
+
 
 /* Contact Details */
 .contact-details {
@@ -2568,6 +2690,7 @@ tr:hover {
 .contact-phone a:hover {
     color: var(--primary-light);
 }
+
 
 /* Modal Responsive Design */
 @media (max-width: 768px) {
@@ -2632,6 +2755,7 @@ tr:hover {
     }
 }
 
+
 /* Dark theme support for modal */
 @media (prefers-color-scheme: dark) {
     .modal-container {
@@ -2659,7 +2783,9 @@ tr:hover {
     }
 }
 
+
 /* ===== REMINDER SYSTEM STYLES ===== */
+
 
 /* Reminder Notification */
 .reminder-notification {
@@ -2737,6 +2863,7 @@ tr:hover {
     gap: var(--space-sm);
 }
 
+
 /* Reminder Settings */
 .reminder-settings {
     background: var(--white);
@@ -2755,7 +2882,7 @@ tr:hover {
     gap: var(--space-sm);
 }
 
-.reminder-settings h3:before {
+.reminder-settings h3::before {
     content: "🔔";
     font-size: 1.2rem;
 }
@@ -2825,7 +2952,7 @@ tr:hover {
     color: var(--dark);
 }
 
-.reminder-time-item:before {
+.reminder-time-item::before {
     content: "⏰";
     font-size: 0.9rem;
 }
@@ -2835,6 +2962,7 @@ tr:hover {
     gap: var(--space-sm);
     flex-wrap: wrap;
 }
+
 
 /* Responsive design for reminders */
 @media (max-width: 768px) {
@@ -2870,6 +2998,7 @@ tr:hover {
     }
 }
 
+
 /* Dark theme support for reminders */
 @media (prefers-color-scheme: dark) {
     .reminder-notification {
@@ -2886,7 +3015,9 @@ tr:hover {
         background: rgba(255, 255, 255, 0.1);
     }
 } 
+
 /* ===== RESOURCES PAGE STYLES ===== */
+
 
 /* Resources Hero Section */
 .resources-hero {
@@ -2911,6 +3042,7 @@ tr:hover {
     max-width: 600px;
     margin: 0 auto;
 }
+
 
 /* Search and Filters */
 .search-filters {
@@ -2949,6 +3081,7 @@ tr:hover {
     box-shadow: 0 0 0 2px rgba(26, 82, 118, 0.2);
 }
 
+
 /* Grid Layouts */
 .category-grid {
     display: grid;
@@ -2963,6 +3096,7 @@ tr:hover {
     gap: 1.5rem;
     margin: 1.5rem 0;
 }
+
 
 /* Cards */
 .category-card,
@@ -3005,6 +3139,7 @@ tr:hover {
     font-size: 0.875rem;
     font-weight: 500;
 }
+
 
 /* Resource Items */
 .resource-item {
@@ -3051,6 +3186,7 @@ tr:hover {
     flex-wrap: wrap;
 }
 
+
 /* Badges */
 .difficulty-badge {
     display: inline-block;
@@ -3091,6 +3227,7 @@ tr:hover {
     font-size: 0.875rem;
 }
 
+
 /* Resource Meta */
 .resource-meta {
     display: flex;
@@ -3106,6 +3243,7 @@ tr:hover {
     line-height: 1.6;
     color: var(--dark);
 }
+
 
 /* Tags */
 .resource-tags {
@@ -3123,6 +3261,7 @@ tr:hover {
     border: 1px solid #ddd;
 }
 
+
 /* Actions */
 .resource-actions {
     display: flex;
@@ -3130,6 +3269,7 @@ tr:hover {
     flex-wrap: wrap;
     margin-top: 1rem;
 }
+
 
 /* Modal Styles */
 .modal-overlay {
@@ -3211,6 +3351,7 @@ tr:hover {
     padding-top: 1rem;
 }
 
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .resources-hero h1 {
@@ -3279,6 +3420,7 @@ tr:hover {
     }
 }
 
+
 /* Dark Theme Support */
 [data-theme="dark"] .search-filters {
     background: #2a2a2a;
@@ -3309,7 +3451,9 @@ tr:hover {
     color: #e0e0e0;
 }
 
+
 /* ===== GLOSSARY STYLES ===== */
+
 
 /* Glossary Search */
 .glossary-search {
@@ -3377,6 +3521,7 @@ tr:hover {
     background: var(--dark);
     border-color: var(--dark);
 }
+
 
 /* Search Results */
 .search-results-header {
@@ -3454,6 +3599,7 @@ tr:hover {
     margin: 1rem 0;
 }
 
+
 /* Glossary Filters */
 .glossary-filters {
     margin-bottom: 2rem;
@@ -3494,6 +3640,7 @@ tr:hover {
     border-color: var(--primary);
 }
 
+
 /* Alphabet Navigation */
 .alphabet-nav {
     display: flex;
@@ -3530,6 +3677,7 @@ tr:hover {
     border-color: var(--primary);
 }
 
+
 /* Glossary Content */
 .glossary-section {
     margin-bottom: 3rem;
@@ -3548,6 +3696,7 @@ tr:hover {
     display: grid;
     gap: 1rem;
 }
+
 
 /* Glossary Term Cards */
 .glossary-term {
@@ -3660,6 +3809,7 @@ tr:hover {
     color: var(--white);
 }
 
+
 /* Term Content */
 .term-content {
     padding: 0 1rem 1rem;
@@ -3687,6 +3837,7 @@ tr:hover {
     line-height: 1.6;
     color: var(--dark);
 }
+
 
 /* Term Sections */
 .term-examples,
@@ -3732,6 +3883,7 @@ tr:hover {
     line-height: 1.5;
 }
 
+
 /* Related Terms */
 .related-terms-list {
     display: flex;
@@ -3755,6 +3907,7 @@ tr:hover {
     text-decoration: none;
 }
 
+
 /* Tags */
 .term-tags {
     display: flex;
@@ -3772,6 +3925,7 @@ tr:hover {
     border-radius: var(--radius-sm);
     font-size: 0.75rem;
 }
+
 
 /* Stats */
 .stat-item {
@@ -3795,6 +3949,7 @@ tr:hover {
     font-size: 1.25rem;
     font-weight: 700;
 }
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -3876,6 +4031,7 @@ tr:hover {
     }
 }
 
+
 /* Dark theme support */
 @media (prefers-color-scheme: dark) {
     .glossary-term {
@@ -3926,7 +4082,9 @@ tr:hover {
     }
 }
 
+
 /* ===== LOADING STATES & SKELETON SCREENS ===== */
+
 
 /* Loading spinner */
 .loading-spinner {
@@ -3951,6 +4109,7 @@ tr:hover {
     border-width: 4px;
 }
 
+
 /* Loading overlay */
 .loading-overlay {
     position: absolute;
@@ -3970,6 +4129,7 @@ tr:hover {
     background: rgba(0, 0, 0, 0.8);
 }
 
+
 /* Loading container */
 .loading-container {
     text-align: center;
@@ -3984,6 +4144,7 @@ tr:hover {
     color: var(--medium);
     font-size: 0.9rem;
 }
+
 
 /* Skeleton screens */
 .skeleton {
@@ -4047,6 +4208,7 @@ tr:hover {
     height: 150px;
 }
 
+
 /* Newsletter skeleton */
 .skeleton-newsletter {
     display: grid;
@@ -4065,6 +4227,7 @@ tr:hover {
     border-radius: var(--radius-md);
 }
 
+
 /* Meeting skeleton */
 .skeleton-meeting {
     background: var(--white);
@@ -4078,6 +4241,7 @@ tr:hover {
     height: 2em;
     margin-bottom: var(--space-sm);
 }
+
 
 /* Glossary skeleton */
 .skeleton-glossary-term {
@@ -4100,11 +4264,13 @@ tr:hover {
     margin-top: var(--space-sm);
 }
 
+
 /* Animation */
 @keyframes shimmer {
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }
 }
+
 
 /* Utility classes */
 .is-loading {
@@ -4127,6 +4293,7 @@ tr:hover {
     animation: spin 0.8s linear infinite;
 }
 
+
 /* Button loading states */
 .btn.is-loading {
     color: transparent;
@@ -4138,6 +4305,7 @@ tr:hover {
     border-width: 2px;
 }
 
+
 /* Form loading states */
 .form-group.is-loading input,
 .form-group.is-loading textarea,
@@ -4145,6 +4313,7 @@ tr:hover {
     background-color: var(--light);
     cursor: not-allowed;
 }
+
 
 /* Dark mode adjustments */
 .dark-mode .skeleton {
@@ -4171,6 +4340,7 @@ tr:hover {
     border-color: var(--dark);
     border-top-color: var(--accent);
 }
+
 
 /* Mobile optimizations */
 @media (max-width: 768px) {

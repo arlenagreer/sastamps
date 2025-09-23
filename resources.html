@@ -6,35 +6,35 @@
     <title>Member Resources - San Antonio Philatelic Association</title>
     <meta name="description" content="Educational resources for stamp collectors - guides, tutorials, and reference materials from the San Antonio Philatelic Association.">
     <meta name="keywords" content="stamp collecting, philately, guides, tutorials, resources, education, SAPA">
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&amp;family=Open+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet">
+
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Preload critical resources -->
     <link rel="preload" href="css/critical.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="css/critical.css"></noscript>
     <link rel="preload" href="css/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="css/styles.css"></noscript>
-    
+
     <!-- Icons and manifest -->
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png">
     <link rel="manifest" href="site.webmanifest">
-    
+
     <!-- Theme meta -->
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
-    
+
     <!-- Open Graph meta tags -->
     <meta property="og:title" content="Member Resources - SAPA">
     <meta property="og:description" content="Educational resources for stamp collectors from the San Antonio Philatelic Association">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://arlenagreer.github.io/resources.html">
-    
+
     <!-- Structured Data -->
     <script type="application/ld+json">
     {
@@ -49,7 +49,7 @@
         }
     }
     </script>
-    
+
     <!-- Critical CSS for resources page -->
     <style id="critical-css">
         :root{--primary:#1a5276;--primary-light:#2980b9;--primary-dark:#0e2f44;--secondary:#d35400;--accent:#f1c40f;--dark:#2c3e50;--medium:#7f8c8d;--light:#ecf0f1;--white:#fff;--success:#27ae60;--warning:#f39c12;--danger:#c0392b;--font-heading:"Merriweather",Georgia,serif;--font-body:"Open Sans",Arial,sans-serif;--space-xxs:0.25rem;--space-xs:0.5rem;--space-sm:0.75rem;--space-md:1rem;--space-lg:1.5rem;--space-xl:2rem;--space-xxl:3rem;--container-sm:640px;--container-md:768px;--container-lg:1024px;--container-xl:1280px;--radius-sm:3px;--radius-md:5px;--radius-lg:8px;--radius-xl:12px;--shadow-sm:0 1px 3px #0000001f;--shadow-md:0 4px 6px #0000001a;--shadow-lg:0 10px 15px -3px #0000001a;--transition-fast:0.15s ease;--transition-normal:0.25s ease;--transition-slow:0.4s ease}
@@ -68,24 +68,24 @@
         .site-title a:hover{color:var(--primary-light)}
         .theme-toggle{background:none;border:none;cursor:pointer;font-size:1.2rem;padding:0.5rem}
         .mobile-menu-toggle{display:none}
-        
+
         /* Active state for current page */
         nav li.active a {
             color: var(--primary);
         }
-        
+
         /* Responsive navigation adjustments for 10 items */
         @media (max-width: 1280px) {
             nav li { margin-left: 1rem; }
             nav a { padding: .25rem; font-size: 0.95rem; }
             .nav-icon { font-size: 1rem; margin-right: 6px; }
         }
-        
+
         @media (max-width: 1024px) {
             nav li { margin-left: 0.75rem; }
             nav a { font-size: 0.9rem; }
         }
-        
+
         .hero {
             background-color: var(--primary);
             color: white;
@@ -93,20 +93,20 @@
             text-align: center;
             position: relative;
         }
-        
+
         .hero h1 {
             margin: 0 0 1rem 0;
             font-size: 2.5rem;
             font-weight: 700;
             color: white;
         }
-        
+
         .hero p {
             font-size: 1.25rem;
             margin: 0;
             opacity: 0.9;
         }
-        
+
         @media (max-width:768px){
             nav ul{flex-direction:column;position:fixed;top:0;right:-100%;background:white;height:100vh;width:300px;padding:2rem;transition:right 0.3s ease;box-shadow:var(--shadow-lg)}
             nav ul.active{right:0}
@@ -114,14 +114,14 @@
             .mobile-menu-toggle{display:block;background:none;border:none;cursor:pointer;flex-direction:column;gap:3px}
             .mobile-menu-toggle span{width:25px;height:3px;background:var(--dark);transition:0.3s}
         }
-        
+
         .category-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             margin: 2rem 0;
         }
-        
+
         .category-card {
             border: 1px solid #e0e0e0;
             border-radius: 8px;
@@ -130,12 +130,12 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        
+
         .category-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-        
+
         .resource-item {
             border: 1px solid #e0e0e0;
             border-radius: 6px;
@@ -143,7 +143,7 @@
             margin: 1rem 0;
             background: #fafafa;
         }
-        
+
         .resource-meta {
             display: flex;
             flex-wrap: wrap;
@@ -152,7 +152,7 @@
             font-size: 0.875rem;
             color: #666;
         }
-        
+
         .difficulty-badge {
             display: inline-block;
             padding: 0.25rem 0.5rem;
@@ -161,56 +161,56 @@
             font-weight: 500;
             text-transform: uppercase;
         }
-        
+
         .difficulty-beginner { background: #e3f2fd; color: #1976d2; }
         .difficulty-intermediate { background: #fff3e0; color: #f57c00; }
         .difficulty-advanced { background: #fce4ec; color: #c2185b; }
-        
+
         .search-filters {
             margin: 2rem 0;
             padding: 1.5rem;
             background: #f8f9fa;
             border-radius: 8px;
         }
-        
+
         .filter-group {
             display: flex;
             flex-wrap: wrap;
             gap: 1rem;
             align-items: center;
         }
-        
+
         /* Modal styles for resources */
         .resource-modal-header {
             border-bottom: 1px solid var(--light);
             padding-bottom: 1rem;
             margin-bottom: 1.5rem;
         }
-        
+
         .resource-modal-meta {
             display: flex;
             gap: 1rem;
             margin-top: 0.5rem;
             font-size: 0.875rem;
         }
-        
+
         .sections-list {
             margin: 1.5rem 0;
         }
-        
+
         .section-item {
             padding: 1rem;
             border: 1px solid var(--light);
             border-radius: var(--radius-md);
             margin-bottom: 1rem;
         }
-        
+
         .section-item h3 {
             font-size: 1.1rem;
             margin-bottom: 0.5rem;
             color: var(--primary);
         }
-        
+
         .resource-modal-actions {
             display: flex;
             gap: 1rem;
@@ -219,7 +219,7 @@
             padding-top: 1rem;
             border-top: 1px solid var(--light);
         }
-        
+
         .bookmark-feedback {
             position: absolute;
             top: -30px;
@@ -232,24 +232,24 @@
             font-size: 0.875rem;
             animation: fadeInOut 2s ease;
         }
-        
+
         @keyframes fadeInOut {
             0%, 100% { opacity: 0; }
             20%, 80% { opacity: 1; }
         }
-        
+
         .btn-bookmark.bookmarked {
             background-color: var(--accent);
             color: var(--dark);
         }
-        
+
         .resource-actions {
             position: relative;
             display: flex;
             gap: 0.5rem;
             margin-top: 1rem;
         }
-        
+
         /* Button styles */
         .btn-primary, .btn-secondary, .btn-outline {
             padding: 0.5rem 1rem;
@@ -264,32 +264,32 @@
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .btn-primary {
             background-color: var(--primary);
             color: white;
         }
-        
+
         .btn-primary:hover {
             background-color: var(--primary-light);
         }
-        
+
         .btn-secondary {
             background-color: var(--secondary);
             color: white;
         }
-        
+
         .btn-secondary:hover {
             background-color: var(--accent);
             color: var(--dark);
         }
-        
+
         .btn-outline {
             background-color: transparent;
             border: 2px solid var(--primary);
             color: var(--primary);
         }
-        
+
         .btn-outline:hover {
             background-color: var(--primary);
             color: white;
@@ -306,7 +306,7 @@
                         <a href="index.html">San Antonio Philatelic Association</a>
                     </h1>
                 </div>
-                
+
                 <nav class="main-nav" role="navigation" aria-label="Main navigation">
                     <ul>
                         <li>
@@ -374,7 +374,7 @@
             </div>
         </div>
     </header>
-    
+
     <!-- Main Content -->
     <main id="main-content">
         <!-- Hero Section -->
@@ -384,24 +384,24 @@
                 <p>Educational guides, tools, and references for stamp collectors of all levels</p>
             </div>
         </section>
-        
+
         <!-- Search and Filters -->
         <section class="search-filters">
             <div class="container">
                 <div class="filter-group">
                     <label for="resource-search">Search Resources:</label>
                     <input type="search" id="resource-search" placeholder="Search guides, tutorials..." aria-label="Search resources">
-                    
+
                     <label for="category-filter">Category:</label>
                     <select id="category-filter" aria-label="Filter by category">
                         <option value="">All Categories</option>
                         <option value="getting-started">Getting Started</option>
-                        <option value="grading-condition">Grading & Condition</option>
-                        <option value="storage-preservation">Storage & Preservation</option>
+                        <option value="grading-condition">Grading &amp; Condition</option>
+                        <option value="storage-preservation">Storage &amp; Preservation</option>
                         <option value="valuation">Valuation</option>
                         <option value="reference">Reference</option>
                     </select>
-                    
+
                     <label for="difficulty-filter">Difficulty:</label>
                     <select id="difficulty-filter" aria-label="Filter by difficulty">
                         <option value="">All Levels</option>
@@ -409,12 +409,12 @@
                         <option value="intermediate">Intermediate</option>
                         <option value="advanced">Advanced</option>
                     </select>
-                    
+
                     <button id="clear-filters" class="btn-secondary">Clear Filters</button>
                 </div>
             </div>
         </section>
-        
+
         <!-- Resources Content -->
         <section class="resources-content">
             <div class="container">
@@ -425,7 +425,7 @@
                         <!-- Featured resources will be loaded here -->
                     </div>
                 </div>
-                
+
                 <!-- All Resources by Category -->
                 <div id="categorized-resources">
                     <h2>Browse by Category</h2>
@@ -433,7 +433,7 @@
                         <!-- Categories will be loaded here -->
                     </div>
                 </div>
-                
+
                 <!-- All Resources List -->
                 <div id="all-resources" class="resources-list">
                     <h2>All Resources</h2>
@@ -441,7 +441,7 @@
                         <!-- All resources will be loaded here -->
                     </div>
                 </div>
-                
+
                 <!-- Quick Links -->
                 <div class="quick-links">
                     <h2>Quick Reference</h2>
@@ -451,19 +451,19 @@
                             <p>Comprehensive dictionary of philatelic terms</p>
                             <a href="glossary.html" class="btn-primary">View Glossary</a>
                         </div>
-                        
+
                         <div class="link-card">
                             <h3>🔍 Stamp Catalog</h3>
                             <p>Browse stamps by country and year for identification</p>
                             <a href="https://colnect.com/en/stamps/catalog" target="_blank" rel="noopener" class="btn-primary">Browse Catalog</a>
                         </div>
-                        
+
                         <div class="link-card">
                             <h3>💰 Scott Catalog</h3>
                             <p>Standard catalog for stamp values and identification</p>
                             <a href="https://www.scottonline.com" target="_blank" rel="noopener" class="btn-primary">View Catalog</a>
                         </div>
-                        
+
                         <div class="link-card">
                             <h3>📧 Contact SAPA</h3>
                             <p>Connect with local collectors and get advice</p>
@@ -471,7 +471,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- External Resources -->
                 <div class="external-resources">
                     <h2>External Resources</h2>
@@ -484,18 +484,18 @@
                                 <li><a href="https://www.uspcs.org" target="_blank" rel="noopener">United States Postal Service</a></li>
                             </ul>
                         </div>
-                        
+
                         <div class="external-category">
-                            <h3>Catalogs & References</h3>
+                            <h3>Catalogs &amp; References</h3>
                             <ul>
                                 <li><a href="https://www.scottonline.com" target="_blank" rel="noopener">Scott Catalog Online</a></li>
                                 <li><a href="https://www.michel.de" target="_blank" rel="noopener">Michel Catalog</a></li>
                                 <li><a href="https://www.colnect.com" target="_blank" rel="noopener">Colnect Database</a></li>
                             </ul>
                         </div>
-                        
+
                         <div class="external-category">
-                            <h3>News & Publications</h3>
+                            <h3>News &amp; Publications</h3>
                             <ul>
                                 <li><a href="https://www.linns.com" target="_blank" rel="noopener">Linn's Stamp News</a></li>
                                 <li><a href="https://stamps.org/news" target="_blank" rel="noopener">APS Stamp News</a></li>
@@ -507,7 +507,7 @@
             </div>
         </section>
     </main>
-    
+
     <!-- Footer -->
     <footer>
         <div class="container">
@@ -541,20 +541,20 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 San Antonio Philatelic Association. All Rights Reserved.</p>
+                <p>&amp;copy; 2025 San Antonio Philatelic Association. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
-    
+
     <!-- Back to top button -->
     <button id="back-to-top" title="Back to Top" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 99; border: none; outline: none; background-color: var(--primary); color: white; cursor: pointer; padding: 15px; border-radius: 50%; font-size: 16px;">
         <i class="fas fa-arrow-up"></i>
     </button>
-    
+
     <!-- Load JavaScript -->
     <script src="dist/js/core.min.js" defer></script>
     <script src="dist/js/resources.min.js" defer></script>
-    
+
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=MEASUREMENT_ID"></script>
     <script>

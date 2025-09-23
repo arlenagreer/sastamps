@@ -4,219 +4,219 @@
  */
 
 class NewsletterLoader {
-    constructor(options = {}) {
-        this.dataUrl = options.dataUrl || './data/newsletters/newsletters.json';
-        this.newsletters = [];
-        this.metadata = {};
-        this.isLoaded = false;
-        this.isLoading = false;
-        
-        this.callbacks = {
-            onLoad: options.onLoad || (() => {}),
-            onError: options.onError || ((error) => console.error('Newsletter loader error:', error))
-        };
-    }
+  constructor(options = {}) {
+    this.dataUrl = options.dataUrl || './data/newsletters/newsletters.json';
+    this.newsletters = [];
+    this.metadata = {};
+    this.isLoaded = false;
+    this.isLoading = false;
 
-    /**
+    this.callbacks = {
+      onLoad: options.onLoad || (() => {}),
+      onError: options.onError || ((error) => console.error('Newsletter loader error:', error))
+    };
+  }
+
+  /**
      * Load newsletter data from JSON
      */
-    async loadData() {
-        if (this.isLoaded || this.isLoading) {
-            return { newsletters: this.newsletters, metadata: this.metadata };
-        }
-
-        this.isLoading = true;
-
-        try {
-            console.log('📰 Loading newsletter data...');
-            
-            const response = await fetch(this.dataUrl);
-            if (!response.ok) {
-                throw new Error(`Failed to load newsletter data: ${response.statusText}`);
-            }
-            
-            const data = await response.json();
-            
-            this.newsletters = data.newsletters || [];
-            this.metadata = data.metadata || {};
-            this.isLoaded = true;
-            this.isLoading = false;
-            
-            console.log(`✅ Loaded ${this.newsletters.length} newsletters`);
-            this.callbacks.onLoad(data);
-            
-            return data;
-            
-        } catch (error) {
-            this.isLoading = false;
-            console.error('❌ Failed to load newsletter data:', error);
-            this.callbacks.onError(error);
-            throw error;
-        }
+  async loadData() {
+    if (this.isLoaded || this.isLoading) {
+      return { newsletters: this.newsletters, metadata: this.metadata };
     }
 
-    /**
+    this.isLoading = true;
+
+    try {
+      // Loading newsletter data
+
+      const response = await fetch(this.dataUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to load newsletter data: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      this.newsletters = data.newsletters || [];
+      this.metadata = data.metadata || {};
+      this.isLoaded = true;
+      this.isLoading = false;
+
+      // Newsletter data loaded successfully
+      this.callbacks.onLoad(data);
+
+      return data;
+
+    } catch (error) {
+      this.isLoading = false;
+      console.error('❌ Failed to load newsletter data:', error);
+      this.callbacks.onError(error);
+      throw error;
+    }
+  }
+
+  /**
      * Get newsletters grouped by year
      */
-    getNewslettersByYear() {
-        if (!this.isLoaded) {
-            console.warn('Newsletter data not loaded yet');
-            return {};
-        }
-
-        const grouped = {};
-        
-        this.newsletters.forEach(newsletter => {
-            const year = newsletter.year;
-            if (!grouped[year]) {
-                grouped[year] = [];
-            }
-            grouped[year].push(newsletter);
-        });
-
-        // Sort newsletters within each year by quarter
-        Object.keys(grouped).forEach(year => {
-            grouped[year].sort((a, b) => {
-                const quarterOrder = { 'First': 1, 'Second': 2, 'Third': 3, 'Fourth': 4 };
-                return (quarterOrder[b.quarter] || 0) - (quarterOrder[a.quarter] || 0); // Most recent first
-            });
-        });
-
-        return grouped;
+  getNewslettersByYear() {
+    if (!this.isLoaded) {
+      console.warn('Newsletter data not loaded yet');
+      return {};
     }
 
-    /**
+    const grouped = {};
+
+    this.newsletters.forEach(newsletter => {
+      const year = newsletter.year;
+      if (!grouped[year]) {
+        grouped[year] = [];
+      }
+      grouped[year].push(newsletter);
+    });
+
+    // Sort newsletters within each year by quarter
+    Object.keys(grouped).forEach(year => {
+      grouped[year].sort((a, b) => {
+        const quarterOrder = { 'First': 1, 'Second': 2, 'Third': 3, 'Fourth': 4 };
+        return (quarterOrder[b.quarter] || 0) - (quarterOrder[a.quarter] || 0); // Most recent first
+      });
+    });
+
+    return grouped;
+  }
+
+  /**
      * Filter newsletters by criteria
      */
-    filterNewsletters(criteria = {}) {
-        if (!this.isLoaded) {
-            console.warn('Newsletter data not loaded yet');
-            return [];
-        }
-
-        let filtered = [...this.newsletters];
-
-        // Filter by year
-        if (criteria.year) {
-            filtered = filtered.filter(newsletter => newsletter.year === criteria.year);
-        }
-
-        // Filter by quarter
-        if (criteria.quarter) {
-            filtered = filtered.filter(newsletter => newsletter.quarter === criteria.quarter);
-        }
-
-        // Filter by tags
-        if (criteria.tags && criteria.tags.length > 0) {
-            filtered = filtered.filter(newsletter => {
-                return criteria.tags.some(tag => 
-                    newsletter.tags && newsletter.tags.includes(tag)
-                );
-            });
-        }
-
-        // Filter by date range
-        if (criteria.dateFrom || criteria.dateTo) {
-            filtered = filtered.filter(newsletter => {
-                const publishDate = new Date(newsletter.publishDate);
-                const fromDate = criteria.dateFrom ? new Date(criteria.dateFrom) : new Date('1900-01-01');
-                const toDate = criteria.dateTo ? new Date(criteria.dateTo) : new Date('2099-12-31');
-                
-                return publishDate >= fromDate && publishDate <= toDate;
-            });
-        }
-
-        // Sort by publish date (most recent first)
-        filtered.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
-
-        return filtered;
+  filterNewsletters(criteria = {}) {
+    if (!this.isLoaded) {
+      console.warn('Newsletter data not loaded yet');
+      return [];
     }
 
-    /**
+    let filtered = [...this.newsletters];
+
+    // Filter by year
+    if (criteria.year) {
+      filtered = filtered.filter(newsletter => newsletter.year === criteria.year);
+    }
+
+    // Filter by quarter
+    if (criteria.quarter) {
+      filtered = filtered.filter(newsletter => newsletter.quarter === criteria.quarter);
+    }
+
+    // Filter by tags
+    if (criteria.tags && criteria.tags.length > 0) {
+      filtered = filtered.filter(newsletter => {
+        return criteria.tags.some(tag =>
+          newsletter.tags && newsletter.tags.includes(tag)
+        );
+      });
+    }
+
+    // Filter by date range
+    if (criteria.dateFrom || criteria.dateTo) {
+      filtered = filtered.filter(newsletter => {
+        const publishDate = new Date(newsletter.publishDate);
+        const fromDate = criteria.dateFrom ? new Date(criteria.dateFrom) : new Date('1900-01-01');
+        const toDate = criteria.dateTo ? new Date(criteria.dateTo) : new Date('2099-12-31');
+
+        return publishDate >= fromDate && publishDate <= toDate;
+      });
+    }
+
+    // Sort by publish date (most recent first)
+    filtered.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
+
+    return filtered;
+  }
+
+  /**
      * Get available years for filtering
      */
-    getAvailableYears() {
-        if (!this.isLoaded) return [];
-        
-        const years = [...new Set(this.newsletters.map(n => n.year))];
-        return years.sort((a, b) => b - a); // Most recent first
-    }
+  getAvailableYears() {
+    if (!this.isLoaded) return [];
 
-    /**
+    const years = [...new Set(this.newsletters.map(n => n.year))];
+    return years.sort((a, b) => b - a); // Most recent first
+  }
+
+  /**
      * Get available quarters for filtering
      */
-    getAvailableQuarters() {
-        return ['First', 'Second', 'Third', 'Fourth'];
-    }
+  getAvailableQuarters() {
+    return ['First', 'Second', 'Third', 'Fourth'];
+  }
 
-    /**
+  /**
      * Get all available tags
      */
-    getAvailableTags() {
-        if (!this.isLoaded) return [];
-        
-        const tags = new Set();
-        this.newsletters.forEach(newsletter => {
-            if (newsletter.tags) {
-                newsletter.tags.forEach(tag => tags.add(tag));
-            }
-        });
-        
-        return Array.from(tags).sort();
-    }
+  getAvailableTags() {
+    if (!this.isLoaded) return [];
 
-    /**
+    const tags = new Set();
+    this.newsletters.forEach(newsletter => {
+      if (newsletter.tags) {
+        newsletter.tags.forEach(tag => tags.add(tag));
+      }
+    });
+
+    return Array.from(tags).sort();
+  }
+
+  /**
      * Render newsletter archive HTML
      */
-    renderArchive(container, options = {}) {
-        const {
-            groupByYear = true,
-            showFilters = false,
-            sortOrder = 'desc'
-        } = options;
+  renderArchive(container, options = {}) {
+    const {
+      groupByYear = true,
+      showFilters = false,
+      sortOrder = 'desc'
+    } = options;
 
-        if (typeof container === 'string') {
-            container = document.querySelector(container);
-        }
-
-        if (!container) {
-            throw new Error('Archive container not found');
-        }
-
-        if (!this.isLoaded) {
-            container.innerHTML = '<div class="loading">Loading newsletter archive...</div>';
-            return;
-        }
-
-        let html = '';
-
-        if (showFilters) {
-            html += this.renderFilters();
-        }
-
-        if (groupByYear) {
-            html += this.renderByYear(sortOrder);
-        } else {
-            html += this.renderFlat(sortOrder);
-        }
-
-        container.innerHTML = html;
-
-        // Add event listeners if filters are shown
-        if (showFilters) {
-            this.initializeFilters(container);
-        }
+    if (typeof container === 'string') {
+      container = document.querySelector(container);
     }
 
-    /**
+    if (!container) {
+      throw new Error('Archive container not found');
+    }
+
+    if (!this.isLoaded) {
+      container.innerHTML = '<div class="loading">Loading newsletter archive...</div>';
+      return;
+    }
+
+    let html = '';
+
+    if (showFilters) {
+      html += this.renderFilters();
+    }
+
+    if (groupByYear) {
+      html += this.renderByYear(sortOrder);
+    } else {
+      html += this.renderFlat(sortOrder);
+    }
+
+    container.innerHTML = html;
+
+    // Add event listeners if filters are shown
+    if (showFilters) {
+      this.initializeFilters(container);
+    }
+  }
+
+  /**
      * Render filter controls
      */
-    renderFilters() {
-        const years = this.getAvailableYears();
-        const quarters = this.getAvailableQuarters();
-        const tags = this.getAvailableTags();
+  renderFilters() {
+    const years = this.getAvailableYears();
+    const quarters = this.getAvailableQuarters();
+    const tags = this.getAvailableTags();
 
-        return `
+    return `
             <div class="archive-filters">
                 <h3>Filter Newsletters</h3>
                 <div class="filter-row">
@@ -247,18 +247,18 @@ class NewsletterLoader {
                 </div>
             </div>
         `;
-    }
+  }
 
-    /**
+  /**
      * Render newsletters grouped by year
      */
-    renderByYear(sortOrder = 'desc') {
-        const groupedNewsletters = this.getNewslettersByYear();
-        const years = Object.keys(groupedNewsletters).sort((a, b) => 
-            sortOrder === 'desc' ? b - a : a - b
-        );
+  renderByYear(sortOrder = 'desc') {
+    const groupedNewsletters = this.getNewslettersByYear();
+    const years = Object.keys(groupedNewsletters).sort((a, b) =>
+      sortOrder === 'desc' ? b - a : a - b
+    );
 
-        return years.map(year => `
+    return years.map(year => `
             <div class="archive-year-section">
                 <h2 class="archive-year-header">${year} Newsletter Archive</h2>
                 <div class="archive-grid">
@@ -266,40 +266,40 @@ class NewsletterLoader {
                 </div>
             </div>
         `).join('');
-    }
+  }
 
-    /**
+  /**
      * Render newsletters in flat list
      */
-    renderFlat(sortOrder = 'desc') {
-        const newsletters = [...this.newsletters].sort((a, b) => {
-            const dateA = new Date(a.publishDate);
-            const dateB = new Date(b.publishDate);
-            return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
-        });
+  renderFlat(sortOrder = 'desc') {
+    const newsletters = [...this.newsletters].sort((a, b) => {
+      const dateA = new Date(a.publishDate);
+      const dateB = new Date(b.publishDate);
+      return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+    });
 
-        return `
+    return `
             <div class="archive-grid">
                 ${newsletters.map(newsletter => this.renderNewsletterCard(newsletter)).join('')}
             </div>
         `;
-    }
+  }
 
-    /**
+  /**
      * Render individual newsletter card
      */
-    renderNewsletterCard(newsletter) {
-        const publishDate = new Date(newsletter.publishDate).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
+  renderNewsletterCard(newsletter) {
+    const publishDate = new Date(newsletter.publishDate).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
 
-        const featuredArticles = newsletter.featuredArticles || [];
-        const highlights = newsletter.highlights || [];
-        const tags = newsletter.tags || [];
+    const featuredArticles = newsletter.featuredArticles || [];
+    const highlights = newsletter.highlights || [];
+    const tags = newsletter.tags || [];
 
-        return `
+    return `
             <div class="archive-item" data-year="${newsletter.year}" data-quarter="${newsletter.quarter}">
                 <div class="archive-item-header">
                     <h3>SAPA PHILATEX</h3>
@@ -351,74 +351,74 @@ class NewsletterLoader {
                 </div>
             </div>
         `;
-    }
+  }
 
-    /**
+  /**
      * Initialize filter functionality
      */
-    initializeFilters(container) {
-        const yearFilter = container.querySelector('#year-filter');
-        const quarterFilter = container.querySelector('#quarter-filter');
-        const tagsFilter = container.querySelector('#tags-filter');
-        const applyButton = container.querySelector('#apply-filters');
-        const clearButton = container.querySelector('#clear-filters');
+  initializeFilters(container) {
+    const yearFilter = container.querySelector('#year-filter');
+    const quarterFilter = container.querySelector('#quarter-filter');
+    const tagsFilter = container.querySelector('#tags-filter');
+    const applyButton = container.querySelector('#apply-filters');
+    const clearButton = container.querySelector('#clear-filters');
 
-        if (applyButton) {
-            applyButton.addEventListener('click', () => {
-                const criteria = {
-                    year: yearFilter?.value ? parseInt(yearFilter.value) : null,
-                    quarter: quarterFilter?.value || null,
-                    tags: tagsFilter ? Array.from(tagsFilter.selectedOptions).map(option => option.value) : []
-                };
+    if (applyButton) {
+      applyButton.addEventListener('click', () => {
+        const criteria = {
+          year: yearFilter?.value ? parseInt(yearFilter.value) : null,
+          quarter: quarterFilter?.value || null,
+          tags: tagsFilter ? Array.from(tagsFilter.selectedOptions).map(option => option.value) : []
+        };
 
-                this.applyFilters(container, criteria);
-            });
-        }
-
-        if (clearButton) {
-            clearButton.addEventListener('click', () => {
-                if (yearFilter) yearFilter.value = '';
-                if (quarterFilter) quarterFilter.value = '';
-                if (tagsFilter) {
-                    Array.from(tagsFilter.options).forEach(option => option.selected = false);
-                }
-                
-                this.renderArchive(container, { groupByYear: true, showFilters: true });
-            });
-        }
+        this.applyFilters(container, criteria);
+      });
     }
 
-    /**
+    if (clearButton) {
+      clearButton.addEventListener('click', () => {
+        if (yearFilter) yearFilter.value = '';
+        if (quarterFilter) quarterFilter.value = '';
+        if (tagsFilter) {
+          Array.from(tagsFilter.options).forEach(option => option.selected = false);
+        }
+
+        this.renderArchive(container, { groupByYear: true, showFilters: true });
+      });
+    }
+  }
+
+  /**
      * Apply filters and re-render
      */
-    applyFilters(container, criteria) {
-        const filtered = this.filterNewsletters(criteria);
-        
-        if (filtered.length === 0) {
-            const archiveContent = container.querySelector('.archive-year-section, .archive-grid');
-            if (archiveContent) {
-                archiveContent.outerHTML = `
+  applyFilters(container, criteria) {
+    const filtered = this.filterNewsletters(criteria);
+
+    if (filtered.length === 0) {
+      const archiveContent = container.querySelector('.archive-year-section, .archive-grid');
+      if (archiveContent) {
+        archiveContent.outerHTML = `
                     <div class="no-results">
                         <h3>No newsletters found</h3>
                         <p>No newsletters match the selected criteria. Try adjusting your filters.</p>
                     </div>
                 `;
-            }
-            return;
-        }
+      }
+      return;
+    }
 
-        // Group filtered results by year
-        const grouped = {};
-        filtered.forEach(newsletter => {
-            const year = newsletter.year;
-            if (!grouped[year]) {
-                grouped[year] = [];
-            }
-            grouped[year].push(newsletter);
-        });
+    // Group filtered results by year
+    const grouped = {};
+    filtered.forEach(newsletter => {
+      const year = newsletter.year;
+      if (!grouped[year]) {
+        grouped[year] = [];
+      }
+      grouped[year].push(newsletter);
+    });
 
-        const years = Object.keys(grouped).sort((a, b) => b - a);
-        const html = years.map(year => `
+    const years = Object.keys(grouped).sort((a, b) => b - a);
+    const html = years.map(year => `
             <div class="archive-year-section">
                 <h2 class="archive-year-header">${year} Newsletter Archive</h2>
                 <div class="archive-grid">
@@ -427,33 +427,33 @@ class NewsletterLoader {
             </div>
         `).join('');
 
-        // Replace content after filters
-        const filtersElement = container.querySelector('.archive-filters');
-        const afterFilters = filtersElement ? filtersElement.nextElementSibling : container.firstElementChild;
-        
-        if (afterFilters) {
-            afterFilters.outerHTML = html;
-        } else {
-            container.innerHTML += html;
-        }
-    }
+    // Replace content after filters
+    const filtersElement = container.querySelector('.archive-filters');
+    const afterFilters = filtersElement ? filtersElement.nextElementSibling : container.firstElementChild;
 
-    /**
+    if (afterFilters) {
+      afterFilters.outerHTML = html;
+    } else {
+      container.innerHTML += html;
+    }
+  }
+
+  /**
      * Format label for display
      */
-    formatLabel(value) {
-        return value
-            .replace(/-/g, ' ')
-            .replace(/\b\w/g, l => l.toUpperCase());
-    }
+  formatLabel(value) {
+    return value
+      .replace(/-/g, ' ')
+      .replace(/\b\w/g, l => l.toUpperCase());
+  }
 
-    /**
+  /**
      * Add newsletter archive styles
      */
-    static addStyles() {
-        if (document.getElementById('newsletter-archive-styles')) return;
+  static addStyles() {
+    if (document.getElementById('newsletter-archive-styles')) return;
 
-        const styles = `
+    const styles = `
             .archive-filters {
                 background-color: var(--light, #ecf0f1);
                 padding: 1.5rem;
@@ -609,20 +609,20 @@ class NewsletterLoader {
             }
         `;
 
-        const styleSheet = document.createElement('style');
-        styleSheet.id = 'newsletter-archive-styles';
-        styleSheet.textContent = styles;
-        document.head.appendChild(styleSheet);
-    }
+    const styleSheet = document.createElement('style');
+    styleSheet.id = 'newsletter-archive-styles';
+    styleSheet.textContent = styles;
+    document.head.appendChild(styleSheet);
+  }
 }
 
 // Add default styles when module loads
 if (typeof document !== 'undefined') {
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => NewsletterLoader.addStyles());
-    } else {
-        NewsletterLoader.addStyles();
-    }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => NewsletterLoader.addStyles());
+  } else {
+    NewsletterLoader.addStyles();
+  }
 }
 
 // Export for module usage
@@ -630,5 +630,5 @@ export default NewsletterLoader;
 
 // Also attach to window for global access
 if (typeof window !== 'undefined') {
-    window.NewsletterLoader = NewsletterLoader;
+  window.NewsletterLoader = NewsletterLoader;
 }

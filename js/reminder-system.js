@@ -3,320 +3,324 @@
  * Provides opt-in localStorage-based reminders for upcoming SAPA meetings
  */
 
-export class ReminderSystem {
-    constructor() {
-        this.storageKey = 'sapa-meeting-reminders';
-        this.settingsKey = 'sapa-reminder-settings';
-        this.reminderTimers = new Map();
-        this.defaultSettings = {
-            enabled: false,
-            reminderTimes: [
-                { label: '1 day before', minutes: 24 * 60 },
-                { label: '2 hours before', minutes: 2 * 60 },
-                { label: '30 minutes before', minutes: 30 }
-            ],
-            showBrowserNotifications: false,
-            playSound: false
-        };
-        this.init();
-    }
+import {
+  REMINDER,
+  TIMING,
+  STORAGE_KEYS,
+  CSS_CLASSES,
+  ERROR_MESSAGES,
+  SUCCESS_MESSAGES
+} from './constants/index.js';
 
-    /**
+export class ReminderSystem {
+  constructor() {
+    this.storageKey = STORAGE_KEYS.MEETING_REMINDERS;
+    this.settingsKey = STORAGE_KEYS.REMINDER_SETTINGS;
+    this.reminderTimers = new Map();
+    this.defaultSettings = {
+      enabled: false,
+      reminderTimes: REMINDER.DEFAULT_TIMES,
+      showBrowserNotifications: false,
+      playSound: false
+    };
+    this.init();
+  }
+
+  /**
      * Initialize reminder system
      */
-    init() {
-        this.loadSettings();
-        this.checkPermissions();
-        this.scheduleReminders();
-        this.createReminderUI();
-        
-        // Check for due reminders every minute
-        setInterval(() => this.checkDueReminders(), 60000);
-        
-        console.log('Reminder system initialized');
-    }
+  init() {
+    this.loadSettings();
+    this.checkPermissions();
+    this.scheduleReminders();
+    this.createReminderUI();
 
-    /**
+    // Check for due reminders every minute
+    setInterval(() => this.checkDueReminders(), TIMING.REMINDER_CHECK_INTERVAL);
+
+    // Reminder system initialized
+  }
+
+  /**
      * Load user settings from localStorage
      */
-    loadSettings() {
-        try {
-            const saved = localStorage.getItem(this.settingsKey);
-            this.settings = saved ? { ...this.defaultSettings, ...JSON.parse(saved) } : { ...this.defaultSettings };
-        } catch (error) {
-            console.warn('Error loading reminder settings:', error);
-            this.settings = { ...this.defaultSettings };
-        }
+  loadSettings() {
+    try {
+      const saved = localStorage.getItem(this.settingsKey);
+      this.settings = saved ? { ...this.defaultSettings, ...JSON.parse(saved) } : { ...this.defaultSettings };
+    } catch (error) {
+      console.warn('Error loading reminder settings:', error);
+      this.settings = { ...this.defaultSettings };
     }
+  }
 
-    /**
+  /**
      * Save settings to localStorage
      */
-    saveSettings() {
-        try {
-            localStorage.setItem(this.settingsKey, JSON.stringify(this.settings));
-        } catch (error) {
-            console.warn('Error saving reminder settings:', error);
-        }
+  saveSettings() {
+    try {
+      localStorage.setItem(this.settingsKey, JSON.stringify(this.settings));
+    } catch (error) {
+      console.warn('Error saving reminder settings:', error);
     }
+  }
 
-    /**
+  /**
      * Check browser notification permissions
      */
-    async checkPermissions() {
-        if ('Notification' in window) {
-            if (Notification.permission === 'default') {
-                this.settings.showBrowserNotifications = false;
-            } else if (Notification.permission === 'granted') {
-                // Permission already granted
-            } else {
-                this.settings.showBrowserNotifications = false;
-            }
-        } else {
-            this.settings.showBrowserNotifications = false;
-        }
+  async checkPermissions() {
+    if ('Notification' in window) {
+      if (Notification.permission === 'default') {
+        this.settings.showBrowserNotifications = false;
+      } else if (Notification.permission === 'granted') {
+        // Permission already granted
+      } else {
+        this.settings.showBrowserNotifications = false;
+      }
+    } else {
+      this.settings.showBrowserNotifications = false;
     }
+  }
 
-    /**
+  /**
      * Request notification permission
      */
-    async requestNotificationPermission() {
-        if ('Notification' in window) {
-            const permission = await Notification.requestPermission();
-            this.settings.showBrowserNotifications = permission === 'granted';
-            this.saveSettings();
-            return permission === 'granted';
-        }
-        return false;
+  async requestNotificationPermission() {
+    if ('Notification' in window) {
+      const permission = await Notification.requestPermission();
+      this.settings.showBrowserNotifications = permission === 'granted';
+      this.saveSettings();
+      return permission === 'granted';
     }
+    return false;
+  }
 
-    /**
+  /**
      * Set reminders for meetings
      * @param {Array} meetings - Array of meeting objects
      */
-    setReminders(meetings) {
-        if (!this.settings.enabled) return;
+  setReminders(meetings) {
+    if (!this.settings.enabled) return;
 
-        // Clear existing timers
-        this.clearAllReminders();
+    // Clear existing timers
+    this.clearAllReminders();
 
-        const now = new Date();
-        const reminders = [];
+    const now = new Date();
+    const reminders = [];
 
-        meetings.forEach(meeting => {
-            if (meeting.cancelled) return;
+    meetings.forEach(meeting => {
+      if (meeting.cancelled) return;
 
-            const meetingDate = new Date(meeting.date);
-            
-            // Parse meeting time
-            if (meeting.time && meeting.time.meetingStart) {
-                const [time, period] = meeting.time.meetingStart.split(' ');
-                const [hours, minutes] = time.split(':').map(Number);
-                
-                let hour24 = hours;
-                if (period === 'PM' && hours !== 12) hour24 += 12;
-                if (period === 'AM' && hours === 12) hour24 = 0;
-                
-                meetingDate.setHours(hour24, minutes, 0, 0);
-            }
+      const meetingDate = new Date(meeting.date);
 
-            // Skip past meetings
-            if (meetingDate <= now) return;
+      // Parse meeting time
+      if (meeting.time && meeting.time.meetingStart) {
+        const [time, period] = meeting.time.meetingStart.split(' ');
+        const [hours, minutes] = time.split(':').map(Number);
 
-            this.settings.reminderTimes.forEach(reminderTime => {
-                const reminderDate = new Date(meetingDate.getTime() - (reminderTime.minutes * 60000));
-                
-                if (reminderDate > now) {
-                    const reminderId = `${meeting.id}-${reminderTime.minutes}`;
-                    reminders.push({
-                        id: reminderId,
-                        meetingId: meeting.id,
-                        meetingTitle: meeting.title,
-                        meetingDate: meetingDate,
-                        reminderDate: reminderDate,
-                        reminderLabel: reminderTime.label,
-                        reminderMinutes: reminderTime.minutes
-                    });
-                }
-            });
-        });
+        let hour24 = hours;
+        if (period === 'PM' && hours !== 12) hour24 += 12;
+        if (period === 'AM' && hours === 12) hour24 = 0;
 
-        // Save reminders to localStorage
-        this.saveReminders(reminders);
-        this.scheduleReminders();
-    }
+        meetingDate.setHours(hour24, minutes, 0, 0);
+      }
 
-    /**
+      // Skip past meetings
+      if (meetingDate <= now) return;
+
+      this.settings.reminderTimes.forEach(reminderTime => {
+        const reminderDate = new Date(meetingDate.getTime() - (reminderTime.minutes * 60000));
+
+        if (reminderDate > now) {
+          const reminderId = `${meeting.id}-${reminderTime.minutes}`;
+          reminders.push({
+            id: reminderId,
+            meetingId: meeting.id,
+            meetingTitle: meeting.title,
+            meetingDate: meetingDate,
+            reminderDate: reminderDate,
+            reminderLabel: reminderTime.label,
+            reminderMinutes: reminderTime.minutes
+          });
+        }
+      });
+    });
+
+    this.saveReminders(reminders);
+    this.scheduleReminders();
+  }
+
+  /**
      * Save reminders to localStorage
      * @param {Array} reminders - Array of reminder objects
      */
-    saveReminders(reminders) {
-        try {
-            localStorage.setItem(this.storageKey, JSON.stringify(reminders));
-        } catch (error) {
-            console.warn('Error saving reminders:', error);
-        }
+  saveReminders(reminders) {
+    try {
+      localStorage.setItem(this.storageKey, JSON.stringify(reminders));
+    } catch (error) {
+      console.warn('Error saving reminders:', error);
     }
+  }
 
-    /**
+  /**
      * Load reminders from localStorage
      * @returns {Array} Array of reminder objects
      */
-    loadReminders() {
-        try {
-            const saved = localStorage.getItem(this.storageKey);
-            return saved ? JSON.parse(saved) : [];
-        } catch (error) {
-            console.warn('Error loading reminders:', error);
-            return [];
-        }
+  loadReminders() {
+    try {
+      const saved = localStorage.getItem(this.storageKey);
+      return saved ? JSON.parse(saved) : [];
+    } catch (error) {
+      console.warn('Error loading reminders:', error);
+      return [];
     }
+  }
 
-    /**
+  /**
      * Schedule reminder timers
      */
-    scheduleReminders() {
-        if (!this.settings.enabled) return;
+  scheduleReminders() {
+    if (!this.settings.enabled) return;
 
-        this.clearAllReminders();
-        const reminders = this.loadReminders();
-        const now = new Date();
+    this.clearAllReminders();
+    const reminders = this.loadReminders();
+    const now = new Date();
 
-        reminders.forEach(reminder => {
-            const reminderDate = new Date(reminder.reminderDate);
-            const timeUntilReminder = reminderDate.getTime() - now.getTime();
+    reminders.forEach(reminder => {
+      const reminderDate = new Date(reminder.reminderDate);
+      const timeUntilReminder = reminderDate.getTime() - now.getTime();
 
-            if (timeUntilReminder > 0) {
-                const timerId = setTimeout(() => {
-                    this.showReminder(reminder);
-                    this.removeReminder(reminder.id);
-                }, timeUntilReminder);
+      if (timeUntilReminder > 0) {
+        const timerId = setTimeout(() => {
+          this.showReminder(reminder);
+          this.removeReminder(reminder.id);
+        }, timeUntilReminder);
 
-                this.reminderTimers.set(reminder.id, timerId);
-            }
-        });
+        this.reminderTimers.set(reminder.id, timerId);
+      }
+    });
 
-        console.log(`Scheduled ${this.reminderTimers.size} reminders`);
-    }
+    // Scheduled reminders
+  }
 
-    /**
+  /**
      * Clear all reminder timers
      */
-    clearAllReminders() {
-        this.reminderTimers.forEach(timerId => clearTimeout(timerId));
-        this.reminderTimers.clear();
-    }
+  clearAllReminders() {
+    this.reminderTimers.forEach(timerId => clearTimeout(timerId));
+    this.reminderTimers.clear();
+  }
 
-    /**
+  /**
      * Remove a specific reminder
      * @param {string} reminderId - Reminder ID to remove
      */
-    removeReminder(reminderId) {
-        if (this.reminderTimers.has(reminderId)) {
-            clearTimeout(this.reminderTimers.get(reminderId));
-            this.reminderTimers.delete(reminderId);
-        }
-
-        // Remove from localStorage
-        const reminders = this.loadReminders().filter(r => r.id !== reminderId);
-        this.saveReminders(reminders);
+  removeReminder(reminderId) {
+    if (this.reminderTimers.has(reminderId)) {
+      clearTimeout(this.reminderTimers.get(reminderId));
+      this.reminderTimers.delete(reminderId);
     }
 
-    /**
+    // Remove from localStorage
+    const reminders = this.loadReminders().filter(r => r.id !== reminderId);
+    this.saveReminders(reminders);
+  }
+
+  /**
      * Check for due reminders (backup check)
      */
-    checkDueReminders() {
-        if (!this.settings.enabled) return;
+  checkDueReminders() {
+    if (!this.settings.enabled) return;
 
-        const reminders = this.loadReminders();
-        const now = new Date();
-        const dueReminders = reminders.filter(reminder => {
-            const reminderDate = new Date(reminder.reminderDate);
-            return reminderDate <= now;
-        });
+    const reminders = this.loadReminders();
+    const now = new Date();
+    const dueReminders = reminders.filter(reminder => {
+      const reminderDate = new Date(reminder.reminderDate);
+      return reminderDate <= now;
+    });
 
-        dueReminders.forEach(reminder => {
-            this.showReminder(reminder);
-            this.removeReminder(reminder.id);
-        });
-    }
+    dueReminders.forEach(reminder => {
+      this.showReminder(reminder);
+      this.removeReminder(reminder.id);
+    });
+  }
 
-    /**
+  /**
      * Show reminder notification
      * @param {Object} reminder - Reminder object
      */
-    showReminder(reminder) {
-        const meetingDate = new Date(reminder.meetingDate);
-        const formattedDate = meetingDate.toLocaleDateString('en-US', {
-            weekday: 'long',
-            month: 'long',
-            day: 'numeric'
-        });
-        const formattedTime = meetingDate.toLocaleTimeString('en-US', {
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true
-        });
+  showReminder(reminder) {
+    const meetingDate = new Date(reminder.meetingDate);
+    const formattedDate = meetingDate.toLocaleDateString('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric'
+    });
+    const formattedTime = meetingDate.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
 
-        // Show in-page notification
-        this.showInPageNotification({
-            title: `Meeting Reminder: ${reminder.reminderLabel}`,
-            message: `${reminder.meetingTitle}`,
-            details: `${formattedDate} at ${formattedTime}`,
-            meetingId: reminder.meetingId
-        });
+    // Show in-page notification
+    this.showInPageNotification({
+      title: `Meeting Reminder: ${reminder.reminderLabel}`,
+      message: `${reminder.meetingTitle}`,
+      details: `${formattedDate} at ${formattedTime}`,
+      meetingId: reminder.meetingId
+    });
 
-        // Show browser notification if enabled
-        if (this.settings.showBrowserNotifications && 'Notification' in window && Notification.permission === 'granted') {
-            this.showBrowserNotification(reminder, formattedDate, formattedTime);
-        }
-
-        // Play sound if enabled
-        if (this.settings.playSound) {
-            this.playNotificationSound();
-        }
-
-        console.log('Reminder shown:', reminder.meetingTitle, reminder.reminderLabel);
+    // Show browser notification if enabled
+    if (this.settings.showBrowserNotifications && 'Notification' in window && Notification.permission === 'granted') {
+      this.showBrowserNotification(reminder, formattedDate, formattedTime);
     }
 
-    /**
+    // Play sound if enabled
+    if (this.settings.playSound) {
+      this.playNotificationSound();
+    }
+
+    // Reminder shown for meeting
+  }
+
+  /**
      * Show browser notification
      * @param {Object} reminder - Reminder object
      * @param {string} formattedDate - Formatted date string
      * @param {string} formattedTime - Formatted time string
      */
-    showBrowserNotification(reminder, formattedDate, formattedTime) {
-        const notification = new Notification(`SAPA Meeting Reminder`, {
-            body: `${reminder.meetingTitle}\n${formattedDate} at ${formattedTime}`,
-            icon: '/favicon.ico',
-            badge: '/favicon.ico',
-            tag: `sapa-meeting-${reminder.meetingId}`,
-            requireInteraction: false
-        });
+  showBrowserNotification(reminder, formattedDate, formattedTime) {
+    const notification = new Notification(`SAPA Meeting Reminder`, {
+      body: `${reminder.meetingTitle}\n${formattedDate} at ${formattedTime}`,
+      icon: '/favicon.ico',
+      badge: '/favicon.ico',
+      tag: `sapa-meeting-${reminder.meetingId}`,
+      requireInteraction: false
+    });
 
-        notification.onclick = () => {
-            window.focus();
-            notification.close();
-        };
+    notification.onclick = () => {
+      window.focus();
+      notification.close();
+    };
 
-        // Auto-close after 10 seconds
-        setTimeout(() => notification.close(), 10000);
-    }
+    // Auto-close after configured duration
+    setTimeout(() => notification.close(), REMINDER.NOTIFICATION_AUTO_CLOSE);
+  }
 
-    /**
+  /**
      * Show in-page notification
      * @param {Object} options - Notification options
      */
-    showInPageNotification(options) {
-        // Remove existing notification
-        const existing = document.getElementById('reminder-notification');
-        if (existing) existing.remove();
+  showInPageNotification(options) {
+    // Remove existing notification
+    const existing = document.getElementById('reminder-notification');
+    if (existing) existing.remove();
 
-        // Create notification element
-        const notification = document.createElement('div');
-        notification.id = 'reminder-notification';
-        notification.className = 'reminder-notification';
-        notification.innerHTML = `
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.id = 'reminder-notification';
+    notification.className = 'reminder-notification';
+    notification.innerHTML = `
             <div class="reminder-content">
                 <div class="reminder-header">
                     <strong>${options.title}</strong>
@@ -331,68 +335,68 @@ export class ReminderSystem {
             </div>
         `;
 
-        // Add event listeners
-        notification.querySelector('.reminder-close').onclick = () => notification.remove();
-        notification.querySelector('.reminder-dismiss').onclick = () => notification.remove();
-        notification.querySelector('.reminder-view').onclick = () => {
-            // Trigger modal for meeting details if available
-            if (window.modal && options.meetingId) {
-                // This would need meeting data - simplified for now
-                console.log('View meeting details:', options.meetingId);
-            }
-            notification.remove();
-        };
+    // Add event listeners
+    notification.querySelector('.reminder-close').onclick = () => notification.remove();
+    notification.querySelector('.reminder-dismiss').onclick = () => notification.remove();
+    notification.querySelector('.reminder-view').onclick = () => {
+      // Trigger modal for meeting details if available
+      if (window.modal && options.meetingId) {
+        // This would need meeting data - simplified for now
+        // View meeting details action
+      }
+      notification.remove();
+    };
 
-        // Insert into page
-        document.body.appendChild(notification);
+    // Insert into page
+    document.body.appendChild(notification);
 
-        // Auto-dismiss after 15 seconds
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.remove();
-            }
-        }, 15000);
-    }
+    // Auto-dismiss after configured duration
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.remove();
+      }
+    }, TIMING.REMINDER_AUTO_DISMISS);
+  }
 
-    /**
+  /**
      * Play notification sound
      */
-    playNotificationSound() {
-        try {
-            // Create a simple notification sound using Web Audio API
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
+  playNotificationSound() {
+    try {
+      // Create a simple notification sound using Web Audio API
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
 
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
 
-            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-            oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.1);
-            
-            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+      oscillator.frequency.setValueAtTime(REMINDER.SOUND_FREQUENCIES.HIGH, audioContext.currentTime);
+      oscillator.frequency.setValueAtTime(REMINDER.SOUND_FREQUENCIES.LOW, audioContext.currentTime + 0.1);
 
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.3);
-        } catch (error) {
-            console.warn('Could not play notification sound:', error);
-        }
+      gainNode.gain.setValueAtTime(REMINDER.SOUND_VOLUME, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + REMINDER.SOUND_DURATION);
+
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + REMINDER.SOUND_DURATION);
+    } catch (error) {
+      console.warn('Could not play notification sound:', error);
     }
+  }
 
-    /**
+  /**
      * Create reminder settings UI
      */
-    createReminderUI() {
-        // Only create UI in development or if container exists
-        if (!(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-            return;
-        }
+  createReminderUI() {
+    // Only create UI in development or if container exists
+    if (!(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+      return;
+    }
 
-        const container = document.getElementById('reminder-settings-container');
-        if (!container) return;
+    const container = document.getElementById('reminder-settings-container');
+    if (!container) return;
 
-        container.innerHTML = `
+    container.innerHTML = `
             <div class="reminder-settings">
                 <h3>Meeting Reminders</h3>
                 <div class="reminder-controls">
@@ -401,7 +405,7 @@ export class ReminderSystem {
                         Enable meeting reminders
                     </label>
                     
-                    <div class="reminder-options ${this.settings.enabled ? '' : 'disabled'}">
+                    <div class="reminder-options ${this.settings.enabled ? '' : CSS_CLASSES.DISABLED}">
                         <label class="reminder-option">
                             <input type="checkbox" ${this.settings.showBrowserNotifications ? 'checked' : ''} id="browser-notifications">
                             Browser notifications
@@ -430,102 +434,102 @@ export class ReminderSystem {
             </div>
         `;
 
-        this.bindUIEvents();
-    }
+    this.bindUIEvents();
+  }
 
-    /**
+  /**
      * Bind UI event listeners
      */
-    bindUIEvents() {
-        const enabledCheckbox = document.getElementById('reminder-enabled');
-        const browserNotifications = document.getElementById('browser-notifications');
-        const playSound = document.getElementById('play-sound');
-        const saveButton = document.getElementById('save-reminder-settings');
-        const testButton = document.getElementById('test-reminder');
+  bindUIEvents() {
+    const enabledCheckbox = document.getElementById('reminder-enabled');
+    const browserNotifications = document.getElementById('browser-notifications');
+    const playSound = document.getElementById('play-sound');
+    const saveButton = document.getElementById('save-reminder-settings');
+    const testButton = document.getElementById('test-reminder');
 
-        if (enabledCheckbox) {
-            enabledCheckbox.onchange = () => {
-                this.settings.enabled = enabledCheckbox.checked;
-                const options = document.querySelector('.reminder-options');
-                if (options) {
-                    options.classList.toggle('disabled', !enabledCheckbox.checked);
-                }
-            };
+    if (enabledCheckbox) {
+      enabledCheckbox.onchange = () => {
+        this.settings.enabled = enabledCheckbox.checked;
+        const options = document.querySelector('.reminder-options');
+        if (options) {
+          options.classList.toggle(CSS_CLASSES.DISABLED, !enabledCheckbox.checked);
         }
-
-        if (browserNotifications) {
-            browserNotifications.onchange = async () => {
-                if (browserNotifications.checked) {
-                    const granted = await this.requestNotificationPermission();
-                    browserNotifications.checked = granted;
-                    this.settings.showBrowserNotifications = granted;
-                } else {
-                    this.settings.showBrowserNotifications = false;
-                }
-            };
-        }
-
-        if (playSound) {
-            playSound.onchange = () => {
-                this.settings.playSound = playSound.checked;
-            };
-        }
-
-        if (saveButton) {
-            saveButton.onclick = () => {
-                this.saveSettings();
-                this.showInPageNotification({
-                    title: 'Settings Saved',
-                    message: 'Reminder settings have been updated',
-                    details: this.settings.enabled ? 'Reminders are now enabled' : 'Reminders are disabled'
-                });
-            };
-        }
-
-        if (testButton) {
-            testButton.onclick = () => {
-                this.showReminder({
-                    meetingTitle: 'Test Meeting',
-                    meetingDate: new Date(Date.now() + 30 * 60000), // 30 minutes from now
-                    reminderLabel: 'Test notification',
-                    meetingId: 'test'
-                });
-            };
-        }
+      };
     }
 
-    /**
+    if (browserNotifications) {
+      browserNotifications.onchange = async () => {
+        if (browserNotifications.checked) {
+          const granted = await this.requestNotificationPermission();
+          browserNotifications.checked = granted;
+          this.settings.showBrowserNotifications = granted;
+        } else {
+          this.settings.showBrowserNotifications = false;
+        }
+      };
+    }
+
+    if (playSound) {
+      playSound.onchange = () => {
+        this.settings.playSound = playSound.checked;
+      };
+    }
+
+    if (saveButton) {
+      saveButton.onclick = () => {
+        this.saveSettings();
+        this.showInPageNotification({
+          title: 'Settings Saved',
+          message: 'Reminder settings have been updated',
+          details: this.settings.enabled ? 'Reminders are now enabled' : 'Reminders are disabled'
+        });
+      };
+    }
+
+    if (testButton) {
+      testButton.onclick = () => {
+        this.showReminder({
+          meetingTitle: 'Test Meeting',
+          meetingDate: new Date(Date.now() + REMINDER.DEFAULT_TIMES[2].minutes * 60000), // 30 minutes from now
+          reminderLabel: 'Test notification',
+          meetingId: 'test'
+        });
+      };
+    }
+  }
+
+  /**
      * Enable reminders
      */
-    enable() {
-        this.settings.enabled = true;
-        this.saveSettings();
-    }
+  enable() {
+    this.settings.enabled = true;
+    this.saveSettings();
+  }
 
-    /**
+  /**
      * Disable reminders
      */
-    disable() {
-        this.settings.enabled = false;
-        this.clearAllReminders();
-        this.saveSettings();
-    }
+  disable() {
+    this.settings.enabled = false;
+    this.clearAllReminders();
+    this.saveSettings();
+  }
 
-    /**
+  /**
      * Get reminder statistics
      * @returns {Object} Statistics object
      */
-    getStats() {
-        const reminders = this.loadReminders();
-        const activeReminders = reminders.filter(r => new Date(r.reminderDate) > new Date());
-        
-        return {
-            enabled: this.settings.enabled,
-            totalReminders: reminders.length,
-            activeReminders: activeReminders.length,
-            scheduledTimers: this.reminderTimers.size
-        };
-    }
+  getStats() {
+    const reminders = this.loadReminders();
+    const activeReminders = reminders.filter(r => new Date(r.reminderDate) > new Date());
+
+    return {
+      enabled: this.settings.enabled,
+      totalReminders: reminders.length,
+      activeReminders: activeReminders.length,
+      scheduledTimers: this.reminderTimers.size
+    };
+  }
 }
 
 // Export singleton instance

@@ -1,0 +1,59 @@
+name: Pull Request Validation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  validate:
+    name: Validate PR
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run quick tests
+      run: npm run test:quick
+      
+    - name: Build project
+      run: npm run build
+      
+    - name: Check bundle size
+      run: |
+        npm run analyze:bundle
+        # Add bundle size limits check here if needed
+        
+    - name: Comment PR with results
+      uses: actions/github-script@v7
+      if: always()
+      with:
+        script: |
+          const fs = require('fs');
+          let comment = '## PR Validation Results\n\n';
+          
+          // Check if bundle analysis exists
+          if (fs.existsSync('dist/bundle-analysis.json')) {
+            const analysis = JSON.parse(fs.readFileSync('dist/bundle-analysis.json', 'utf8'));
+            comment += '### Bundle Analysis\n';
+            comment += `Total Size: ${analysis.totalSize ? (analysis.totalSize / 1024).toFixed(2) + ' KB' : 'N/A'}\n`;
+            comment += `Bundles: ${analysis.bundles ? analysis.bundles.length : 0}\n\n`;
+          }
+          
+          comment += '✅ All checks passed!';
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });

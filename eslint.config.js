@@ -1,0 +1,91 @@
+module.exports = [{
+  files: ["js/**/*.js"],
+  languageOptions: {
+    ecmaVersion: "latest",
+    sourceType: "module",
+    globals: {
+      window: "readonly",
+      document: "readonly",
+      console: "readonly",
+      localStorage: "readonly",
+      sessionStorage: "readonly",
+      navigator: "readonly",
+      fetch: "readonly",
+      Calendar: "readonly",
+      lunr: "readonly",
+      gtag: "readonly",
+      setTimeout: "readonly",
+      clearTimeout: "readonly",
+      setInterval: "readonly",
+      clearInterval: "readonly",
+      FormData: "readonly",
+      URL: "readonly",
+      URLSearchParams: "readonly",
+      performance: "readonly",
+      Date: "readonly",
+      JSON: "readonly",
+      Promise: "readonly",
+      Math: "readonly",
+      Array: "readonly",
+      Object: "readonly",
+      String: "readonly",
+      Number: "readonly",
+      Boolean: "readonly",
+      Error: "readonly",
+      Map: "readonly",
+      Set: "readonly",
+      WeakMap: "readonly",
+      WeakSet: "readonly",
+      Proxy: "readonly",
+      Reflect: "readonly",
+      Symbol: "readonly",
+      BigInt: "readonly",
+      Intl: "readonly",
+      RegExp: "readonly",
+      isNaN: "readonly",
+      isFinite: "readonly",
+      parseFloat: "readonly",
+      parseInt: "readonly",
+      decodeURI: "readonly",
+      decodeURIComponent: "readonly",
+      encodeURI: "readonly",
+      encodeURIComponent: "readonly",
+      escape: "readonly",
+      unescape: "readonly",
+      eval: "readonly",
+      alert: "readonly",
+      confirm: "readonly",
+      prompt: "readonly",
+      HTMLElement: "readonly",
+      IntersectionObserver: "readonly",
+      Event: "readonly",
+      CustomEvent: "readonly",
+      history: "readonly",
+      requestAnimationFrame: "readonly",
+      cancelAnimationFrame: "readonly",
+      Notification: "readonly"
+    }
+  },
+  rules: {
+    "no-unused-vars": ["warn", { 
+      "argsIgnorePattern": "^_",
+      "varsIgnorePattern": "^_"
+    }],
+    "no-console": ["warn", { 
+      "allow": ["warn", "error"] 
+    }],
+    "indent": ["error", 2],
+    "quotes": ["error", "single", { 
+      "allowTemplateLiterals": true 
+    }],
+    "semi": ["error", "always"],
+    "comma-dangle": ["error", "only-multiline"],
+    "no-trailing-spaces": "error",
+    "eol-last": ["error", "always"],
+    "no-undef": "error",
+    "no-redeclare": "error",
+    "no-unreachable": "error"
+  }
+}, {
+  ignores: ["dist/**", "node_modules/**", "*.min.js", "vendor/**", "reports/**"]
+}];
