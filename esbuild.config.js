@@ -38,6 +38,11 @@ const pageConfigs = [
     entryPoint: 'js/pages/glossary.js',
     outfile: 'dist/js/glossary.min.js',
     globalName: 'SAPA_GLOSSARY'
+  },
+  {
+    entryPoint: 'js/pages/about.js',
+    outfile: 'dist/js/about.min.js',
+    globalName: 'SAPA_ABOUT'
   }
 ];
 

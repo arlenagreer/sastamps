@@ -1,6 +1,6 @@
 {
-  "buildDate": "2025-09-27T17:13:50.760Z",
-  "totalSize": 281788,
+  "buildDate": "2025-09-27T17:50:12.343Z",
+  "totalSize": 286076,
   "bundles": [
     {
       "name": "glossary.min.js",
@@ -27,18 +27,18 @@
       "compressionRatio": "0.77"
     },
     {
-      "name": "contact.min.js",
-      "size": 12740,
-      "sizeFormatted": "12.44 KB",
-      "imports": 8,
+      "name": "about.min.js",
+      "size": 4288,
+      "sizeFormatted": "4.19 KB",
+      "imports": 5,
       "exports": 0,
       "compressionRatio": "0.77"
     },
     {
-      "name": "meetings.min.js",
-      "size": 109904,
-      "sizeFormatted": "107.33 KB",
-      "imports": 10,
+      "name": "contact.min.js",
+      "size": 12740,
+      "sizeFormatted": "12.44 KB",
+      "imports": 8,
       "exports": 0,
       "compressionRatio": "0.77"
     },
@@ -49,11 +49,19 @@
       "imports": 9,
       "exports": 0,
       "compressionRatio": "0.77"
+    },
+    {
+      "name": "meetings.min.js",
+      "size": 109904,
+      "sizeFormatted": "107.33 KB",
+      "imports": 10,
+      "exports": 0,
+      "compressionRatio": "0.77"
     }
   ],
   "treeshakingStats": {
-    "modulesAnalyzed": 6,
+    "modulesAnalyzed": 7,
     "deadCodeEliminated": 0,
-    "bundleCount": 6
+    "bundleCount": 7
   }
 }
