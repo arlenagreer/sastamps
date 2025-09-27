@@ -2525,7 +2525,7 @@
                 let indexData, docsData;
 
                 // Check if embedded data is available
-                if (window.SEARCH_INDEX_DATA &amp;&amp; window.SEARCH_DOCUMENTS_DATA) {
+                if (window.SEARCH_INDEX_DATA && window.SEARCH_DOCUMENTS_DATA) {
                     // Use embedded data
                     indexData = window.SEARCH_INDEX_DATA;
                     docsData = window.SEARCH_DOCUMENTS_DATA;
@@ -2750,7 +2750,7 @@
 
             for (const term of terms) {
                 const index = content.indexOf(term);
-                if (index !== -1 &amp;&amp; (firstMatchIndex === -1 || index < firstMatchIndex)) {
+                if (index !== -1 && (firstMatchIndex === -1 || index < firstMatchIndex)) {
                     firstMatchIndex = index;
                     matchedTerm = term;
                 }
@@ -2768,7 +2768,7 @@
             // Clean up snippet boundaries
             if (start > 0) {
                 const firstSpace = snippet.indexOf(' ');
-                if (firstSpace > 0 &amp;&amp; firstSpace < 20) {
+                if (firstSpace > 0 && firstSpace < 20) {
                     snippet = snippet.substring(firstSpace + 1);
                 }
             }
