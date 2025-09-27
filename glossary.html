@@ -351,39 +351,17 @@
         }
 
         if (moduleSupport) {
-            // Use modules if supported
-            var script = document.createElement('script');
-            script.type = 'module';
-            script.innerHTML = `
-                // Load minified glossary script directly
-                const glossaryScript = document.createElement('script');
-                glossaryScript.src = 'dist/js/glossary.min.js';
-                glossaryScript.onload = () => {
-                    console.log('✅ Glossary page loaded successfully');
-
-                    // Force initialize glossary components after script loads
-                    setTimeout(() => {
-                        if (window.initializeGlossary) {
-                            try {
-                                window.initializeGlossary();
-                                console.log('🔤 Glossary manually initialized');
-                            } catch (error) {
-                                console.warn('Failed to initialize glossary:', error);
-                                showFallbackContent();
-                            }
-                        } else {
-                            console.warn('initializeGlossary function not available');
-                            showFallbackContent();
-                        }
-                    }, 100);
-                };
-                glossaryScript.onerror = () => {
-                    console.warn('⚠️ Glossary page script failed to load');
-                    showFallbackContent();
-                };
-                document.body.appendChild(glossaryScript);
-            `;
-            document.body.appendChild(script);
+            // Simply load the glossary script - it self-initializes
+            var glossaryScript = document.createElement('script');
+            glossaryScript.src = 'dist/js/glossary.min.js';
+            glossaryScript.onload = () => {
+                console.log('✅ Glossary page loaded successfully');
+            };
+            glossaryScript.onerror = () => {
+                console.warn('⚠️ Glossary page script failed to load');
+                showFallbackContent();
+            };
+            document.body.appendChild(glossaryScript);
         } else {
             // Show fallback for file:// protocol
             if (document.readyState === 'loading') {

@@ -61,12 +61,19 @@ async function buildWithTreeShaking() {
     console.log(`📦 Building: ${entryPoint} → dist/${outfile}`);
     
     try {
-      const result = await esbuild.build({
+      // Don't use globalName for glossary as it needs to execute immediately
+      const buildConfig = {
         ...baseConfig,
         entryPoints: [entryPoint],
         outfile: `dist/${outfile}`,
-        globalName: `SAPA_${path.basename(outfile, '.min.js').toUpperCase()}`,
-      });
+      };
+      
+      // Only add globalName for non-glossary bundles
+      if (!outfile.includes('glossary')) {
+        buildConfig.globalName = `SAPA_${path.basename(outfile, '.min.js').toUpperCase()}`;
+      }
+      
+      const result = await esbuild.build(buildConfig);
       
       results.push({ outfile, result });
       

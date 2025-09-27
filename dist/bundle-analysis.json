@@ -1,6 +1,6 @@
 {
-  "buildDate": "2025-09-23T16:10:41.796Z",
-  "totalSize": 288857,
+  "buildDate": "2025-09-23T16:26:01.383Z",
+  "totalSize": 288839,
   "bundles": [
     {
       "name": "js/core.min.js",
@@ -60,8 +60,8 @@
     },
     {
       "name": "js/glossary.min.js",
-      "size": 15303,
-      "sizeFormatted": "14.94 KB",
+      "size": 15285,
+      "sizeFormatted": "14.93 KB",
       "imports": 0,
       "exports": 0,
       "compressionRatio": "0.77"
