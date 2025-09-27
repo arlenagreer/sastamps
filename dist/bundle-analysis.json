@@ -1,6 +1,6 @@
 {
-  "buildDate": "2025-09-27T15:48:56.068Z",
-  "totalSize": 288839,
+  "buildDate": "2025-09-27T16:13:18.588Z",
+  "totalSize": 289146,
   "bundles": [
     {
       "name": "js/core.min.js",
@@ -20,8 +20,8 @@
     },
     {
       "name": "js/meetings.min.js",
-      "size": 57958,
-      "sizeFormatted": "56.6 KB",
+      "size": 58269,
+      "sizeFormatted": "56.9 KB",
       "imports": 1,
       "exports": 0,
       "compressionRatio": "0.77"
@@ -60,8 +60,8 @@
     },
     {
       "name": "js/glossary.min.js",
-      "size": 15285,
-      "sizeFormatted": "14.93 KB",
+      "size": 15281,
+      "sizeFormatted": "14.92 KB",
       "imports": 0,
       "exports": 0,
       "compressionRatio": "0.77"

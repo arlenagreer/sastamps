@@ -136,7 +136,7 @@ async function loadGlossarySearch(container) {
  */
 async function loadGlossaryFilters(container) {
   try {
-    const response = await fetch('/data/glossary/glossary.json');
+    const response = await fetch('data/glossary/glossary.json');
     const glossaryData = await response.json();
     const terms = glossaryData.terms || [];
 
@@ -237,7 +237,7 @@ async function loadGlossaryFilters(container) {
  */
 async function loadGlossaryContent(container) {
   try {
-    const response = await fetch('/data/glossary/glossary.json');
+    const response = await fetch('data/glossary/glossary.json');
     const glossaryData = await response.json();
     const terms = glossaryData.terms || [];
 
@@ -427,7 +427,7 @@ function renderTermCard(term) {
  */
 async function performSearch(query, resultsContainer) {
   try {
-    const response = await fetch('/data/glossary/glossary.json');
+    const response = await fetch('data/glossary/glossary.json');
     const glossaryData = await response.json();
     const terms = glossaryData.terms || [];
 
@@ -585,7 +585,7 @@ function scrollToTerm(termId) {
  */
 async function loadGlossaryStats() {
   try {
-    const response = await fetch('/data/glossary/glossary.json');
+    const response = await fetch('data/glossary/glossary.json');
     const glossaryData = await response.json();
     const terms = glossaryData.terms || [];
 

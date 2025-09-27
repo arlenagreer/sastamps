@@ -110,8 +110,43 @@ async function initializeMeetingsCalendar() {
 async function loadMeetingsList(container) {
   try {
     const { default: meetingsData } = await import('../../data/meetings/meetings.json');
+    
+    // Get current date to determine which quarter to show
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1; // JavaScript months are 0-based
+    
+    // Determine current quarter
+    let quarterStart, quarterEnd, quarterLabel;
+    if (currentMonth >= 10) {
+      // Q4: October-December
+      quarterStart = new Date(currentYear, 9, 1); // October 1
+      quarterEnd = new Date(currentYear, 11, 31); // December 31
+      quarterLabel = 'Q4';
+    } else if (currentMonth >= 7) {
+      // Q3: July-September
+      quarterStart = new Date(currentYear, 6, 1); // July 1
+      quarterEnd = new Date(currentYear, 8, 30); // September 30
+      quarterLabel = 'Q3';
+    } else if (currentMonth >= 4) {
+      // Q2: April-June
+      quarterStart = new Date(currentYear, 3, 1); // April 1
+      quarterEnd = new Date(currentYear, 5, 30); // June 30
+      quarterLabel = 'Q2';
+    } else {
+      // Q1: January-March
+      quarterStart = new Date(currentYear, 0, 1); // January 1
+      quarterEnd = new Date(currentYear, 2, 31); // March 31
+      quarterLabel = 'Q1';
+    }
+    
+    // Filter meetings for current quarter
     const meetings = meetingsData.meetings
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
+      .filter(meeting => {
+        const meetingDate = new Date(meeting.date);
+        return meetingDate >= quarterStart && meetingDate <= quarterEnd;
+      })
+      .sort((a, b) => new Date(a.date) - new Date(b.date)); // Sort ascending for chronological order
 
     const html = meetings.map(meeting => `
             <article class="meeting-item" data-date="${meeting.date}" data-type="${meeting.type || 'regular'}">
