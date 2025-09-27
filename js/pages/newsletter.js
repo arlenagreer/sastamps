@@ -247,7 +247,7 @@ function initializeNewsletterFilters(container) {
 
 function sortNewsletters(newsletters, sortBy) {
   const container = newsletters[0]?.parentElement;
-  if (!container) return;
+  if (!container) {return;}
 
   newsletters.sort((a, b) => {
     switch (sortBy) {
@@ -273,15 +273,15 @@ function bindNewsletterActions(container) {
   const downloadButtons = container.querySelectorAll('.btn-download');
   downloadButtons.forEach(button => {
     addEventListenerWithCleanup(button, 'click', (e) => {
-      const url = e.target.dataset.url;
-      const title = e.target.dataset.title;
+      const {url} = e.target.dataset;
+      const {title} = e.target.dataset;
       downloadNewsletter(url, title);
     });
   });
   const viewButtons = container.querySelectorAll('.btn-view-pdf');
   viewButtons.forEach(button => {
     addEventListenerWithCleanup(button, 'click', (e) => {
-      const newsletterId = e.target.dataset.newsletterId;
+      const {newsletterId} = e.target.dataset;
       trackNewsletterView(newsletterId);
     });
   });

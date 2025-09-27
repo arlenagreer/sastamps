@@ -282,7 +282,7 @@ class DataLoader {
      * @returns {boolean} Whether cache is valid
      */
   isCacheValid(key) {
-    if (!this.cache.has(key)) return false;
+    if (!this.cache.has(key)) {return false;}
 
     const expiryTime = this.cacheExpiry.get(key);
     return expiryTime && Date.now() < expiryTime;

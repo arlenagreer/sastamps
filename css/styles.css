@@ -2,12 +2,12 @@
 
 
 /* ===== IMPORTS ===== */
+
 /* vanilla-calendar import removed - CSS is not needed */
 
 
 /* ===== VARIABLES ===== */
 :root {
-
     /* Color Palette */
     --primary: #1a5276;        /* Deep blue */
     --primary-light: #2980b9;  /* Mid blue */
@@ -17,15 +17,15 @@
     --dark: #2c3e50;           /* Slate dark */
     --medium: #7f8c8d;         /* Gray */
     --light: #ecf0f1;          /* Light gray */
-    --white: #ffffff;
+    --white: #fff;
     --success: #27ae60;        /* Green */
     --warning: #f39c12;        /* Orange */
     --danger: #c0392b;         /* Red */
 
     
     /* Typography */
-    --font-heading: 'Merriweather', Georgia, serif;
-    --font-body: 'Open Sans', Arial, sans-serif;
+    --font-heading: 'Merriweather', georgia, serif;
+    --font-body: 'Open Sans', arial, sans-serif;
 
     
     /* Spacing */
@@ -53,9 +53,9 @@
 
     
     /* Shadows */
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-sm: 0 1px 3px rgb(0, 0, 0, 0.12);
+    --shadow-md: 0 4px 6px rgb(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0, 0, 0, 0.1);
 
     
     /* Transitions */
@@ -67,7 +67,6 @@
 
 /* Dark theme variables */
 [data-theme="dark"] {
-
     /* Color Palette - Dark Mode */
     --primary: #5dade2;        /* Lighter blue for dark mode */
     --primary-light: #85c1e9;  /* Even lighter blue */
@@ -84,9 +83,9 @@
 
     
     /* Dark mode shadows */
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 1px 3px rgb(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px rgb(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px -3px rgb(0, 0, 0, 0.4);
 }
 
 
@@ -267,7 +266,7 @@ button, input, select, textarea {
     grid-template-columns: repeat(3, 1fr);
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .grid-cols-2, .grid-cols-3 {
         grid-template-columns: 1fr;
     }
@@ -437,7 +436,7 @@ footer,
     transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .menu-toggle {
         display: block;
         touch-action: manipulation;
@@ -476,7 +475,7 @@ footer,
     
     
     nav li {
-        margin: 0 0 1.5rem 0;
+        margin: 0 0 1.5rem;
     }
     
     nav a::after {
@@ -486,11 +485,10 @@ footer,
     
     /* Ensure mobile nav links are clickable */
     .nav-menu a {
-        display: block;
         padding: 0.75rem 1rem;
         position: relative;
         z-index: 65;
-        -webkit-tap-highlight-color: rgba(26, 82, 118, 0.2);
+        -webkit-tap-highlight-color: rgb(26, 82, 118, 0.2);
         -webkit-touch-callout: none;
         -webkit-user-select: none;
         user-select: none;
@@ -530,14 +528,14 @@ footer,
     
     /* iOS specific fixes and hover states */
     .nav-menu a:active {
-        background-color: rgba(26, 82, 118, 0.15);
+        background-color: rgb(26, 82, 118, 0.15);
         transform: scale(0.98);
         transition: all 0.1s ease;
         color: var(--primary-dark);
     }
     
     .nav-menu a:hover {
-        background-color: rgba(26, 82, 118, 0.08);
+        background-color: rgb(26, 82, 118, 0.08);
         color: var(--primary-dark);
         transform: translateX(4px);
     }
@@ -600,7 +598,7 @@ footer {
 .footer-bottom {
     margin-top: 2rem;
     padding-top: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgb(255, 255, 255, 0.1);
     text-align: center;
     font-size: 0.9rem;
     color: var(--light);
@@ -848,7 +846,7 @@ input, select, textarea {
 input:focus, select:focus, textarea:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(26, 82, 118, 0.1);
+    box-shadow: 0 0 0 3px rgb(26, 82, 118, 0.1);
 }
 
 textarea {
@@ -913,7 +911,7 @@ th {
 }
 
 tr:hover {
-    background-color: rgba(236, 240, 241, 0.5);
+    background-color: rgb(236, 240, 241, 0.5);
 }
 
 
@@ -1182,7 +1180,7 @@ tr:hover {
     background-color: var(--light);
     padding: var(--space-sm) 0;
     margin-bottom: var(--space-lg);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgb(0, 0, 0, 0.1);
 }
 
 .breadcrumb-list {
@@ -1226,8 +1224,8 @@ tr:hover {
 
 /* Dark mode support */
 .dark-mode .breadcrumb-navigation {
-    background-color: rgba(255, 255, 255, 0.05);
-    border-bottom-color: rgba(255, 255, 255, 0.1);
+    background-color: rgb(255, 255, 255, 0.05);
+    border-bottom-color: rgb(255, 255, 255, 0.1);
 }
 
 .dark-mode .breadcrumb-item a {
@@ -1244,7 +1242,7 @@ tr:hover {
 
 
 /* Mobile breadcrumb adjustments */
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .breadcrumb-navigation {
         padding: var(--space-xs) 0;
         margin-bottom: var(--space-md);
@@ -1261,7 +1259,7 @@ tr:hover {
 
 
 /* ===== MOBILE RESPONSIVENESS ===== */
-@media (max-width: 576px) {
+@media (width <= 576px) {
     html {
         font-size: 14px;
     }
@@ -1302,7 +1300,6 @@ tr:hover {
 
 /* ===== PRINT STYLES ===== */
 @media print {
-
     /* Page setup */
     @page {
         margin: 0.75in;
@@ -1611,7 +1608,7 @@ tr:hover {
     color: var(--accent);
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .nav-icon {
         margin-right: 5px;
         font-size: 1rem;
@@ -1620,7 +1617,7 @@ tr:hover {
 
 
 /* Mobile Calendar Styles */
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .meeting-entry {
         display: flex;
         flex-direction: column;
@@ -1730,7 +1727,6 @@ tr:hover {
 
 /* iPhone-specific optimizations */
 @media screen and (width <= 428px) {
-
     /* Calendar table optimizations */
     .meeting-table {
         font-size: 0.85rem;  /* Slightly smaller font for iPhone */
@@ -1796,14 +1792,14 @@ tr:hover {
     /* Meeting times and info */
     .meeting-times li {
         padding: 0.75rem;
-        background-color: rgba(255, 255, 255, 0.5);
+        background-color: rgb(255, 255, 255, 0.5);
         border-radius: var(--radius-md);
         margin-bottom: 0.5rem;
     }
 
     .meeting-types-list li {
         padding: 0.75rem;
-        background-color: rgba(255, 255, 255, 0.5);
+        background-color: rgb(255, 255, 255, 0.5);
         border-radius: var(--radius-md);
         margin-bottom: 0.5rem;
     }
@@ -1860,7 +1856,7 @@ tr:hover {
 
 
 /* Fix for iPhone landscape mode */
-@media screen and (max-height: 428px) and (orientation: landscape) {
+@media screen and (height <= 428px) and (orientation: landscape) {
     .meeting-entry {
         flex-direction: row;
         align-items: center;
@@ -1902,6 +1898,7 @@ tr:hover {
     --vc-black: var(--dark);
     --vc-gray: var(--medium);
     --vc-gray-light: var(--light);
+
     width: 100%;
     max-width: 100%;
 }
@@ -1918,15 +1915,15 @@ tr:hover {
 .vanilla-calendar .vc-header button {
     color: var(--white);
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgb(255, 255, 255, 0.3);
     border-radius: var(--radius-sm);
     padding: var(--space-xs) var(--space-sm);
     transition: all 0.2s ease;
 }
 
 .vanilla-calendar .vc-header button:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.5);
+    background: rgb(255, 255, 255, 0.1);
+    border-color: rgb(255, 255, 255, 0.5);
 }
 
 
@@ -2078,7 +2075,7 @@ tr:hover {
 
 
 /* Calendar responsive design */
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .calendar-container {
         margin: var(--space-md) 0;
         border-radius: var(--radius-md);
@@ -2114,7 +2111,7 @@ tr:hover {
     }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
     .vanilla-calendar .vc-date {
         min-height: 35px;
         font-size: 0.8rem;
@@ -2156,11 +2153,11 @@ tr:hover {
     }
     
     .vanilla-calendar .vc-date:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgb(255, 255, 255, 0.1);
     }
     
     .event-indicators {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgb(255, 255, 255, 0.1);
     }
     
     .meeting-popover {
@@ -2267,7 +2264,7 @@ tr:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgb(0, 0, 0, 0.7);
     display: none;
     justify-content: center;
     align-items: center;
@@ -2337,7 +2334,7 @@ tr:hover {
 }
 
 .modal-close:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgb(255, 255, 255, 0.2);
 }
 
 .modal-close:focus {
@@ -2693,7 +2690,7 @@ tr:hover {
 
 
 /* Modal Responsive Design */
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .modal-container {
         width: 95vw;
         max-height: 95vh;
@@ -2736,7 +2733,7 @@ tr:hover {
     }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
     .modal-container {
         width: 100vw;
         height: 100vh;
@@ -2764,7 +2761,7 @@ tr:hover {
     }
     
     .modal-footer {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgb(255, 255, 255, 0.05);
         border-color: var(--medium);
     }
     
@@ -2774,11 +2771,11 @@ tr:hover {
     
     .agenda-item,
     .requirement-item {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgb(255, 255, 255, 0.1);
     }
     
     .special-notes li {
-        background: rgba(243, 156, 18, 0.2);
+        background: rgb(243, 156, 18, 0.2);
         border-color: var(--warning);
     }
 }
@@ -2965,7 +2962,7 @@ tr:hover {
 
 
 /* Responsive design for reminders */
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .reminder-notification {
         width: 320px;
         right: 10px;
@@ -2986,7 +2983,7 @@ tr:hover {
     }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
     .reminder-notification {
         width: calc(100vw - 20px);
         right: 10px;
@@ -3012,7 +3009,7 @@ tr:hover {
     }
     
     .reminder-times {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgb(255, 255, 255, 0.1);
     }
 } 
 
@@ -3029,7 +3026,7 @@ tr:hover {
 }
 
 .resources-hero h1 {
-    margin: 0 0 1rem 0;
+    margin: 0 0 1rem;
     font-size: 2.5rem;
     font-weight: 700;
     font-family: var(--font-heading);
@@ -3037,7 +3034,6 @@ tr:hover {
 
 .resources-hero p {
     font-size: 1.25rem;
-    margin: 0;
     opacity: 0.9;
     max-width: 600px;
     margin: 0 auto;
@@ -3078,7 +3074,7 @@ tr:hover {
 .filter-group select:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 2px rgba(26, 82, 118, 0.2);
+    box-shadow: 0 0 0 2px rgb(26, 82, 118, 0.2);
 }
 
 
@@ -3120,14 +3116,14 @@ tr:hover {
 .category-card h3,
 .resource-card h3,
 .link-card h3 {
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 0.5rem;
     color: var(--primary);
     font-family: var(--font-heading);
 }
 
 .category-description {
     color: var(--medium);
-    margin: 0.5rem 0 1rem 0;
+    margin: 0.5rem 0 1rem;
 }
 
 .resource-count {
@@ -3239,7 +3235,7 @@ tr:hover {
 }
 
 .resource-summary {
-    margin: 0.5rem 0 1rem 0;
+    margin: 0.5rem 0 1rem;
     line-height: 1.6;
     color: var(--dark);
 }
@@ -3278,7 +3274,7 @@ tr:hover {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgb(0, 0, 0, 0.7);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3306,7 +3302,7 @@ tr:hover {
 }
 
 .resource-modal-header h2 {
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 0.5rem;
     color: var(--primary);
     font-family: var(--font-heading);
 }
@@ -3324,13 +3320,13 @@ tr:hover {
 
 .resource-modal-content h3 {
     color: var(--primary);
-    margin: 1.5rem 0 0.5rem 0;
+    margin: 1.5rem 0 0.5rem;
     font-family: var(--font-heading);
 }
 
 .resource-modal-content h4 {
     color: var(--dark);
-    margin: 1rem 0 0.5rem 0;
+    margin: 1rem 0 0.5rem;
 }
 
 .resource-modal-content ul {
@@ -3353,7 +3349,7 @@ tr:hover {
 
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .resources-hero h1 {
         font-size: 2rem;
     }
@@ -3714,7 +3710,7 @@ tr:hover {
 
 .glossary-term.highlighted {
     border-color: var(--accent);
-    box-shadow: 0 0 10px rgba(241, 196, 15, 0.3);
+    box-shadow: 0 0 10px rgb(241, 196, 15, 0.3);
 }
 
 .term-header {
@@ -3741,7 +3737,7 @@ tr:hover {
 }
 
 .glossary-term.expanded .term-header .alternate-names {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgb(255, 255, 255, 0.8);
 }
 
 .term-title-group {
@@ -3952,7 +3948,7 @@ tr:hover {
 
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .filters-grid {
         grid-template-columns: 1fr;
     }
@@ -4011,7 +4007,7 @@ tr:hover {
     }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
     .glossary-letter-header {
         font-size: 1.5rem;
     }
@@ -4044,7 +4040,7 @@ tr:hover {
     }
     
     .term-header:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgb(255, 255, 255, 0.1);
     }
     
     .term-content {
@@ -4055,7 +4051,7 @@ tr:hover {
     .term-examples,
     .term-etymology,
     .related-terms {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgb(255, 255, 255, 0.05);
     }
     
     .search-result-item {
@@ -4117,7 +4113,7 @@ tr:hover {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgb(255, 255, 255, 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -4126,7 +4122,7 @@ tr:hover {
 }
 
 .dark-mode .loading-overlay {
-    background: rgba(0, 0, 0, 0.8);
+    background: rgb(0, 0, 0, 0.8);
 }
 
 
@@ -4150,7 +4146,7 @@ tr:hover {
 .skeleton {
     background: linear-gradient(90deg, 
         var(--light) 25%, 
-        rgba(241, 196, 15, 0.1) 50%, 
+        rgb(241, 196, 15, 0.1) 50%, 
         var(--light) 75%
     );
     background-size: 200% 100%;
@@ -4319,7 +4315,7 @@ tr:hover {
 .dark-mode .skeleton {
     background: linear-gradient(90deg, 
         var(--dark) 25%, 
-        rgba(241, 196, 15, 0.1) 50%, 
+        rgb(241, 196, 15, 0.1) 50%, 
         var(--dark) 75%
     );
 }
@@ -4343,7 +4339,7 @@ tr:hover {
 
 
 /* Mobile optimizations */
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .skeleton-newsletter {
         grid-template-columns: 100px 1fr;
         gap: var(--space-md);
@@ -4359,5 +4355,3 @@ tr:hover {
         padding: var(--space-xl);
     }
 }
-
-EOF < /dev/null

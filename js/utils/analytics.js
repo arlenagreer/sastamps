@@ -5,7 +5,7 @@
 
 import { ANALYTICS } from '../constants/index.js';
 
-const GA_MEASUREMENT_ID = ANALYTICS.GA_MEASUREMENT_ID;
+const {GA_MEASUREMENT_ID} = ANALYTICS;
 
 /**
  * Initialize Google Analytics if configured

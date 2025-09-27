@@ -215,8 +215,8 @@ class TemplateEngine {
       }
 
       // Handle booleans
-      if (arg === 'true') return true;
-      if (arg === 'false') return false;
+      if (arg === 'true') {return true;}
+      if (arg === 'false') {return false;}
 
       // Handle variables
       return this.getNestedValue(arg, context);
@@ -274,9 +274,9 @@ class TemplateEngine {
     const value = this.getNestedValue(condition, context);
 
     // Truthy check
-    if (Array.isArray(value)) return value.length > 0;
-    if (typeof value === 'string') return value.length > 0;
-    if (typeof value === 'number') return value !== 0;
+    if (Array.isArray(value)) {return value.length > 0;}
+    if (typeof value === 'string') {return value.length > 0;}
+    if (typeof value === 'number') {return value !== 0;}
 
     return Boolean(value);
   }
@@ -292,7 +292,7 @@ class TemplateEngine {
     let current = context;
 
     for (const part of parts) {
-      if (current == null) return undefined;
+      if (current == null) {return undefined;}
       current = current[part];
     }
 
@@ -322,10 +322,10 @@ class TemplateEngine {
   registerDefaultHelpers() {
     // Format date helper
     this.registerHelper('formatDate', (date, format = 'long') => {
-      if (!date) return '';
+      if (!date) {return '';}
 
       const d = new Date(date);
-      if (isNaN(d.getTime())) return date;
+      if (isNaN(d.getTime())) {return date;}
 
       const options = {
         short: { month: 'short', day: 'numeric', year: 'numeric' },
@@ -347,13 +347,13 @@ class TemplateEngine {
 
     // Truncate text helper
     this.registerHelper('truncate', (text, length = 100, suffix = '...') => {
-      if (!text || text.length <= length) return text;
+      if (!text || text.length <= length) {return text;}
       return text.substring(0, length) + suffix;
     });
 
     // Join array helper
     this.registerHelper('join', (array, separator = ', ') => {
-      if (!Array.isArray(array)) return '';
+      if (!Array.isArray(array)) {return '';}
       return array.join(separator);
     });
 
@@ -399,7 +399,7 @@ class TemplateEngine {
     // Newsletter card component
     this.registerComponent('newsletterCard', (args, context) => {
       const { newsletter } = args;
-      if (!newsletter) return '';
+      if (!newsletter) {return '';}
 
       return `
                 <div class="newsletter-card">
@@ -426,7 +426,7 @@ class TemplateEngine {
     // Meeting card component
     this.registerComponent('meetingCard', (args, context) => {
       const { meeting } = args;
-      if (!meeting) return '';
+      if (!meeting) {return '';}
 
       return `
                 <div class="meeting-card">
@@ -471,7 +471,7 @@ class TemplateEngine {
     // Resource card component
     this.registerComponent('resourceCard', (args, context) => {
       const { resource } = args;
-      if (!resource) return '';
+      if (!resource) {return '';}
 
       return `
                 <div class="resource-card">
@@ -499,7 +499,7 @@ class TemplateEngine {
     // Glossary term component
     this.registerComponent('glossaryTerm', (args, context) => {
       const { term } = args;
-      if (!term) return '';
+      if (!term) {return '';}
 
       return `
                 <div class="glossary-term">

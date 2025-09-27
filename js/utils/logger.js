@@ -86,7 +86,7 @@ export class Logger {
      * @param {Object} logEntry - Formatted log entry
      */
   logToConsole(logEntry) {
-    if (!this.config.enableConsole) return;
+    if (!this.config.enableConsole) {return;}
 
     const { level, message, ...context } = logEntry;
     const prefix = `[${logEntry.timestamp}] [${level}] [${this.name}]`;
@@ -113,7 +113,7 @@ export class Logger {
      * @param {Object} logEntry - Formatted log entry
      */
   async logToRemote(logEntry) {
-    if (!this.config.enableRemote || !ENV.isProduction) return;
+    if (!this.config.enableRemote || !ENV.isProduction) {return;}
 
     try {
       await fetch(this.config.remoteEndpoint, {
@@ -136,7 +136,7 @@ export class Logger {
      * @param {Object} context - Additional context
      */
   log(level, message, context = {}) {
-    if (!this.shouldLog(level)) return;
+    if (!this.shouldLog(level)) {return;}
 
     const logEntry = this.formatMessage(level, message, context);
 

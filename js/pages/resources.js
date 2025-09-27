@@ -60,7 +60,7 @@ async function loadResourcesData() {
 
 function displayFeaturedResources(resources) {
   const container = safeQuerySelector('#featured-resources-grid');
-  if (!container) return;
+  if (!container) {return;}
 
   const featuredResources = resources.filter(resource => resource.featured);
 
@@ -117,7 +117,7 @@ function displayFeaturedResources(resources) {
 
 function displayCategorizedResources(resources, categories) {
   const container = safeQuerySelector('#categories-container');
-  if (!container) return;
+  if (!container) {return;}
 
   const html = categories.map(category => {
     const categoryResources = resources.filter(resource => resource.category === category.id);
@@ -158,7 +158,7 @@ function displayCategorizedResources(resources, categories) {
 
 function displayAllResources(resources) {
   const container = safeQuerySelector('#resources-container');
-  if (!container) return;
+  if (!container) {return;}
 
   const html = resources.map(resource => `
         <div class="resource-item" data-id="${resource.id}" data-category="${resource.category}" data-difficulty="${resource.difficulty}">
@@ -196,7 +196,7 @@ function displayAllResources(resources) {
 
 function initializeResourceSearch(resources) {
   const searchInput = safeQuerySelector('#resource-search');
-  if (!searchInput) return;
+  if (!searchInput) {return;}
 
   const performSearch = debounce((query) => {
     if (!query.trim()) {
@@ -254,10 +254,10 @@ function initializeResourceFilters(resources, categories) {
 
   if (clearButton) {
     addEventListenerWithCleanup(clearButton, 'click', () => {
-      if (categoryFilter) categoryFilter.value = '';
-      if (difficultyFilter) difficultyFilter.value = '';
+      if (categoryFilter) {categoryFilter.value = '';}
+      if (difficultyFilter) {difficultyFilter.value = '';}
       const searchInput = safeQuerySelector('#resource-search');
-      if (searchInput) searchInput.value = '';
+      if (searchInput) {searchInput.value = '';}
 
       showAllResources();
     });
@@ -315,7 +315,7 @@ function bindResourceActions(container) {
     addEventListenerWithCleanup(button, 'click', (e) => {
       e.preventDefault();
       const btn = e.currentTarget;
-      const resourceId = btn.dataset.resourceId;
+      const {resourceId} = btn.dataset;
       if (resourceId) {
         openResourceModal(resourceId);
       } else {
@@ -330,7 +330,7 @@ function bindResourceActions(container) {
     addEventListenerWithCleanup(button, 'click', (e) => {
       e.preventDefault();
       const btn = e.currentTarget;
-      const resourceId = btn.dataset.resourceId;
+      const {resourceId} = btn.dataset;
       if (resourceId) {
         toggleBookmark(resourceId, btn);
       }
@@ -343,7 +343,7 @@ function bindResourceActions(container) {
     addEventListenerWithCleanup(button, 'click', (e) => {
       e.preventDefault();
       const btn = e.currentTarget;
-      const resourceId = btn.dataset.resourceId;
+      const {resourceId} = btn.dataset;
       if (resourceId) {
         showResourceSections(resourceId);
       }
@@ -358,7 +358,7 @@ function bindCategoryActions(container) {
     addEventListenerWithCleanup(link, 'click', (e) => {
       e.preventDefault();
       const btn = e.currentTarget;
-      const resourceId = btn.dataset.resourceId;
+      const {resourceId} = btn.dataset;
       if (resourceId) {
         openResourceModal(resourceId);
       }
@@ -533,7 +533,7 @@ function showModal(content) {
     addEventListenerWithCleanup(modalBookmarkButton, 'click', (e) => {
       e.preventDefault();
       const btn = e.currentTarget;
-      const resourceId = btn.dataset.resourceId;
+      const {resourceId} = btn.dataset;
       if (resourceId) {
         toggleBookmark(resourceId, btn);
         // Update the bookmark state on the main page too
@@ -628,7 +628,7 @@ function updateBookmarkStates() {
   const bookmarkButtons = document.querySelectorAll('.btn-bookmark');
 
   bookmarkButtons.forEach(button => {
-    const resourceId = button.dataset.resourceId;
+    const {resourceId} = button.dataset;
     if (bookmarks.includes(resourceId)) {
       button.textContent = '🔖 Bookmarked';
       button.setAttribute('aria-label', 'Remove bookmark');

@@ -450,7 +450,7 @@ class MeetingLoader {
      * Add meeting styles
      */
   static addStyles() {
-    if (document.getElementById('meeting-loader-styles')) return;
+    if (document.getElementById('meeting-loader-styles')) {return;}
 
     const styles = `
             .meetings-list {

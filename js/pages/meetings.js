@@ -307,7 +307,7 @@ function bindMeetingActions(container) {
   const rsvpButtons = container.querySelectorAll('.btn-rsvp');
   rsvpButtons.forEach(button => {
     addEventListenerWithCleanup(button, 'click', (e) => {
-      const meetingId = e.target.dataset.meetingId;
+      const {meetingId} = e.target.dataset;
       handleRSVP(meetingId, button);
     });
   });
@@ -316,7 +316,7 @@ function bindMeetingActions(container) {
   const reminderButtons = container.querySelectorAll('.btn-reminder');
   reminderButtons.forEach(button => {
     addEventListenerWithCleanup(button, 'click', async (e) => {
-      const meetingId = e.target.dataset.meetingId;
+      const {meetingId} = e.target.dataset;
       const { reminderSystem } = await import('../reminder-system.js');
       reminderSystem.setReminder(meetingId);
 

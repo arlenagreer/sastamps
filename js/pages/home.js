@@ -112,7 +112,7 @@ function calculateTimeUntil(dateString) {
   const target = new Date(dateString);
   const diff = target - now;
 
-  if (diff <= 0) return null;
+  if (diff <= 0) {return null;}
 
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
   const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -122,12 +122,12 @@ function calculateTimeUntil(dateString) {
 }
 
 function formatCountdown(time) {
-  if (!time) return '<p>Meeting has started!</p>';
+  if (!time) {return '<p>Meeting has started!</p>';}
 
   const parts = [];
-  if (time.days > 0) parts.push(`${time.days} day${time.days !== 1 ? 's' : ''}`);
-  if (time.hours > 0) parts.push(`${time.hours} hour${time.hours !== 1 ? 's' : ''}`);
-  if (time.minutes > 0) parts.push(`${time.minutes} minute${time.minutes !== 1 ? 's' : ''}`);
+  if (time.days > 0) {parts.push(`${time.days} day${time.days !== 1 ? 's' : ''}`);}
+  if (time.hours > 0) {parts.push(`${time.hours} hour${time.hours !== 1 ? 's' : ''}`);}
+  if (time.minutes > 0) {parts.push(`${time.minutes} minute${time.minutes !== 1 ? 's' : ''}`);}
 
   return `<p>Next meeting in: <strong>${parts.join(', ')}</strong></p>`;
 }

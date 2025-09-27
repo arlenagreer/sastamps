@@ -136,7 +136,7 @@ class SearchEngine {
         return {
           id: result.ref,
           score: result.score,
-          document: document,
+          document,
           matches: result.matchData || {}
         };
       });
@@ -186,7 +186,7 @@ class SearchEngine {
 
     return results.filter(result => {
       const doc = result.document;
-      if (!doc) return false;
+      if (!doc) {return false;}
 
       // Filter by type
       if (types && types.length > 0 && !types.includes(doc.type)) {
@@ -290,10 +290,10 @@ class SearchEngine {
     };
 
     this.documents.forEach(doc => {
-      if (doc.type) options.types.add(doc.type);
-      if (doc.category) options.categories.add(doc.category);
-      if (doc.difficulty) options.difficulty.add(doc.difficulty);
-      if (doc.quarter) options.quarters.add(doc.quarter);
+      if (doc.type) {options.types.add(doc.type);}
+      if (doc.category) {options.categories.add(doc.category);}
+      if (doc.difficulty) {options.difficulty.add(doc.difficulty);}
+      if (doc.quarter) {options.quarters.add(doc.quarter);}
       if (doc.date) {
         const year = new Date(doc.date).getFullYear();
         options.years.add(year.toString());
@@ -646,13 +646,13 @@ class SearchEngine {
         }
       } else {
         // Handle single select
-        const value = select.value;
+        const {value} = select;
         if (value) {
-          if (filterType === 'type') filters.types = [value];
-          else if (filterType === 'category') filters.categories = [value];
-          else if (filterType === 'difficulty') filters.difficulty = [value];
-          else if (filterType === 'year') filters.years = [value];
-          else if (filterType === 'quarter') filters.quarters = [value];
+          if (filterType === 'type') {filters.types = [value];}
+          else if (filterType === 'category') {filters.categories = [value];}
+          else if (filterType === 'difficulty') {filters.difficulty = [value];}
+          else if (filterType === 'year') {filters.years = [value];}
+          else if (filterType === 'quarter') {filters.quarters = [value];}
         }
       }
     });
@@ -796,16 +796,16 @@ class SearchEngine {
     const statusContainer = container.querySelector('.search-status');
     const suggestionsContainer = container.querySelector('.search-suggestions');
 
-    if (resultsContainer) resultsContainer.innerHTML = '';
-    if (statusContainer) statusContainer.innerHTML = '';
-    if (suggestionsContainer) suggestionsContainer.style.display = 'none';
+    if (resultsContainer) {resultsContainer.innerHTML = '';}
+    if (statusContainer) {statusContainer.innerHTML = '';}
+    if (suggestionsContainer) {suggestionsContainer.style.display = 'none';}
   }
 
   /**
      * Add search styles to the page
      */
   static addStyles() {
-    if (document.getElementById('search-engine-styles')) return;
+    if (document.getElementById('search-engine-styles')) {return;}
 
     const styles = `
             .search-container {

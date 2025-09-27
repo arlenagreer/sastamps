@@ -67,7 +67,7 @@ class NewsletterLoader {
     const grouped = {};
 
     this.newsletters.forEach(newsletter => {
-      const year = newsletter.year;
+      const {year} = newsletter;
       if (!grouped[year]) {
         grouped[year] = [];
       }
@@ -136,7 +136,7 @@ class NewsletterLoader {
      * Get available years for filtering
      */
   getAvailableYears() {
-    if (!this.isLoaded) return [];
+    if (!this.isLoaded) {return [];}
 
     const years = [...new Set(this.newsletters.map(n => n.year))];
     return years.sort((a, b) => b - a); // Most recent first
@@ -153,7 +153,7 @@ class NewsletterLoader {
      * Get all available tags
      */
   getAvailableTags() {
-    if (!this.isLoaded) return [];
+    if (!this.isLoaded) {return [];}
 
     const tags = new Set();
     this.newsletters.forEach(newsletter => {
@@ -377,8 +377,8 @@ class NewsletterLoader {
 
     if (clearButton) {
       clearButton.addEventListener('click', () => {
-        if (yearFilter) yearFilter.value = '';
-        if (quarterFilter) quarterFilter.value = '';
+        if (yearFilter) {yearFilter.value = '';}
+        if (quarterFilter) {quarterFilter.value = '';}
         if (tagsFilter) {
           Array.from(tagsFilter.options).forEach(option => option.selected = false);
         }
@@ -410,7 +410,7 @@ class NewsletterLoader {
     // Group filtered results by year
     const grouped = {};
     filtered.forEach(newsletter => {
-      const year = newsletter.year;
+      const {year} = newsletter;
       if (!grouped[year]) {
         grouped[year] = [];
       }
@@ -451,7 +451,7 @@ class NewsletterLoader {
      * Add newsletter archive styles
      */
   static addStyles() {
-    if (document.getElementById('newsletter-archive-styles')) return;
+    if (document.getElementById('newsletter-archive-styles')) {return;}
 
     const styles = `
             .archive-filters {

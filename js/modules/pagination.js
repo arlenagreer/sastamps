@@ -279,7 +279,7 @@ class Pagination {
     const pages = [];
     const half = Math.floor(this.maxVisiblePages / 2);
     let start = Math.max(1, this.currentPage - half);
-    let end = Math.min(this.totalPages, start + this.maxVisiblePages - 1);
+    const end = Math.min(this.totalPages, start + this.maxVisiblePages - 1);
 
     // Adjust start if we're near the end
     if (end - start + 1 < this.maxVisiblePages) {
@@ -314,7 +314,7 @@ class Pagination {
      * Attach event listeners to pagination controls
      */
   attachEventListeners() {
-    if (!this.paginationElement) return;
+    if (!this.paginationElement) {return;}
 
     // Page buttons
     this.paginationElement.querySelectorAll('.pagination-btn[data-page]').forEach(btn => {
@@ -349,7 +349,7 @@ class Pagination {
      * @returns {number} Start item number
      */
   getStartItem() {
-    if (this.totalItems === 0) return 0;
+    if (this.totalItems === 0) {return 0;}
     return (this.currentPage - 1) * this.itemsPerPage + 1;
   }
 
@@ -383,7 +383,7 @@ class Pagination {
      * Add pagination styles to the page
      */
   static addStyles() {
-    if (document.getElementById('pagination-styles')) return;
+    if (document.getElementById('pagination-styles')) {return;}
 
     const styles = `
             .pagination-controls {

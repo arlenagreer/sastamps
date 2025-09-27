@@ -216,7 +216,7 @@ async function loadGlossaryFilters(container) {
 
     alphabetBtns.forEach(btn => {
       btn.addEventListener('click', (e) => {
-        const letter = e.target.dataset.letter;
+        const {letter} = e.target.dataset;
         jumpToLetter(letter);
 
         // Visual feedback
@@ -333,7 +333,7 @@ function renderGlossaryTerms(terms, container) {
     // Handle related term clicks
     if (e.target.closest('.related-term')) {
       e.preventDefault();
-      const termId = e.target.closest('.related-term').dataset.termId;
+      const {termId} = e.target.closest('.related-term').dataset;
       scrollToTerm(termId);
     }
   });
@@ -485,7 +485,7 @@ function applyFilters() {
   const difficultyFilter = document.querySelector('#difficulty-filter')?.value || '';
   const sortFilter = document.querySelector('#sort-filter')?.value || 'alphabetical';
 
-  if (!window.glossaryTerms) return;
+  if (!window.glossaryTerms) {return;}
 
   let filteredTerms = [...window.glossaryTerms];
 
@@ -503,7 +503,7 @@ function applyFilters() {
   switch (sortFilter) {
   case 'category':
     filteredTerms.sort((a, b) => {
-      if (a.category !== b.category) return a.category.localeCompare(b.category);
+      if (a.category !== b.category) {return a.category.localeCompare(b.category);}
       return a.term.localeCompare(b.term);
     });
     break;
@@ -512,7 +512,7 @@ function applyFilters() {
     filteredTerms.sort((a, b) => {
       const orderA = difficultyOrder[a.difficulty] || 999;
       const orderB = difficultyOrder[b.difficulty] || 999;
-      if (orderA !== orderB) return orderA - orderB;
+      if (orderA !== orderB) {return orderA - orderB;}
       return a.term.localeCompare(b.term);
     });
     break;
@@ -570,7 +570,7 @@ function scrollToTerm(termId) {
     const icon = termElement.querySelector('.expand-icon');
     if (content && content.style.display !== 'block') {
       content.style.display = 'block';
-      if (icon) icon.style.transform = 'rotate(180deg)';
+      if (icon) {icon.style.transform = 'rotate(180deg)';}
       termElement.classList.add('expanded');
     }
 
@@ -597,9 +597,9 @@ async function loadGlossaryStats() {
     const totalCategoriesEl = document.querySelector('#total-categories');
     const totalReferencesEl = document.querySelector('#total-references');
 
-    if (totalTermsEl) totalTermsEl.textContent = totalTerms;
-    if (totalCategoriesEl) totalCategoriesEl.textContent = categories;
-    if (totalReferencesEl) totalReferencesEl.textContent = totalReferences;
+    if (totalTermsEl) {totalTermsEl.textContent = totalTerms;}
+    if (totalCategoriesEl) {totalCategoriesEl.textContent = categories;}
+    if (totalReferencesEl) {totalReferencesEl.textContent = totalReferences;}
 
   } catch (error) {
     console.error('Failed to load glossary stats:', error);
@@ -626,7 +626,7 @@ function formatTermId(termId) {
 }
 
 function escapeHtml(text) {
-  if (!text) return '';
+  if (!text) {return '';}
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;

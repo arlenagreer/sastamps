@@ -361,7 +361,7 @@
                     const searchContainer = document.getElementById('glossary-search-container');
                     const filtersContainer = document.getElementById('glossary-filters-container');
                     const contentContainer = document.getElementById('glossary-content-container');
-                    
+
                     if (searchContainer && searchContainer.innerHTML.includes('Loading search')) {
                         console.error('❌ Search container still showing loading message');
                     }
@@ -371,11 +371,11 @@
                     if (contentContainer && contentContainer.innerHTML.includes('Loading glossary')) {
                         console.error('❌ Content container still showing loading message');
                     }
-                    
+
                     // Try manual initialization if auto-init failed
-                    if (window.initializeGlossary && 
-                        (searchContainer.innerHTML.includes('Loading') || 
-                         filtersContainer.innerHTML.includes('Loading') || 
+                    if (window.initializeGlossary &&
+                        (searchContainer.innerHTML.includes('Loading') ||
+                         filtersContainer.innerHTML.includes('Loading') ||
                          contentContainer.innerHTML.includes('Loading'))) {
                         console.log('🔄 Attempting manual initialization...');
                         window.initializeGlossary();

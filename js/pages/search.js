@@ -116,7 +116,7 @@ async function initializeSearchInterface(container) {
         // Add click handlers for suggestions
         suggestionsContainer.querySelectorAll('.search-suggestion').forEach(button => {
           addEventListenerWithCleanup(button, 'click', (e) => {
-            const query = e.target.dataset.query;
+            const {query} = e.target.dataset;
             searchInput.value = query;
             performSearch(query);
             suggestionsContainer.innerHTML = '';
@@ -244,7 +244,7 @@ function initializeSearchResults(container) {
 
 function displaySearchResults(results, query) {
   const container = safeQuerySelector('#results-container');
-  if (!container) return;
+  if (!container) {return;}
 
   if (results.length === 0) {
     container.innerHTML = `
@@ -309,7 +309,7 @@ function displaySearchResults(results, query) {
 
 function updateSearchStats(count, query) {
   const container = safeQuerySelector('#search-stats');
-  if (!container) return;
+  if (!container) {return;}
 
   container.innerHTML = `
         <p class="search-stats-text">
@@ -345,7 +345,7 @@ function showSearchError(message) {
 
 function applySearchFilters() {
   const currentQuery = safeQuerySelector('#main-search-input')?.value;
-  if (!currentQuery || !window.siteSearchEngine) return;
+  if (!currentQuery || !window.siteSearchEngine) {return;}
 
   const filters = {
     contentType: safeQuerySelector('#content-type-filter')?.value,
@@ -422,7 +422,7 @@ function updateURLWithQuery(query, pushState = true) {
 
 // Utility functions
 function highlightMatch(text, query) {
-  if (!query.trim()) return text;
+  if (!query.trim()) {return text;}
 
   const regex = new RegExp(`(${query.split(' ').join('|')})`, 'gi');
   return text.replace(regex, '<mark>$1</mark>');
