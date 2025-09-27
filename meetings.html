@@ -13,8 +13,8 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://cdnjs.cloudflare.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://www.google-analytics.com; connect-src 'self' https://www.google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://cdnjs.cloudflare.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://www.google-analytics.com; connect-src 'self' https://www.google-analytics.com; frame-src 'self' https://www.google.com https://maps.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="format-detection" content="telephone=no">
     <meta name="description" content="Join SAPA for our weekly meetings featuring educational programs, auctions, and trading sessions. Find our meeting schedule and add events to your calendar.">
@@ -1905,6 +1905,18 @@ h2{font-size:1.75rem}
                                     <p>Please enable JavaScript in your browser or contact us at <a href="mailto:loz33@hotmail.com">loz33@hotmail.com</a> for meeting information.</p>
                                 </div>
                             </noscript>
+                        </div>
+
+                        <!-- Interactive Calendar View -->
+                        <div class="calendar-section mt-4">
+                            <h3 style="color: var(--primary); margin-bottom: 1rem; text-align: center;">
+                                <i class="fas fa-calendar-alt"></i> Calendar View
+                            </h3>
+                            <div id="calendar-container" class="calendar-container">
+                                <div class="loading">
+                                    <i class="fas fa-spinner fa-spin"></i> Loading calendar...
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Calendar Download Options -->
