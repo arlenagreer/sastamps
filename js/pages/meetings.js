@@ -59,8 +59,11 @@ async function initializeMeetingsCalendar() {
     ]);
 
     // Initialize calendar with full meeting functionality
-    const adapter = calendarAdapter();
-    await adapter.loadMeetings();
+    // calendarAdapter is already an instance, not a function
+    const adapter = calendarAdapter;
+    if (adapter && adapter.loadMeetings) {
+      await adapter.loadMeetings();
+    }
 
     const calendar = new Calendar(calendarContainer, {
       type: 'default',

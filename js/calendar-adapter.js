@@ -5,6 +5,7 @@
 
 export class CalendarAdapter {
   constructor() {
+    this.meetingsData = null;
     this.eventTypeStyles = {
       'business': {
         color: '#1a5276',
@@ -31,6 +32,33 @@ export class CalendarAdapter {
         bgColor: '#fef9e7'
       }
     };
+  }
+
+  /**
+   * Load meetings data from JSON file
+   */
+  async loadMeetings() {
+    try {
+      const response = await fetch('data/meetings/meetings.json');
+      if (!response.ok) {
+        throw new Error(`Failed to load meetings: ${response.status}`);
+      }
+      this.meetingsData = await response.json();
+      return this.meetingsData;
+    } catch (error) {
+      console.error('Error loading meetings:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get a meeting by date
+   */
+  getMeetingByDate(date) {
+    if (!this.meetingsData || !this.meetingsData.meetings) {
+      return null;
+    }
+    return this.meetingsData.meetings.find(meeting => meeting.date === date);
   }
 
   /**
@@ -267,5 +295,10 @@ export class CalendarAdapter {
   }
 }
 
-// Export singleton instance
+// Export singleton instance and factory function
 export const calendarAdapter = new CalendarAdapter();
+
+// Export factory function for backward compatibility
+export default function createCalendarAdapter() {
+  return new CalendarAdapter();
+}

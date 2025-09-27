@@ -22,7 +22,8 @@ async function initializeHomeCalendar() {
 
     // Initialize calendar with lazy loading
     calendarLazyLoader.observe(calendarContainer, async (element) => {
-      const adapter = calendarAdapter();
+      // calendarAdapter is already an instance, not a function
+      const adapter = calendarAdapter;
       const calendar = new Calendar(element, {
         type: 'default',
         settings: {
@@ -35,7 +36,9 @@ async function initializeHomeCalendar() {
         }
       });
 
-      await adapter.loadMeetings();
+      if (adapter && adapter.loadMeetings) {
+        await adapter.loadMeetings();
+      }
       calendar.init();
 
       return calendar;
