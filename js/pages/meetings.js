@@ -22,7 +22,7 @@ async function initializeMeetingsPage() {
   await initializeMeetingsCalendar();
 
   // Meeting list/grid view
-  const meetingsList = safeQuerySelector('#meetings-list');
+  const meetingsList = safeQuerySelector('#meeting-schedule-container');
   if (meetingsList) {
     await loadMeetingsList(meetingsList);
   }

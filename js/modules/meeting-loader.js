@@ -81,6 +81,13 @@ class MeetingLoader {
   }
 
   /**
+     * Get meetings for Q4 2025 (October-December)
+     */
+  getQ4Meetings() {
+    return this.filterMeetingsByDateRange('2025-10-01', '2025-12-31');
+  }
+
+  /**
      * Group meetings by month
      */
   groupMeetingsByMonth(meetings) {
@@ -191,12 +198,17 @@ class MeetingLoader {
       return;
     }
 
-    // Get Q3 2025 meetings
-    const q3Meetings = this.getQ3Meetings();
-    const groupedMeetings = this.groupMeetingsByMonth(q3Meetings);
+    // Get meetings based on dateRange parameter
+    let meetings;
+    if (dateRange === 'Q4-2025') {
+      meetings = this.getQ4Meetings();
+    } else {
+      meetings = this.getQ3Meetings(); // Default to Q3 for backward compatibility
+    }
+    const groupedMeetings = this.groupMeetingsByMonth(meetings);
 
     // Generate table HTML
-    const tableHTML = this.generateTableHTML(groupedMeetings, showCalendarLinks);
+    const tableHTML = this.generateTableHTML(groupedMeetings, showCalendarLinks, dateRange);
 
     container.innerHTML = tableHTML;
   }
@@ -204,9 +216,16 @@ class MeetingLoader {
   /**
      * Generate the meeting table HTML
      */
-  generateTableHTML(groupedMeetings, showCalendarLinks) {
-    const months = ['2025-07', '2025-08', '2025-09'];
-    const monthNames = ['July 2025', 'August 2025', 'September 2025'];
+  generateTableHTML(groupedMeetings, showCalendarLinks, dateRange = 'Q3-2025') {
+    // Define months and names based on quarter
+    let months, monthNames;
+    if (dateRange === 'Q4-2025') {
+      months = ['2025-10', '2025-11', '2025-12'];
+      monthNames = ['October 2025', 'November 2025', 'December 2025'];
+    } else {
+      months = ['2025-07', '2025-08', '2025-09'];
+      monthNames = ['July 2025', 'August 2025', 'September 2025'];
+    }
 
     let html = `
             <table class="meeting-table" style="width: 100%; border-collapse: collapse; font-family: var(--font-body); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm);">
