@@ -32,8 +32,10 @@ export class CalendarComponent {
       try {
         if (!meetingsData) {
           import('./modules/meeting-loader.js')
-            .then(({ meetingLoader }) => {
-              return meetingLoader.loadMeetings();
+            .then((module) => {
+              const MeetingLoader = module.default;
+              const meetingLoader = new MeetingLoader();
+              return meetingLoader.loadData();
             })
             .then(data => {
               const calendar = new CalendarComponent(element.id, data);
