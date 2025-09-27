@@ -1244,9 +1244,11 @@ function setupDynamicContentBoundaries() {
           container,
           async (element) => {
             // Dynamic import of newsletter loader
-            const { newsletterLoader } = await import('./modules/newsletter-loader.js');
-
-            const newsletters = await newsletterLoader.loadNewsletters();
+            const { default: NewsletterLoader } = await import('./modules/newsletter-loader.js');
+            
+            const loader = new NewsletterLoader();
+            const data = await loader.loadData();
+            const newsletters = data.newsletters;
 
             // Render newsletter content
             if (newsletters && newsletters.length > 0) {
