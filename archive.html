@@ -227,10 +227,43 @@ h2{font-size:1.75rem}
             margin-bottom: 1.5rem;
         }
 
+        .newsletter-tags {
+            margin-bottom: 1rem;
+        }
+
+        .newsletter-tags .tag {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--dark);
+            padding: 0.25rem 0.5rem;
+            margin: 0.125rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+        }
+
+        .newsletter-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--medium);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
         @media (max-width: 768px) {
             .archive-grid {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
+            }
+            
+            .newsletter-meta {
+                flex-direction: column;
+                gap: 0.5rem;
             }
         }
     </style>
@@ -324,12 +357,89 @@ h2{font-size:1.75rem}
             </div>
         </section>
 
-        <!-- Dynamic Newsletter Archive Section -->
+        <!-- Newsletter Archive Section -->
         <section class="section">
             <div class="container">
-                <div id="newsletter-archive-container">
-                    <div class="loading">
-                        <i class="fas fa-spinner fa-spin"></i> Loading newsletter archive...
+                <div class="archive-year-section">
+                    <h2 class="archive-year-header">2025 Newsletter Archive</h2>
+
+                    <div class="archive-grid">
+                        <!-- Fourth Quarter 2025 -->
+                        <div class="archive-item">
+                            <div class="archive-item-header">
+                                <h3>SAPA PHILATEX</h3>
+                                <p>Fourth Quarter 2025</p>
+                            </div>
+                            <div class="archive-item-content">
+                                <p><strong>Published:</strong> October 1, 2025</p>
+                                <p>Features the October-December meeting calendar, year-end activities, holiday schedule adjustments, 2026 membership renewal information, upcoming stamp shows, and special programs on postal history and rare stamp collections.</p>
+                                <div class="newsletter-tags">
+                                    <span class="tag">2025</span>
+                                    <span class="tag">Q4</span>
+                                    <span class="tag">Holidays</span>
+                                    <span class="tag">Year-End</span>
+                                    <span class="tag">Membership</span>
+                                </div>
+                                <div class="newsletter-meta">
+                                    <span class="meta-item"><i class="fas fa-file-alt"></i> 12 pages</span>
+                                    <span class="meta-item"><i class="fas fa-download"></i> 2.5 MB</span>
+                                </div>
+                                <a href="public/SAPA-PHILATEX-Fourth-Quarter-2025.pdf" class="btn btn-primary" target="_blank">
+                                    <i class="fas fa-file-pdf"></i> Download PDF
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Third Quarter 2025 -->
+                        <div class="archive-item">
+                            <div class="archive-item-header">
+                                <h3>SAPA PHILATEX</h3>
+                                <p>Third Quarter 2025</p>
+                            </div>
+                            <div class="archive-item-content">
+                                <p><strong>Published:</strong> July 1, 2025</p>
+                                <p>Features the July-September meeting calendar, annual "Blue Chip" auction details, Greater Houston Stamp Show information, TSDA show schedule, 2025 membership drive, and programs on US Air Mail History and Classic Mexican Stamps.</p>
+                                <div class="newsletter-tags">
+                                    <span class="tag">2025</span>
+                                    <span class="tag">Auction</span>
+                                    <span class="tag">Meetings</span>
+                                    <span class="tag">Air Mail</span>
+                                    <span class="tag">Mexican Stamps</span>
+                                </div>
+                                <div class="newsletter-meta">
+                                    <span class="meta-item"><i class="fas fa-file-alt"></i> 12 pages</span>
+                                    <span class="meta-item"><i class="fas fa-download"></i> 2.1 MB</span>
+                                </div>
+                                <a href="public/SAPA-PHILATEX-Third-Quarter-2025.pdf" class="btn btn-primary" target="_blank">
+                                    <i class="fas fa-file-pdf"></i> Download PDF
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Second Quarter 2025 -->
+                        <div class="archive-item">
+                            <div class="archive-item-header">
+                                <h3>SAPA PHILATEX</h3>
+                                <p>Second Quarter 2025</p>
+                            </div>
+                            <div class="archive-item-content">
+                                <p><strong>Published:</strong> April 1, 2025</p>
+                                <p>Contains the April-June meeting schedule, club updates, member spotlights, and special features on recent philatelic discoveries and collecting tips for the spring season.</p>
+                                <div class="newsletter-tags">
+                                    <span class="tag">2025</span>
+                                    <span class="tag">Spring</span>
+                                    <span class="tag">Collecting Tips</span>
+                                    <span class="tag">Member Spotlight</span>
+                                </div>
+                                <div class="newsletter-meta">
+                                    <span class="meta-item"><i class="fas fa-file-alt"></i> 10 pages</span>
+                                    <span class="meta-item"><i class="fas fa-download"></i> 1.8 MB</span>
+                                </div>
+                                <a href="public/SAPA PHILATEX Second Quarter 2025.pdf" class="btn btn-primary" target="_blank">
+                                    <i class="fas fa-file-pdf"></i> Download PDF
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -712,131 +822,5 @@ h2{font-size:1.75rem}
     }
 </script>
 
-<!-- Newsletter Archive Dynamic Loading -->
-<script type="module">
-    // Newsletter archive dynamic loading
-    document.addEventListener('DOMContentLoaded', async () => {
-        try {
-            // Check if we can use ES modules
-            const NewsletterLoader = (await import('./js/modules/newsletter-loader.js')).default;
-
-            const loader = new NewsletterLoader({
-                dataUrl: './data/newsletters/newsletters.json',
-                onLoad: (data) => {
-                    console.log('📰 Newsletter archive loaded:', data.metadata);
-                },
-                onError: (error) => {
-                    console.error('❌ Newsletter loading error:', error);
-                    showFallbackContent();
-                }
-            });
-
-            // Load newsletter data
-            await loader.loadData();
-
-            // Render the archive with filters
-            loader.renderArchive('#newsletter-archive-container', {
-                groupByYear: true,
-                showFilters: true,
-                sortOrder: 'desc'
-            });
-
-        } catch (error) {
-            console.warn('⚠️ Module loading failed, using fallback:', error);
-            showFallbackContent();
-        }
-    });
-
-    // Fallback content if module loading fails
-    function showFallbackContent() {
-        const container = document.getElementById('newsletter-archive-container');
-        if (container) {
-            container.innerHTML = `
-                <div class="archive-year-section">
-                    <h2 class="archive-year-header">2025 Newsletter Archive</h2>
-
-                    <div class="archive-grid">
-                        <!-- Fourth Quarter 2025 -->
-                        <div class="archive-item">
-                            <div class="archive-item-header">
-                                <h3>SAPA PHILATEX</h3>
-                                <p>Fourth Quarter 2025</p>
-                            </div>
-                            <div class="archive-item-content">
-                                <p><strong>Published:</strong> October 1, 2025</p>
-                                <p>Features the October-December meeting calendar, year-end activities, holiday schedule adjustments, 2026 membership renewal information, upcoming stamp shows, and special programs on postal history and rare stamp collections.</p>
-                                <div class="newsletter-tags">
-                                    <span class="tag">2025</span>
-                                    <span class="tag">Q4</span>
-                                    <span class="tag">Holidays</span>
-                                    <span class="tag">Year-End</span>
-                                    <span class="tag">Membership</span>
-                                </div>
-                                <div class="newsletter-meta">
-                                    <span class="meta-item"><i class="fas fa-file-alt"></i> 12 pages</span>
-                                    <span class="meta-item"><i class="fas fa-download"></i> 2.5 MB</span>
-                                </div>
-                                <a href="public/SAPA-PHILATEX-Fourth-Quarter-2025.pdf" class="btn btn-primary" target="_blank">
-                                    <i class="fas fa-file-pdf"></i> Download PDF
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Third Quarter 2025 -->
-                        <div class="archive-item">
-                            <div class="archive-item-header">
-                                <h3>SAPA PHILATEX</h3>
-                                <p>Third Quarter 2025</p>
-                            </div>
-                            <div class="archive-item-content">
-                                <p><strong>Published:</strong> July 1, 2025</p>
-                                <p>Features the July-September meeting calendar, annual "Blue Chip" auction details, Greater Houston Stamp Show information, TSDA show schedule, 2025 membership drive, and programs on US Air Mail History and Classic Mexican Stamps.</p>
-                                <div class="newsletter-tags">
-                                    <span class="tag">2025</span>
-                                    <span class="tag">Auction</span>
-                                    <span class="tag">Meetings</span>
-                                    <span class="tag">Air Mail</span>
-                                    <span class="tag">Mexican Stamps</span>
-                                </div>
-                                <div class="newsletter-meta">
-                                    <span class="meta-item"><i class="fas fa-file-alt"></i> 12 pages</span>
-                                    <span class="meta-item"><i class="fas fa-download"></i> 2.1 MB</span>
-                                </div>
-                                <a href="public/SAPA-PHILATEX-Third-Quarter-2025.pdf" class="btn btn-primary" target="_blank">
-                                    <i class="fas fa-file-pdf"></i> Download PDF
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Second Quarter 2025 -->
-                        <div class="archive-item">
-                            <div class="archive-item-header">
-                                <h3>SAPA PHILATEX</h3>
-                                <p>Second Quarter 2025</p>
-                            </div>
-                            <div class="archive-item-content">
-                                <p><strong>Published:</strong> April 1, 2025</p>
-                                <p>Contains the April-June meeting schedule, club updates, member spotlights, and special features on recent philatelic discoveries and collecting tips for the spring season.</p>
-                                <div class="newsletter-tags">
-                                    <span class="tag">2025</span>
-                                    <span class="tag">Spring</span>
-                                    <span class="tag">Collecting Tips</span>
-                                    <span class="tag">Member Spotlight</span>
-                                </div>
-                                <div class="newsletter-meta">
-                                    <span class="meta-item"><i class="fas fa-file-alt"></i> 10 pages</span>
-                                    <span class="meta-item"><i class="fas fa-download"></i> 1.8 MB</span>
-                                </div>
-                                <a href="public/SAPA PHILATEX Second Quarter 2025.pdf" class="btn btn-primary" target="_blank">
-                                    <i class="fas fa-file-pdf"></i> Download PDF
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-    }
-</script>
 </body>
 </html>
