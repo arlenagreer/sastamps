@@ -53,7 +53,7 @@
 
     <!-- Service Worker -->
     <script>
-        if ('serviceWorker' in navigator &amp;&amp; window.location.protocol !== 'file:') {
+        if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
                     .then((registration) => {
@@ -70,7 +70,7 @@
     <script>
         (function() {
             const theme = localStorage.getItem('theme') || 'auto';
-            if (theme === 'dark' || (theme === 'auto' &amp;&amp; window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            if (theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.setAttribute('data-theme', 'dark');
             }
         })();
@@ -316,7 +316,7 @@
     <!-- Scripts -->
     <script>
         // Check if we can use modules (will fail on file:// protocol)
-        var moduleSupport = 'noModule' in HTMLScriptElement.prototype &amp;&amp; window.location.protocol !== 'file:';
+        var moduleSupport = 'noModule' in HTMLScriptElement.prototype && window.location.protocol !== 'file:';
 
         // Fallback content function
         function showFallbackContent() {
