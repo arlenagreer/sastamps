@@ -2673,7 +2673,7 @@
                             ...${contentSnippet}...
                         </div>
                     ` : ''}
-                    ${doc.tags &amp;&amp; doc.tags.length > 0 ? `
+                    ${doc.tags && doc.tags.length > 0 ? `
                         <div class="result-tags">
                             ${doc.tags.map(tag => `<span class="tag">${highlightText(tag, query)}</span>`).join('')}
                         </div>

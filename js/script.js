@@ -1159,7 +1159,7 @@ function setupDynamicContentBoundaries() {
     }
 
     // Calendar container with lazy loading
-    const calendarContainers = document.querySelectorAll('.calendar-container, #calendar-container, [class*="calendar"], [id*="calendar"]');
+    const calendarContainers = document.querySelectorAll('.calendar-container, #calendar-container, #meetings-calendar, #calendar');
     calendarContainers.forEach((calendarContainer, index) => {
       if (calendarContainer) {
         // Set up lazy loading for calendar
