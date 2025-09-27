@@ -1987,6 +1987,7 @@ h2{font-size:1.75rem}
 
     <!-- Scripts -->
     <script src="dist/js/script.min.js" defer></script>
+    <script src="dist/js/meetings.min.js" defer></script>
 
     <style>
     .meeting-entry {
@@ -2277,7 +2278,23 @@ h2{font-size:1.75rem}
 
     <!-- Meeting Schedule Dynamic Loading -->
     <script type="module">
-        import MeetingLoader from './js/modules/meeting-loader.js';
+        // Try to import the module version, fallback to global if available
+        let MeetingLoader;
+        try {
+            const module = await import('./js/modules/meeting-loader.js');
+            MeetingLoader = module.default;
+        } catch (error) {
+            console.log('Module import failed, checking for global MeetingLoader');
+            // Check if the bundled version loaded it globally
+            if (window.MeetingLoader) {
+                MeetingLoader = window.MeetingLoader;
+            } else if (window.SAPA_MEETINGS && window.SAPA_MEETINGS.MeetingLoader) {
+                MeetingLoader = window.SAPA_MEETINGS.MeetingLoader;
+            } else {
+                console.error('MeetingLoader not available');
+                showFallbackContent();
+            }
+        }
 
         async function initializeMeetingSchedule() {
             try {
@@ -2325,16 +2342,16 @@ h2{font-size:1.75rem}
                         <p style="margin-bottom: 1.5rem;">We meet weekly on Fridays at 7:00 PM during Q4 2025.</p>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
                             <div style="background: white; padding: 1rem; border-radius: var(--radius-sm);">
-                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">July 2025</h4>
-                                <p style="margin: 0;">BOG, Auction, Bourse meetings</p>
+                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">October 2025</h4>
+                                <p style="margin: 0;">BOG meetings, Year-End Auction, Bourse sessions</p>
                             </div>
                             <div style="background: white; padding: 1rem; border-radius: var(--radius-sm);">
-                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">August 2025</h4>
-                                <p style="margin: 0;">BOG, Auction, Bourse, Program meetings</p>
+                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">November 2025</h4>
+                                <p style="margin: 0;">BOG, Christmas Auction, Bourse, Program meetings</p>
                             </div>
                             <div style="background: white; padding: 1rem; border-radius: var(--radius-sm);">
-                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">September 2025</h4>
-                                <p style="margin: 0;">BOG, Auction, Bourse, Program meetings</p>
+                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">December 2025</h4>
+                                <p style="margin: 0;">BOG, Installation Dinner (Dec 5), Christmas Break</p>
                             </div>
                         </div>
                         <p style="margin: 0; color: var(--medium);">
@@ -2372,16 +2389,16 @@ h2{font-size:1.75rem}
                         <p style="margin-bottom: 1.5rem;">We meet weekly on Fridays at 7:00 PM during Q4 2025.</p>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
                             <div style="background: white; padding: 1rem; border-radius: var(--radius-sm);">
-                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">July 2025</h4>
-                                <p style="margin: 0;">BOG meetings, Auctions, Bourse sessions</p>
+                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">October 2025</h4>
+                                <p style="margin: 0;">BOG meetings, Year-End Auction, Stamp Bourse</p>
                             </div>
                             <div style="background: white; padding: 1rem; border-radius: var(--radius-sm);">
-                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">August 2025</h4>
-                                <p style="margin: 0;">Special program: "The Early History of US Air Mail"</p>
+                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">November 2025</h4>
+                                <p style="margin: 0;">Special program: "The Evolution of Postal History"</p>
                             </div>
                             <div style="background: white; padding: 1rem; border-radius: var(--radius-sm);">
-                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">September 2025</h4>
-                                <p style="margin: 0;">Special program: "Classic Stamps of Mexico"</p>
+                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">December 2025</h4>
+                                <p style="margin: 0;">Installation Dinner & Christmas Celebration</p>
                             </div>
                         </div>
                         <p style="margin: 0; color: var(--medium);">
