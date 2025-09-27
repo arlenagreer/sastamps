@@ -60,13 +60,15 @@ function initMobileMenu() {
  * Initialize service worker if available
  */
 async function initServiceWorker() {
-    if ('serviceWorker' in navigator) {
+    if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
         try {
             await navigator.serviceWorker.register('/sw.js');
             console.log('Service Worker registered successfully');
         } catch (error) {
             console.warn('Service Worker registration failed:', error);
         }
+    } else if ('serviceWorker' in navigator) {
+        console.info('Service Worker not supported on file:// protocol');
     }
 }
 

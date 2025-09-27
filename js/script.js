@@ -678,7 +678,7 @@ function setActiveNavLink() {
 setActiveNavLink();
 
 // Service Worker Registration
-if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
   window.addEventListener('load', () => {
     try {
       navigator.serviceWorker.register('/sw.js')
@@ -694,7 +694,11 @@ if ('serviceWorker' in navigator) {
     }
   });
 } else {
-  console.info('ServiceWorker not supported in this browser');
+  if ('serviceWorker' in navigator) {
+    console.info('ServiceWorker not supported on file:// protocol');
+  } else {
+    console.info('ServiceWorker not supported in this browser');
+  }
 }
 
 /**
@@ -1278,16 +1282,19 @@ function setupDynamicContentBoundaries() {
                             </div>
                         `,
             fallbackContent: (error) => `
-                            <div class="newsletter-error" style="
-                                background-color: #e7f3ff;
-                                color: #0066cc;
-                                border: 1px solid #b3d9ff;
+                            <div class="newsletter-loading-fallback" style="
+                                background-color: #f8f9fa;
+                                border: 2px dashed #dee2e6;
                                 border-radius: var(--radius-md);
-                                padding: 1rem;
+                                padding: 2rem;
                                 text-align: center;
+                                color: var(--medium);
                             ">
-                                <h4><i class="fas fa-newspaper"></i> Newsletter Content Unavailable</h4>
-                                <p>Unable to load newsletter content. Please contact us for the latest issues.</p>
+                                <i class="fas fa-newspaper" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                                <p>Newsletter archive loading...</p>
+                                <button onclick="location.reload()" class="btn btn-primary mt-2">
+                                    <i class="fas fa-refresh"></i> Retry
+                                </button>
                             </div>
                         `,
             maxRetries: 1

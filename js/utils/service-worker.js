@@ -10,7 +10,7 @@ import { TIMING, CSS_CLASSES } from '../constants/index.js';
  * @returns {Promise<ServiceWorkerRegistration|null>} Registration or null
  */
 export async function registerServiceWorker() {
-  if ('serviceWorker' in navigator) {
+  if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
     try {
 
       const registration = await navigator.serviceWorker.register('/sw.js', {

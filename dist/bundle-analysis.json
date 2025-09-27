@@ -1,7 +1,15 @@
 {
-  "buildDate": "2025-09-27T18:31:33.543Z",
-  "totalSize": 322991,
+  "buildDate": "2025-09-27T19:33:28.929Z",
+  "totalSize": 323124,
   "bundles": [
+    {
+      "name": "about.min.js",
+      "size": 4421,
+      "sizeFormatted": "4.32 KB",
+      "imports": 5,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
     {
       "name": "glossary.min.js",
       "size": 15404,
@@ -11,25 +19,17 @@
       "compressionRatio": "0.77"
     },
     {
+      "name": "search.min.js",
+      "size": 36915,
+      "sizeFormatted": "36.05 KB",
+      "imports": 6,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
       "name": "resources.min.js",
       "size": 32487,
       "sizeFormatted": "31.73 KB",
-      "imports": 7,
-      "exports": 0,
-      "compressionRatio": "0.77"
-    },
-    {
-      "name": "about.min.js",
-      "size": 4288,
-      "sizeFormatted": "4.19 KB",
-      "imports": 5,
-      "exports": 0,
-      "compressionRatio": "0.77"
-    },
-    {
-      "name": "newsletter.min.js",
-      "size": 15071,
-      "sizeFormatted": "14.72 KB",
       "imports": 7,
       "exports": 0,
       "compressionRatio": "0.77"
@@ -43,18 +43,10 @@
       "compressionRatio": "0.77"
     },
     {
-      "name": "search.min.js",
-      "size": 36915,
-      "sizeFormatted": "36.05 KB",
-      "imports": 6,
-      "exports": 0,
-      "compressionRatio": "0.77"
-    },
-    {
-      "name": "home.min.js",
-      "size": 96182,
-      "sizeFormatted": "93.93 KB",
-      "imports": 9,
+      "name": "newsletter.min.js",
+      "size": 15071,
+      "sizeFormatted": "14.72 KB",
+      "imports": 7,
       "exports": 0,
       "compressionRatio": "0.77"
     },
@@ -63,6 +55,14 @@
       "size": 109904,
       "sizeFormatted": "107.33 KB",
       "imports": 10,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "home.min.js",
+      "size": 96182,
+      "sizeFormatted": "93.93 KB",
+      "imports": 9,
       "exports": 0,
       "compressionRatio": "0.77"
     }
