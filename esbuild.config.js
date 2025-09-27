@@ -43,6 +43,11 @@ const pageConfigs = [
     entryPoint: 'js/pages/about.js',
     outfile: 'dist/js/about.min.js',
     globalName: 'SAPA_ABOUT'
+  },
+  {
+    entryPoint: 'js/pages/search.js',
+    outfile: 'dist/js/search.min.js',
+    globalName: 'SAPA_SEARCH'
   }
 ];
 

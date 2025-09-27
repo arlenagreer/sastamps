@@ -1,20 +1,20 @@
 {
-  "buildDate": "2025-09-27T18:16:30.164Z",
-  "totalSize": 286076,
+  "buildDate": "2025-09-27T18:31:33.543Z",
+  "totalSize": 322991,
   "bundles": [
-    {
-      "name": "newsletter.min.js",
-      "size": 15071,
-      "sizeFormatted": "14.72 KB",
-      "imports": 7,
-      "exports": 0,
-      "compressionRatio": "0.77"
-    },
     {
       "name": "glossary.min.js",
       "size": 15404,
       "sizeFormatted": "15.04 KB",
       "imports": 2,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "resources.min.js",
+      "size": 32487,
+      "sizeFormatted": "31.73 KB",
+      "imports": 7,
       "exports": 0,
       "compressionRatio": "0.77"
     },
@@ -27,9 +27,9 @@
       "compressionRatio": "0.77"
     },
     {
-      "name": "resources.min.js",
-      "size": 32487,
-      "sizeFormatted": "31.73 KB",
+      "name": "newsletter.min.js",
+      "size": 15071,
+      "sizeFormatted": "14.72 KB",
       "imports": 7,
       "exports": 0,
       "compressionRatio": "0.77"
@@ -43,10 +43,10 @@
       "compressionRatio": "0.77"
     },
     {
-      "name": "meetings.min.js",
-      "size": 109904,
-      "sizeFormatted": "107.33 KB",
-      "imports": 10,
+      "name": "search.min.js",
+      "size": 36915,
+      "sizeFormatted": "36.05 KB",
+      "imports": 6,
       "exports": 0,
       "compressionRatio": "0.77"
     },
@@ -57,11 +57,19 @@
       "imports": 9,
       "exports": 0,
       "compressionRatio": "0.77"
+    },
+    {
+      "name": "meetings.min.js",
+      "size": 109904,
+      "sizeFormatted": "107.33 KB",
+      "imports": 10,
+      "exports": 0,
+      "compressionRatio": "0.77"
     }
   ],
   "treeshakingStats": {
-    "modulesAnalyzed": 7,
+    "modulesAnalyzed": 8,
     "deadCodeEliminated": 0,
-    "bundleCount": 7
+    "bundleCount": 8
   }
 }
