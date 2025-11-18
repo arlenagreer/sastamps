@@ -222,7 +222,7 @@ function initializeResourceSearch(resources) {
   });
 }
 
-function initializeResourceFilters(resources, categories) {
+function initializeResourceFilters(resources, _categories) {
   const categoryFilter = safeQuerySelector('#category-filter');
   const difficultyFilter = safeQuerySelector('#difficulty-filter');
   const clearButton = safeQuerySelector('#clear-filters');

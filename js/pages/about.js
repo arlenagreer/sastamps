@@ -5,7 +5,7 @@
 
 // Import utilities
 import { safeQuerySelector } from '../utils/safe-dom.js';
-import { debounce } from '../utils/performance.js';
+import { debounce as _debounce } from '../utils/performance.js';
 
 // Import core modules
 import breadcrumb from '../modules/breadcrumb.js';

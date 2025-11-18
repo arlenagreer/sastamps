@@ -3,7 +3,7 @@
  * Provides consistent error handling patterns across the application
  */
 
-import { ERROR_MESSAGES, ANALYTICS_EVENTS } from '../constants/index.js';
+import { ERROR_MESSAGES, ANALYTICS_EVENTS as _ANALYTICS_EVENTS } from '../constants/index.js';
 
 /**
  * Error types enumeration
@@ -88,7 +88,7 @@ export async function retryWithBackoff(fn, options = {}) {
     initialDelay = 1000,
     maxDelay = 10000,
     backoffFactor = 2,
-    shouldRetry = (error) => true
+    shouldRetry = (_error) => true
   } = options;
 
   let lastError;

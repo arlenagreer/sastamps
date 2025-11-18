@@ -4,7 +4,7 @@
  */
 
 import { createLogger } from './logger.js';
-import { ERROR_MESSAGES, TIMING, CSS_CLASSES } from '../constants/index.js';
+import { ERROR_MESSAGES, TIMING, CSS_CLASSES as _CSS_CLASSES } from '../constants/index.js';
 import { ENV } from '../config/index.js';
 
 const logger = createLogger('GlobalErrorHandler');

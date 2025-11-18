@@ -182,7 +182,7 @@ class MeetingLoader {
     const {
       dateRange = 'Q3-2025',
       showCalendarLinks = true,
-      responsive = true
+      _responsive = true
     } = options;
 
     if (typeof container === 'string') {
@@ -339,7 +339,7 @@ class MeetingLoader {
      */
   renderMeetingsList(container, options = {}) {
     const {
-      dateRange = 'Q3-2025',
+      _dateRange = 'Q3-2025',
       showDetails = true,
       groupByMonth = true
     } = options;

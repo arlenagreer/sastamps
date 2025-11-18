@@ -12,8 +12,7 @@ import {
   ERROR_MESSAGES,
   SUCCESS_MESSAGES,
   STORAGE_KEYS,
-  FILTER_OPTIONS,
-  CSS_CLASSES
+  FILTER_OPTIONS
 } from '../constants/index.js';
 
 // Meetings-specific functionality
@@ -120,27 +119,27 @@ async function loadMeetingsList(container) {
     const currentMonth = now.getMonth() + 1; // JavaScript months are 0-based
     
     // Determine current quarter
-    let quarterStart, quarterEnd, quarterLabel;
+    let quarterStart, quarterEnd, _quarterLabel;
     if (currentMonth >= 10) {
       // Q4: October-December
       quarterStart = new Date(currentYear, 9, 1); // October 1
       quarterEnd = new Date(currentYear, 11, 31); // December 31
-      quarterLabel = 'Q4';
+      _quarterLabel = 'Q4';
     } else if (currentMonth >= 7) {
       // Q3: July-September
       quarterStart = new Date(currentYear, 6, 1); // July 1
       quarterEnd = new Date(currentYear, 8, 30); // September 30
-      quarterLabel = 'Q3';
+      _quarterLabel = 'Q3';
     } else if (currentMonth >= 4) {
       // Q2: April-June
       quarterStart = new Date(currentYear, 3, 1); // April 1
       quarterEnd = new Date(currentYear, 5, 30); // June 30
-      quarterLabel = 'Q2';
+      _quarterLabel = 'Q2';
     } else {
       // Q1: January-March
       quarterStart = new Date(currentYear, 0, 1); // January 1
       quarterEnd = new Date(currentYear, 2, 31); // March 31
-      quarterLabel = 'Q1';
+      _quarterLabel = 'Q1';
     }
     
     // Filter meetings for current quarter

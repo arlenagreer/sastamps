@@ -143,7 +143,7 @@ async function loadGlossaryFilters(container) {
     // Extract unique categories and difficulties
     const categories = [...new Set(terms.map(term => term.category))].sort();
     const difficulties = [...new Set(terms.map(term => term.difficulty))].sort();
-    const subcategories = [...new Set(terms.map(term => term.subcategory).filter(Boolean))].sort();
+    const _subcategories = [...new Set(terms.map(term => term.subcategory).filter(Boolean))].sort();
 
     container.innerHTML = `
             <div class="glossary-filters">

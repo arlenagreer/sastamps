@@ -17,9 +17,10 @@ export default [
     },
     rules: {
       // Core JavaScript rules
-      "no-unused-vars": ["error", { 
+      "no-unused-vars": ["error", {
         "argsIgnorePattern": "^_",
-        "varsIgnorePattern": "^_" 
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
       }],
       "no-undef": "error",
       "no-console": ["warn", { 

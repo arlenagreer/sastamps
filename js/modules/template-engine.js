@@ -292,7 +292,7 @@ class TemplateEngine {
     let current = context;
 
     for (const part of parts) {
-      if (current == null) {return undefined;}
+      if (current === null || current === undefined) {return undefined;}
       current = current[part];
     }
 
@@ -374,7 +374,7 @@ class TemplateEngine {
 
     // Default value helper
     this.registerHelper('default', (value, defaultValue = '') => {
-      return value != null && value !== '' ? value : defaultValue;
+      return value !== null && value !== undefined && value !== '' ? value : defaultValue;
     });
 
     // Math helpers
@@ -397,7 +397,7 @@ class TemplateEngine {
      */
   registerSapaComponents() {
     // Newsletter card component
-    this.registerComponent('newsletterCard', (args, context) => {
+    this.registerComponent('newsletterCard', (args, _context) => {
       const { newsletter } = args;
       if (!newsletter) {return '';}
 
@@ -424,7 +424,7 @@ class TemplateEngine {
     });
 
     // Meeting card component
-    this.registerComponent('meetingCard', (args, context) => {
+    this.registerComponent('meetingCard', (args, _context) => {
       const { meeting } = args;
       if (!meeting) {return '';}
 
@@ -469,7 +469,7 @@ class TemplateEngine {
     });
 
     // Resource card component
-    this.registerComponent('resourceCard', (args, context) => {
+    this.registerComponent('resourceCard', (args, _context) => {
       const { resource } = args;
       if (!resource) {return '';}
 
@@ -497,7 +497,7 @@ class TemplateEngine {
     });
 
     // Glossary term component
-    this.registerComponent('glossaryTerm', (args, context) => {
+    this.registerComponent('glossaryTerm', (args, _context) => {
       const { term } = args;
       if (!term) {return '';}
 

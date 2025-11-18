@@ -3,7 +3,7 @@
  * Tree-shakable service worker management
  */
 
-import { TIMING, CSS_CLASSES } from '../constants/index.js';
+import { TIMING, CSS_CLASSES as _CSS_CLASSES } from '../constants/index.js';
 
 /**
  * Register service worker if supported

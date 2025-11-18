@@ -9,10 +9,10 @@ import {
   handleNetworkError,
   withTimeout,
   retryWithBackoff,
-  AppError,
+  AppError as _AppError,
   ErrorTypes
 } from './error-handler.js';
-import { API_ENDPOINTS, TIMING, HTTP_STATUS } from '../constants/index.js';
+import { API_ENDPOINTS, TIMING, HTTP_STATUS as _HTTP_STATUS } from '../constants/index.js';
 
 /**
  * Default API client configuration

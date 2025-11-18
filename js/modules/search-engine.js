@@ -126,7 +126,7 @@ class SearchEngine {
       types = [],
       categories = [],
       difficulty = [],
-      boost = true
+      _boost = true
     } = options;
 
     try {
@@ -435,8 +435,8 @@ class SearchEngine {
     const searchInput = container.querySelector('.search-input');
     const searchButton = container.querySelector('.search-button');
     const suggestionsContainer = container.querySelector('.search-suggestions');
-    const resultsContainer = container.querySelector('.search-results-list');
-    const statusContainer = container.querySelector('.search-status');
+    const _resultsContainer = container.querySelector('.search-results-list');
+    const _statusContainer = container.querySelector('.search-status');
     const filterSelects = container.querySelectorAll('.filter-select');
     const filterInputs = container.querySelectorAll('.filter-input');
     const clearFiltersButton = container.querySelector('.clear-filters-button');
@@ -627,7 +627,7 @@ class SearchEngine {
     const resultsContainer = container.querySelector('.search-results-list');
     const statusContainer = container.querySelector('.search-status');
     const filterSelects = container.querySelectorAll('.filter-select');
-    const filterInputs = container.querySelectorAll('.filter-input');
+    const _filterInputs = container.querySelectorAll('.filter-input');
 
     // Show loading state
     statusContainer.innerHTML = '<div class="search-loading">Searching...</div>';

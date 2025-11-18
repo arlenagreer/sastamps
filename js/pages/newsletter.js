@@ -6,7 +6,7 @@
 import { debounce } from '../utils/performance.js';
 import { safeQuerySelector } from '../utils/safe-dom.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
-import breadcrumb from '../modules/breadcrumb.js';
+import _breadcrumb from '../modules/breadcrumb.js';
 
 async function initializeNewsletterPage() {
   const newsletterContainer = safeQuerySelector('#newsletters-container');

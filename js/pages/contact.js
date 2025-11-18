@@ -205,7 +205,7 @@ async function handleFormSubmission(event) {
     }
 
     // Import API client dynamically
-    const { apiClient } = await import('../utils/api-client.js');
+    const { apiClient: _apiClient } = await import('../utils/api-client.js');
 
     // Submit to server
     const response = await fetch(API_ENDPOINTS.CONTACT_FORM, {

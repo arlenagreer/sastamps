@@ -224,13 +224,13 @@ export class Logger {
       const duration = performance.now() - start;
       this.debug(`${label} completed`, { duration: `${duration.toFixed(2)}ms` });
       return result;
-    } catch (error) {
+    } catch (_error) {
       const duration = performance.now() - start;
       this.error(`${label} failed`, {
         duration: `${duration.toFixed(2)}ms`,
-        error
+        error: _error
       });
-      throw error;
+      throw _error;
     }
   }
 
@@ -284,7 +284,7 @@ export function endTiming(label, log = logger) {
           duration: `${measure.duration.toFixed(2)}ms`
         });
       }
-    } catch (error) {
+    } catch (_error) {
       // Ignore errors in performance measurement
     }
   }

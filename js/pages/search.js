@@ -53,7 +53,7 @@ async function initializeSearchInterface(container) {
   const searchInput = container.querySelector('#main-search-input');
   const searchButton = container.querySelector('#search-button');
   const suggestionsContainer = container.querySelector('#search-suggestions');
-  const statsContainer = container.querySelector('#search-stats');
+  const _statsContainer = container.querySelector('#search-stats');
 
   // Load search engine
   let searchEngine = null;
