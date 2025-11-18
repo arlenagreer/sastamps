@@ -53,8 +53,8 @@
             },
             {
                 name: "Image XSS Attempt",
-                input: '<img src=x onerror="alert(\'XSS\')">',
-                expected: '&lt;img src=x onerror="alert(\'XSS\')"&gt;'
+                input: '<img src="x" onerror="alert(\'XSS\')">',
+                expected: '&lt;img src="x" onerror="alert(\'XSS\')"&gt;'
             },
             {
                 name: "Event Handler XSS",
@@ -68,8 +68,8 @@
             },
             {
                 name: "Quotes and Special Chars",
-                input: 'Test "quotes" & <brackets>',
-                expected: 'Test "quotes" &amp; &lt;brackets&gt;'
+                input: 'Test "quotes" & <span>text</span>',
+                expected: 'Test "quotes" &amp; &lt;span&gt;text&lt;/span&gt;'
             }
         ];
 
@@ -81,11 +81,16 @@
 
             const testDiv = document.createElement('div');
             testDiv.className = `test-case ${passed ? 'pass' : 'fail'}`;
+
+            const escapedInput = testCase.input.replace(/</g, '&' + 'lt;').replace(/>/g, '&' + 'gt;');
+            const escapedExpected = testCase.expected.replace(/</g, '&' + 'lt;').replace(/>/g, '&' + 'gt;');
+            const escapedResult = result.replace(/</g, '&' + 'lt;').replace(/>/g, '&' + 'gt;');
+
             testDiv.innerHTML = `
                 <h3>Test ${index + 1}: ${testCase.name}</h3>
-                <p><strong>Input:</strong> <code>${testCase.input.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></p>
-                <p><strong>Expected:</strong> <code>${testCase.expected.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></p>
-                <p><strong>Result:</strong> <code>${result.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></p>
+                <p><strong>Input:</strong> <code>${escapedInput}</code></p>
+                <p><strong>Expected:</strong> <code>${escapedExpected}</code></p>
+                <p><strong>Result:</strong> <code>${escapedResult}</code></p>
                 <div class="result">
                     <strong>Status:</strong> ${passed ? '✅ PASSED' : '❌ FAILED'}
                 </div>
