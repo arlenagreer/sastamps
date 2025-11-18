@@ -120,10 +120,24 @@ jobs:
     - name: Setup Pages
       uses: actions/configure-pages@v5
       
+    - name: Prepare deployment directory
+      run: |
+        mkdir -p _site
+        # Copy HTML files from root
+        cp *.html _site/ 2>/dev/null || true
+        # Copy built assets
+        cp -r dist _site/
+        # Copy static files
+        cp site.webmanifest _site/ 2>/dev/null || true
+        cp .nojekyll _site/ 2>/dev/null || true
+        cp -r images _site/ 2>/dev/null || true
+        # Copy PHP files if they exist (for form handling)
+        cp *.php _site/ 2>/dev/null || true
+
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: '.'
+        path: '_site'
         
     - name: Deploy to GitHub Pages
       id: deployment
