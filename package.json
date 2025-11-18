@@ -25,7 +25,7 @@
     "build:search": "node scripts/build-search-index.js",
     "build:search:embed": "node scripts/build-search-embedded.js",
     "test": "npm run test:html && npm run test:links && npm run test:js && npm run test:css && npm run test:md",
-    "test:html": "html-validate '*.html' --config .htmlvalidate.json",
+    "test:html": "html-validate '*.html' '!test-*.html' --config .htmlvalidate.json",
     "test:links": "echo 'Run npm run test:links:server in a separate terminal first' && broken-link-checker http://localhost:3000 --recursive --exclude-external",
     "test:links:server": "echo 'Starting server for link checking...' && npm run serve",
     "test:js": "eslint js/**/*.js",
