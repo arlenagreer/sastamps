@@ -1,36 +1,12 @@
 {
-  "buildDate": "2025-09-27T19:33:28.929Z",
-  "totalSize": 323124,
+  "buildDate": "2025-11-18T14:48:51.210Z",
+  "totalSize": 324695,
   "bundles": [
     {
-      "name": "about.min.js",
-      "size": 4421,
-      "sizeFormatted": "4.32 KB",
-      "imports": 5,
-      "exports": 0,
-      "compressionRatio": "0.77"
-    },
-    {
       "name": "glossary.min.js",
-      "size": 15404,
+      "size": 15406,
       "sizeFormatted": "15.04 KB",
       "imports": 2,
-      "exports": 0,
-      "compressionRatio": "0.77"
-    },
-    {
-      "name": "search.min.js",
-      "size": 36915,
-      "sizeFormatted": "36.05 KB",
-      "imports": 6,
-      "exports": 0,
-      "compressionRatio": "0.77"
-    },
-    {
-      "name": "resources.min.js",
-      "size": 32487,
-      "sizeFormatted": "31.73 KB",
-      "imports": 7,
       "exports": 0,
       "compressionRatio": "0.77"
     },
@@ -44,24 +20,48 @@
     },
     {
       "name": "newsletter.min.js",
-      "size": 15071,
+      "size": 15075,
       "sizeFormatted": "14.72 KB",
       "imports": 7,
       "exports": 0,
       "compressionRatio": "0.77"
     },
     {
+      "name": "resources.min.js",
+      "size": 32506,
+      "sizeFormatted": "31.74 KB",
+      "imports": 7,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "about.min.js",
+      "size": 4421,
+      "sizeFormatted": "4.32 KB",
+      "imports": 5,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "search.min.js",
+      "size": 37279,
+      "sizeFormatted": "36.41 KB",
+      "imports": 6,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
       "name": "meetings.min.js",
-      "size": 109904,
-      "sizeFormatted": "107.33 KB",
+      "size": 110496,
+      "sizeFormatted": "107.91 KB",
       "imports": 10,
       "exports": 0,
       "compressionRatio": "0.77"
     },
     {
       "name": "home.min.js",
-      "size": 96182,
-      "sizeFormatted": "93.93 KB",
+      "size": 96772,
+      "sizeFormatted": "94.50 KB",
       "imports": 9,
       "exports": 0,
       "compressionRatio": "0.77"

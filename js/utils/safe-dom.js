@@ -79,3 +79,60 @@ export function safeLocalStorageRemove(key) {
     return false;
   }
 }
+
+/**
+ * Escape HTML special characters to prevent XSS
+ * @param {string} text - Text to escape
+ * @returns {string} Escaped text safe for HTML insertion
+ */
+export function escapeHTML(text) {
+  if (typeof text !== 'string') {
+    return '';
+  }
+
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+/**
+ * Safely set text content with fallback
+ * @param {Element} element - Target element
+ * @param {string} text - Text to set
+ * @returns {boolean} Success status
+ */
+export function safeSetTextContent(element, text) {
+  if (!element || typeof element.textContent === 'undefined') {
+    console.warn('Invalid element for setting text content');
+    return false;
+  }
+
+  try {
+    element.textContent = text;
+    return true;
+  } catch (error) {
+    console.warn('Failed to set text content:', error);
+    return false;
+  }
+}
+
+/**
+ * Safely set innerHTML with sanitized content
+ * @param {Element} element - Target element
+ * @param {string} html - HTML to set (should be pre-sanitized)
+ * @returns {boolean} Success status
+ */
+export function safeSetInnerHTML(element, html) {
+  if (!element) {
+    console.warn('Invalid element for setting innerHTML');
+    return false;
+  }
+
+  try {
+    element.innerHTML = html;
+    return true;
+  } catch (error) {
+    console.warn('Failed to set innerHTML:', error);
+    return false;
+  }
+}

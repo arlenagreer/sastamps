@@ -992,7 +992,7 @@ function validateAndSanitizeInput(input, type = 'text') {
 
   // Basic safety checks
   const dangerousPatterns = [
-    /<script[^>]*>.*?<\/script>/gi,
+    /<script[^>]*>.*?<\/script\s*>/gis,  // Fixed: Now matches whitespace before closing >
     /javascript:/gi,
     /vbscript:/gi,
     /onload=/gi,

@@ -3,6 +3,8 @@
  * Handles search functionality using Lunr.js and provides UI components
  */
 
+import { escapeHTML } from '../utils/safe-dom.js';
+
 class SearchEngine {
   constructor(options = {}) {
     this.index = null;
@@ -671,7 +673,7 @@ class SearchEngine {
       const results = await this.search(query, filters);
       this.displaySearchResults(results, container);
     } catch (error) {
-      statusContainer.innerHTML = `<div class="search-error">Search failed: ${error.message}</div>`;
+      statusContainer.innerHTML = `<div class="search-error">Search failed: ${escapeHTML(error.message)}</div>`;
     }
   }
 
@@ -686,13 +688,13 @@ class SearchEngine {
     if (searchResult.hasResults) {
       statusContainer.innerHTML = `
                 <div class="search-info">
-                    Found ${searchResult.total} result${searchResult.total === 1 ? '' : 's'} for "${searchResult.query}"
+                    Found ${searchResult.total} result${searchResult.total === 1 ? '' : 's'} for "${escapeHTML(searchResult.query)}"
                 </div>
             `;
     } else {
       statusContainer.innerHTML = `
                 <div class="search-no-results">
-                    No results found for "${searchResult.query}"
+                    No results found for "${escapeHTML(searchResult.query)}"
                 </div>
             `;
     }
@@ -716,23 +718,23 @@ class SearchEngine {
     const formattedDate = doc.date ? new Date(doc.date).toLocaleDateString() : '';
 
     return `
-            <div class="search-result-item" data-type="${doc.type}">
+            <div class="search-result-item" data-type="${escapeHTML(doc.type)}">
                 <div class="search-result-header">
                     <h3 class="search-result-title">
-                        <i class="${typeIcon}"></i>
-                        <a href="${doc.url}">${doc.title}</a>
+                        <i class="${escapeHTML(typeIcon)}"></i>
+                        <a href="${escapeHTML(doc.url)}">${escapeHTML(doc.title)}</a>
                     </h3>
                     <div class="search-result-meta">
-                        <span class="search-result-type">${this.formatLabel(doc.type)}</span>
-                        ${doc.category ? `<span class="search-result-category">${this.formatLabel(doc.category)}</span>` : ''}
-                        ${doc.difficulty ? `<span class="search-result-difficulty difficulty-${doc.difficulty}">${doc.difficulty}</span>` : ''}
-                        ${formattedDate ? `<span class="search-result-date">${formattedDate}</span>` : ''}
+                        <span class="search-result-type">${escapeHTML(this.formatLabel(doc.type))}</span>
+                        ${doc.category ? `<span class="search-result-category">${escapeHTML(this.formatLabel(doc.category))}</span>` : ''}
+                        ${doc.difficulty ? `<span class="search-result-difficulty difficulty-${escapeHTML(doc.difficulty)}">${escapeHTML(doc.difficulty)}</span>` : ''}
+                        ${formattedDate ? `<span class="search-result-date">${escapeHTML(formattedDate)}</span>` : ''}
                     </div>
                 </div>
-                <p class="search-result-summary">${doc.summary}</p>
+                <p class="search-result-summary">${escapeHTML(doc.summary)}</p>
                 ${doc.tags && doc.tags.length > 0 ? `
                     <div class="search-result-tags">
-                        ${doc.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        ${doc.tags.map(tag => `<span class="tag">${escapeHTML(tag)}</span>`).join('')}
                     </div>
                 ` : ''}
                 <div class="search-result-score">Relevance: ${(result.score * 100).toFixed(1)}%</div>
@@ -762,9 +764,9 @@ class SearchEngine {
 
       if (suggestions.length > 0) {
         container.innerHTML = suggestions.map(suggestion => `
-                    <div class="search-suggestion" data-url="${suggestion.url}">
-                        <i class="${this.getTypeIcon(suggestion.type)}"></i>
-                        <span>${suggestion.text}</span>
+                    <div class="search-suggestion" data-url="${escapeHTML(suggestion.url)}">
+                        <i class="${escapeHTML(this.getTypeIcon(suggestion.type))}"></i>
+                        <span>${escapeHTML(suggestion.text)}</span>
                     </div>
                 `).join('');
 

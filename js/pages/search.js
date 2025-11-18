@@ -4,7 +4,7 @@
  */
 
 import { debounce } from '../utils/performance.js';
-import { safeQuerySelector } from '../utils/safe-dom.js';
+import { safeQuerySelector, escapeHTML } from '../utils/safe-dom.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 
 // Search-specific functionality
@@ -102,7 +102,7 @@ async function initializeSearchInterface(container) {
 
       if (suggestions.length > 0) {
         const html = suggestions.map(suggestion => `
-                    <button class="search-suggestion" data-query="${suggestion}">
+                    <button class="search-suggestion" data-query="${escapeHTML(suggestion)}">
                         ${highlightMatch(suggestion, query)}
                     </button>
                 `).join('');
@@ -247,9 +247,11 @@ function displaySearchResults(results, query) {
   if (!container) {return;}
 
   if (results.length === 0) {
+    // Escape user input to prevent XSS attacks
+    const escapedQuery = escapeHTML(query);
     container.innerHTML = `
             <div class="no-results">
-                <h3>No results found for "${query}"</h3>
+                <h3>No results found for "${escapedQuery}"</h3>
                 <p>Try adjusting your search terms or using different keywords.</p>
                 <div class="search-tips">
                     <h4>Search Tips:</h4>
@@ -269,29 +271,29 @@ function displaySearchResults(results, query) {
         <article class="search-result" data-index="${index}">
             <header class="result-header">
                 <h3 class="result-title">
-                    <a href="${result.url}" target="_blank">
+                    <a href="${escapeHTML(result.url)}" target="_blank">
                         ${highlightMatch(result.title, query)}
                     </a>
                 </h3>
                 <div class="result-meta">
                     <span class="result-type">${formatContentType(result.type)}</span>
-                    ${result.date ? `<time datetime="${result.date}">${formatDate(result.date)}</time>` : ''}
+                    ${result.date ? `<time datetime="${escapeHTML(result.date)}">${formatDate(result.date)}</time>` : ''}
                     ${result.score ? `<span class="result-score">Relevance: ${Math.round(result.score * 100)}%</span>` : ''}
                 </div>
             </header>
-            
+
             <div class="result-content">
                 ${result.excerpt ? `<p class="result-excerpt">${highlightMatch(result.excerpt, query)}</p>` : ''}
                 ${result.tags && result.tags.length > 0 ? `
                     <div class="result-tags">
-                        ${result.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        ${result.tags.map(tag => `<span class="tag">${escapeHTML(tag)}</span>`).join('')}
                     </div>
                 ` : ''}
             </div>
-            
+
             <footer class="result-actions">
-                <a href="${result.url}" class="btn-outline btn-small">View Full Content</a>
-                ${result.downloadUrl ? `<a href="${result.downloadUrl}" class="btn-outline btn-small">Download</a>` : ''}
+                <a href="${escapeHTML(result.url)}" class="btn-outline btn-small">View Full Content</a>
+                ${result.downloadUrl ? `<a href="${escapeHTML(result.downloadUrl)}" class="btn-outline btn-small">Download</a>` : ''}
             </footer>
         </article>
     `).join('');
@@ -311,9 +313,11 @@ function updateSearchStats(count, query) {
   const container = safeQuerySelector('#search-stats');
   if (!container) {return;}
 
+  // Escape user input to prevent XSS attacks
+  const escapedQuery = escapeHTML(query);
   container.innerHTML = `
         <p class="search-stats-text">
-            Found <strong>${count}</strong> result${count !== 1 ? 's' : ''} for "<em>${query}</em>"
+            Found <strong>${count}</strong> result${count !== 1 ? 's' : ''} for "<em>${escapedQuery}</em>"
         </p>
     `;
 }
@@ -422,10 +426,26 @@ function updateURLWithQuery(query, pushState = true) {
 
 // Utility functions
 function highlightMatch(text, query) {
-  if (!query.trim()) {return text;}
+  if (!query.trim()) {
+    return escapeHTML(text);
+  }
 
-  const regex = new RegExp(`(${query.split(' ').join('|')})`, 'gi');
-  return text.replace(regex, '<mark>$1</mark>');
+  // Escape the text first to prevent XSS
+  const escapedText = escapeHTML(text);
+
+  // Escape query terms for safe regex and HTML insertion
+  const queryTerms = query.split(' ')
+    .map(term => term.trim())
+    .filter(term => term.length > 0)
+    .map(term => escapeHTML(term))
+    .map(term => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')); // Escape regex special chars
+
+  if (queryTerms.length === 0) {
+    return escapedText;
+  }
+
+  const regex = new RegExp(`(${queryTerms.join('|')})`, 'gi');
+  return escapedText.replace(regex, '<mark>$1</mark>');
 }
 
 function formatContentType(type) {

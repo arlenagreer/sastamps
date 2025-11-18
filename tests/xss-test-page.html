@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XSS Security Test - Search Engine</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #1a5276;
+        }
+
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+        }
+
+        .payload {
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #e74c3c;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+
+        .result {
+            background: #e8f4f8;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #27ae60;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .safe {
+            background: #27ae60;
+            color: white;
+        }
+
+        .unsafe {
+            background: #e74c3c;
+            color: white;
+        }
+
+        button {
+            background: #1a5276;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        #test-results {
+            margin-top: 20px;
+        }
+
+        .test-item {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .test-item.passed {
+            border-left: 5px solid #27ae60;
+        }
+
+        .test-item.failed {
+            border-left: 5px solid #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔒 XSS Security Test - Search Engine</h1>
+
+    <div class="test-section">
+        <h2>Test Overview</h2>
+        <p>This page tests that the <code>escapeHTML()</code> function properly escapes XSS payloads in the search engine module.</p>
+        <p><strong>Expected Behavior:</strong> All XSS payloads should be rendered as text, not executed as code.</p>
+    </div>
+
+    <div class="test-section">
+        <h2>XSS Test Payloads</h2>
+        <div class="payload">&lt;script&gt;alert('XSS')&lt;/script&gt;</div>
+        <div class="payload">&lt;img src=x onerror=alert('XSS')&gt;</div>
+        <div class="payload">"&gt;&lt;script&gt;alert('XSS')&lt;/script&gt;</div>
+        <div class="payload">&lt;svg onload=alert('XSS')&gt;</div>
+        <div class="payload">&lt;iframe src="javascript:alert('XSS')"&gt;</div>
+
+        <button onclick="runTests()">Run Security Tests</button>
+
+        <div id="test-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Manual Verification</h2>
+        <p>If you see any alert dialogs or unexpected behavior, the XSS protection is <strong>NOT</strong> working correctly.</p>
+        <p>✅ <strong>PASS:</strong> All payloads displayed as text, no alerts</p>
+        <p>❌ <strong>FAIL:</strong> Alert dialogs appear, scripts execute</p>
+    </div>
+
+    <script type="module">
+        import { escapeHTML } from '../js/utils/safe-dom.js';
+
+        window.escapeHTML = escapeHTML;
+
+        window.runTests = function() {
+            const payloads = [
+                '<script>alert("XSS")</script>',
+                '<img src=x onerror=alert("XSS")>',
+                '"><script>alert("XSS")</script>',
+                '<svg onload=alert("XSS")>',
+                '<iframe src="javascript:alert(\'XSS\')">',
+                '<body onload=alert("XSS")>',
+                '<input onfocus=alert("XSS") autofocus>',
+                '<marquee onstart=alert("XSS")>',
+                'javascript:alert("XSS")',
+                '<a href="javascript:alert(\'XSS\')">click</a>'
+            ];
+
+            const resultsContainer = document.getElementById('test-results');
+            resultsContainer.innerHTML = '<h3>Test Results:</h3>';
+
+            let passCount = 0;
+            let failCount = 0;
+
+            payloads.forEach((payload, index) => {
+                const escaped = escapeHTML(payload);
+
+                // Check if the escaped string contains potentially dangerous patterns
+                const isDangerous =
+                    escaped.includes('<script') ||
+                    escaped.includes('onerror=') ||
+                    escaped.includes('onload=') ||
+                    escaped.includes('onfocus=') ||
+                    escaped.includes('onstart=') ||
+                    escaped.includes('<iframe') ||
+                    escaped.includes('<svg') ||
+                    (escaped.includes('javascript:') && escaped.includes('<'));
+
+                const passed = !isDangerous;
+
+                if (passed) {
+                    passCount++;
+                } else {
+                    failCount++;
+                }
+
+                const testItem = document.createElement('div');
+                testItem.className = `test-item ${passed ? 'passed' : 'failed'}`;
+                testItem.innerHTML = `
+                    <div><strong>Test ${index + 1}:</strong> ${passed ? '✅ PASSED' : '❌ FAILED'}</div>
+                    <div style="margin-top: 10px;">
+                        <strong>Payload:</strong>
+                        <div class="payload">${escapeHTML(payload)}</div>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <strong>Escaped Result:</strong>
+                        <div class="result">${escapeHTML(escaped)}</div>
+                    </div>
+                `;
+
+                resultsContainer.appendChild(testItem);
+            });
+
+            // Summary
+            const summary = document.createElement('div');
+            summary.style.cssText = 'margin-top: 30px; padding: 20px; background: #1a5276; color: white; border-radius: 5px; font-size: 18px;';
+            summary.innerHTML = `
+                <strong>Summary:</strong><br>
+                ✅ Passed: ${passCount}/${payloads.length}<br>
+                ${failCount > 0 ? `❌ Failed: ${failCount}/${payloads.length}<br>` : ''}
+                <br>
+                ${failCount === 0
+                    ? '🎉 All tests passed! The XSS protection is working correctly.'
+                    : '⚠️ Some tests failed! XSS vulnerabilities may exist.'}
+            `;
+            resultsContainer.appendChild(summary);
+        };
+    </script>
+</body>
+</html>
