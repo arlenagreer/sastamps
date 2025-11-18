@@ -23,7 +23,6 @@ updates:
     # Auto-label PRs
     labels:
       - "dependencies"
-      - "automated"
     # Commit message prefix
     commit-message:
       prefix: "chore(deps)"
