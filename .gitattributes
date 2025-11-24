@@ -1,0 +1,6 @@
+# Exclude browser-tools-test from GitHub Pages builds
+browser-tools-test/ export-ignore
+claudedocs/ export-ignore
+scripts/ export-ignore
+*.md export-ignore
+!README.md
