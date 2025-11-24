@@ -40,3 +40,9 @@ updates:
       - "github-actions"
     commit-message:
       prefix: "chore(ci)"
+    # Ignore incompatible version updates
+    ignore:
+      # v4 excludes dotfiles, breaking .nojekyll requirement for GitHub Pages
+      # See: claudedocs/PR-15-Analysis-Report.md
+      - dependency-name: "actions/upload-pages-artifact"
+        versions: ["4.x"]
