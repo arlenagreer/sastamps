@@ -978,7 +978,8 @@ function checkClientRateLimit(key, maxRequests = 3, timeWindow = 3600000) { // 1
 }
 
 /**
- * Enhanced input validation and sanitization
+ * Client-side input validation for UX feedback only
+ * Security validation is handled server-side in contact-handler.php
  * @param {string} input - Input to validate
  * @param {string} type - Input type (text, email, phone)
  * @returns {object} - Validation result
@@ -990,27 +991,17 @@ function validateAndSanitizeInput(input, type = 'text') {
     errors: []
   };
 
-  // Basic safety checks
-  const dangerousPatterns = [
-    /<script[^>]*>.*?<\/script\s*>/gis,  // Fixed: Now matches whitespace before closing >
-    /javascript:/gi,
-    /vbscript:/gi,
-    /onload=/gi,
-    /onerror=/gi,
-    /onclick=/gi
-  ];
-
-  for (const pattern of dangerousPatterns) {
-    if (pattern.test(input)) {
-      result.isValid = false;
-      result.errors.push('Invalid characters detected');
-      break;
-    }
+  // Basic checks - empty input
+  if (!input || input.trim().length === 0) {
+    result.isValid = false;
+    result.errors.push('This field is required');
+    return result;
   }
 
-  // Type-specific validation
+  // Type-specific validation for UX feedback
   switch (type) {
   case 'email':
+    // Basic email format validation for UX
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(input)) {
       result.isValid = false;
@@ -1019,6 +1010,7 @@ function validateAndSanitizeInput(input, type = 'text') {
     break;
 
   case 'phone':
+    // Basic phone format validation for UX
     const phonePattern = /^[\d\s\-\(\)\+\.]{10,}$/;
     if (input && !phonePattern.test(input)) {
       result.isValid = false;
@@ -1028,15 +1020,19 @@ function validateAndSanitizeInput(input, type = 'text') {
 
   case 'text':
   default:
-    // Length validation
+    // Length validation for UX
     if (input.length > 5000) {
       result.isValid = false;
-      result.errors.push('Input too long');
+      result.errors.push('Input too long (maximum 5000 characters)');
+    }
+    if (input.length < 2) {
+      result.isValid = false;
+      result.errors.push('Input too short (minimum 2 characters)');
     }
     break;
   }
 
-  // Sanitize output
+  // Sanitize output for safe display only (security handled server-side)
   result.sanitized = sanitizeText(input);
 
   return result;
