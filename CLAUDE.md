@@ -273,7 +273,3 @@ The build system generates detailed bundle analysis:
 - Validate all JSON data against schemas
 
 This codebase represents a sophisticated, production-ready web application with enterprise-level security, performance optimization, and maintainability features while maintaining clean, readable code structure.
-
-## Task Master AI Instructions
-**Import Task Master's development workflow commands and guidelines, treat as if import is in the main CLAUDE.md file.**
-@./.taskmaster/CLAUDE.md
