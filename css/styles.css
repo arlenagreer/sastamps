@@ -556,6 +556,152 @@ footer {
     padding-right: 1.5rem;
 }
 
+/* Color utilities */
+.text-primary {
+    color: var(--primary);
+}
+
+.text-accent {
+    color: var(--accent);
+}
+
+.text-danger {
+    color: var(--danger);
+}
+
+.text-white {
+    color: white;
+}
+
+.bg-light {
+    background-color: var(--light);
+}
+
+.bg-primary {
+    background-color: var(--primary);
+}
+
+.bg-accent {
+    background-color: var(--accent);
+}
+
+/* List utilities */
+.list-unstyled {
+    list-style-type: none;
+    padding-left: 0;
+    margin-left: 0;
+}
+
+/* Flex utilities */
+.flex-center {
+    display: flex;
+    align-items: center;
+}
+
+/* Icon spacing utilities */
+.icon-mr {
+    margin-right: 0.5rem;
+}
+
+.icon-mr-lg {
+    margin-right: 10px;
+}
+
+/* Back-to-top button */
+.back-to-top {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 99;
+    border: none;
+    outline: none;
+    background-color: var(--primary);
+    color: white;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 50%;
+    font-size: 16px;
+}
+
+.back-to-top:hover {
+    background-color: var(--dark);
+}
+
+/* Meeting schedule table cell */
+.meeting-cell {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+}
+
+/* Section variations */
+.section-light {
+    background-color: var(--light);
+}
+
+.section-primary {
+    background-color: var(--primary);
+    color: white;
+}
+
+/* CTA card styling */
+.cta-card-primary {
+    background-color: var(--primary);
+    color: white;
+    border-radius: 8px;
+    padding: 3rem;
+    text-align: center;
+}
+
+/* Button color variants */
+.btn-accent {
+    background-color: var(--accent);
+    color: var(--dark);
+}
+
+.btn-dark {
+    background-color: var(--dark);
+    color: white;
+}
+
+/* Calendar downloads box */
+.calendar-downloads-box {
+    background-color: var(--light);
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+}
+
+/* Placeholder image box */
+.placeholder-box {
+    background-color: var(--primary);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Table header row */
+.table-header-primary {
+    background-color: var(--primary);
+    color: white;
+    text-align: center;
+}
+
+/* Heading utilities */
+.heading-primary {
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.heading-accent {
+    color: var(--accent);
+}
+
+/* Font weight */
+.font-bold {
+    font-weight: bold;
+}
+
 
 /* ===== SECTION TITLES ===== */
 .section-title {
