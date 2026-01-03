@@ -131,6 +131,14 @@ jobs:
         cp site.webmanifest _site/ 2>/dev/null || true
         cp .nojekyll _site/ 2>/dev/null || true
         cp -r images _site/ 2>/dev/null || true
+        # Copy public directory (PDFs, newsletters, downloads)
+        cp -r public _site/ 2>/dev/null || true
+        # Copy downloads directory
+        cp -r downloads _site/ 2>/dev/null || true
+        # Copy data directory for JSON files
+        cp -r data _site/ 2>/dev/null || true
+        # Copy CSS directory
+        cp -r css _site/ 2>/dev/null || true
         # Copy PHP files if they exist (for form handling)
         cp *.php _site/ 2>/dev/null || true
 
