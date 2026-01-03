@@ -6,6 +6,7 @@
 import { debounce } from '../utils/performance.js';
 import { safeQuerySelector } from '../utils/safe-dom.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
+import { createLogger } from '../utils/logger.js';
 import {
   TIMING,
   CALENDAR,
@@ -14,6 +15,8 @@ import {
   STORAGE_KEYS,
   FILTER_OPTIONS
 } from '../constants/index.js';
+
+const logger = createLogger('MeetingsPage');
 
 // Meetings-specific functionality
 async function initializeMeetingsPage() {
@@ -37,9 +40,9 @@ async function initializeMeetingsPage() {
 }
 
 async function initializeMeetingsCalendar() {
-  const calendarContainer = safeQuerySelector('#meetings-calendar');
+  const calendarContainer = safeQuerySelector('#calendar-container');
   if (!calendarContainer) {
-    console.warn('Calendar container not found on meetings page');
+    logger.warn('Calendar container not found on meetings page');
     return;
   }
 
@@ -99,7 +102,7 @@ async function initializeMeetingsCalendar() {
     // Meetings calendar initialized successfully
 
   } catch (error) {
-    console.error('Failed to initialize meetings calendar:', error);
+    logger.error('Failed to initialize meetings calendar:', error);
     calendarContainer.innerHTML = `
             <div class="error-message">
                 <p>${ERROR_MESSAGES.CALENDAR_UNAVAILABLE}</p>
@@ -192,7 +195,7 @@ async function loadMeetingsList(container) {
     bindMeetingActions(container);
 
   } catch (error) {
-    console.error('Failed to load meetings list:', error);
+    logger.error('Failed to load meetings list:', error);
     container.innerHTML = `<p class="error-message">${ERROR_MESSAGES.MEETING_LOAD_FAILED}</p>`;
   }
 }
@@ -297,7 +300,7 @@ function handleRSVP(meetingId, button) {
     rsvps[meetingId] = !isRSVPd;
     localStorage.setItem('meeting_rsvps', JSON.stringify(rsvps));
   } catch (error) {
-    console.warn('Failed to save RSVP status:', error);
+    logger.warn('Failed to save RSVP status:', error);
   }
 }
 

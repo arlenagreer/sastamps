@@ -1,6 +1,43 @@
 {
   "newsletters": [
     {
+      "id": "2026-Q1",
+      "title": "SAPA PHILATEX First Quarter 2026",
+      "quarter": "First",
+      "year": 2026,
+      "publishDate": "2026-01-01",
+      "filePath": "public/SAPA-PHILATEX-First-Quarter-2026.pdf",
+      "description": "First Quarter 2026 newsletter featuring new editor Jim Durham's introduction, Q1 meeting calendar with updated location at MacArthur Park Lutheran Church, USPS 2026 stamp preview, and updated Board of Governors listing.",
+      "featuredArticles": [
+        {
+          "title": "New Editor Introduction",
+          "category": "News",
+          "page": 1
+        },
+        {
+          "title": "USPS 2026 Stamp Preview",
+          "category": "Feature",
+          "page": 2
+        },
+        {
+          "title": "Q1 2026 Meeting Calendar",
+          "category": "Calendar",
+          "page": 1
+        }
+      ],
+      "highlights": [
+        "New newsletter editor Jim Durham introduced",
+        "Preview of USPS 2026 stamp releases",
+        "Complete January-March 2026 meeting schedule",
+        "Updated Board of Governors listing",
+        "New meeting location: MacArthur Park Lutheran Church"
+      ],
+      "tags": ["2026", "Q1", "new-editor", "usps", "meetings", "calendar"],
+      "pageCount": 3,
+      "fileSize": "268 KB",
+      "status": "published"
+    },
+    {
       "id": "2025-Q4",
       "title": "SAPA PHILATEX Fourth Quarter 2025",
       "quarter": "Fourth",
@@ -113,9 +150,9 @@
     }
   ],
   "metadata": {
-    "lastUpdated": "2025-10-01T00:00:00.000Z",
-    "totalIssues": 3,
-    "latestIssue": "2025-Q4",
+    "lastUpdated": "2026-01-01T00:00:00.000Z",
+    "totalIssues": 4,
+    "latestIssue": "2026-Q1",
     "version": "1.0"
   }
 }

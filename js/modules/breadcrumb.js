@@ -3,6 +3,10 @@
  * Provides automatic breadcrumb generation for pages
  */
 
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('Breadcrumb');
+
 class BreadcrumbNavigation {
   constructor() {
     this.container = null;
@@ -17,7 +21,7 @@ class BreadcrumbNavigation {
   init(containerId = 'breadcrumb-nav') {
     this.container = document.getElementById(containerId);
     if (!this.container) {
-      console.warn('Breadcrumb container not found');
+      logger.warn('Breadcrumb container not found');
       return;
     }
 
@@ -118,7 +122,7 @@ class BreadcrumbNavigation {
      */
   setBreadcrumb(items) {
     if (!this.container) {
-      console.warn('Breadcrumb not initialized');
+      logger.warn('Breadcrumb not initialized');
       return;
     }
 

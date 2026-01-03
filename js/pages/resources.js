@@ -7,6 +7,9 @@ import { debounce } from '../utils/performance.js';
 import { safeQuerySelector } from '../utils/safe-dom.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { formatDate } from '../utils/helpers.js';
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('ResourcesPage');
 
 // Resources-specific functionality
 async function initializeResourcesPage() {
@@ -15,7 +18,7 @@ async function initializeResourcesPage() {
   // Load resources data
   const resourcesData = await loadResourcesData();
   if (!resourcesData) {
-    console.error('❌ Failed to load resources data');
+    logger.error('Failed to load resources data');
     return;
   }
 
@@ -52,7 +55,7 @@ async function loadResourcesData() {
     // Resources data loaded successfully
     return data;
   } catch (error) {
-    console.error('Failed to load resources data:', error);
+    logger.error('Failed to load resources data:', error);
     showResourcesError('Unable to load resources. Please try again later.');
     return null;
   }
@@ -319,7 +322,7 @@ function bindResourceActions(container) {
       if (resourceId) {
         openResourceModal(resourceId);
       } else {
-        console.error('❌ No resourceId found on button:', btn);
+        logger.error('No resourceId found on button:', btn);
       }
     });
   });
@@ -385,7 +388,7 @@ async function openResourceModal(resourceId) {
     const resource = resourcesData.resources.find(r => r.id === resourceId);
 
     if (!resource) {
-      console.error('Resource not found:', resourceId);
+      logger.error('Resource not found:', resourceId);
       return;
     }
 
@@ -464,7 +467,7 @@ async function openResourceModal(resourceId) {
     }
 
   } catch (error) {
-    console.error('Failed to load resource:', error);
+    logger.error('Failed to load resource:', error);
     alert('Unable to load resource content. Please try again.');
   }
 }
@@ -570,7 +573,7 @@ async function showResourceSections(resourceId) {
     const resource = resourcesData.resources.find(r => r.id === resourceId);
 
     if (!resource || !resource.sections) {
-      console.error('Resource sections not found:', resourceId);
+      logger.error('Resource sections not found:', resourceId);
       return;
     }
 
@@ -618,7 +621,7 @@ async function showResourceSections(resourceId) {
     }
 
   } catch (error) {
-    console.error('Failed to load resource sections:', error);
+    logger.error('Failed to load resource sections:', error);
     alert('Unable to load sections. Please try again.');
   }
 }

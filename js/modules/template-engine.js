@@ -3,6 +3,11 @@
  * Lightweight template engine for rendering JSON data into HTML components
  */
 
+import { escapeHTML } from '../utils/safe-dom.js';
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('TemplateEngine');
+
 class TemplateEngine {
   constructor() {
     this.templates = new Map();
@@ -154,7 +159,7 @@ class TemplateEngine {
 
       // It's a variable
       const value = this.getNestedValue(trimmed, context);
-      return this.escapeHtml(String(value ?? ''));
+      return escapeHTML(String(value ?? ''));
     });
   }
 
@@ -169,7 +174,7 @@ class TemplateEngine {
 
     return template.replace(componentRegex, (match, componentName, argsStr) => {
       if (!this.components.has(componentName)) {
-        console.warn(`Component not found: ${componentName}`);
+        logger.warn(`Component not found: ${componentName}`);
         return '';
       }
 
@@ -179,7 +184,7 @@ class TemplateEngine {
       try {
         return component(args, context);
       } catch (error) {
-        console.error(`Error rendering component ${componentName}:`, error);
+        logger.error(`Error rendering component ${componentName}:`, error);
         return '';
       }
     });
@@ -197,7 +202,7 @@ class TemplateEngine {
     const args = parts.slice(1);
 
     if (!this.helpers.has(helperName)) {
-      console.warn(`Helper not found: ${helperName}`);
+      logger.warn(`Helper not found: ${helperName}`);
       return '';
     }
 
@@ -224,9 +229,9 @@ class TemplateEngine {
 
     try {
       const result = helper(...resolvedArgs, context);
-      return this.escapeHtml(String(result ?? ''));
+      return escapeHTML(String(result ?? ''));
     } catch (error) {
-      console.error(`Error executing helper ${helperName}:`, error);
+      logger.error(`Error executing helper ${helperName}:`, error);
       return '';
     }
   }
@@ -299,22 +304,7 @@ class TemplateEngine {
     return current;
   }
 
-  /**
-     * Escape HTML characters
-     * @param {string} str - String to escape
-     * @returns {string} Escaped string
-     */
-  escapeHtml(str) {
-    const escapeMap = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      '\'': '&#39;'
-    };
-
-    return str.replace(/[&<>"']/g, match => escapeMap[match]);
-  }
+  // escapeHTML is now imported from '../utils/safe-dom.js'
 
   /**
      * Register default helper functions
@@ -404,15 +394,15 @@ class TemplateEngine {
       return `
                 <div class="newsletter-card">
                     <div class="card-header">
-                        <h3>${this.escapeHtml(newsletter.title)}</h3>
-                        <p class="quarter">${this.escapeHtml(newsletter.quarter)} Quarter ${newsletter.year}</p>
+                        <h3>${escapeHTML(newsletter.title)}</h3>
+                        <p class="quarter">${escapeHTML(newsletter.quarter)} Quarter ${newsletter.year}</p>
                     </div>
                     <div class="card-content">
                         <p class="publish-date">Published: ${this.helpers.get('formatDate')(newsletter.publishDate, 'short')}</p>
-                        <p class="description">${this.escapeHtml(newsletter.description)}</p>
+                        <p class="description">${escapeHTML(newsletter.description)}</p>
                         ${newsletter.highlights ? `
                             <ul class="highlights">
-                                ${newsletter.highlights.map(h => `<li>${this.escapeHtml(h)}</li>`).join('')}
+                                ${newsletter.highlights.map(h => `<li>${escapeHTML(h)}</li>`).join('')}
                             </ul>
                         ` : ''}
                         <a href="${newsletter.filePath}" class="btn btn-primary" target="_blank">
@@ -431,7 +421,7 @@ class TemplateEngine {
       return `
                 <div class="meeting-card">
                     <div class="card-header">
-                        <h3>${this.escapeHtml(meeting.title || meeting.topic || 'SAPA Meeting')}</h3>
+                        <h3>${escapeHTML(meeting.title || meeting.topic || 'SAPA Meeting')}</h3>
                         <p class="date">${this.helpers.get('formatDate')(meeting.date)}</p>
                     </div>
                     <div class="card-content">
@@ -442,24 +432,24 @@ class TemplateEngine {
                         </p>
                         <p class="location">
                             <i class="fas fa-map-marker-alt"></i>
-                            ${this.escapeHtml(meeting.location.name)}
-                            ${meeting.location.building ? `, ${this.escapeHtml(meeting.location.building)}` : ''}
+                            ${escapeHTML(meeting.location.name)}
+                            ${meeting.location.building ? `, ${escapeHTML(meeting.location.building)}` : ''}
                         </p>
                         ${meeting.presenter ? `
                             <p class="presenter">
                                 <i class="fas fa-user"></i>
-                                Presenter: ${this.escapeHtml(meeting.presenter.name)}
-                                ${meeting.presenter.title ? ` (${this.escapeHtml(meeting.presenter.title)})` : ''}
+                                Presenter: ${escapeHTML(meeting.presenter.name)}
+                                ${meeting.presenter.title ? ` (${escapeHTML(meeting.presenter.title)})` : ''}
                             </p>
                         ` : ''}
                         ${meeting.description ? `
-                            <p class="description">${this.escapeHtml(meeting.description)}</p>
+                            <p class="description">${escapeHTML(meeting.description)}</p>
                         ` : ''}
                         ${meeting.specialNotes && meeting.specialNotes.length > 0 ? `
                             <div class="special-notes">
                                 <strong>Special Notes:</strong>
                                 <ul>
-                                    ${meeting.specialNotes.map(note => `<li>${this.escapeHtml(note)}</li>`).join('')}
+                                    ${meeting.specialNotes.map(note => `<li>${escapeHTML(note)}</li>`).join('')}
                                 </ul>
                             </div>
                         ` : ''}
@@ -476,7 +466,7 @@ class TemplateEngine {
       return `
                 <div class="resource-card">
                     <div class="card-header">
-                        <h3>${this.escapeHtml(resource.title)}</h3>
+                        <h3>${escapeHTML(resource.title)}</h3>
                         <div class="meta">
                             <span class="difficulty ${resource.difficulty}">${this.helpers.get('capitalize')(resource.difficulty)}</span>
                             <span class="category">${this.helpers.get('capitalize')(resource.category.replace('-', ' '))}</span>
@@ -484,10 +474,10 @@ class TemplateEngine {
                         </div>
                     </div>
                     <div class="card-content">
-                        <p class="summary">${this.escapeHtml(resource.summary)}</p>
+                        <p class="summary">${escapeHTML(resource.summary)}</p>
                         ${resource.tags && resource.tags.length > 0 ? `
                             <div class="tags">
-                                ${resource.tags.map(tag => `<span class="tag">${this.escapeHtml(tag)}</span>`).join('')}
+                                ${resource.tags.map(tag => `<span class="tag">${escapeHTML(tag)}</span>`).join('')}
                             </div>
                         ` : ''}
                         <a href="/resources/${resource.slug}" class="btn btn-primary">Read More</a>
@@ -503,15 +493,15 @@ class TemplateEngine {
 
       return `
                 <div class="glossary-term">
-                    <h3 class="term-name">${this.escapeHtml(term.term)}</h3>
+                    <h3 class="term-name">${escapeHTML(term.term)}</h3>
                     ${term.alternateNames && term.alternateNames.length > 0 ? `
                         <p class="alternate-names">
-                            Also known as: ${term.alternateNames.map(name => this.escapeHtml(name)).join(', ')}
+                            Also known as: ${term.alternateNames.map(name => escapeHTML(name)).join(', ')}
                         </p>
                     ` : ''}
-                    <p class="definition">${this.escapeHtml(term.definition)}</p>
+                    <p class="definition">${escapeHTML(term.definition)}</p>
                     ${term.detailedDescription ? `
-                        <p class="detailed-description">${this.escapeHtml(term.detailedDescription)}</p>
+                        <p class="detailed-description">${escapeHTML(term.detailedDescription)}</p>
                     ` : ''}
                     <div class="term-meta">
                         <span class="category">${this.helpers.get('capitalize')(term.category.replace('-', ' '))}</span>

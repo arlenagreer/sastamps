@@ -13,6 +13,9 @@ import {
   ErrorTypes
 } from './error-handler.js';
 import { API_ENDPOINTS, TIMING, HTTP_STATUS as _HTTP_STATUS } from '../constants/index.js';
+import { createLogger } from './logger.js';
+
+const logger = createLogger('ApiClient');
 
 /**
  * Default API client configuration
@@ -159,7 +162,7 @@ export class ApiClient {
         return data.token;
       }
     } catch (error) {
-      console.warn('Failed to get CSRF token:', error);
+      logger.warn('Failed to get CSRF token:', error);
     }
     return null;
   }

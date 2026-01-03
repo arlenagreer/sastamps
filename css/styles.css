@@ -1,68 +1,17 @@
 /* San Antonio Philatelic Association - Main Stylesheet */
 
+/*
+ * NOTE: CSS Custom Properties (:root) are defined in critical.css
+ * which is loaded first for performance. This file extends those base styles.
+ *
+ * DO NOT duplicate :root variables here - they are loaded via critical.css
+ * See: css/critical.css for base variables, typography, and critical path styles
+ */
+
 
 /* ===== IMPORTS ===== */
 
 /* vanilla-calendar import removed - CSS is not needed */
-
-
-/* ===== VARIABLES ===== */
-:root {
-    /* Color Palette */
-    --primary: #1a5276;        /* Deep blue */
-    --primary-light: #2980b9;  /* Mid blue */
-    --primary-dark: #0e2f44;   /* Darker blue */
-    --secondary: #d35400;      /* Warm orange */
-    --accent: #f1c40f;         /* Gold/Yellow */
-    --dark: #2c3e50;           /* Slate dark */
-    --medium: #7f8c8d;         /* Gray */
-    --light: #ecf0f1;          /* Light gray */
-    --white: #fff;
-    --success: #27ae60;        /* Green */
-    --warning: #f39c12;        /* Orange */
-    --danger: #c0392b;         /* Red */
-
-    
-    /* Typography */
-    --font-heading: 'Merriweather', georgia, serif;
-    --font-body: 'Open Sans', arial, sans-serif;
-
-    
-    /* Spacing */
-    --space-xxs: 0.25rem;
-    --space-xs: 0.5rem;
-    --space-sm: 0.75rem;
-    --space-md: 1rem;
-    --space-lg: 1.5rem;
-    --space-xl: 2rem;
-    --space-xxl: 3rem;
-
-    
-    /* Container widths */
-    --container-sm: 640px;
-    --container-md: 768px;
-    --container-lg: 1024px;
-    --container-xl: 1280px;
-
-    
-    /* Border radius */
-    --radius-sm: 3px;
-    --radius-md: 5px;
-    --radius-lg: 8px;
-    --radius-xl: 12px;
-
-    
-    /* Shadows */
-    --shadow-sm: 0 1px 3px rgb(0, 0, 0, 0.12);
-    --shadow-md: 0 4px 6px rgb(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0, 0, 0, 0.1);
-
-    
-    /* Transitions */
-    --transition-fast: 0.15s ease;
-    --transition-normal: 0.25s ease;
-    --transition-slow: 0.4s ease;
-}
 
 
 /* Dark theme variables */
@@ -90,6 +39,9 @@
 
 
 /* ===== RESET & BASE STYLES ===== */
+/* NOTE: Core body and typography styles are in critical.css */
+/* These reset styles complement but don't duplicate critical.css */
+
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -101,34 +53,7 @@ html {
     scroll-behavior: smooth;
 }
 
-body {
-    font-family: var(--font-body);
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--dark);
-    background-color: var(--white);
-}
-
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
-    line-height: 1.3;
-    margin-bottom: 1rem;
-    font-weight: 700;
-    color: var(--dark);
-}
-
-h1 {
-    font-size: 2.5rem;
-}
-
-h2 {
-    font-size: 2rem;
-}
-
-h3 {
-    font-size: 1.75rem;
-}
-
+/* Extended heading styles (h4-h6 not in critical.css) */
 h4 {
     font-size: 1.5rem;
 }
@@ -239,12 +164,7 @@ button, input, select, textarea {
 
 
 /* ===== LAYOUT ===== */
-.container {
-    width: 100%;
-    max-width: var(--container-xl);
-    margin: 0 auto;
-    padding: 0 1.5rem;
-}
+/* NOTE: .container is defined in critical.css */
 
 .section {
     padding: var(--space-xxl) 0;
@@ -296,20 +216,8 @@ button, input, select, textarea {
 
 
 /* ===== HEADER STYLES ===== */
-header {
-    background-color: var(--white);
-    box-shadow: var(--shadow-sm);
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    padding: 1rem 0;
-}
-
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+/* NOTE: Core header, nav, .header-container styles are in critical.css */
+/* Extended header styles below */
 
 .site-title {
     font-size: 1.5rem;
@@ -319,45 +227,6 @@ header {
 .site-title a {
     color: var(--primary);
     text-decoration: none;
-}
-
-nav ul {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-nav li {
-    margin-left: 1.5rem;
-}
-
-nav a {
-    font-weight: 600;
-    color: var(--dark);
-    text-decoration: none;
-    padding: 0.5rem 0;
-    transition: color var(--transition-fast);
-    position: relative;
-}
-
-nav a:hover {
-    color: var(--primary);
-}
-
-nav a::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: var(--primary);
-    transition: width var(--transition-normal);
-}
-
-nav a:hover::after {
-    width: 100%;
 }
 
 
@@ -436,87 +305,26 @@ footer,
     transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
+/* Mobile styles (base menu-toggle, nav-menu, nav li, nav a::after, .nav-menu a,
+   .nav-menu li, .nav-menu a:active, .nav-menu a:hover, body.menu-open, .nav-icon)
+   defined in critical.css - mobile navigation core styles */
+
 @media (width <= 768px) {
-    .menu-toggle {
-        display: block;
-        touch-action: manipulation;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        user-select: none;
-    }
-    
-    .nav-menu {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 80%;
-        max-width: 300px;
-        height: 100vh; /* Fallback for older browsers */
-        height: 100dvh; /* Use dynamic viewport height for better mobile support */
-        height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback for iOS */
-        background-color: var(--white);
-        flex-direction: column;
-        justify-content: flex-start;
-        padding: 2rem;
-        box-shadow: var(--shadow-lg);
-        transition: right var(--transition-normal);
-        z-index: 60;
-
-        /* iOS specific fixes */
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior: contain;
-    }
-
-    
-    /* CSS-only menu toggle using checkbox */
+    /* CSS-only menu toggle using checkbox - extension */
     .menu-toggle-checkbox:checked ~ .nav-menu {
         right: 0;
     }
-    
-    
-    nav li {
-        margin: 0 0 1.5rem;
-    }
-    
-    nav a::after {
-        display: none;
-    }
 
-    
-    /* Ensure mobile nav links are clickable */
+    /* Extended mobile link styling - enhancements over critical.css base */
     .nav-menu a {
-        padding: 0.75rem 1rem;
-        position: relative;
-        z-index: 65;
-        -webkit-tap-highlight-color: rgb(26, 82, 118, 0.2);
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        user-select: none;
-        touch-action: manipulation;
-        cursor: pointer;
-
-        /* Ensure proper touch target size */
-        min-height: 44px;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        box-sizing: border-box;
-
-        /* Improved mobile link styling */
         color: var(--primary);
         font-weight: 600;
         border-radius: var(--radius-md);
         margin-bottom: 0.25rem;
         transition: all var(--transition-fast);
     }
-    
-    .nav-menu li {
-        display: block;
-        width: 100%;
-    }
 
-    
-    /* Mobile menu icon styling */
+    /* Mobile menu icon styling - enhanced positioning */
     .nav-menu .nav-icon {
         color: var(--primary);
         margin-right: 0.75rem;
@@ -525,34 +333,27 @@ footer,
         text-align: center;
     }
 
-    
-    /* iOS specific fixes and hover states */
+    /* Extended hover states with color and transform */
     .nav-menu a:active {
-        background-color: rgb(26, 82, 118, 0.15);
-        transform: scale(0.98);
-        transition: all 0.1s ease;
         color: var(--primary-dark);
     }
-    
+
     .nav-menu a:hover {
-        background-color: rgb(26, 82, 118, 0.08);
         color: var(--primary-dark);
         transform: translateX(4px);
     }
 
-    
     /* Active/current page styling for mobile */
     .nav-menu a.active,
     .nav-menu a[aria-current="page"] {
         background-color: var(--primary);
         color: var(--white);
     }
-    
+
     .nav-menu a.active .nav-icon,
     .nav-menu a[aria-current="page"] .nav-icon {
         color: var(--white);
     }
-    
 }
 
 
@@ -606,25 +407,7 @@ footer {
 
 
 /* ===== HERO SECTION ===== */
-.hero {
-    background-color: var(--primary);
-    color: var(--white);
-    padding: var(--space-xxl) 0;
-    text-align: center;
-}
-
-.hero h1 {
-    color: var(--white);
-    font-size: 2.75rem;
-    margin-bottom: 1rem;
-}
-
-.hero p {
-    font-size: 1.25rem;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
+/* NOTE: .hero base styles are in critical.css */
 
 /* ===== BUTTONS ===== */
 .btn {
@@ -692,40 +475,10 @@ footer {
 
 
 /* ===== CARDS ===== */
-.card {
-    background-color: var(--white);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-    margin-bottom: 1.5rem;
-    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-}
-
-.card-content {
-    padding: 1.5rem;
-}
-
-.card-title {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-}
-
-.card-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
-
+/* NOTE: .card, .card-content, .card-title, .card-image, .card:hover are in critical.css */
 
 /* ===== UTILITIES ===== */
-.text-center {
-    text-align: center;
-}
+/* NOTE: .text-center is in critical.css */
 
 .text-right {
     text-align: right;
@@ -970,11 +723,7 @@ tr:hover {
     box-shadow: var(--shadow-md);
 }
 
-.timeline-content h3 {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-    color: var(--primary);
-}
+/* .timeline-content h3 defined in critical.css */
 
 @media screen and (width <= 768px) {
     .timeline::after {
@@ -1128,28 +877,8 @@ tr:hover {
     border-bottom: none;
 }
 
-.accordion-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 1.25rem;
-    background-color: var(--white);
-    border: none;
-    text-align: left;
-    cursor: pointer;
-    transition: background-color var(--transition-fast);
-    font-weight: 600;
-}
-
-.accordion-header:hover {
-    background-color: var(--light);
-}
-
-.accordion-header.active {
-    background-color: var(--primary);
-    color: var(--white);
-}
+/* .accordion-header, .accordion-header:hover, .accordion-header.active
+   defined in critical.css - base accordion header styling */
 
 .accordion-content {
     max-height: 0;

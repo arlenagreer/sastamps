@@ -6,6 +6,9 @@
 import { debounce } from '../utils/performance.js';
 import { safeQuerySelector, escapeHTML } from '../utils/safe-dom.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('SearchPage');
 
 // Search-specific functionality
 async function initializeSearchPage() {
@@ -63,7 +66,7 @@ async function initializeSearchInterface(container) {
     await searchEngine.initialize();
     // Search engine initialized successfully
   } catch (error) {
-    console.error('Failed to initialize search engine:', error);
+    logger.error('Failed to initialize search engine:', error);
     showSearchError('Search functionality is temporarily unavailable.');
     return;
   }
@@ -85,7 +88,7 @@ async function initializeSearchInterface(container) {
       suggestionsContainer.innerHTML = '';
 
     } catch (error) {
-      console.error('Search failed:', error);
+      logger.error('Search failed:', error);
       showSearchError('Search failed. Please try again.');
     }
   }, 300);
@@ -127,7 +130,7 @@ async function initializeSearchInterface(container) {
       }
 
     } catch (error) {
-      console.error('Suggestions failed:', error);
+      logger.error('Suggestions failed:', error);
       suggestionsContainer.innerHTML = '';
     }
   }, 500);
@@ -366,7 +369,7 @@ function applySearchFilters() {
       updateSearchStats(results.length, currentQuery);
     })
     .catch(error => {
-      console.error('Filtered search failed:', error);
+      logger.error('Filtered search failed:', error);
       showSearchError('Search with filters failed. Please try again.');
     });
 }
@@ -402,7 +405,7 @@ function handleURLSearchParams() {
           updateSearchStats(results.length, query);
         })
         .catch(error => {
-          console.error('URL parameter search failed:', error);
+          logger.error('URL parameter search failed:', error);
         });
     }
   }

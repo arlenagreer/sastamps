@@ -3,6 +3,10 @@
  * Handles loading and rendering meeting data from JSON
  */
 
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('MeetingLoader');
+
 class MeetingLoader {
   constructor(options = {}) {
     this.dataUrl = options.dataUrl || './data/meetings/meetings.json';
@@ -13,7 +17,7 @@ class MeetingLoader {
 
     this.callbacks = {
       onLoad: options.onLoad || (() => {}),
-      onError: options.onError || ((error) => console.error('Meeting loader error:', error))
+      onError: options.onError || ((error) => logger.error('Meeting loader error:', error))
     };
   }
 
@@ -49,7 +53,7 @@ class MeetingLoader {
 
     } catch (error) {
       this.isLoading = false;
-      console.error('❌ Failed to load meeting data:', error);
+      logger.error('Failed to load meeting data:', error);
       this.callbacks.onError(error);
       throw error;
     }
@@ -60,7 +64,7 @@ class MeetingLoader {
      */
   filterMeetingsByDateRange(startDate, endDate) {
     if (!this.isLoaded) {
-      console.warn('Meeting data not loaded yet');
+      logger.warn('Meeting data not loaded yet');
       return [];
     }
 

@@ -6,6 +6,9 @@
 // Core utilities (will be tree-shaken if not used)
 import { debounce } from '../utils/performance.js';
 import { safeQuerySelector } from '../utils/safe-dom.js';
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('HomePage');
 
 // Conditionally import calendar only if needed
 async function initializeHomeCalendar() {
@@ -45,7 +48,7 @@ async function initializeHomeCalendar() {
     });
 
   } catch (error) {
-    console.warn('Failed to initialize home calendar:', error);
+    logger.warn('Failed to initialize home calendar:', error);
   }
 }
 
@@ -84,7 +87,7 @@ function initializeCountdownTimer(element) {
         element.innerHTML = '<p>No upcoming meetings scheduled</p>';
       }
     } catch (error) {
-      console.warn('Failed to update countdown:', error);
+      logger.warn('Failed to update countdown:', error);
       element.innerHTML = '<p>Upcoming meeting information unavailable</p>';
     }
   }, 1000);
@@ -162,7 +165,7 @@ async function loadQuickStats(container) {
             </div>
         `;
   } catch (error) {
-    console.warn('Failed to load quick stats:', error);
+    logger.warn('Failed to load quick stats:', error);
     container.innerHTML = '<p>Statistics temporarily unavailable</p>';
   }
 }
@@ -188,7 +191,7 @@ async function loadRecentNewsletters(container) {
             <a href="newsletter.html" class="view-all-link">View All Newsletters →</a>
         `;
   } catch (error) {
-    console.warn('Failed to load recent newsletters:', error);
+    logger.warn('Failed to load recent newsletters:', error);
     container.innerHTML = '<p>Recent newsletters temporarily unavailable</p>';
   }
 }

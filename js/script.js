@@ -6,6 +6,10 @@
 import { ErrorBoundary } from './error-boundary.js';
 import { calendarLazyLoader } from './lazy-loader.js';
 import { safeLocalStorageGet, safeLocalStorageSet, safeQuerySelector } from './utils/safe-dom.js';
+import { createLogger } from './utils/logger.js';
+
+// Create logger for this module
+const logger = createLogger('Script');
 
 // Store references to event listeners for cleanup
 const eventListeners = new Map();
@@ -73,7 +77,7 @@ function safeDateParse(dateString, fallback = new Date()) {
     }
     return date;
   } catch (error) {
-    console.error(`Failed to parse date "${dateString}":`, error);
+    logger.error(`Failed to parse date "${dateString}":`, error);
     return fallback;
   }
 }
@@ -95,7 +99,7 @@ async function fetchWithRetry(url, options = {}, retries = 3) {
       return response;
     } catch (error) {
       if (i === retries - 1) throw error;
-      console.warn(`Fetch attempt ${i + 1} failed, retrying...`, error);
+      logger.warn(`Fetch attempt ${i + 1} failed, retrying...`, error);
       await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, i)));
     }
   }
@@ -112,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
         componentName: name,
         container: container,
         onError: (error, componentName) => {
-          console.error(`[${componentName}] Component failed:`, error);
+          logger.error(`[${componentName}] Component failed:`, error);
           // Track component failures
           if (typeof gtag !== 'undefined') {
             gtag('event', 'exception', {
@@ -125,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
           try {
             fn();
           } catch (retryError) {
-            console.error(`[${name}] Retry failed:`, retryError);
+            logger.error(`[${name}] Retry failed:`, retryError);
           }
         },
         maxRetries: 1
@@ -156,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupDynamicContentBoundaries();
 
   } catch (error) {
-    console.error('Error during page initialization:', error);
+    logger.error('Error during page initialization:', error);
     // Show user-friendly error message
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error-banner';
@@ -226,7 +230,7 @@ function setupBackToTopButton() {
     const backToTopButton = safeQuerySelector('#back-to-top');
 
     if (!backToTopButton) {
-      console.info('Back to top button not found - feature not available on this page');
+      logger.info('Back to top button not found - feature not available on this page');
       return;
     }
 
@@ -239,7 +243,7 @@ function setupBackToTopButton() {
           backToTopButton.style.display = 'none';
         }
       } catch (error) {
-        console.error('Error updating back to top button visibility:', error);
+        logger.error('Error updating back to top button visibility:', error);
       }
     }, 100);
 
@@ -254,18 +258,18 @@ function setupBackToTopButton() {
           behavior: 'smooth'
         });
       } catch (error) {
-        console.error('Error scrolling to top:', error);
+        logger.error('Error scrolling to top:', error);
         // Fallback to instant scroll
         try {
           window.scrollTo(0, 0);
         } catch (fallbackError) {
-          console.error('Fallback scroll failed:', fallbackError);
+          logger.error('Fallback scroll failed:', fallbackError);
         }
       }
     });
 
   } catch (error) {
-    console.error('Error setting up back to top button:', error);
+    logger.error('Error setting up back to top button:', error);
   }
 }
 
@@ -277,14 +281,14 @@ function setupEventCountdown() {
     const countdownElement = safeQuerySelector('#event-countdown');
 
     if (!countdownElement) {
-      console.info('Event countdown element not found - feature not available on this page');
+      logger.info('Event countdown element not found - feature not available on this page');
       return;
     }
 
     const eventDateAttribute = countdownElement.getAttribute('data-event-date');
 
     if (!eventDateAttribute) {
-      console.warn('Event countdown missing data-event-date attribute');
+      logger.warn('Event countdown missing data-event-date attribute');
       return;
     }
 
@@ -292,7 +296,7 @@ function setupEventCountdown() {
     const eventDateTime = eventDate.getTime();
 
     if (isNaN(eventDateTime)) {
-      console.error('Invalid event date:', eventDateAttribute);
+      logger.error('Invalid event date:', eventDateAttribute);
       countdownElement.innerHTML = '';
       const errorSpan = createSafeElement('span', {
         className: 'countdown-error',
@@ -350,7 +354,7 @@ function setupEventCountdown() {
         countdownElement.appendChild(createCountdownUnit(minutes, 'Minute'));
         countdownElement.appendChild(createCountdownUnit(seconds, 'Second'));
       } catch (error) {
-        console.error('Error updating countdown display:', error);
+        logger.error('Error updating countdown display:', error);
         clearInterval(countdownInterval);
         countdownElement.innerHTML = '';
         const errorSpan = createSafeElement('span', {
@@ -362,7 +366,7 @@ function setupEventCountdown() {
     }, 1000);
 
   } catch (error) {
-    console.error('Error setting up event countdown:', error);
+    logger.error('Error setting up event countdown:', error);
   }
 }
 
@@ -374,7 +378,7 @@ function setupFormValidation() {
     const contactForm = safeQuerySelector('#contact-form');
 
     if (!contactForm) {
-      console.info('Contact form not found - feature not available on this page');
+      logger.info('Contact form not found - feature not available on this page');
       return;
     }
 
@@ -525,7 +529,7 @@ function setupFormValidation() {
             }
           })
           .catch(error => {
-            console.error('Form submission error:', error);
+            logger.error('Form submission error:', error);
 
             // Show generic error message
             const errorDiv = document.createElement('div');
@@ -545,7 +549,7 @@ function setupFormValidation() {
       }
     });
   } catch (error) {
-    console.error('Error setting up form validation:', error);
+    logger.error('Error setting up form validation:', error);
   }
 }
 
@@ -686,18 +690,18 @@ if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
           // ServiceWorker registration successful
         })
         .catch(err => {
-          console.warn('ServiceWorker registration failed:', err);
+          logger.warn('ServiceWorker registration failed:', err);
           // Service worker failure shouldn't break the app
         });
     } catch (error) {
-      console.warn('ServiceWorker registration error:', error);
+      logger.warn('ServiceWorker registration error:', error);
     }
   });
 } else {
   if ('serviceWorker' in navigator) {
-    console.info('ServiceWorker not supported on file:// protocol');
+    logger.info('ServiceWorker not supported on file:// protocol');
   } else {
-    console.info('ServiceWorker not supported in this browser');
+    logger.info('ServiceWorker not supported in this browser');
   }
 }
 
@@ -715,14 +719,14 @@ function setupThemeToggle() {
         document.documentElement.setAttribute('data-theme', 'dark');
       }
     } catch (error) {
-      console.error('Error applying saved theme:', error);
+      logger.error('Error applying saved theme:', error);
     }
 
     // Theme toggle functionality for all toggle buttons
     const themeToggles = document.querySelectorAll('.theme-toggle');
 
     if (themeToggles.length === 0) {
-      console.info('No theme toggle buttons found');
+      logger.info('No theme toggle buttons found');
       return;
     }
 
@@ -743,14 +747,14 @@ function setupThemeToggle() {
           // Save preference
           const saveResult = safeLocalStorageSet('theme', newTheme);
           if (!saveResult) {
-            console.warn('Failed to save theme preference');
+            logger.warn('Failed to save theme preference');
           }
 
           // Update button aria-label for accessibility
           const label = newTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
           themeToggles.forEach(t => t.setAttribute('aria-label', label));
         } catch (error) {
-          console.error('Error toggling theme:', error);
+          logger.error('Error toggling theme:', error);
         }
       });
 
@@ -760,12 +764,12 @@ function setupThemeToggle() {
         const initialLabel = initialTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
         toggle.setAttribute('aria-label', initialLabel);
       } catch (error) {
-        console.error('Error setting initial aria-label:', error);
+        logger.error('Error setting initial aria-label:', error);
       }
     });
 
   } catch (error) {
-    console.error('Error setting up theme toggle:', error);
+    logger.error('Error setting up theme toggle:', error);
   }
 }
 
@@ -905,7 +909,7 @@ function setupContactForm() {
         }
 
       } catch (error) {
-        console.error('Contact form submission error:', error);
+        logger.error('Contact form submission error:', error);
         if (formMessage) {
           formMessage.innerHTML = '';
           const errorDiv = createSafeElement('div', {
@@ -937,7 +941,7 @@ function setupContactForm() {
     });
 
   } catch (error) {
-    console.error('Error setting up contact form:', error);
+    logger.error('Error setting up contact form:', error);
   }
 }
 
@@ -972,7 +976,7 @@ function checkClientRateLimit(key, maxRequests = 3, timeWindow = 3600000) { // 1
 
     return true;
   } catch (error) {
-    console.warn('Rate limiting check failed:', error);
+    logger.warn('Rate limiting check failed:', error);
     return true; // Allow request if rate limiting fails
   }
 }
@@ -1056,7 +1060,7 @@ async function fetchCSRFToken() {
       csrfTokenField.value = data.csrf_token;
     }
   } catch (error) {
-    console.error('Error fetching CSRF token:', error);
+    logger.error('Error fetching CSRF token:', error);
   }
 }
 
@@ -1152,7 +1156,7 @@ function setupDynamicContentBoundaries() {
         componentName: 'Meeting Schedule',
         container: meetingContainer,
         onError: (error) => {
-          console.error('[Meeting Schedule] Failed to load:', error);
+          logger.error('[Meeting Schedule] Failed to load:', error);
         },
         maxRetries: 2
       });
@@ -1337,7 +1341,7 @@ function setupDynamicContentBoundaries() {
     // Error boundaries initialized successfully
 
   } catch (error) {
-    console.error('Error setting up dynamic content boundaries:', error);
+    logger.error('Error setting up dynamic content boundaries:', error);
   }
 }
 

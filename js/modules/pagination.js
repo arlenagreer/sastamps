@@ -3,6 +3,10 @@
  * Reusable pagination component for newsletters, search results, and glossary
  */
 
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('Pagination');
+
 class Pagination {
   constructor(options = {}) {
     this.itemsPerPage = options.itemsPerPage || 10;
@@ -146,7 +150,7 @@ class Pagination {
     }
 
     if (!this.containerElement) {
-      console.error('Pagination container not found');
+      logger.error('Pagination container not found');
       return this;
     }
 

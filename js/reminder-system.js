@@ -11,6 +11,9 @@ import {
   ERROR_MESSAGES,
   SUCCESS_MESSAGES
 } from './constants/index.js';
+import { createLogger } from './utils/logger.js';
+
+const logger = createLogger('ReminderSystem');
 
 export class ReminderSystem {
   constructor() {
@@ -49,7 +52,7 @@ export class ReminderSystem {
       const saved = localStorage.getItem(this.settingsKey);
       this.settings = saved ? { ...this.defaultSettings, ...JSON.parse(saved) } : { ...this.defaultSettings };
     } catch (error) {
-      console.warn('Error loading reminder settings:', error);
+      logger.warn('Error loading reminder settings:', error);
       this.settings = { ...this.defaultSettings };
     }
   }
@@ -61,7 +64,7 @@ export class ReminderSystem {
     try {
       localStorage.setItem(this.settingsKey, JSON.stringify(this.settings));
     } catch (error) {
-      console.warn('Error saving reminder settings:', error);
+      logger.warn('Error saving reminder settings:', error);
     }
   }
 
@@ -158,7 +161,7 @@ export class ReminderSystem {
     try {
       localStorage.setItem(this.storageKey, JSON.stringify(reminders));
     } catch (error) {
-      console.warn('Error saving reminders:', error);
+      logger.warn('Error saving reminders:', error);
     }
   }
 
@@ -171,7 +174,7 @@ export class ReminderSystem {
       const saved = localStorage.getItem(this.storageKey);
       return saved ? JSON.parse(saved) : [];
     } catch (error) {
-      console.warn('Error loading reminders:', error);
+      logger.warn('Error loading reminders:', error);
       return [];
     }
   }
@@ -380,7 +383,7 @@ export class ReminderSystem {
       oscillator.start(audioContext.currentTime);
       oscillator.stop(audioContext.currentTime + REMINDER.SOUND_DURATION);
     } catch (error) {
-      console.warn('Could not play notification sound:', error);
+      logger.warn('Could not play notification sound:', error);
     }
   }
 

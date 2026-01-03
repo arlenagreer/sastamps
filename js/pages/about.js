@@ -6,15 +6,18 @@
 // Import utilities
 import { safeQuerySelector } from '../utils/safe-dom.js';
 import { debounce as _debounce } from '../utils/performance.js';
+import { createLogger } from '../utils/logger.js';
 
 // Import core modules
 import breadcrumb from '../modules/breadcrumb.js';
+
+const logger = createLogger('AboutPage');
 
 /**
  * Initialize about page functionality
  */
 async function initAboutPage() {
-  console.log('Initializing about page...');
+  logger.info('Initializing about page...');
 
   try {
     // Initialize breadcrumb navigation
@@ -26,9 +29,9 @@ async function initAboutPage() {
     // Initialize service worker if available
     initServiceWorker();
 
-    console.log('About page initialized successfully');
+    logger.info('About page initialized successfully');
   } catch (error) {
-    console.error('About page initialization failed:', error);
+    logger.error('About page initialization failed:', error);
   }
 }
 
@@ -63,12 +66,12 @@ async function initServiceWorker() {
   if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
     try {
       await navigator.serviceWorker.register('/sw.js');
-      console.log('Service Worker registered successfully');
+      logger.info('Service Worker registered successfully');
     } catch (error) {
-      console.warn('Service Worker registration failed:', error);
+      logger.warn('Service Worker registration failed:', error);
     }
   } else if ('serviceWorker' in navigator) {
-    console.info('Service Worker not supported on file:// protocol');
+    logger.info('Service Worker not supported on file:// protocol');
   }
 }
 

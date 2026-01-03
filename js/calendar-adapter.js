@@ -3,6 +3,10 @@
  * Converts SAPA meeting data to Vanilla Calendar Pro format
  */
 
+import { createLogger } from './utils/logger.js';
+
+const logger = createLogger('CalendarAdapter');
+
 export class CalendarAdapter {
   constructor() {
     this.meetingsData = null;
@@ -46,7 +50,7 @@ export class CalendarAdapter {
       this.meetingsData = await response.json();
       return this.meetingsData;
     } catch (error) {
-      console.error('Error loading meetings:', error);
+      logger.error('Error loading meetings:', error);
       return null;
     }
   }

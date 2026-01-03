@@ -4,6 +4,9 @@
  */
 
 import { escapeHTML } from '../utils/safe-dom.js';
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('SearchEngine');
 
 class SearchEngine {
   constructor(options = {}) {
@@ -16,7 +19,7 @@ class SearchEngine {
     this.callbacks = {
       onLoad: options.onLoad || (() => {}),
       onSearch: options.onSearch || (() => {}),
-      onError: options.onError || ((error) => console.error('Search error:', error))
+      onError: options.onError || ((error) => logger.error('Search error:', error))
     };
 
     // Load Lunr.js if not already loaded
@@ -72,7 +75,7 @@ class SearchEngine {
 
     } catch (error) {
       this.isLoading = false;
-      console.error('❌ Failed to initialize search engine:', error);
+      logger.error('Failed to initialize search engine:', error);
       this.callbacks.onError(error);
       throw error;
     }
@@ -168,7 +171,7 @@ class SearchEngine {
       return searchResult;
 
     } catch (error) {
-      console.error('Search error:', error);
+      logger.error('Search error:', error);
       this.callbacks.onError(error);
       return {
         query,
@@ -262,7 +265,7 @@ class SearchEngine {
       }));
 
     } catch (error) {
-      console.error('Suggestions error:', error);
+      logger.error('Suggestions error:', error);
       return [];
     }
   }
@@ -785,7 +788,7 @@ class SearchEngine {
         container.style.display = 'none';
       }
     } catch (error) {
-      console.error('Suggestions error:', error);
+      logger.error('Suggestions error:', error);
       container.style.display = 'none';
     }
   }

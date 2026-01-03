@@ -1,6 +1,665 @@
 {
   "meetings": [
     {
+      "id": "2026-01-02",
+      "date": "2026-01-02",
+      "time": {
+        "doorsOpen": "N/A",
+        "meetingStart": "N/A",
+        "meetingEnd": "N/A"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "holiday",
+      "title": "No Meeting - New Year's Day",
+      "description": "No meeting scheduled due to New Year's Day holiday.",
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": true,
+      "tags": ["holiday", "new-years"]
+    },
+    {
+      "id": "2026-01-09",
+      "date": "2026-01-09",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "bogStart": "7:15 PM",
+        "meetingStart": "7:30 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "business",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "topic": "Monthly club business and member presentations",
+      "description": "Monthly Board of Governors meeting followed by member show and tell presentations. Guests welcome!",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, social time"
+        },
+        {
+          "time": "7:15 PM",
+          "item": "Board of Governors meeting",
+          "presenter": "Board Members"
+        },
+        {
+          "time": "7:30 PM",
+          "item": "Show and Tell presentations",
+          "presenter": "Members"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Meeting adjournment"
+        }
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false,
+        "bringItems": ["Items for show and tell"]
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bog", "business", "show-and-tell", "guests-welcome"]
+    },
+    {
+      "id": "2026-01-16",
+      "date": "2026-01-16",
+      "time": {
+        "doorsOpen": "N/A",
+        "meetingStart": "N/A",
+        "meetingEnd": "N/A"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "holiday",
+      "title": "No Meeting - MLK Day",
+      "description": "No meeting scheduled due to Martin Luther King Jr. Day holiday.",
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": true,
+      "tags": ["holiday", "mlk-day"]
+    },
+    {
+      "id": "2026-01-23",
+      "date": "2026-01-23",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "auction",
+      "title": "Club Auction",
+      "topic": "Monthly stamp auction",
+      "description": "Monthly club auction featuring member consignments and donated materials. Guests welcome!",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, lot viewing"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Auction preview and announcements"
+        },
+        {
+          "time": "7:15 PM",
+          "item": "Auction begins"
+        },
+        {
+          "time": "8:45 PM",
+          "item": "Auction conclusion and checkout"
+        }
+      ],
+      "specialNotes": [
+        "Cash or check accepted for purchases",
+        "Bring lots for consignment (10% commission)",
+        "Guests welcome!"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["auction", "buying", "selling", "consignment", "guests-welcome"]
+    },
+    {
+      "id": "2026-01-30",
+      "date": "2026-01-30",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "social",
+      "title": "Stamp Bourse",
+      "topic": "Dealer tables and stamp trading",
+      "description": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers. Guests welcome!",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, dealer setup"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Bourse officially opens"
+        },
+        {
+          "time": "8:30 PM",
+          "item": "Final sales and trading"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Cleanup and departure"
+        }
+      ],
+      "specialNotes": [
+        "Dealer table rental: $10 for members, $15 for non-members",
+        "Contact secretary to reserve tables",
+        "Guests welcome!"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bourse", "dealers", "trading", "buying", "selling", "guests-welcome"]
+    },
+    {
+      "id": "2026-02-06",
+      "date": "2026-02-06",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "bogStart": "7:15 PM",
+        "meetingStart": "7:30 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "business",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "topic": "Monthly club business and member presentations",
+      "description": "Monthly Board of Governors meeting followed by member show and tell presentations. Guests welcome!",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, social time"
+        },
+        {
+          "time": "7:15 PM",
+          "item": "Board of Governors meeting",
+          "presenter": "Board Members"
+        },
+        {
+          "time": "7:30 PM",
+          "item": "Show and Tell presentations",
+          "presenter": "Members"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Meeting adjournment"
+        }
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false,
+        "bringItems": ["Items for show and tell"]
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bog", "business", "show-and-tell", "guests-welcome"]
+    },
+    {
+      "id": "2026-02-13",
+      "date": "2026-02-13",
+      "time": {
+        "doorsOpen": "N/A",
+        "meetingStart": "N/A",
+        "meetingEnd": "N/A"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "holiday",
+      "title": "No Meeting - Presidents Day",
+      "description": "No meeting scheduled due to Presidents Day holiday.",
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": true,
+      "tags": ["holiday", "presidents-day"]
+    },
+    {
+      "id": "2026-02-20",
+      "date": "2026-02-20",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "auction",
+      "title": "Club Auction",
+      "topic": "Monthly stamp auction",
+      "description": "Monthly club auction featuring member consignments and donated materials. Guests welcome!",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, lot viewing"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Auction preview and announcements"
+        },
+        {
+          "time": "7:15 PM",
+          "item": "Auction begins"
+        },
+        {
+          "time": "8:45 PM",
+          "item": "Auction conclusion and checkout"
+        }
+      ],
+      "specialNotes": [
+        "Cash or check accepted for purchases",
+        "Bring lots for consignment (10% commission)",
+        "Guests welcome!"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["auction", "buying", "selling", "consignment", "guests-welcome"]
+    },
+    {
+      "id": "2026-02-27",
+      "date": "2026-02-27",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "social",
+      "title": "Stamp Bourse",
+      "topic": "Dealer tables and stamp trading",
+      "description": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers. Guests welcome!",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, dealer setup"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Bourse officially opens"
+        },
+        {
+          "time": "8:30 PM",
+          "item": "Final sales and trading"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Cleanup and departure"
+        }
+      ],
+      "specialNotes": [
+        "Dealer table rental: $10 for members, $15 for non-members",
+        "Contact secretary to reserve tables",
+        "Guests welcome!"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bourse", "dealers", "trading", "buying", "selling", "guests-welcome"]
+    },
+    {
+      "id": "2026-03-06",
+      "date": "2026-03-06",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "bogStart": "7:15 PM",
+        "meetingStart": "7:30 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "business",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "topic": "Monthly club business and member presentations",
+      "description": "Monthly Board of Governors meeting followed by member show and tell presentations. Guests welcome!",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, social time"
+        },
+        {
+          "time": "7:15 PM",
+          "item": "Board of Governors meeting",
+          "presenter": "Board Members"
+        },
+        {
+          "time": "7:30 PM",
+          "item": "Show and Tell presentations",
+          "presenter": "Members"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Meeting adjournment"
+        }
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false,
+        "bringItems": ["Items for show and tell"]
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bog", "business", "show-and-tell", "guests-welcome"]
+    },
+    {
+      "id": "2026-03-13",
+      "date": "2026-03-13",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "auction",
+      "title": "Club Auction",
+      "topic": "Monthly stamp auction",
+      "description": "Monthly club auction featuring member consignments and donated materials. Guests welcome!",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, lot viewing"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Auction preview and announcements"
+        },
+        {
+          "time": "7:15 PM",
+          "item": "Auction begins"
+        },
+        {
+          "time": "8:45 PM",
+          "item": "Auction conclusion and checkout"
+        }
+      ],
+      "specialNotes": [
+        "Cash or check accepted for purchases",
+        "Bring lots for consignment (10% commission)",
+        "Guests welcome!"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["auction", "buying", "selling", "consignment", "guests-welcome"]
+    },
+    {
+      "id": "2026-03-20",
+      "date": "2026-03-20",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "social",
+      "title": "Stamp Bourse",
+      "topic": "Dealer tables and stamp trading",
+      "description": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers. Guests welcome!",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, dealer setup"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Bourse officially opens"
+        },
+        {
+          "time": "8:30 PM",
+          "item": "Final sales and trading"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Cleanup and departure"
+        }
+      ],
+      "specialNotes": [
+        "Dealer table rental: $10 for members, $15 for non-members",
+        "Contact secretary to reserve tables",
+        "Guests welcome!"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bourse", "dealers", "trading", "buying", "selling", "guests-welcome"]
+    },
+    {
+      "id": "2026-03-27",
+      "date": "2026-03-27",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "social",
+      "title": "Stamp Bourse & Stamp Program",
+      "topic": "Dealer tables, stamp trading, and educational program",
+      "description": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers, plus a special stamp program. Guests welcome!",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, dealer setup"
+        },
+        {
+          "time": "7:00 PM",
+          "item": "Bourse officially opens"
+        },
+        {
+          "time": "7:30 PM",
+          "item": "Stamp Program presentation"
+        },
+        {
+          "time": "8:30 PM",
+          "item": "Final sales and trading"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Cleanup and departure"
+        }
+      ],
+      "specialNotes": [
+        "Dealer table rental: $10 for members, $15 for non-members",
+        "Contact secretary to reserve tables",
+        "Special stamp program this month",
+        "Guests welcome!"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bourse", "dealers", "trading", "buying", "selling", "stamp-program", "guests-welcome"]
+    },
+    {
       "id": "2025-07-04",
       "date": "2025-07-04",
       "time": {
@@ -13,10 +672,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "holiday",
@@ -42,10 +701,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "business",
@@ -97,10 +756,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "auction",
@@ -153,10 +812,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "social",
@@ -209,10 +868,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "business",
@@ -264,10 +923,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "auction",
@@ -320,10 +979,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "social",
@@ -376,10 +1035,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "regular",
@@ -446,10 +1105,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "holiday",
@@ -475,10 +1134,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "business",
@@ -530,10 +1189,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "auction",
@@ -586,10 +1245,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "social",
@@ -642,10 +1301,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "regular",
@@ -712,10 +1371,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "business",
@@ -767,10 +1426,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "auction",
@@ -824,10 +1483,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "social",
@@ -881,10 +1540,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "social",
@@ -937,10 +1596,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "holiday",
@@ -967,10 +1626,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "business",
@@ -1028,10 +1687,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "auction",
@@ -1084,10 +1743,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "bourse",
@@ -1185,10 +1844,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "business",
@@ -1251,10 +1910,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "holiday",
@@ -1318,10 +1977,10 @@
         "building": "Building 1",
         "room": "Fellowship Hall",
         "address": {
-          "street": "13030 Jones Maltsberger Road",
+          "street": "2903 Nacogdoches Road",
           "city": "San Antonio",
           "state": "TX",
-          "zipCode": "78247"
+          "zipCode": "78217"
         }
       },
       "type": "holiday",
@@ -1448,10 +2107,10 @@
       "building": "Building 1",
       "room": "Fellowship Hall",
       "address": {
-        "street": "13030 Jones Maltsberger Road",
+        "street": "2903 Nacogdoches Road",
         "city": "San Antonio",
         "state": "TX",
-        "zipCode": "78247"
+        "zipCode": "78217"
       }
     }
   }

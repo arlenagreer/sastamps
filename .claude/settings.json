@@ -1,12 +1,11 @@
 {
-  // Liberal permissions configuration - pre-approve most operations
   "permissions": {
     "allow": [
       "Read",
       "Write",
       "Edit",
       "MultiEdit",
-      "Bash(*)",
+      "Bash",
       "Task",
       "Glob",
       "Grep",
@@ -17,7 +16,7 @@
       "WebFetch",
       "NotebookRead",
       "NotebookEdit",
-      "exit_plan_mode",
+      "ExitPlanMode",
       "mcp__*"
     ],
     "deny": []

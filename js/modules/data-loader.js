@@ -3,6 +3,10 @@
  * Handles fetching and caching of JSON data files for the SAPA website
  */
 
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('DataLoader');
+
 class DataLoader {
   constructor() {
     this.cache = new Map();
@@ -52,7 +56,7 @@ class DataLoader {
 
       return data;
     } catch (error) {
-      console.error(`❌ Error loading data from ${endpoint}:`, error);
+      logger.error(`Error loading data from ${endpoint}:`, error);
 
       // Return cached data if available, even if expired
       if (this.cache.has(cacheKey)) {
@@ -118,7 +122,7 @@ class DataLoader {
         })
         .sort((a, b) => new Date(a.date) - new Date(b.date));
     } catch (error) {
-      console.error('Error getting upcoming meetings:', error);
+      logger.error('Error getting upcoming meetings:', error);
       return [];
     }
   }
@@ -134,7 +138,7 @@ class DataLoader {
         .filter(newsletter => newsletter.status === 'published')
         .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate))[0] || null;
     } catch (error) {
-      console.error('Error getting latest newsletter:', error);
+      logger.error('Error getting latest newsletter:', error);
       return null;
     }
   }
@@ -179,7 +183,7 @@ class DataLoader {
 
       return results;
     } catch (error) {
-      console.error('Search error:', error);
+      logger.error('Search error:', error);
       return results;
     }
   }
@@ -203,7 +207,7 @@ class DataLoader {
                          tag.toLowerCase().includes(lowerQuery));
       });
     } catch (error) {
-      console.error('Newsletter search error:', error);
+      logger.error('Newsletter search error:', error);
       return [];
     }
   }
@@ -226,7 +230,7 @@ class DataLoader {
                        meeting.tags?.some(tag => tag.toLowerCase().includes(lowerQuery));
       });
     } catch (error) {
-      console.error('Meeting search error:', error);
+      logger.error('Meeting search error:', error);
       return [];
     }
   }
@@ -248,7 +252,7 @@ class DataLoader {
                        resource.tags.some(tag => tag.toLowerCase().includes(lowerQuery));
       });
     } catch (error) {
-      console.error('Resource search error:', error);
+      logger.error('Resource search error:', error);
       return [];
     }
   }
@@ -271,7 +275,7 @@ class DataLoader {
                        term.tags?.some(tag => tag.toLowerCase().includes(lowerQuery));
       });
     } catch (error) {
-      console.error('Glossary search error:', error);
+      logger.error('Glossary search error:', error);
       return [];
     }
   }
@@ -345,7 +349,7 @@ class DataLoader {
      * @returns {Object} Fallback data
      */
   getFallbackData(endpoint, error) {
-    console.warn(`⚠️ Using fallback data for ${endpoint}:`, error.message);
+    logger.warn(`Using fallback data for ${endpoint}:`, error.message);
 
     // Return minimal structure based on endpoint
     if (endpoint.includes('newsletters')) {

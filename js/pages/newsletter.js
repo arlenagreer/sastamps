@@ -7,6 +7,9 @@ import { debounce } from '../utils/performance.js';
 import { safeQuerySelector } from '../utils/safe-dom.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import _breadcrumb from '../modules/breadcrumb.js';
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('NewsletterPage');
 
 async function initializeNewsletterPage() {
   const newsletterContainer = safeQuerySelector('#newsletters-container');
@@ -94,7 +97,7 @@ async function loadNewslettersList(container) {
     bindNewsletterActions(container);
 
   } catch (error) {
-    console.error('Failed to load newsletters:', error);
+    logger.error('Failed to load newsletters:', error);
     container.innerHTML = '<p class="error-message">Unable to load newsletters. Please try again later.</p>';
   }
 }
@@ -131,7 +134,7 @@ function initializeNewsletterSearch(container) {
         showSearchResults(results);
       }
     } catch (error) {
-      console.error('Search failed:', error);
+      logger.error('Search failed:', error);
       resultsContainer.innerHTML = '<p>Search temporarily unavailable.</p>';
     }
   }, 300);
@@ -299,7 +302,7 @@ function downloadNewsletter(url, title) {
     trackNewsletterDownload(title);
 
   } catch (error) {
-    console.error('Download failed:', error);
+    logger.error('Download failed:', error);
     alert('Download failed. Please try opening the PDF in a new tab.');
   }
 }

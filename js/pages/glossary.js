@@ -3,7 +3,10 @@
  * Handles glossary search, filtering, and display functionality
  */
 
-import { safeQuerySelector } from '../utils/safe-dom.js';
+import { safeQuerySelector, escapeHTML } from '../utils/safe-dom.js';
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('GlossaryPage');
 
 // Initialize glossary page
 async function initializeGlossary() {
@@ -125,7 +128,7 @@ async function loadGlossarySearch(container) {
     });
 
   } catch (error) {
-    console.error('Failed to load glossary search:', error);
+    logger.error('Failed to load glossary search:', error);
     container.innerHTML = '<p class="error-message">Unable to load search functionality.</p>';
   }
 }
@@ -226,7 +229,7 @@ async function loadGlossaryFilters(container) {
     });
 
   } catch (error) {
-    console.error('Failed to load glossary filters:', error);
+    logger.error('Failed to load glossary filters:', error);
     container.innerHTML = '<p class="error-message">Unable to load filters.</p>';
   }
 }
@@ -258,7 +261,7 @@ async function loadGlossaryContent(container) {
     renderGlossaryTerms(terms, container);
 
   } catch (error) {
-    console.error('Failed to load glossary content:', error);
+    logger.error('Failed to load glossary content:', error);
     container.innerHTML = `
             <div class="card">
                 <div class="card-content text-center">
@@ -352,10 +355,10 @@ function renderTermCard(term) {
         <div class="glossary-term" id="term-${term.id}" data-term-id="${term.id}">
             <div class="term-header">
                 <div class="term-title-group">
-                    <h3 class="term-title">${escapeHtml(term.term)}</h3>
+                    <h3 class="term-title">${escapeHTML(term.term)}</h3>
                     ${term.alternateNames && term.alternateNames.length > 0 ?
     `<div class="alternate-names">
-                            Also known as: ${term.alternateNames.map(name => escapeHtml(name)).join(', ')}
+                            Also known as: ${term.alternateNames.map(name => escapeHTML(name)).join(', ')}
                         </div>` : ''
 }
                 </div>
@@ -368,10 +371,10 @@ function renderTermCard(term) {
             
             <div class="term-content" style="display: none;">
                 <div class="term-definition">
-                    <p class="definition">${escapeHtml(term.definition)}</p>
+                    <p class="definition">${escapeHTML(term.definition)}</p>
                     ${term.detailedDescription ?
     `<div class="detailed-description">
-                            <p>${escapeHtml(term.detailedDescription)}</p>
+                            <p>${escapeHTML(term.detailedDescription)}</p>
                         </div>` : ''
 }
                 </div>
@@ -382,8 +385,8 @@ function renderTermCard(term) {
                         <ul>
                             ${term.examples.map(example => `
                                 <li>
-                                    ${escapeHtml(example.description)}
-                                    ${example.caption ? `<span class="example-caption">${escapeHtml(example.caption)}</span>` : ''}
+                                    ${escapeHTML(example.description)}
+                                    ${example.caption ? `<span class="example-caption">${escapeHTML(example.caption)}</span>` : ''}
                                 </li>
                             `).join('')}
                         </ul>
@@ -393,9 +396,9 @@ function renderTermCard(term) {
                 ${term.etymology ? `
                     <div class="term-etymology">
                         <h4><i class="fas fa-history"></i> Etymology</h4>
-                        <p><strong>Origin:</strong> ${escapeHtml(term.etymology.origin)}</p>
-                        <p><strong>Meaning:</strong> ${escapeHtml(term.etymology.meaning)}</p>
-                        ${term.etymology.history ? `<p><strong>History:</strong> ${escapeHtml(term.etymology.history)}</p>` : ''}
+                        <p><strong>Origin:</strong> ${escapeHTML(term.etymology.origin)}</p>
+                        <p><strong>Meaning:</strong> ${escapeHTML(term.etymology.meaning)}</p>
+                        ${term.etymology.history ? `<p><strong>History:</strong> ${escapeHTML(term.etymology.history)}</p>` : ''}
                     </div>
                 ` : ''}
                 
@@ -412,7 +415,7 @@ function renderTermCard(term) {
                 
                 ${term.tags && term.tags.length > 0 ? `
                     <div class="term-tags">
-                        ${term.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
+                        ${term.tags.map(tag => `<span class="tag">${escapeHTML(tag)}</span>`).join('')}
                     </div>
                 ` : ''}
             </div>
@@ -444,20 +447,20 @@ async function performSearch(query, resultsContainer) {
     if (results.length === 0) {
       resultsContainer.innerHTML = `
                 <div class="search-no-results">
-                    <p><strong>No results found for "${escapeHtml(query)}"</strong></p>
+                    <p><strong>No results found for "${escapeHTML(query)}"</strong></p>
                     <p>Try searching for related terms or browse by category.</p>
                 </div>
             `;
     } else {
       resultsContainer.innerHTML = `
                 <div class="search-results-header">
-                    <p>Found <strong>${results.length}</strong> result${results.length !== 1 ? 's' : ''} for "<strong>${escapeHtml(query)}</strong>"</p>
+                    <p>Found <strong>${results.length}</strong> result${results.length !== 1 ? 's' : ''} for "<strong>${escapeHTML(query)}</strong>"</p>
                 </div>
                 <div class="search-results-list">
                     ${results.map(term => `
                         <div class="search-result-item">
-                            <h4><a href="#term-${term.id}" onclick="scrollToTerm('${term.id}')">${escapeHtml(term.term)}</a></h4>
-                            <p class="result-definition">${escapeHtml(term.definition)}</p>
+                            <h4><a href="#term-${term.id}" onclick="scrollToTerm('${term.id}')">${escapeHTML(term.term)}</a></h4>
+                            <p class="result-definition">${escapeHTML(term.definition)}</p>
                             <div class="result-meta">
                                 <span class="result-category">${formatCategory(term.category)}</span>
                                 <span class="result-difficulty">${formatDifficulty(term.difficulty)}</span>
@@ -471,7 +474,7 @@ async function performSearch(query, resultsContainer) {
     resultsContainer.style.display = 'block';
 
   } catch (error) {
-    console.error('Search failed:', error);
+    logger.error('Search failed:', error);
     resultsContainer.innerHTML = '<p class="error-message">Search temporarily unavailable. Please try again.</p>';
     resultsContainer.style.display = 'block';
   }
@@ -602,7 +605,7 @@ async function loadGlossaryStats() {
     if (totalReferencesEl) {totalReferencesEl.textContent = totalReferences;}
 
   } catch (error) {
-    console.error('Failed to load glossary stats:', error);
+    logger.error('Failed to load glossary stats:', error);
   }
 }
 
@@ -625,12 +628,7 @@ function formatTermId(termId) {
   ).join(' ');
 }
 
-function escapeHtml(text) {
-  if (!text) {return '';}
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
+// escapeHTML is now imported from '../utils/safe-dom.js'
 
 // Make scrollToTerm globally available for onclick handlers
 window.scrollToTerm = scrollToTerm;

@@ -3,6 +3,10 @@
  * Tree-shakable exports for all modules
  */
 
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('ModuleLoader');
+
 // For now, create a simple modules bundle that doesn't require the existing modules
 // This will be expanded as we refactor the existing modules to use ES6 exports
 
@@ -53,7 +57,7 @@ export async function loadModule(moduleName) {
       throw new Error(`Unknown module: ${moduleName}`);
     }
   } catch (error) {
-    console.error(`Failed to load module ${moduleName}:`, error);
+    logger.error(`Failed to load module ${moduleName}:`, error);
     throw error;
   }
 }

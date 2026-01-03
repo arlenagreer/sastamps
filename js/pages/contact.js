@@ -7,6 +7,7 @@ import { debounce } from '../utils/performance.js';
 import { safeQuerySelector } from '../utils/safe-dom.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { validateEmail, validatePhone } from '../utils/helpers.js';
+import { createLogger } from '../utils/logger.js';
 import {
   ERROR_MESSAGES,
   SUCCESS_MESSAGES,
@@ -14,6 +15,8 @@ import {
   ANALYTICS_EVENTS,
   CSS_CLASSES
 } from '../constants/index.js';
+
+const logger = createLogger('ContactPage');
 
 // Contact-specific functionality
 function initializeContactPage() {
@@ -237,7 +240,7 @@ async function handleFormSubmission(event) {
     }
 
   } catch (error) {
-    console.error('Form submission failed:', error);
+    logger.error('Form submission failed:', error);
     showFormMessage(ERROR_MESSAGES.SUBMISSION_FAILED, CSS_CLASSES.ERROR);
 
     // Track failed submission
@@ -286,7 +289,7 @@ async function getCSRFToken() {
     const data = await response.json();
     return data.token;
   } catch (error) {
-    console.warn('Failed to get CSRF token:', error);
+    logger.warn('Failed to get CSRF token:', error);
     return null;
   }
 }
@@ -324,7 +327,7 @@ function initializeLocationMap(container) {
       navigator.clipboard.writeText(address).then(() => {
         showCopyConfirmation();
       }).catch(err => {
-        console.error('Failed to copy address:', err);
+        logger.error('Failed to copy address:', err);
         fallbackCopyAddress(address);
       });
     } else {
@@ -353,7 +356,7 @@ function initializeLocationMap(container) {
       document.execCommand('copy');
       showCopyConfirmation();
     } catch (err) {
-      console.error('Fallback copy failed:', err);
+      logger.error('Fallback copy failed:', err);
       alert('Please manually copy the address from above.');
     }
 
@@ -372,7 +375,7 @@ function initializeContactInfo() {
         navigator.clipboard.writeText(textToCopy).then(() => {
           showCopyFeedback(e.target);
         }).catch(err => {
-          console.error('Failed to copy:', err);
+          logger.error('Failed to copy:', err);
         });
       }
     });

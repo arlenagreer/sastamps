@@ -61,16 +61,8 @@ export function validatePhone(phone) {
   return phoneRegex.test(phone);
 }
 
-/**
- * Sanitize HTML string
- * @param {string} html - HTML string to sanitize
- * @returns {string} Sanitized HTML
- */
-export function sanitizeHtml(html) {
-  const div = document.createElement('div');
-  div.textContent = html;
-  return div.innerHTML;
-}
+// Note: For HTML sanitization, use escapeHTML from '../utils/safe-dom.js'
+// The sanitizeHtml function was removed to avoid duplication
 
 /**
  * Generate unique ID

@@ -3,6 +3,10 @@
  * Handles loading and rendering newsletter data from JSON
  */
 
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('NewsletterLoader');
+
 class NewsletterLoader {
   constructor(options = {}) {
     this.dataUrl = options.dataUrl || './data/newsletters/newsletters.json';
@@ -13,7 +17,7 @@ class NewsletterLoader {
 
     this.callbacks = {
       onLoad: options.onLoad || (() => {}),
-      onError: options.onError || ((error) => console.error('Newsletter loader error:', error))
+      onError: options.onError || ((error) => logger.error('Newsletter loader error:', error))
     };
   }
 
@@ -49,7 +53,7 @@ class NewsletterLoader {
 
     } catch (error) {
       this.isLoading = false;
-      console.error('❌ Failed to load newsletter data:', error);
+      logger.error('Failed to load newsletter data:', error);
       this.callbacks.onError(error);
       throw error;
     }
@@ -60,7 +64,7 @@ class NewsletterLoader {
      */
   getNewslettersByYear() {
     if (!this.isLoaded) {
-      console.warn('Newsletter data not loaded yet');
+      logger.warn('Newsletter data not loaded yet');
       return {};
     }
 
@@ -90,7 +94,7 @@ class NewsletterLoader {
      */
   filterNewsletters(criteria = {}) {
     if (!this.isLoaded) {
-      console.warn('Newsletter data not loaded yet');
+      logger.warn('Newsletter data not loaded yet');
       return [];
     }
 

@@ -3,6 +3,10 @@
  * Tree-shakable DOM manipulation with error handling
  */
 
+import { createLogger } from './logger.js';
+
+const logger = createLogger('SafeDOM');
+
 /**
  * Safely query for an element with error handling
  * @param {string} selector - CSS selector
@@ -13,7 +17,7 @@ export function safeQuerySelector(selector, context = document) {
   try {
     return context.querySelector(selector);
   } catch (error) {
-    console.warn(`Failed to query selector "${selector}":`, error);
+    logger.warn(`Failed to query selector "${selector}":`, error);
     return null;
   }
 }
@@ -28,7 +32,7 @@ export function safeQuerySelectorAll(selector, context = document) {
   try {
     return context.querySelectorAll(selector);
   } catch (error) {
-    console.warn(`Failed to query selector all "${selector}":`, error);
+    logger.warn(`Failed to query selector all "${selector}":`, error);
     return [];
   }
 }
@@ -44,7 +48,7 @@ export function safeLocalStorageGet(key, defaultValue = null) {
     const item = localStorage.getItem(key);
     return item !== null ? JSON.parse(item) : defaultValue;
   } catch (error) {
-    console.warn(`Failed to get localStorage item "${key}":`, error);
+    logger.warn(`Failed to get localStorage item "${key}":`, error);
     return defaultValue;
   }
 }
@@ -60,7 +64,7 @@ export function safeLocalStorageSet(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
     return true;
   } catch (error) {
-    console.warn(`Failed to set localStorage item "${key}":`, error);
+    logger.warn(`Failed to set localStorage item "${key}":`, error);
     return false;
   }
 }
@@ -75,7 +79,7 @@ export function safeLocalStorageRemove(key) {
     localStorage.removeItem(key);
     return true;
   } catch (error) {
-    console.warn(`Failed to remove localStorage item "${key}":`, error);
+    logger.warn(`Failed to remove localStorage item "${key}":`, error);
     return false;
   }
 }
@@ -103,7 +107,7 @@ export function escapeHTML(text) {
  */
 export function safeSetTextContent(element, text) {
   if (!element || typeof element.textContent === 'undefined') {
-    console.warn('Invalid element for setting text content');
+    logger.warn('Invalid element for setting text content');
     return false;
   }
 
@@ -111,7 +115,7 @@ export function safeSetTextContent(element, text) {
     element.textContent = text;
     return true;
   } catch (error) {
-    console.warn('Failed to set text content:', error);
+    logger.warn('Failed to set text content:', error);
     return false;
   }
 }
@@ -124,7 +128,7 @@ export function safeSetTextContent(element, text) {
  */
 export function safeSetInnerHTML(element, html) {
   if (!element) {
-    console.warn('Invalid element for setting innerHTML');
+    logger.warn('Invalid element for setting innerHTML');
     return false;
   }
 
@@ -132,7 +136,7 @@ export function safeSetInnerHTML(element, html) {
     element.innerHTML = html;
     return true;
   } catch (error) {
-    console.warn('Failed to set innerHTML:', error);
+    logger.warn('Failed to set innerHTML:', error);
     return false;
   }
 }

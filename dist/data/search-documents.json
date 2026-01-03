@@ -1,6 +1,23 @@
 {
   "documents": [
     {
+      "id": "newsletter-2026-Q1",
+      "type": "newsletter",
+      "title": "SAPA PHILATEX First Quarter 2026",
+      "summary": "First Quarter 2026 newsletter featuring new editor Jim Durham's introduction, Q1 meeting calendar with updated location at MacArthur Park Lutheran Church, USPS 2026 stamp preview, and updated Board of Governors listing.",
+      "url": "/newsletter.html#2026-Q1",
+      "date": "2026-01-01",
+      "tags": [
+        "2026",
+        "Q1",
+        "new-editor",
+        "usps",
+        "meetings",
+        "calendar"
+      ],
+      "category": "newsletter"
+    },
+    {
       "id": "newsletter-2025-Q4",
       "type": "newsletter",
       "title": "SAPA PHILATEX Fourth Quarter 2025",
@@ -49,6 +66,207 @@
         "member-spotlight"
       ],
       "category": "newsletter"
+    },
+    {
+      "id": "meeting-2026-01-02",
+      "type": "meeting",
+      "title": "No Meeting - New Year's Day",
+      "summary": "No meeting scheduled due to New Year's Day holiday.",
+      "url": "/meetings.html#2026-01-02",
+      "date": "2026-01-02",
+      "tags": [
+        "holiday",
+        "new-years"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-01-09",
+      "type": "meeting",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "summary": "Monthly Board of Governors meeting followed by member show and tell presentations. Guests welcome!",
+      "url": "/meetings.html#2026-01-09",
+      "date": "2026-01-09",
+      "tags": [
+        "bog",
+        "business",
+        "show-and-tell",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-01-16",
+      "type": "meeting",
+      "title": "No Meeting - MLK Day",
+      "summary": "No meeting scheduled due to Martin Luther King Jr. Day holiday.",
+      "url": "/meetings.html#2026-01-16",
+      "date": "2026-01-16",
+      "tags": [
+        "holiday",
+        "mlk-day"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-01-23",
+      "type": "meeting",
+      "title": "Club Auction",
+      "summary": "Monthly club auction featuring member consignments and donated materials. Guests welcome!",
+      "url": "/meetings.html#2026-01-23",
+      "date": "2026-01-23",
+      "tags": [
+        "auction",
+        "buying",
+        "selling",
+        "consignment",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-01-30",
+      "type": "meeting",
+      "title": "Stamp Bourse",
+      "summary": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers. Guests welcome!",
+      "url": "/meetings.html#2026-01-30",
+      "date": "2026-01-30",
+      "tags": [
+        "bourse",
+        "dealers",
+        "trading",
+        "buying",
+        "selling",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-02-06",
+      "type": "meeting",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "summary": "Monthly Board of Governors meeting followed by member show and tell presentations. Guests welcome!",
+      "url": "/meetings.html#2026-02-06",
+      "date": "2026-02-06",
+      "tags": [
+        "bog",
+        "business",
+        "show-and-tell",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-02-13",
+      "type": "meeting",
+      "title": "No Meeting - Presidents Day",
+      "summary": "No meeting scheduled due to Presidents Day holiday.",
+      "url": "/meetings.html#2026-02-13",
+      "date": "2026-02-13",
+      "tags": [
+        "holiday",
+        "presidents-day"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-02-20",
+      "type": "meeting",
+      "title": "Club Auction",
+      "summary": "Monthly club auction featuring member consignments and donated materials. Guests welcome!",
+      "url": "/meetings.html#2026-02-20",
+      "date": "2026-02-20",
+      "tags": [
+        "auction",
+        "buying",
+        "selling",
+        "consignment",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-02-27",
+      "type": "meeting",
+      "title": "Stamp Bourse",
+      "summary": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers. Guests welcome!",
+      "url": "/meetings.html#2026-02-27",
+      "date": "2026-02-27",
+      "tags": [
+        "bourse",
+        "dealers",
+        "trading",
+        "buying",
+        "selling",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-03-06",
+      "type": "meeting",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "summary": "Monthly Board of Governors meeting followed by member show and tell presentations. Guests welcome!",
+      "url": "/meetings.html#2026-03-06",
+      "date": "2026-03-06",
+      "tags": [
+        "bog",
+        "business",
+        "show-and-tell",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-03-13",
+      "type": "meeting",
+      "title": "Club Auction",
+      "summary": "Monthly club auction featuring member consignments and donated materials. Guests welcome!",
+      "url": "/meetings.html#2026-03-13",
+      "date": "2026-03-13",
+      "tags": [
+        "auction",
+        "buying",
+        "selling",
+        "consignment",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-03-20",
+      "type": "meeting",
+      "title": "Stamp Bourse",
+      "summary": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers. Guests welcome!",
+      "url": "/meetings.html#2026-03-20",
+      "date": "2026-03-20",
+      "tags": [
+        "bourse",
+        "dealers",
+        "trading",
+        "buying",
+        "selling",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-03-27",
+      "type": "meeting",
+      "title": "Stamp Bourse & Stamp Program",
+      "summary": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers, plus a special stamp program. Guests welcome!",
+      "url": "/meetings.html#2026-03-27",
+      "date": "2026-03-27",
+      "tags": [
+        "bourse",
+        "dealers",
+        "trading",
+        "buying",
+        "selling",
+        "stamp-program",
+        "guests-welcome"
+      ],
+      "category": "meeting"
     },
     {
       "id": "meeting-2025-07-04",
@@ -243,6 +461,198 @@
       "category": "meeting"
     },
     {
+      "id": "meeting-2025-10-03",
+      "type": "meeting",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "summary": "Monthly Board of Governors meeting followed by member show and tell presentations.",
+      "url": "/meetings.html#2025-10-03",
+      "date": "2025-10-03",
+      "tags": [
+        "bog",
+        "business",
+        "show-and-tell"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-10-10",
+      "type": "meeting",
+      "title": "Year-End Stamp Auction",
+      "summary": "Special year-end auction featuring premium lots, collections, and donated materials for club fundraising.",
+      "url": "/meetings.html#2025-10-10",
+      "date": "2025-10-10",
+      "tags": [
+        "auction",
+        "year-end",
+        "fundraising",
+        "premium-lots"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-10-17",
+      "type": "meeting",
+      "title": "Stamp Bourse",
+      "summary": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers.",
+      "url": "/meetings.html#2025-10-17",
+      "date": "2025-10-17",
+      "tags": [
+        "bourse",
+        "trading",
+        "dealers",
+        "buying",
+        "selling"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-10-24",
+      "type": "meeting",
+      "title": "Stamp Bourse",
+      "summary": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers.",
+      "url": "/meetings.html#2025-10-24",
+      "date": "2025-10-24",
+      "tags": [
+        "bourse",
+        "dealers",
+        "trading",
+        "buying",
+        "selling"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-10-31",
+      "type": "meeting",
+      "title": "NO MEETING - HALLOWEEN",
+      "summary": "No meeting scheduled due to Halloween holiday.",
+      "url": "/meetings.html#2025-10-31",
+      "date": "2025-10-31",
+      "tags": [
+        "holiday",
+        "halloween"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-11-07",
+      "type": "meeting",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "summary": "Monthly Board of Governors meeting followed by member show and tell presentations.",
+      "url": "/meetings.html#2025-11-07",
+      "date": "2025-11-07",
+      "tags": [
+        "business",
+        "show-and-tell",
+        "board-meeting",
+        "trading"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-11-14",
+      "type": "meeting",
+      "title": "Auction",
+      "summary": "Monthly club auction featuring member consignments and donated materials.",
+      "url": "/meetings.html#2025-11-14",
+      "date": "2025-11-14",
+      "tags": [
+        "auction",
+        "buying",
+        "selling",
+        "consignment"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-11-21",
+      "type": "meeting",
+      "title": "November Stamp Bourse",
+      "summary": "Monthly bourse featuring multiple dealers with stamps, covers, supplies, and philatelic literature. Great opportunity for buying, selling, and trading.",
+      "url": "/meetings.html#2025-11-21",
+      "date": "2025-11-21",
+      "tags": [
+        "bourse",
+        "dealers",
+        "trading",
+        "buying",
+        "selling"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-11-28",
+      "type": "meeting",
+      "title": "Meeting Cancelled - Thanksgiving Holiday",
+      "summary": "Regular meeting cancelled due to Thanksgiving holiday weekend. Happy Thanksgiving to all members!",
+      "url": "/meetings.html#2025-11-28",
+      "date": "2025-11-28",
+      "tags": [
+        "cancelled",
+        "holiday",
+        "thanksgiving"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-12-05",
+      "type": "meeting",
+      "title": "Board of Governors Meeting & Blue Chip Auction",
+      "summary": "Annual Board of Governors elections for 2026 officers, followed by member presentations and holiday season preparation.",
+      "url": "/meetings.html#2025-12-05",
+      "date": "2025-12-05",
+      "tags": [
+        "business",
+        "elections",
+        "board-meeting",
+        "annual"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-12-12",
+      "type": "meeting",
+      "title": "Christmas Party & Silent Auction",
+      "summary": "Annual SAPA holiday party featuring a potluck dinner, philatelic gift exchange, and special recognition of volunteers and long-time members.",
+      "url": "/meetings.html#2025-12-12",
+      "date": "2025-12-12",
+      "tags": [
+        "holiday",
+        "party",
+        "social",
+        "gift-exchange",
+        "potluck"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-12-19",
+      "type": "meeting",
+      "title": "NO MEETING - CHRISTMAS",
+      "summary": "No meeting scheduled due to Christmas holiday.",
+      "url": "/meetings.html#2025-12-19",
+      "date": "2025-12-19",
+      "tags": [
+        "holiday",
+        "christmas"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2025-12-26",
+      "type": "meeting",
+      "title": "Meeting Cancelled - Holiday Week",
+      "summary": "Regular meeting cancelled due to Christmas holiday week. Wishing all members a wonderful holiday season and Happy New Year!",
+      "url": "/meetings.html#2025-12-26",
+      "date": "2025-12-26",
+      "tags": [
+        "cancelled",
+        "holiday",
+        "christmas"
+      ],
+      "category": "meeting"
+    },
+    {
       "id": "meeting-2025-06-20",
       "type": "meeting",
       "title": "Annual SAPA Summer Picnic",
@@ -400,13 +810,13 @@
     }
   ],
   "metadata": {
-    "totalDocuments": 25,
+    "totalDocuments": 52,
     "types": {
-      "newsletter": 3,
-      "meeting": 14,
+      "newsletter": 4,
+      "meeting": 40,
       "resource": 3,
       "glossary": 5
     },
-    "buildDate": "2025-09-23T15:25:59.028Z"
+    "buildDate": "2026-01-03T18:54:46.716Z"
   }
 }

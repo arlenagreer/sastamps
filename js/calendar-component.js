@@ -7,6 +7,9 @@ import { Calendar } from 'vanilla-calendar-pro';
 import { calendarAdapter } from './calendar-adapter.js';
 import { modal } from './modal.js';
 import { reminderSystem } from './reminder-system.js';
+import { createLogger } from './utils/logger.js';
+
+const logger = createLogger('CalendarComponent');
 
 export class CalendarComponent {
   constructor(containerId, meetingsData) {
@@ -71,7 +74,7 @@ export class CalendarComponent {
 
       // Calendar component initialized successfully
     } catch (error) {
-      console.error('Error initializing calendar:', error);
+      logger.error('Error initializing calendar:', error);
       this.showError('Failed to initialize calendar');
     }
   }
@@ -82,7 +85,7 @@ export class CalendarComponent {
   createCalendar() {
     const container = document.getElementById(this.containerId);
     if (!container) {
-      console.error(`Calendar container with ID "${this.containerId}" not found`);
+      logger.error(`Calendar container with ID "${this.containerId}" not found`);
       return;
     }
 

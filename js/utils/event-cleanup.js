@@ -3,6 +3,10 @@
  * Tree-shakable event listener management with memory leak prevention
  */
 
+import { createLogger } from './logger.js';
+
+const logger = createLogger('EventCleanup');
+
 // Store references to event listeners for cleanup
 const eventListeners = new Map();
 
@@ -15,7 +19,7 @@ const eventListeners = new Map();
  */
 export function addEventListenerWithCleanup(element, event, handler, options) {
   if (!element || typeof element.addEventListener !== 'function') {
-    console.warn('Invalid element provided to addEventListenerWithCleanup');
+    logger.warn('Invalid element provided to addEventListenerWithCleanup');
     return;
   }
 
@@ -36,7 +40,7 @@ export function addEventListenerWithCleanup(element, event, handler, options) {
  */
 export function removeEventListenerWithCleanup(element, event, handler) {
   if (!element || typeof element.removeEventListener !== 'function') {
-    console.warn('Invalid element provided to removeEventListenerWithCleanup');
+    logger.warn('Invalid element provided to removeEventListenerWithCleanup');
     return;
   }
 
@@ -75,7 +79,7 @@ export function cleanupEventListeners(specificElement = null) {
         try {
           element.removeEventListener(event, handler, options);
         } catch (error) {
-          console.warn('Failed to remove event listener:', error);
+          logger.warn('Failed to remove event listener:', error);
         }
       });
     });

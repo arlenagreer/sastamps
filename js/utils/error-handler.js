@@ -4,6 +4,9 @@
  */
 
 import { ERROR_MESSAGES, ANALYTICS_EVENTS as _ANALYTICS_EVENTS } from '../constants/index.js';
+import { createLogger } from './logger.js';
+
+const logger = createLogger('ErrorHandler');
 
 /**
  * Error types enumeration
@@ -50,7 +53,7 @@ export function withErrorHandling(fn, options = {}) {
       return await fn.apply(this, args);
     } catch (error) {
       if (logError) {
-        console.error(`Error in ${fn.name || 'anonymous function'}:`, error);
+        logger.error(`Error in ${fn.name || 'anonymous function'}:`, error);
       }
 
       if (trackError && typeof gtag === 'function') {
@@ -173,7 +176,7 @@ export function safeJsonParse(text, fallback = null) {
   try {
     return JSON.parse(text);
   } catch (error) {
-    console.warn('JSON parse error:', error);
+    logger.warn('JSON parse error:', error);
     return fallback;
   }
 }
@@ -217,7 +220,7 @@ export function logError(error, context = {}) {
     ...context
   };
 
-  console.error('Application Error:', errorInfo);
+  logger.error('Application Error:', errorInfo);
 
   // Send to error tracking service if available
   if (window.errorTracker) {
