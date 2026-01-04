@@ -4,6 +4,9 @@
  */
 
 import { TIMING, CSS_CLASSES as _CSS_CLASSES } from '../constants/index.js';
+import { createLogger } from './logger.js';
+
+const logger = createLogger('ServiceWorker');
 
 /**
  * Register service worker if supported
@@ -32,7 +35,7 @@ export async function registerServiceWorker() {
       return registration;
 
     } catch (error) {
-      console.warn('Service worker registration failed:', error);
+      logger.warn('Service worker registration failed:', error);
       return null;
     }
   } else {
@@ -53,7 +56,7 @@ export async function unregisterServiceWorker() {
         return success;
       }
     } catch (error) {
-      console.warn('Service worker unregistration failed:', error);
+      logger.warn('Service worker unregistration failed:', error);
     }
   }
   return false;

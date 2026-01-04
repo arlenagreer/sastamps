@@ -3,6 +3,10 @@
  * Tree-shakable helper functions
  */
 
+import { createLogger } from './logger.js';
+
+const logger = createLogger('Helpers');
+
 /**
  * Format date for display
  * @param {string|Date} date - Date to format
@@ -36,7 +40,7 @@ export function parseDate(dateString, fallback = new Date()) {
     const parsed = new Date(dateString);
     return isNaN(parsed) ? fallback : parsed;
   } catch (error) {
-    console.warn('Failed to parse date:', dateString, error);
+    logger.warn('Failed to parse date:', dateString, error);
     return fallback;
   }
 }

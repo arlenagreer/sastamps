@@ -5,6 +5,7 @@
 
 import { safeQuerySelector, escapeHTML } from '../utils/safe-dom.js';
 import { createLogger } from '../utils/logger.js';
+import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 
 const logger = createLogger('GlossaryPage');
 
@@ -85,7 +86,7 @@ async function loadGlossarySearch(container) {
     let searchTimeout;
 
     // Real-time search with debouncing
-    searchInput.addEventListener('input', (e) => {
+    addEventListenerWithCleanup(searchInput, 'input', (e) => {
       clearTimeout(searchTimeout);
       const query = e.target.value.trim();
 
@@ -100,7 +101,7 @@ async function loadGlossarySearch(container) {
     });
 
     // Search button click
-    searchButton.addEventListener('click', () => {
+    addEventListenerWithCleanup(searchButton, 'click', () => {
       const query = searchInput.value.trim();
       if (query) {
         performSearch(query, resultsContainer);
@@ -108,7 +109,7 @@ async function loadGlossarySearch(container) {
     });
 
     // Clear button click
-    clearButton.addEventListener('click', () => {
+    addEventListenerWithCleanup(clearButton, 'click', () => {
       searchInput.value = '';
       clearButton.style.display = 'none';
       resultsContainer.style.display = 'none';
@@ -117,7 +118,7 @@ async function loadGlossarySearch(container) {
     });
 
     // Enter key search
-    searchInput.addEventListener('keypress', (e) => {
+    addEventListenerWithCleanup(searchInput, 'keypress', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
         const query = searchInput.value.trim();
@@ -207,10 +208,10 @@ async function loadGlossaryFilters(container) {
     const alphabetBtns = container.querySelectorAll('.alphabet-btn');
 
     [categoryFilter, difficultyFilter, sortFilter].forEach(filter => {
-      filter.addEventListener('change', applyFilters);
+      addEventListenerWithCleanup(filter, 'change', applyFilters);
     });
 
-    resetButton.addEventListener('click', () => {
+    addEventListenerWithCleanup(resetButton, 'click', () => {
       categoryFilter.value = '';
       difficultyFilter.value = '';
       sortFilter.value = 'alphabetical';
@@ -218,7 +219,7 @@ async function loadGlossaryFilters(container) {
     });
 
     alphabetBtns.forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      addEventListenerWithCleanup(btn, 'click', (e) => {
         const {letter} = e.target.dataset;
         jumpToLetter(letter);
 
@@ -316,7 +317,7 @@ function renderGlossaryTerms(terms, container) {
   container.innerHTML = html;
 
   // Add click handlers for term expansion
-  container.addEventListener('click', (e) => {
+  addEventListenerWithCleanup(container, 'click', (e) => {
     if (e.target.closest('.term-header')) {
       const termCard = e.target.closest('.glossary-term');
       const content = termCard.querySelector('.term-content');

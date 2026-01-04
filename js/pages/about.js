@@ -7,6 +7,7 @@
 import { safeQuerySelector } from '../utils/safe-dom.js';
 import { debounce as _debounce } from '../utils/performance.js';
 import { createLogger } from '../utils/logger.js';
+import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 
 // Import core modules
 import breadcrumb from '../modules/breadcrumb.js';
@@ -44,14 +45,14 @@ function initMobileMenu() {
 
   if (menuToggle && navMenu) {
     // Close menu when clicking outside
-    document.addEventListener('click', (event) => {
+    addEventListenerWithCleanup(document, 'click', (event) => {
       if (!navMenu.contains(event.target) && !menuToggle.contains(event.target)) {
         menuToggle.checked = false;
       }
     });
 
     // Close menu when pressing escape
-    document.addEventListener('keydown', (event) => {
+    addEventListenerWithCleanup(document, 'keydown', (event) => {
       if (event.key === 'Escape' && menuToggle.checked) {
         menuToggle.checked = false;
       }

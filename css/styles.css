@@ -500,6 +500,10 @@ footer {
     margin-bottom: 1.5rem;
 }
 
+.mt-0 {
+    margin-top: 0;
+}
+
 .mt-1 {
     margin-top: 0.25rem;
 }
@@ -605,6 +609,125 @@ footer {
 
 .icon-mr-lg {
     margin-right: 10px;
+}
+
+/* Hero overlay utilities - for pages with background images */
+.hero-overlay {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.hero-overlay::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(26, 82, 118, 0.85), rgba(26, 82, 118, 0.85));
+    z-index: 0;
+}
+
+.hero-overlay {
+    position: relative;
+}
+
+.hero-overlay > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Page-specific hero backgrounds */
+.hero-home {
+    background-image: url('../images/home-page-image.png');
+}
+
+.hero-about {
+    background-image: url('../images/about-page-image.png');
+}
+
+.hero-meetings {
+    background-image: url('../images/meetings-page-image.png');
+}
+
+.hero-newsletter,
+.hero-archive {
+    background-image: url('../images/newsletter-page-image.png');
+}
+
+.hero-membership {
+    background-image: url('../images/membership-page-image.png');
+}
+
+.hero-contact {
+    background-image: url('../images/contact-us-page-image.png');
+}
+
+.hero-resources,
+.hero-glossary {
+    background-image: url('../images/banner.png');
+}
+
+/* Blockquote utilities */
+.blockquote-styled {
+    font-style: italic;
+    border-left: 3px solid var(--accent);
+    padding-left: 1rem;
+    color: #666;
+    margin: 1.5rem 0;
+}
+
+.blockquote-centered {
+    font-style: italic;
+    max-width: 800px;
+    margin: 2rem auto;
+    color: #555;
+    font-size: 1.1rem;
+}
+
+/* Grid utilities */
+.grid-auto-fit {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+/* Card and panel utilities */
+.panel-light {
+    background-color: var(--light);
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+}
+
+.panel-primary {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+}
+
+/* Fallback/error state utilities */
+.fallback-content {
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--light);
+    border-radius: var(--radius-md);
+}
+
+/* Button variant utilities */
+.btn-accent {
+    background-color: var(--accent);
+    color: white;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.btn-accent:hover {
+    background-color: var(--secondary);
+    color: white;
 }
 
 /* Back-to-top button */

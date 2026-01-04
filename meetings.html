@@ -5837,7 +5837,7 @@ EOF < /dev/null
     <!-- Main Content -->
     <main id="main-content">
         <!-- Hero Section -->
-        <section class="hero" style="background-image: linear-gradient(rgba(26, 82, 118, 0.85), rgba(26, 82, 118, 0.85)), url('images/meetings-page-image.png'); background-size: cover; background-position: center;">
+        <section class="hero hero-overlay hero-meetings">
             <div class="container">
                 <h1>SAPA Meetings</h1>
                 <p>Join us for weekly meetings featuring educational programs, auctions, and trading sessions</p>
@@ -6333,10 +6333,10 @@ EOF < /dev/null
             const container = document.getElementById('meeting-schedule-container');
             if (container) {
                 container.innerHTML = `
-                    <div class="fallback-content" style="text-align: center; padding: 2rem; background-color: var(--light); border-radius: var(--radius-md);">
-                        <h3 style="color: var(--primary); margin-bottom: 1rem;">Meeting Schedule</h3>
-                        <p style="margin-bottom: 1.5rem;">We meet most Fridays during Q1 2026. Doors open at 6:30 PM, meetings begin at 7:30 PM.</p>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                    <div class="fallback-content">
+                        <h3 class="text-primary mb-3">Meeting Schedule</h3>
+                        <p class="mb-4">We meet most Fridays during Q1 2026. Doors open at 6:30 PM, meetings begin at 7:30 PM.</p>
+                        <div class="grid-auto-fit mb-4">
                             <div style="background: white; padding: 1rem; border-radius: var(--radius-sm);">
                                 <h4 style="color: var(--primary); margin-bottom: 0.5rem;">January 2026</h4>
                                 <p style="margin: 0;">BOG & Show and Tell, Auction, Bourse sessions</p>
@@ -6380,10 +6380,10 @@ EOF < /dev/null
             const container = document.getElementById('meeting-schedule-container');
             if (container) {
                 container.innerHTML = `
-                    <div class="fallback-content" style="text-align: center; padding: 2rem; background-color: var(--light); border-radius: var(--radius-md);">
-                        <h3 style="color: var(--primary); margin-bottom: 1rem;">Meeting Schedule</h3>
-                        <p style="margin-bottom: 1.5rem;">We meet most Fridays during Q1 2026. Doors open at 6:30 PM, meetings begin at 7:30 PM.</p>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                    <div class="fallback-content">
+                        <h3 class="text-primary mb-3">Meeting Schedule</h3>
+                        <p class="mb-4">We meet most Fridays during Q1 2026. Doors open at 6:30 PM, meetings begin at 7:30 PM.</p>
+                        <div class="grid-auto-fit mb-4">
                             <div style="background: white; padding: 1rem; border-radius: var(--radius-sm);">
                                 <h4 style="color: var(--primary); margin-bottom: 0.5rem;">January 2026</h4>
                                 <p style="margin: 0;">BOG & Show and Tell, Auction, Bourse sessions</p>
