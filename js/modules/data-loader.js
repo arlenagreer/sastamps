@@ -117,10 +117,10 @@ class DataLoader {
 
       return data.meetings
         .filter(meeting => {
-          const meetingDate = new Date(meeting.date);
+          const meetingDate = new Date(meeting.date + 'T00:00:00');
           return meetingDate >= now && meetingDate <= threeMonthsFromNow && !meeting.cancelled;
         })
-        .sort((a, b) => new Date(a.date) - new Date(b.date));
+        .sort((a, b) => new Date(a.date + 'T00:00:00') - new Date(b.date + 'T00:00:00'));
     } catch (error) {
       logger.error('Error getting upcoming meetings:', error);
       return [];

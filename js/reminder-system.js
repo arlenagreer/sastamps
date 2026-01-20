@@ -114,7 +114,7 @@ export class ReminderSystem {
     meetings.forEach(meeting => {
       if (meeting.cancelled) return;
 
-      const meetingDate = new Date(meeting.date);
+      const meetingDate = new Date(meeting.date + 'T00:00:00');
 
       // Parse meeting time
       if (meeting.time && meeting.time.meetingStart) {

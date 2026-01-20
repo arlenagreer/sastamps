@@ -148,17 +148,17 @@ async function loadMeetingsList(container) {
     // Filter meetings for current quarter
     const meetings = meetingsData.meetings
       .filter(meeting => {
-        const meetingDate = new Date(meeting.date);
+        const meetingDate = new Date(meeting.date + 'T00:00:00');
         return meetingDate >= quarterStart && meetingDate <= quarterEnd;
       })
-      .sort((a, b) => new Date(a.date) - new Date(b.date)); // Sort ascending for chronological order
+      .sort((a, b) => new Date(a.date + 'T00:00:00') - new Date(b.date + 'T00:00:00')); // Sort ascending for chronological order
 
     const html = meetings.map(meeting => `
             <article class="meeting-item" data-date="${meeting.date}" data-type="${meeting.type || 'regular'}">
                 <header class="meeting-header">
                     <h3>${meeting.title}</h3>
                     <time datetime="${meeting.date}" class="meeting-date">
-                        ${new Date(meeting.date).toLocaleDateString('en-US', {
+                        ${new Date(meeting.date + 'T00:00:00').toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',

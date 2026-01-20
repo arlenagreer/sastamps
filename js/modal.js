@@ -160,7 +160,7 @@ export class Modal {
      * @returns {string} HTML content
      */
   buildMeetingContent(meeting) {
-    const eventDate = new Date(meeting.date);
+    const eventDate = new Date(meeting.date + 'T00:00:00');
     const formattedDate = eventDate.toLocaleDateString('en-US', {
       weekday: 'long',
       year: 'numeric',

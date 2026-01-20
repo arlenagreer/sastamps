@@ -106,13 +106,13 @@ function initializeCountdownTimer(element) {
 function findNextMeeting(meetings) {
   const now = new Date();
   return meetings
-    .filter(meeting => new Date(meeting.date) > now)
-    .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+    .filter(meeting => new Date(meeting.date + 'T00:00:00') > now)
+    .sort((a, b) => new Date(a.date + 'T00:00:00') - new Date(b.date + 'T00:00:00'))[0];
 }
 
 function calculateTimeUntil(dateString) {
   const now = new Date();
-  const target = new Date(dateString);
+  const target = new Date(dateString + 'T00:00:00');
   const diff = target - now;
 
   if (diff <= 0) {return null;}

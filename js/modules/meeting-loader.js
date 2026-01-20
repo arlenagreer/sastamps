@@ -72,9 +72,9 @@ class MeetingLoader {
     const end = new Date(endDate);
 
     return this.meetings.filter(meeting => {
-      const meetingDate = new Date(meeting.date);
+      const meetingDate = new Date(meeting.date + 'T00:00:00');
       return meetingDate >= start && meetingDate <= end;
-    }).sort((a, b) => new Date(a.date) - new Date(b.date));
+    }).sort((a, b) => new Date(a.date + 'T00:00:00') - new Date(b.date + 'T00:00:00'));
   }
 
   /**
@@ -92,13 +92,20 @@ class MeetingLoader {
   }
 
   /**
+     * Get meetings for Q1 2026 (January-March)
+     */
+  getQ1Meetings() {
+    return this.filterMeetingsByDateRange('2026-01-01', '2026-03-31');
+  }
+
+  /**
      * Group meetings by month
      */
   groupMeetingsByMonth(meetings) {
     const grouped = {};
 
     meetings.forEach(meeting => {
-      const date = new Date(meeting.date);
+      const date = new Date(meeting.date + 'T00:00:00');
       const monthKey = date.toISOString().slice(0, 7); // YYYY-MM format
       const monthName = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
@@ -204,7 +211,9 @@ class MeetingLoader {
 
     // Get meetings based on dateRange parameter
     let meetings;
-    if (dateRange === 'Q4-2025') {
+    if (dateRange === 'Q1-2026') {
+      meetings = this.getQ1Meetings();
+    } else if (dateRange === 'Q4-2025') {
       meetings = this.getQ4Meetings();
     } else {
       meetings = this.getQ3Meetings(); // Default to Q3 for backward compatibility
@@ -223,7 +232,10 @@ class MeetingLoader {
   generateTableHTML(groupedMeetings, showCalendarLinks, dateRange = 'Q3-2025') {
     // Define months and names based on quarter
     let months, monthNames;
-    if (dateRange === 'Q4-2025') {
+    if (dateRange === 'Q1-2026') {
+      months = ['2026-01', '2026-02', '2026-03'];
+      monthNames = ['January 2026', 'February 2026', 'March 2026'];
+    } else if (dateRange === 'Q4-2025') {
       months = ['2025-10', '2025-11', '2025-12'];
       monthNames = ['October 2025', 'November 2025', 'December 2025'];
     } else {
@@ -278,7 +290,7 @@ class MeetingLoader {
      * Generate individual meeting cell HTML
      */
   generateMeetingCell(meeting, showCalendarLinks) {
-    const date = new Date(meeting.date);
+    const date = new Date(meeting.date + 'T00:00:00');
     const dayOfMonth = date.getDate();
     const meetingType = this.formatMeetingType(meeting);
     const details = this.getMeetingDetails(meeting);
@@ -392,7 +404,7 @@ class MeetingLoader {
      * Render individual meeting card
      */
   renderMeetingCard(meeting, showDetails) {
-    const date = new Date(meeting.date);
+    const date = new Date(meeting.date + 'T00:00:00');
     const formattedDate = date.toLocaleDateString('en-US', {
       weekday: 'long',
       year: 'numeric',
