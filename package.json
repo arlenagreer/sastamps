@@ -26,7 +26,7 @@
     "build:search:embed": "node scripts/build-search-embedded.js",
     "test": "npm run test:html && npm run test:links && npm run test:js && npm run test:css && npm run test:md",
     "test:html": "html-validate '*.html' '!test-*.html' --config .htmlvalidate.json",
-    "test:links": "echo 'Run npm run test:links:server in a separate terminal first' && broken-link-checker http://localhost:3000 --recursive --exclude-external",
+    "test:links": "echo 'Run npm run test:links:server in a separate terminal first' && linkinator http://localhost:3000 --recurse --skip 'external'",
     "test:links:server": "echo 'Starting server for link checking...' && npm run serve",
     "test:js": "eslint js/**/*.js",
     "test:css": "stylelint 'css/**/*.css' --config .stylelintrc.json",
@@ -58,7 +58,6 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.17",
-    "broken-link-checker": "^0.7.8",
     "cssnano": "^7.1.2",
     "esbuild": "^0.27.0",
     "eslint": "^9.30.1",
@@ -66,6 +65,7 @@
     "html-validate": "^10.4.0",
     "http-server": "^14.1.1",
     "lighthouse": "^13.0.1",
+    "linkinator": "^7.5.3",
     "markdownlint-cli": "^0.46.0",
     "npm-run-all": "^4.1.5",
     "pa11y": "^9.0.0",
@@ -81,9 +81,6 @@
     "not op_mini all"
   ],
   "overrides": {
-    "tough-cookie": "^4.1.3",
-    "tmp": "^0.2.4",
-    "robots-txt-guard": "^1.0.2",
     "glob": "^11.1.0"
   }
 }
