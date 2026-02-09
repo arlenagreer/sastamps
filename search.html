@@ -33,7 +33,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="dist/css/styles.min.css">
+    <link rel="preload" href="css/critical.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="css/critical.css"></noscript>
+    <link rel="stylesheet" href="css/styles.css">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="dist/images/favicon.webp">
@@ -331,15 +333,10 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 San Antonio Philatelic Association. All Rights Reserved.</p>
+                <p>&copy; 2026 San Antonio Philatelic Association. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
-
-    <!-- Back to top button -->
-    <button id="back-to-top" title="Back to Top" style="display: none;">
-        <i class="fas fa-arrow-up"></i>
-    </button>
 
     <!-- Scripts -->
     <script src="dist/js/search.min.js"></script>

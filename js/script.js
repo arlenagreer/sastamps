@@ -139,7 +139,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Wrap setup functions with error boundaries
     const mobileViewportSetup = createComponentBoundary('Mobile Viewport', setupMobileViewportHeight);
     const mobileMenuSetup = createComponentBoundary('Mobile Menu', setupMobileMenu);
-    const backToTopSetup = createComponentBoundary('Back to Top', setupBackToTopButton);
     const countdownSetup = createComponentBoundary('Event Countdown', setupEventCountdown);
     const formValidationSetup = createComponentBoundary('Form Validation', setupFormValidation);
     const accordionSetup = createComponentBoundary('Accordion', setupAccordion);
@@ -149,7 +148,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize components with error isolation
     mobileViewportSetup();
     mobileMenuSetup();
-    backToTopSetup();
     countdownSetup();
     formValidationSetup();
     accordionSetup();
@@ -220,57 +218,6 @@ function setupMobileViewportHeight() {
  */
 function setupMobileMenu() {
   // Intentionally empty - mobile menu is handled via CSS
-}
-
-/**
- * Back to Top Button Functionality
- */
-function setupBackToTopButton() {
-  try {
-    const backToTopButton = safeQuerySelector('#back-to-top');
-
-    if (!backToTopButton) {
-      logger.info('Back to top button not found - feature not available on this page');
-      return;
-    }
-
-    // Show/hide the button based on scroll position with debouncing
-    const scrollHandler = debounce(function() {
-      try {
-        if (window.scrollY > 300) {
-          backToTopButton.style.display = 'block';
-        } else {
-          backToTopButton.style.display = 'none';
-        }
-      } catch (error) {
-        logger.error('Error updating back to top button visibility:', error);
-      }
-    }, 100);
-
-    addEventListenerWithCleanup(window, 'scroll', scrollHandler);
-
-    // Smooth scroll to top when clicked
-    addEventListenerWithCleanup(backToTopButton, 'click', function(e) {
-      try {
-        e.preventDefault();
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-      } catch (error) {
-        logger.error('Error scrolling to top:', error);
-        // Fallback to instant scroll
-        try {
-          window.scrollTo(0, 0);
-        } catch (fallbackError) {
-          logger.error('Fallback scroll failed:', fallbackError);
-        }
-      }
-    });
-
-  } catch (error) {
-    logger.error('Error setting up back to top button:', error);
-  }
 }
 
 /**
