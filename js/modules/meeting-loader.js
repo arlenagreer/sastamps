@@ -72,9 +72,9 @@ class MeetingLoader {
     const end = new Date(endDate);
 
     return this.meetings.filter(meeting => {
-      const meetingDate = new Date(meeting.date + 'T00:00:00');
+      const meetingDate = new Date(`${meeting.date  }T00:00:00`);
       return meetingDate >= start && meetingDate <= end;
-    }).sort((a, b) => new Date(a.date + 'T00:00:00') - new Date(b.date + 'T00:00:00'));
+    }).sort((a, b) => new Date(`${a.date  }T00:00:00`) - new Date(`${b.date  }T00:00:00`));
   }
 
   /**
@@ -105,7 +105,7 @@ class MeetingLoader {
     const grouped = {};
 
     meetings.forEach(meeting => {
-      const date = new Date(meeting.date + 'T00:00:00');
+      const date = new Date(`${meeting.date  }T00:00:00`);
       const monthKey = date.toISOString().slice(0, 7); // YYYY-MM format
       const monthName = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
@@ -290,7 +290,7 @@ class MeetingLoader {
      * Generate individual meeting cell HTML
      */
   generateMeetingCell(meeting, showCalendarLinks) {
-    const date = new Date(meeting.date + 'T00:00:00');
+    const date = new Date(`${meeting.date  }T00:00:00`);
     const dayOfMonth = date.getDate();
     const meetingType = this.formatMeetingType(meeting);
     const details = this.getMeetingDetails(meeting);
@@ -404,7 +404,7 @@ class MeetingLoader {
      * Render individual meeting card
      */
   renderMeetingCard(meeting, showDetails) {
-    const date = new Date(meeting.date + 'T00:00:00');
+    const date = new Date(`${meeting.date  }T00:00:00`);
     const formattedDate = date.toLocaleDateString('en-US', {
       weekday: 'long',
       year: 'numeric',

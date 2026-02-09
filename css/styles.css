@@ -39,7 +39,9 @@
 
 
 /* ===== RESET & BASE STYLES ===== */
+
 /* NOTE: Core body and typography styles are in critical.css */
+
 /* These reset styles complement but don't duplicate critical.css */
 
 *, *::before, *::after {
@@ -164,6 +166,7 @@ button, input, select, textarea {
 
 
 /* ===== LAYOUT ===== */
+
 /* NOTE: .container is defined in critical.css */
 
 .section {
@@ -216,7 +219,9 @@ button, input, select, textarea {
 
 
 /* ===== HEADER STYLES ===== */
+
 /* NOTE: Core header, nav, .header-container styles are in critical.css */
+
 /* Extended header styles below */
 
 .site-title {
@@ -407,6 +412,7 @@ footer {
 
 
 /* ===== HERO SECTION ===== */
+
 /* NOTE: .hero base styles are in critical.css */
 
 /* ===== BUTTONS ===== */
@@ -475,9 +481,11 @@ footer {
 
 
 /* ===== CARDS ===== */
+
 /* NOTE: .card, .card-content, .card-title, .card-image, .card:hover are in critical.css */
 
 /* ===== UTILITIES ===== */
+
 /* NOTE: .text-center is in critical.css */
 
 .text-right {
@@ -613,6 +621,7 @@ footer {
 
 /* Hero overlay utilities - for pages with background images */
 .hero-overlay {
+    position: relative;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -625,12 +634,8 @@ footer {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(rgba(26, 82, 118, 0.85), rgba(26, 82, 118, 0.85));
+    background: linear-gradient(rgb(26, 82, 118, 0.85), rgb(26, 82, 118, 0.85));
     z-index: 0;
-}
-
-.hero-overlay {
-    position: relative;
 }
 
 .hero-overlay > * {
@@ -777,11 +782,6 @@ footer {
 }
 
 /* Button color variants */
-.btn-accent {
-    background-color: var(--accent);
-    color: var(--dark);
-}
-
 .btn-dark {
     background-color: var(--dark);
     color: white;
