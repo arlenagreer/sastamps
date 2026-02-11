@@ -1,44 +1,60 @@
 /*! name: vanilla-calendar-pro v3.0.5 | url: https://github.com/uvarov-frontend/vanilla-calendar-pro */
-[data-vc=calendar]{border-radius:.75rem;box-sizing:border-box;display:flex;flex-direction:column;min-width:272px;padding:.75rem}
-[data-vc=header]{align-items:center;display:flex;justify-content:space-between;margin-bottom:.5rem}
-[data-vc=arrow]{background:none;border:none;cursor:pointer;display:flex;padding:.25rem}
-[data-vc=arrow]:disabled{cursor:default;opacity:.5}
-[data-vc=arrow] svg{height:1.5rem;width:1.5rem}
-[data-vc-header=content]{display:flex;flex-direction:row;flex-wrap:wrap;gap:.25rem;justify-content:center;text-align:center}
-[data-vc-header=content]>div{align-items:center;cursor:pointer;display:flex;font-size:1rem;font-weight:700;gap:.25rem;justify-content:center;padding:.25rem .5rem}
-[data-vc=week]{display:grid;grid-template-columns:repeat(7,1fr);justify-items:center;margin-bottom:.5rem}
-[data-vc=weekday]{font-size:.75rem;font-weight:500;padding:.25rem}
-[data-vc=dates]{align-items:center;display:grid;flex-grow:1;grid-template-columns:repeat(7,1fr);justify-items:center;pointer-events:none}
-[data-vc=date]{align-items:center;aspect-ratio:1;border-radius:50%;cursor:pointer;display:flex;font-size:.875rem;justify-content:center;max-height:2.5rem;max-width:2.5rem;min-height:2rem;min-width:2rem;pointer-events:auto;transition:background-color .15s,color .15s}
-[data-vc=date]:hover{background-color:rgba(0,0,0,.1)}
-[data-vc-date=today]{font-weight:700}
-[data-vc-date=selected]{font-weight:700}
-[data-vc-date=out-of-range]{opacity:.3;pointer-events:none}
-[data-vc-date=disabled]{opacity:.3;pointer-events:none}
-[data-vc-date=prev],[data-vc-date=next]{opacity:.5}
+/* CSS updated to match actual v3 DOM structure with .vc-* classes and data-vc-* attributes */
+
+/* Calendar container */
+[data-vc=calendar]{border-radius:.75rem;box-sizing:border-box;display:flex;flex-direction:column;min-width:272px;padding:.75rem;background-color:#fff;color:#1f2937}
+
+/* Header with navigation */
+[data-vc=header],.vc-header{align-items:center;display:flex;justify-content:space-between;margin-bottom:.5rem}
+
+/* Navigation arrows - using class selector */
+.vc-arrow{background:none;border:none;cursor:pointer;display:flex;padding:.25rem;width:2rem;height:2rem;align-items:center;justify-content:center}
+.vc-arrow:hover{background-color:rgba(0,0,0,.1);border-radius:.25rem}
+.vc-arrow:disabled{cursor:default;opacity:.5}
+.vc-arrow svg{height:1.5rem;width:1.5rem;fill:#374151}
+/* Arrow content - add chevron icons via CSS */
+.vc-arrow::before{font-size:1.25rem;font-weight:bold;color:#374151}
+.vc-arrow_prev::before{content:'‹'}
+.vc-arrow_next::before{content:'›'}
+
+/* Header content (month/year buttons) */
+[data-vc-header=content],.vc-header__content{display:flex;flex-direction:row;flex-wrap:wrap;gap:.25rem;justify-content:center;text-align:center}
+.vc-month,.vc-year,[data-vc=month],[data-vc=year]{background:none;border:none;cursor:pointer;font-size:1rem;font-weight:700;padding:.25rem .5rem;border-radius:.25rem}
+.vc-month:hover,.vc-year:hover,[data-vc=month]:hover,[data-vc=year]:hover{background-color:rgba(0,0,0,.05)}
+
+/* Week days header row */
+[data-vc=week],.vc-week{display:grid;grid-template-columns:repeat(7,1fr);justify-items:center;margin-bottom:.5rem}
+.vc-week__day,[data-vc=weekday]{font-size:.75rem;font-weight:500;padding:.25rem;color:#6b7280}
+
+/* Dates container - should NOT have grid on the container itself for row-based layout */
+[data-vc=dates],.vc-dates{display:flex;flex-direction:column;flex-grow:1}
+
+/* CRITICAL: Week rows - each row is a 7-column grid */
+.vc-dates__row,[data-vc-dates=row]{display:grid;grid-template-columns:repeat(7,1fr);justify-items:center}
+
+/* Individual date cells */
+.vc-date{display:flex;align-items:center;justify-content:center;padding:.25rem}
+.vc-date__btn,[data-vc-date-btn]{align-items:center;aspect-ratio:1;border:none;border-radius:50%;background:none;cursor:pointer;display:flex;font-size:.875rem;justify-content:center;max-height:2.5rem;max-width:2.5rem;min-height:2rem;min-width:2rem;transition:background-color .15s,color .15s}
+.vc-date__btn:hover{background-color:rgba(0,0,0,.1)}
+
+/* Date states */
+[data-vc-date-today] .vc-date__btn{font-weight:700;background-color:#e5e7eb}
+[data-vc-date-month="prev"] .vc-date__btn,[data-vc-date-month="next"] .vc-date__btn{opacity:.5}
+[data-vc-date-weekend] .vc-date__btn{color:#6b7280}
+
+/* Month/Year picker grids */
 [data-vc=months],[data-vc=years]{display:grid;gap:.5rem;grid-template-columns:repeat(3,1fr);padding:.5rem}
-[data-vc=month],[data-vc=year]{border:none;border-radius:.5rem;cursor:pointer;font-size:.875rem;padding:.5rem}
-[data-vc=month]:hover,[data-vc=year]:hover{background-color:rgba(0,0,0,.1)}
-[data-vc-month=selected],[data-vc-year=selected]{font-weight:700}
+
+/* Time picker */
 [data-vc=time]{align-items:center;border-top:1px solid rgba(0,0,0,.1);display:flex;justify-content:center;margin-top:.5rem;padding-top:.75rem}
 [data-vc=time] input{border:1px solid rgba(0,0,0,.2);border-radius:.25rem;font-size:1rem;padding:.25rem .5rem;text-align:center;width:3rem}
 [data-vc=time] span{margin:0 .25rem}
 
-/* Light theme (default) */
-[data-vc=calendar]{background-color:#fff;color:#1f2937}
-[data-vc=arrow] svg{fill:#374151}
-[data-vc-header=content]>div:hover{background-color:rgba(0,0,0,.05);border-radius:.25rem}
-[data-vc=weekday]{color:#6b7280}
-[data-vc-date=today]{background-color:#e5e7eb}
-[data-vc-date=selected]{background-color:#1a5276;color:#fff}
-[data-vc-month=selected],[data-vc-year=selected]{background-color:#1a5276;color:#fff}
-
 /* Dark theme */
 [data-vc=calendar][data-vc-theme=dark]{background-color:#1f2937;color:#f9fafb}
-[data-vc=calendar][data-vc-theme=dark] [data-vc=arrow] svg{fill:#d1d5db}
-[data-vc=calendar][data-vc-theme=dark] [data-vc-header=content]>div:hover{background-color:rgba(255,255,255,.1)}
-[data-vc=calendar][data-vc-theme=dark] [data-vc=weekday]{color:#9ca3af}
-[data-vc=calendar][data-vc-theme=dark] [data-vc-date=today]{background-color:#374151}
-[data-vc=calendar][data-vc-theme=dark] [data-vc=date]:hover{background-color:rgba(255,255,255,.1)}
-[data-vc=calendar][data-vc-theme=dark] [data-vc=month]:hover,[data-vc=calendar][data-vc-theme=dark] [data-vc=year]:hover{background-color:rgba(255,255,255,.1)}
-[data-vc=calendar][data-vc-theme=dark] [data-vc=time]{border-top-color:rgba(255,255,255,.1)}
+[data-vc=calendar][data-vc-theme=dark] .vc-arrow svg{fill:#d1d5db}
+[data-vc=calendar][data-vc-theme=dark] .vc-arrow::before{color:#d1d5db}
+[data-vc=calendar][data-vc-theme=dark] .vc-month:hover,[data-vc=calendar][data-vc-theme=dark] .vc-year:hover{background-color:rgba(255,255,255,.1)}
+[data-vc=calendar][data-vc-theme=dark] .vc-week__day{color:#9ca3af}
+[data-vc=calendar][data-vc-theme=dark] [data-vc-date-today] .vc-date__btn{background-color:#374151}
+[data-vc=calendar][data-vc-theme=dark] .vc-date__btn:hover{background-color:rgba(255,255,255,.1)}
