@@ -88,7 +88,7 @@ async function initializeMeetingsCalendar() {
           const meeting = adapter.getMeetingByDate(clickedDate);
 
           if (meeting) {
-            modal.showMeetingDetails(meeting);
+            modal.open(meeting);
           }
         }
       }
@@ -96,8 +96,7 @@ async function initializeMeetingsCalendar() {
 
     calendar.init();
 
-    // Initialize reminder system
-    reminderSystem.initialize();
+    // Reminder system is already initialized via its constructor/singleton pattern
 
     // Meetings calendar initialized successfully
 
