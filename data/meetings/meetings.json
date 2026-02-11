@@ -617,36 +617,35 @@
           "zipCode": "78217"
         }
       },
-      "type": "social",
-      "title": "Stamp Bourse & Stamp Program",
-      "topic": "Dealer tables, stamp trading, and educational program",
-      "description": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers, plus a special stamp program. Guests welcome!",
+      "type": "educational",
+      "title": "Stamp Program: The Art of Stamps on Covers and Cards",
+      "presenter": "H. Wallace",
+      "topic": "The Art of Stamps on Covers and Cards",
+      "description": "H. Wallace presents 'The Art of Stamps on Covers and Cards', exploring the artistic elements and design of stamps displayed on covers and postcards. Guests welcome!",
       "agenda": [
         {
           "time": "6:30 PM",
-          "item": "Doors open, dealer setup"
+          "item": "Doors open, social time"
         },
         {
           "time": "7:00 PM",
-          "item": "Bourse officially opens"
+          "item": "Meeting begins"
         },
         {
-          "time": "7:30 PM",
-          "item": "Stamp Program presentation"
+          "time": "7:15 PM",
+          "item": "Stamp Program: 'The Art of Stamps on Covers and Cards' by H. Wallace"
         },
         {
-          "time": "8:30 PM",
-          "item": "Final sales and trading"
+          "time": "8:45 PM",
+          "item": "Q&A and discussion"
         },
         {
           "time": "9:00 PM",
-          "item": "Cleanup and departure"
+          "item": "Meeting concludes"
         }
       ],
       "specialNotes": [
-        "Dealer table rental: $10 for members, $15 for non-members",
-        "Contact secretary to reserve tables",
-        "Special stamp program this month",
+        "Presentation by H. Wallace: 'The Art of Stamps on Covers and Cards'",
         "Guests welcome!"
       ],
       "requirements": {
@@ -658,7 +657,7 @@
         "email": "loz33@hotmail.com"
       },
       "cancelled": false,
-      "tags": ["bourse", "dealers", "trading", "buying", "selling", "stamp-program", "guests-welcome"]
+      "tags": ["stamp-program", "presentation", "covers", "postcards", "guests-welcome"]
     },
     {
       "id": "2025-07-04",
