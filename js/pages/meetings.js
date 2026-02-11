@@ -15,8 +15,12 @@ import {
   STORAGE_KEYS,
   FILTER_OPTIONS
 } from '../constants/index.js';
+import MeetingLoader from '../modules/meeting-loader.js';
 
 const logger = createLogger('MeetingsPage');
+
+// Export MeetingLoader for global access via SAPA_MEETINGS
+export { MeetingLoader };
 
 // Meetings-specific functionality
 async function initializeMeetingsPage() {
