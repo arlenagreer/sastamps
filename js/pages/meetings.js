@@ -112,6 +112,64 @@ async function initializeMeetingsCalendar() {
   }
 }
 
+/**
+ * Formats meeting time object into readable string
+ * @param {Object|string} time - Time object or string
+ * @returns {string} Formatted time string
+ */
+function formatMeetingTime(time) {
+  if (typeof time === 'string') {
+    return time;
+  }
+  if (time && typeof time === 'object') {
+    if (time.meetingStart === 'N/A' || !time.meetingStart) {
+      return 'N/A';
+    }
+    const parts = [];
+    if (time.doorsOpen && time.doorsOpen !== 'N/A') {
+      parts.push(`Doors: ${time.doorsOpen}`);
+    }
+    if (time.meetingStart) {
+      parts.push(`Meeting: ${time.meetingStart}`);
+    }
+    if (time.meetingEnd) {
+      parts.push(`End: ${time.meetingEnd}`);
+    }
+    return parts.join(' | ') || 'Time TBD';
+  }
+  return 'Time TBD';
+}
+
+/**
+ * Formats meeting location object into readable string
+ * @param {Object|string} location - Location object or string
+ * @returns {string} Formatted location string
+ */
+function formatMeetingLocation(location) {
+  if (typeof location === 'string') {
+    return location;
+  }
+  if (location && typeof location === 'object') {
+    const parts = [];
+    if (location.name) {
+      parts.push(location.name);
+    }
+    if (location.building) {
+      parts.push(location.building);
+    }
+    if (location.room) {
+      parts.push(location.room);
+    }
+    if (location.address) {
+      const addr = location.address;
+      const addressStr = `${addr.street}, ${addr.city}, ${addr.state} ${addr.zipCode}`;
+      parts.push(addressStr);
+    }
+    return parts.join(', ') || 'Location TBD';
+  }
+  return 'Location TBD';
+}
+
 async function loadMeetingsList(container) {
   try {
     const { default: meetingsData } = await import('../../data/meetings/meetings.json');
@@ -168,8 +226,8 @@ async function loadMeetingsList(container) {
                 </header>
                 
                 <div class="meeting-details">
-                    <p><strong>Time:</strong> ${meeting.time}</p>
-                    <p><strong>Location:</strong> ${meeting.location}</p>
+                    <p><strong>Time:</strong> ${formatMeetingTime(meeting.time)}</p>
+                    <p><strong>Location:</strong> ${formatMeetingLocation(meeting.location)}</p>
                     ${meeting.description ? `<p class="meeting-description">${meeting.description}</p>` : ''}
                     ${meeting.agenda ? `
                         <details class="meeting-agenda">
