@@ -1,48 +1,44 @@
-/* Vanilla Calendar Pro Placeholder
- * This is a placeholder file to replace the broken node_modules import
- * The actual calendar styling should be included here when available
- */
+/*! name: vanilla-calendar-pro v3.0.5 | url: https://github.com/uvarov-frontend/vanilla-calendar-pro */
+[data-vc=calendar]{border-radius:.75rem;box-sizing:border-box;display:flex;flex-direction:column;min-width:272px;padding:.75rem}
+[data-vc=header]{align-items:center;display:flex;justify-content:space-between;margin-bottom:.5rem}
+[data-vc=arrow]{background:none;border:none;cursor:pointer;display:flex;padding:.25rem}
+[data-vc=arrow]:disabled{cursor:default;opacity:.5}
+[data-vc=arrow] svg{height:1.5rem;width:1.5rem}
+[data-vc-header=content]{display:flex;flex-direction:row;flex-wrap:wrap;gap:.25rem;justify-content:center;text-align:center}
+[data-vc-header=content]>div{align-items:center;cursor:pointer;display:flex;font-size:1rem;font-weight:700;gap:.25rem;justify-content:center;padding:.25rem .5rem}
+[data-vc=week]{display:grid;grid-template-columns:repeat(7,1fr);justify-items:center;margin-bottom:.5rem}
+[data-vc=weekday]{font-size:.75rem;font-weight:500;padding:.25rem}
+[data-vc=dates]{align-items:center;display:grid;flex-grow:1;grid-template-columns:repeat(7,1fr);justify-items:center;pointer-events:none}
+[data-vc=date]{align-items:center;aspect-ratio:1;border-radius:50%;cursor:pointer;display:flex;font-size:.875rem;justify-content:center;max-height:2.5rem;max-width:2.5rem;min-height:2rem;min-width:2rem;pointer-events:auto;transition:background-color .15s,color .15s}
+[data-vc=date]:hover{background-color:rgba(0,0,0,.1)}
+[data-vc-date=today]{font-weight:700}
+[data-vc-date=selected]{font-weight:700}
+[data-vc-date=out-of-range]{opacity:.3;pointer-events:none}
+[data-vc-date=disabled]{opacity:.3;pointer-events:none}
+[data-vc-date=prev],[data-vc-date=next]{opacity:.5}
+[data-vc=months],[data-vc=years]{display:grid;gap:.5rem;grid-template-columns:repeat(3,1fr);padding:.5rem}
+[data-vc=month],[data-vc=year]{border:none;border-radius:.5rem;cursor:pointer;font-size:.875rem;padding:.5rem}
+[data-vc=month]:hover,[data-vc=year]:hover{background-color:rgba(0,0,0,.1)}
+[data-vc-month=selected],[data-vc-year=selected]{font-weight:700}
+[data-vc=time]{align-items:center;border-top:1px solid rgba(0,0,0,.1);display:flex;justify-content:center;margin-top:.5rem;padding-top:.75rem}
+[data-vc=time] input{border:1px solid rgba(0,0,0,.2);border-radius:.25rem;font-size:1rem;padding:.25rem .5rem;text-align:center;width:3rem}
+[data-vc=time] span{margin:0 .25rem}
 
-.vanilla-calendar {
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background: white;
-    font-family: inherit;
-}
+/* Light theme (default) */
+[data-vc=calendar]{background-color:#fff;color:#1f2937}
+[data-vc=arrow] svg{fill:#374151}
+[data-vc-header=content]>div:hover{background-color:rgba(0,0,0,.05);border-radius:.25rem}
+[data-vc=weekday]{color:#6b7280}
+[data-vc-date=today]{background-color:#e5e7eb}
+[data-vc-date=selected]{background-color:#1a5276;color:#fff}
+[data-vc-month=selected],[data-vc-year=selected]{background-color:#1a5276;color:#fff}
 
-.vanilla-calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    background: var(--primary, #1a5276);
-    color: white;
-}
-
-.vanilla-calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 1px;
-    padding: 1rem;
-}
-
-.vanilla-calendar-day {
-    padding: 0.5rem;
-    text-align: center;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.vanilla-calendar-day:hover {
-    background-color: #f0f0f0;
-}
-
-.vanilla-calendar-day.is-selected {
-    background-color: var(--primary, #1a5276);
-    color: white;
-}
-
-.vanilla-calendar-day.is-today {
-    font-weight: bold;
-    border: 2px solid var(--primary, #1a5276);
-}
+/* Dark theme */
+[data-vc=calendar][data-vc-theme=dark]{background-color:#1f2937;color:#f9fafb}
+[data-vc=calendar][data-vc-theme=dark] [data-vc=arrow] svg{fill:#d1d5db}
+[data-vc=calendar][data-vc-theme=dark] [data-vc-header=content]>div:hover{background-color:rgba(255,255,255,.1)}
+[data-vc=calendar][data-vc-theme=dark] [data-vc=weekday]{color:#9ca3af}
+[data-vc=calendar][data-vc-theme=dark] [data-vc-date=today]{background-color:#374151}
+[data-vc=calendar][data-vc-theme=dark] [data-vc=date]:hover{background-color:rgba(255,255,255,.1)}
+[data-vc=calendar][data-vc-theme=dark] [data-vc=month]:hover,[data-vc=calendar][data-vc-theme=dark] [data-vc=year]:hover{background-color:rgba(255,255,255,.1)}
+[data-vc=calendar][data-vc-theme=dark] [data-vc=time]{border-top-color:rgba(255,255,255,.1)}
