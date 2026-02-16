@@ -54,10 +54,12 @@ Plans:
   2. 404 error page displays correct information (founded 1896, loz33@hotmail.com, "Most Friday nights" schedule) with full navigation and current design
   3. Search result match percentages show normalized values (100% cap or appropriate labels) instead of raw scores
   4. Footer uses consistent 3-column structure and link set across all pages
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] (Plans created via /gsd:plan-phase 3)
+- [ ] 03-01-PLAN.md — Fix membership button visibility and normalize search scores
+- [ ] 03-02-PLAN.md — Rebuild 404 page with correct info and current design
+- [ ] 03-03-PLAN.md — Standardize footer across all pages to match homepage
 
 ## Progress
 
@@ -68,4 +70,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Asset Loading | 0/2 | Not started | - |
 | 2. Build & Deployment | 0/2 | Not started | - |
-| 3. Display & UX Fixes | 0/TBD | Not started | - |
+| 3. Display & UX Fixes | 0/3 | Not started | - |
