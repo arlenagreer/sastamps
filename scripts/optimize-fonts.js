@@ -21,17 +21,9 @@ const fontConfig = {
 };
 
 async function generateFontPreloadTags() {
-    const preloadTags = [];
-    
-    for (const [family, config] of Object.entries(fontConfig)) {
-        for (const weight of config.weights) {
-            preloadTags.push(
-                `<link rel="preload" href="https://fonts.gstatic.com/s/${family.toLowerCase().replace(/\s+/g, '')}/v1/${weight}.woff2" as="font" type="font/woff2" crossorigin>`
-            );
-        }
-    }
-    
-    return preloadTags.join('\n    ');
+    // Font preload tags removed — Google Fonts uses versioned, hashed URLs
+    // that cannot be predicted. The fonts load correctly via the CSS link.
+    return '';
 }
 
 async function generateFontFaceObserver() {

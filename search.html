@@ -6767,15 +6767,17 @@
             statusEl.textContent = `Found ${results.length} result${results.length === 1 ? '' : 's'} for "${query}"`;
             statusEl.style.display = 'block';
 
+            const maxScore = Math.max(...results.map(r => r.score || 0), 1);
+
             resultsEl.innerHTML = results.map(result => {
                 const doc = documents[result.ref];
                 if (!doc) return '';
 
-                return renderSearchResult(doc, result.score, query);
+                return renderSearchResult(doc, result.score, maxScore, query);
             }).join('');
         }
 
-        function renderSearchResult(doc, score, query) {
+        function renderSearchResult(doc, score, maxScore, query) {
             const typeClass = `type-${doc.type}`;
             const typeIcon = getTypeIcon(doc.type);
             const date = doc.date ? new Date(doc.date).toLocaleDateString() : '';
@@ -6798,7 +6800,7 @@
                         <span><i class="fas fa-tag"></i> ${capitalize(doc.type)}</span>
                         ${doc.category ? `<span><i class="fas fa-folder"></i> ${formatCategory(doc.category)}</span>` : ''}
                         ${date ? `<span><i class="fas fa-calendar"></i> ${date}</span>` : ''}
-                        <span><i class="fas fa-chart-bar"></i> ${(score * 100).toFixed(0)}% match</span>
+                        <span><i class="fas fa-chart-bar"></i> ${Math.round((score / maxScore) * 100)}% match</span>
                     </div>
                     <div class="result-summary">
                         ${highlightedSummary}
