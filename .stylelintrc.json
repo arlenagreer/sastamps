@@ -15,6 +15,7 @@
     "dist/**",
     "node_modules/**",
     "*.min.css",
-    "vendor/**"
+    "vendor/**",
+    "css/vendor/**"
   ]
 }

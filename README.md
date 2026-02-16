@@ -168,7 +168,7 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guid
 
 ## 🔒 Security
 
-For security concerns, please email loz33@hotmail.com directly rather than opening a public issue.
+For security concerns, please email <loz33@hotmail.com> directly rather than opening a public issue.
 
 ## 📜 License
 
@@ -182,8 +182,8 @@ This project is licensed under the ISC License - see the [package.json](package.
 
 ## 📞 Contact
 
-- **Email**: loz33@hotmail.com
-- **Website**: https://sastamps.org
+- **Email**: <loz33@hotmail.com>
+- **Website**: <https://sastamps.org>
 - **Meetings**: MacArthur Park Lutheran Church, Building 1
 - **Meeting Times**: Most Friday nights, doors open at 6:30 PM
 

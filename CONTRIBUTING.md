@@ -229,7 +229,7 @@ npm run analyze:bundle
 
 Feel free to:
 - Open an issue for questions
-- Email loz33@hotmail.com for sensitive matters
+- Email <loz33@hotmail.com> for sensitive matters
 - Join us at a meeting to discuss in person
 
 ## Recognition

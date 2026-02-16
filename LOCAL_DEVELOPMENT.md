@@ -17,7 +17,7 @@ python3 -m http.server 8000
 python -m SimpleHTTPServer 8000
 ```
 
-Then open your browser to: http://localhost:8000
+Then open your browser to: <http://localhost:8000>
 
 ### Option 2: Node.js
 If you have Node.js installed:
@@ -30,7 +30,7 @@ npm install -g http-server
 http-server -p 8000
 ```
 
-Then open your browser to: http://localhost:8000
+Then open your browser to: <http://localhost:8000>
 
 ### Option 3: VS Code
 If you're using Visual Studio Code, install the "Live Server" extension, then right-click on any HTML file and select "Open with Live Server".

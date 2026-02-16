@@ -136,7 +136,7 @@ permissions:
 #### Attack Surface Reduction
 
 | Permission | Before | After | Impact |
-|------------|--------|-------|---------|
+| ------------ | -------- | ------- | --------- |
 | Repository Write | ✅ Full | ❌ None | Can't modify code |
 | Pull Requests | ✅ Full | ❌ None | Can't change PRs |
 | Workflows | ✅ Can modify | ❌ None | CI/CD protected |
@@ -225,27 +225,27 @@ npm run build:js
 
 ### Defense-in-Depth Layers
 
-**Layer 1: Input Validation**
+### Layer 1: Input Validation
 - HTML filtering regex (fixed)
 - Query length limits
 - Pattern blocking
 
-**Layer 2: Output Sanitization**
+### Layer 2: Output Sanitization
 - `escapeHTML()` for all user data
 - Entity encoding (`<` → `&lt;`, etc.)
 - Safe DOM utilities
 
-**Layer 3: Safe Operations**
+### Layer 3: Safe Operations
 - `textContent` instead of `innerHTML` where possible
 - Controlled HTML insertion with validation
 - Memory-safe event handling
 
-**Layer 4: Server Protection**
+### Layer 4: Server Protection
 - Content Security Policy headers
 - Rate limiting (3 requests/hour)
 - Server-side validation (PHP + Serverless)
 
-**Layer 5: Infrastructure Security**
+### Layer 5: Infrastructure Security
 - Minimal GitHub Actions permissions
 - Principle of least privilege
 - Protected CI/CD pipeline
@@ -354,7 +354,7 @@ tests/                                (automated test suites)
 
 ### Recommended Commit Strategy
 
-**Option 1: Single Commit (Recommended)**
+### Option 1: Single Commit (Recommended)
 ```bash
 git add .github/workflows/*.yml js/ dist/
 git commit -m "security: fix all 8 code scanning alerts
@@ -367,7 +367,7 @@ git commit -m "security: fix all 8 code scanning alerts
 Resolves: #alerts-1-through-8"
 ```
 
-**Option 2: Separate Commits by Category**
+### Option 2: Separate Commits by Category
 ```bash
 # XSS fixes
 git add js/utils/safe-dom.js js/pages/search.js js/modules/search-engine.js dist/
@@ -389,7 +389,7 @@ git commit -m "security: add minimal permissions to workflows (alerts 1-2)"
 ### Security Metrics
 
 | Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
+| -------- | -------- | ------- | ------------- |
 | **Code Scanning Alerts** | 8 | 0 | 100% resolved |
 | **XSS Vulnerabilities** | 7 | 0 | Eliminated |
 | **Attack Vectors Blocked** | 0 | 13+ | Comprehensive |
@@ -399,7 +399,7 @@ git commit -m "security: add minimal permissions to workflows (alerts 1-2)"
 ### Code Metrics
 
 | Metric | Value |
-|--------|-------|
+| -------- | ------- |
 | **Files Modified** | 14 |
 | **Lines Added** | 263 |
 | **Lines Removed** | 177 |
@@ -411,7 +411,7 @@ git commit -m "security: add minimal permissions to workflows (alerts 1-2)"
 ### Time to Resolution
 
 | Phase | Duration |
-|-------|----------|
+| ------- | ---------- |
 | **Alert Analysis** | 10 minutes |
 | **Sub-agent Deployment** | 15 minutes |
 | **Implementation** | 30 minutes |

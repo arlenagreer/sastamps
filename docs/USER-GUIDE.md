@@ -19,7 +19,7 @@ Welcome to the San Antonio Philatelic Association website! This guide will help 
 ### Accessing the Website
 
 1. Open your web browser (Chrome, Firefox, Safari, or Edge recommended)
-2. Navigate to: **https://sastamps.org**
+2. Navigate to: **<https://sastamps.org>**
 3. The home page will display current meeting information and latest news
 
 ### Navigation Menu
@@ -64,7 +64,7 @@ The main navigation menu appears at the top of every page:
 
 ### Meeting Location
 
-**MacArthur Park Lutheran Church**
+### MacArthur Park Lutheran Church
 - Building 1
 - Doors open at 6:30 PM
 - Most Friday nights (check calendar for exceptions)
@@ -165,7 +165,7 @@ Each glossary entry includes:
 5. We typically respond within 48 hours
 
 ### Contact Information
-- **Email**: loz33@hotmail.com
+- **Email**: <loz33@hotmail.com>
 - **Meeting Location**: MacArthur Park Lutheran Church
 - **Meeting Time**: Fridays, doors open 6:30 PM
 

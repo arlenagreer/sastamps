@@ -146,7 +146,7 @@ v4: Excludes all dotfiles (files starting with '.')
 **Critical Dependency - `.nojekyll` File**:
 
 | Without `.nojekyll` | With `.nojekyll` |
-|-------------------|-----------------|
+| ------------------- | ----------------- |
 | GitHub applies Jekyll processing | GitHub serves files as-is |
 | Ignores `_directories` | Preserves all directories |
 | Processes `.md` as templates | Serves `.md` as static files |
@@ -225,7 +225,7 @@ cp .nojekyll _site/ 2>/dev/null || true
 **Recovery Complexity**:
 
 | Action | Time Required | Risk Level |
-|--------|--------------|------------|
+| -------- | -------------- | ------------ |
 | Identify problem | 5-30 minutes | Low |
 | Revert PR merge | 2 minutes | Low |
 | Rebuild/redeploy | 5 minutes | Low |
@@ -234,7 +234,7 @@ cp .nojekyll _site/ 2>/dev/null || true
 #### Comparison: v3 vs v4
 
 | Feature | v3 | v4 | Impact |
-|---------|----|----|---------|
+| --------- | ---- | ---- | --------- |
 | Dotfile Inclusion | ✅ Included | ❌ Excluded | BREAKING |
 | Hidden Files | ✅ Included | ❌ Excluded | BREAKING |
 | `.nojekyll` Support | ✅ Yes | ❌ No | CRITICAL |
@@ -297,7 +297,7 @@ Move all assets out of underscore-prefixed directories.
 #### Decision Matrix
 
 | Factor | Weight | v3 (Keep) | v4 (Upgrade) |
-|--------|--------|-----------|--------------|
+| -------- | -------- | ----------- | -------------- |
 | Works Correctly | 10 | ✅ 10/10 | ❌ 0/10 |
 | Security Benefits | 3 | ⚠️ 5/10 | ✅ 8/10 |
 | Maintenance Effort | 5 | ✅ 10/10 | ❌ 2/10 |
@@ -713,8 +713,9 @@ Recent commits:
 **Result**: Blocked with detailed explanation
 
 **Decision Matrix**:
+
 | Factor | v3 | v4 | Winner |
-|--------|----|----|---------|
+| -------- | ---- | ---- | --------- |
 | Functionality | ✅ Works | ❌ Breaks | v3 |
 | Security | ⚠️ Good | ✅ Better | v4 |
 | Risk | ✅ None | ❌ Critical | v3 |

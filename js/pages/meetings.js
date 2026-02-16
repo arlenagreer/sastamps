@@ -56,7 +56,7 @@ async function initializeMeetingsCalendar() {
       { Calendar },
       { calendarAdapter },
       { modal },
-      { reminderSystem }
+      { reminderSystem: _reminderSystem }
     ] = await Promise.all([
       import('vanilla-calendar-pro'),
       import('../calendar-adapter.js'),

@@ -376,9 +376,9 @@ The codebase now includes reusable security utilities that can be used throughou
 
 ## References
 
-- **OWASP XSS Prevention Cheat Sheet:** https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html
-- **CWE-79: Improper Neutralization of Input During Web Page Generation:** https://cwe.mitre.org/data/definitions/79.html
-- **MDN Web Security:** https://developer.mozilla.org/en-US/docs/Web/Security
+- **OWASP XSS Prevention Cheat Sheet:** <https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html>
+- **CWE-79: Improper Neutralization of Input During Web Page Generation:** <https://cwe.mitre.org/data/definitions/79.html>
+- **MDN Web Security:** <https://developer.mozilla.org/en-US/docs/Web/Security>
 
 ---
 

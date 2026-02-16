@@ -93,10 +93,10 @@ export class Logger {
 
     switch (level) {
     case LOG_LEVEL_NAMES[LogLevel.DEBUG]:
-      console.debug(prefix, message, context);
+      console.warn(prefix, message, context);
       break;
     case LOG_LEVEL_NAMES[LogLevel.INFO]:
-      console.info(prefix, message, context);
+      console.warn(prefix, message, context);
       break;
     case LOG_LEVEL_NAMES[LogLevel.WARN]:
       console.warn(prefix, message, context);

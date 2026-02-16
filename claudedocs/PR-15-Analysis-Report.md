@@ -51,7 +51,7 @@ Purpose: Control GitHub Pages Jekyll processing
 The `.nojekyll` file serves a **critical infrastructure function** for GitHub Pages:
 
 | Without `.nojekyll` | With `.nojekyll` |
-|-------------------|-----------------|
+| ------------------- | ----------------- |
 | GitHub applies Jekyll processing | GitHub serves files as-is |
 | Ignores `_directories` | Preserves all directories |
 | Processes `.md` as templates | Serves `.md` as static files |
@@ -174,7 +174,7 @@ Site non-functional
 **If accidentally merged:**
 
 | Action | Time Required | Risk Level |
-|--------|--------------|------------|
+| -------- | -------------- | ------------ |
 | Identify problem | 5-30 minutes | Low |
 | Revert PR merge | 2 minutes | Low |
 | Rebuild/redeploy | 5 minutes | Low |
@@ -213,7 +213,7 @@ Site non-functional
 ### actions/upload-pages-artifact v3 vs v4
 
 | Feature | v3 | v4 | Impact |
-|---------|----|----|---------|
+| --------- | ---- | ---- | --------- |
 | Dotfile Inclusion | ✅ Included | ❌ Excluded | BREAKING |
 | Hidden Files | ✅ Included | ❌ Excluded | BREAKING |
 | `.nojekyll` Support | ✅ Yes | ❌ No | CRITICAL |
@@ -454,14 +454,14 @@ PR #15 represents a legitimate dependency update that unfortunately contains a b
 ### Decision Matrix
 
 | Factor | Weight | v3 (Keep) | v4 (Upgrade) |
-|--------|--------|-----------|--------------|
+| -------- | -------- | ----------- | -------------- |
 | Works Correctly | 10 | ✅ 10/10 | ❌ 0/10 |
 | Security Benefits | 3 | ⚠️ 5/10 | ✅ 8/10 |
 | Maintenance Effort | 5 | ✅ 10/10 | ❌ 2/10 |
 | Risk Level | 8 | ✅ 10/10 | ❌ 0/10 |
 | **Total Score** | | **235/260** | **56/260** |
 
-**Recommendation: Keep v3**
+### Recommendation: Keep v3
 
 ### Final Recommendation
 
@@ -506,4 +506,4 @@ If future migration is needed:
 
 ---
 
-**Report End**
+### Report End

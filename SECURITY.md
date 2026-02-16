@@ -10,7 +10,7 @@ The San Antonio Philatelic Association takes the security of our website serious
 - Exploit the vulnerability
 
 ### DO
-1. Email security details to: **loz33@hotmail.com**
+1. Email security details to: **<loz33@hotmail.com>**
 2. Include "SAPA Website Security" in the subject line
 3. Provide detailed information:
    - Description of the vulnerability
@@ -191,4 +191,4 @@ With permission, we will acknowledge security contributors in our:
 
 **Last Updated**: January 2025
 
-For security concerns, contact: **loz33@hotmail.com**
+For security concerns, contact: **<loz33@hotmail.com>**

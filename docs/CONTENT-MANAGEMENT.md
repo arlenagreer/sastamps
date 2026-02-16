@@ -451,7 +451,7 @@ The `data/glossary/glossary.json` file:
 ### JSON Validation Errors
 
 **Problem**: "Unexpected token" error
-**Solution**: 
+**Solution**:
 - Check for missing commas
 - Ensure proper quotes (use double quotes)
 - Validate at jsonlint.com

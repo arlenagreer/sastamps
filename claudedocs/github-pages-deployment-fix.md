@@ -6,7 +6,7 @@ The GitHub Pages "pages build and deployment" workflow is failing during the "Up
 
 ## Root Cause
 
-**Build Type: Legacy Mode**
+### Build Type: Legacy Mode
 
 The repository's GitHub Pages is configured to use "legacy" build type, which means:
 - Deploys from the main branch root directory (path: `/`)
@@ -65,7 +65,7 @@ The repository already has a proper CI/CD workflow (`.github/workflows/ci.yml`) 
 **Steps to Fix:**
 
 1. **Go to GitHub Pages Settings:**
-   https://github.com/arlenagreer/sastamps/settings/pages
+   <https://github.com/arlenagreer/sastamps/settings/pages>
 
 2. **Change Source:**
    - Current: "Deploy from a branch" (legacy mode)
@@ -120,7 +120,7 @@ After switching to GitHub Actions:
    gh run view <run-id> --log
    ```
 
-3. Verify site is accessible at: https://www.sastamps.org
+3. Verify site is accessible at: <https://www.sastamps.org>
 
 ## Technical Details
 
