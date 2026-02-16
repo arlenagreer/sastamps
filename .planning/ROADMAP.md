@@ -26,10 +26,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   1. Google Fonts (Open Sans 400/600/700, Merriweather 400/700) load on all pages without 404 errors
   2. Favicon displays in browser tabs across all pages
   3. No service worker or manifest 404 errors appear in browser console
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] (Plans created via /gsd:plan-phase 1)
+- [ ] 01-01-PLAN.md — Fix Google Fonts URLs and standardize favicon references
+- [ ] 01-02-PLAN.md — Fix service worker and manifest references
 
 ### Phase 2: Build & Deployment
 **Goal**: All page-specific bundles deployed and accessible, sitemap link functional
@@ -65,6 +66,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Asset Loading | 0/TBD | Not started | - |
+| 1. Asset Loading | 0/2 | Not started | - |
 | 2. Build & Deployment | 0/2 | Not started | - |
 | 3. Display & UX Fixes | 0/TBD | Not started | - |
