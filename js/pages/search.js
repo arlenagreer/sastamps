@@ -270,6 +270,8 @@ function displaySearchResults(results, query) {
     return;
   }
 
+  const maxScore = Math.max(...results.map(r => r.score || 0), 1);
+
   const html = results.map((result, index) => `
         <article class="search-result" data-index="${index}">
             <header class="result-header">
@@ -281,7 +283,7 @@ function displaySearchResults(results, query) {
                 <div class="result-meta">
                     <span class="result-type">${formatContentType(result.type)}</span>
                     ${result.date ? `<time datetime="${escapeHTML(result.date)}">${formatDate(result.date)}</time>` : ''}
-                    ${result.score ? `<span class="result-score">Relevance: ${Math.round(result.score * 100)}%</span>` : ''}
+                    ${result.score ? `<span class="result-score">${Math.round((result.score / maxScore) * 100)}% match</span>` : ''}
                 </div>
             </header>
 

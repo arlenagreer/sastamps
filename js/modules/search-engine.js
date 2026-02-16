@@ -704,8 +704,9 @@ class SearchEngine {
 
     // Display results
     if (searchResult.hasResults) {
+      const maxScore = Math.max(...searchResult.results.map(r => r.score || 0), 1);
       resultsContainer.innerHTML = searchResult.results.map(result =>
-        this.renderSearchResult(result)
+        this.renderSearchResult(result, maxScore)
       ).join('');
     } else {
       resultsContainer.innerHTML = '';
@@ -715,7 +716,7 @@ class SearchEngine {
   /**
      * Render individual search result
      */
-  renderSearchResult(result) {
+  renderSearchResult(result, maxScore = 1) {
     const doc = result.document;
     const typeIcon = this.getTypeIcon(doc.type);
     const formattedDate = doc.date ? new Date(doc.date).toLocaleDateString() : '';
@@ -740,7 +741,7 @@ class SearchEngine {
                         ${doc.tags.map(tag => `<span class="tag">${escapeHTML(tag)}</span>`).join('')}
                     </div>
                 ` : ''}
-                <div class="search-result-score">Relevance: ${(result.score * 100).toFixed(1)}%</div>
+                <div class="search-result-score">${Math.round((result.score / maxScore) * 100)}% match</div>
             </div>
         `;
   }
