@@ -38,10 +38,11 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. About, Archive, Membership, and Glossary pages load their JavaScript bundles without 404 errors
   2. Sitemap link in Glossary footer either works (sitemap.xml exists) or is removed (no broken link)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] (Plans created via /gsd:plan-phase 2)
+- [ ] 02-01-PLAN.md — Deploy page-specific JS bundles for About, Archive, Membership, Glossary
+- [ ] 02-02-PLAN.md — Remove broken sitemap link from Glossary footer
 
 ### Phase 3: Display & UX Fixes
 **Goal**: All pages display correctly with consistent layout and functional UI elements
@@ -65,5 +66,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Asset Loading | 0/TBD | Not started | - |
-| 2. Build & Deployment | 0/TBD | Not started | - |
+| 2. Build & Deployment | 0/2 | Not started | - |
 | 3. Display & UX Fixes | 0/TBD | Not started | - |
