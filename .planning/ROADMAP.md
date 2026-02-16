@@ -42,8 +42,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Deploy page-specific JS bundles for About, Archive, Membership, Glossary
-- [ ] 02-02-PLAN.md — Remove broken sitemap link from Glossary footer
+- [x] 02-01-PLAN.md — Deploy page-specific JS bundles for About, Archive, Membership, Glossary
+- [x] 02-02-PLAN.md — Remove broken sitemap link from Glossary footer
 
 ### Phase 3: Display & UX Fixes
 **Goal**: All pages display correctly with consistent layout and functional UI elements
@@ -69,5 +69,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Asset Loading | 0/2 | Not started | - |
-| 2. Build & Deployment | 0/2 | Not started | - |
+| 2. Build & Deployment | 2/2 | Complete | 2026-02-16 |
 | 3. Display & UX Fixes | 0/3 | Not started | - |
