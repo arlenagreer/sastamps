@@ -4,7 +4,7 @@
       "id": "newsletter-2026-Q1",
       "type": "newsletter",
       "title": "SAPA PHILATEX First Quarter 2026",
-      "summary": "First Quarter 2026 newsletter featuring new editor Jim Durham's introduction, Q1 meeting calendar with updated location at MacArthur Park Lutheran Church, USPS 2026 stamp preview, and updated Board of Governors listing.",
+      "summary": "First Quarter 2026 newsletter featuring new editor Jim Durham's introduction, Q1 meeting calendar with March 27 stamp program by H. Wallace on 'The Art of Stamps on Covers and Cards', USPS 2026 stamp preview, and updated Board of Governors listing.",
       "url": "/newsletter.html#2026-Q1",
       "date": "2026-01-01",
       "tags": [
@@ -111,16 +111,18 @@
     {
       "id": "meeting-2026-01-23",
       "type": "meeting",
-      "title": "Club Auction",
-      "summary": "Monthly club auction featuring member consignments and donated materials. Guests welcome!",
+      "title": "Stamp Bourse",
+      "summary": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers. Guests welcome! Note: This replaces the originally scheduled auction.",
       "url": "/meetings.html#2026-01-23",
       "date": "2026-01-23",
       "tags": [
-        "auction",
+        "bourse",
+        "dealers",
+        "trading",
         "buying",
         "selling",
-        "consignment",
-        "guests-welcome"
+        "guests-welcome",
+        "schedule-change"
       ],
       "category": "meeting"
     },
@@ -253,17 +255,15 @@
     {
       "id": "meeting-2026-03-27",
       "type": "meeting",
-      "title": "Stamp Bourse & Stamp Program",
-      "summary": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers, plus a special stamp program. Guests welcome!",
+      "title": "Stamp Program: The Art of Stamps on Covers and Cards",
+      "summary": "H. Wallace presents 'The Art of Stamps on Covers and Cards', exploring the artistic elements and design of stamps displayed on covers and postcards. Guests welcome!",
       "url": "/meetings.html#2026-03-27",
       "date": "2026-03-27",
       "tags": [
-        "bourse",
-        "dealers",
-        "trading",
-        "buying",
-        "selling",
         "stamp-program",
+        "presentation",
+        "covers",
+        "postcards",
         "guests-welcome"
       ],
       "category": "meeting"
@@ -817,6 +817,6 @@
       "resource": 3,
       "glossary": 5
     },
-    "buildDate": "2026-01-03T18:54:46.716Z"
+    "buildDate": "2026-02-16T19:34:29.803Z"
   }
 }

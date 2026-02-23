@@ -4,14 +4,14 @@
     "description": "San Antonio's premier stamp collecting club since 1896",
     "icons": [
         {
-            "src": "images/favicon.png",
+            "src": "favicon.ico",
             "sizes": "192x192",
-            "type": "image/png"
+            "type": "image/x-icon"
         },
         {
-            "src": "images/favicon.png",
+            "src": "favicon.ico",
             "sizes": "512x512",
-            "type": "image/png"
+            "type": "image/x-icon"
         }
     ],
     "theme_color": "#1a5276",

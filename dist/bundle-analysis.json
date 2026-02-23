@@ -1,36 +1,12 @@
 {
-  "buildDate": "2026-02-16T19:34:00.173Z",
+  "buildDate": "2026-02-16T19:34:29.948Z",
   "totalSize": 420816,
   "bundles": [
     {
-      "name": "archive.min.js",
-      "size": 8876,
-      "sizeFormatted": "8.67 KB",
-      "imports": 8,
-      "exports": 0,
-      "compressionRatio": "0.77"
-    },
-    {
-      "name": "search.min.js",
-      "size": 41345,
-      "sizeFormatted": "40.38 KB",
-      "imports": 8,
-      "exports": 0,
-      "compressionRatio": "0.77"
-    },
-    {
-      "name": "about.min.js",
-      "size": 8864,
-      "sizeFormatted": "8.66 KB",
-      "imports": 8,
-      "exports": 0,
-      "compressionRatio": "0.77"
-    },
-    {
-      "name": "resources.min.js",
-      "size": 36373,
-      "sizeFormatted": "35.52 KB",
-      "imports": 9,
+      "name": "glossary.min.js",
+      "size": 20578,
+      "sizeFormatted": "20.10 KB",
+      "imports": 6,
       "exports": 0,
       "compressionRatio": "0.77"
     },
@@ -43,9 +19,9 @@
       "compressionRatio": "0.77"
     },
     {
-      "name": "membership.min.js",
-      "size": 8894,
-      "sizeFormatted": "8.69 KB",
+      "name": "archive.min.js",
+      "size": 8876,
+      "sizeFormatted": "8.67 KB",
       "imports": 8,
       "exports": 0,
       "compressionRatio": "0.77"
@@ -59,18 +35,42 @@
       "compressionRatio": "0.77"
     },
     {
-      "name": "home.min.js",
-      "size": 115829,
-      "sizeFormatted": "113.11 KB",
-      "imports": 11,
+      "name": "membership.min.js",
+      "size": 8894,
+      "sizeFormatted": "8.69 KB",
+      "imports": 8,
       "exports": 0,
       "compressionRatio": "0.77"
     },
     {
-      "name": "glossary.min.js",
-      "size": 20578,
-      "sizeFormatted": "20.10 KB",
-      "imports": 6,
+      "name": "about.min.js",
+      "size": 8864,
+      "sizeFormatted": "8.66 KB",
+      "imports": 8,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "search.min.js",
+      "size": 41345,
+      "sizeFormatted": "40.38 KB",
+      "imports": 8,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "resources.min.js",
+      "size": 36373,
+      "sizeFormatted": "35.52 KB",
+      "imports": 9,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "home.min.js",
+      "size": 115829,
+      "sizeFormatted": "113.11 KB",
+      "imports": 11,
       "exports": 0,
       "compressionRatio": "0.77"
     },
