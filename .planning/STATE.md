@@ -39,7 +39,16 @@ All decisions archived in PROJECT.md Key Decisions table.
 
 ### Pending Todos
 
-None.
+9 pending todos:
+- **Add automated testing framework** (testing) — Unit/E2E tests with Jest/Vitest + Playwright/Cypress
+- **Fix accessibility gaps** (ui) — ARIA attributes, color contrast, focus management
+- **Audit XSS surface area** (security) — Verify all innerHTML uses sanitization
+- **Reduce JavaScript bundle sizes** (performance) — Extract shared chunks, reduce meetings/home bundles
+- **Update SEO and structured data** (general) — Sitemap dates, canonical tags, JSON-LD
+- **Verify dark mode contrast** (ui) — WCAG AA verification for dark theme
+- **Add performance refinements** (performance) — Source maps, caching, compression
+- **Harden security configuration** (security) — CSP reporting, security.txt, rate limiting
+- **Improve developer experience** (tooling) — Standardize async/await, centralize logging
 
 ### Blockers/Concerns
 
