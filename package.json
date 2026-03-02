@@ -57,22 +57,22 @@
     "vanilla-calendar-pro": "^3.1.0"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.24",
+    "autoprefixer": "^10.4.27",
     "cssnano": "^7.1.2",
     "esbuild": "^0.27.3",
-    "eslint": "^10.0.1",
-    "globals": "^17.3.0",
+    "eslint": "^10.0.2",
+    "globals": "^17.4.0",
     "html-validate": "^10.9.0",
     "http-server": "^14.1.1",
     "lighthouse": "^13.0.3",
-    "linkinator": "^7.5.3",
+    "linkinator": "^7.6.1",
     "markdownlint-cli": "^0.47.0",
     "npm-run-all": "^4.1.5",
-    "pa11y": "^9.1.0",
+    "pa11y": "^9.1.1",
     "postcss": "^8.4.35",
     "postcss-cli": "^11.0.0",
     "sharp-cli": "^5.2.0",
-    "stylelint": "^17.3.0",
+    "stylelint": "^17.4.0",
     "stylelint-config-standard": "^40.0.0"
   },
   "browserslist": [
