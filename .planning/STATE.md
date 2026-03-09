@@ -5,14 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-09)
 
 **Core value:** Primary digital presence for SAPA — meeting schedules, newsletters, membership info, educational resources
-**Current focus:** v1.1 Restore Newsletter Archive
+**Current focus:** Phase 4 — PDF Downloads (v1.1 Restore Newsletter Archive)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-09 — Milestone v1.1 started
+Phase: 4 of 6 (PDF Downloads)
+Plan: — of — in current phase
+Status: Ready to plan
+Last activity: 2026-03-09 — v1.1 roadmap created (3 phases, 11 requirements mapped)
+
+Progress: [░░░░░░░░░░] 0% (v1.1 — 0/3 phases complete)
 
 ## Performance Metrics
 
@@ -29,6 +31,8 @@ Last activity: 2026-03-09 — Milestone v1.1 started
 | 2 | 2 | 3 min | 1.5 min |
 | 3 | 3 | 8 min | 2.7 min |
 
+*Updated after each plan completion*
+
 ## Accumulated Context
 
 ### Decisions
@@ -37,16 +41,10 @@ All v1.0 decisions archived in PROJECT.md Key Decisions table.
 
 ### Pending Todos
 
-9 pending todos:
-- **Add automated testing framework** (testing) — Unit/E2E tests with Jest/Vitest + Playwright/Cypress
-- **Fix accessibility gaps** (ui) — ARIA attributes, color contrast, focus management
-- **Audit XSS surface area** (security) — Verify all innerHTML uses sanitization
-- **Reduce JavaScript bundle sizes** (performance) — Extract shared chunks, reduce meetings/home bundles
-- **Update SEO and structured data** (general) — Sitemap dates, canonical tags, JSON-LD
-- **Verify dark mode contrast** (ui) — WCAG AA verification for dark theme
-- **Add performance refinements** (performance) — Source maps, caching, compression
-- **Harden security configuration** (security) — CSP reporting, security.txt, rate limiting
-- **Improve developer experience** (tooling) — Standardize async/await, centralize logging
+9 pending todos (see .planning/todos/pending/):
+- Add automated testing framework, fix accessibility gaps, audit XSS surface area
+- Reduce JS bundle sizes, update SEO/structured data, verify dark mode contrast
+- Add performance refinements, harden security config, improve developer experience
 
 ### Blockers/Concerns
 
@@ -55,5 +53,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-09
-Stopped at: Milestone v1.1 requirements definition
+Stopped at: Roadmap created for v1.1 — ready to plan Phase 4
 Resume file: None

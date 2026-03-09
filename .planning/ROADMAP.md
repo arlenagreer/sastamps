@@ -3,6 +3,7 @@
 ## Milestones
 
 - ✅ **v1.0 Fix Site Issues** — Phases 1-3 (shipped 2026-02-16)
+- 🚧 **v1.1 Restore Newsletter Archive** — Phases 4-6 (in progress)
 
 ## Phases
 
@@ -15,6 +16,45 @@
 
 </details>
 
+### 🚧 v1.1 Restore Newsletter Archive (In Progress)
+
+**Milestone Goal:** Download ~90 archived newsletter PDFs (2008-2024) from Dropbox/Google Drive, catalogue them in a reference JSON file, and surface them as year-grouped download links on archive.html.
+
+#### Phase 4: PDF Downloads
+
+**Goal**: All archived newsletter PDFs (2008-2024) are present in `public/newsletter_archive/` with consistent naming
+**Depends on**: Nothing (first phase of milestone)
+**Requirements**: DL-01, DL-02, DL-03, DL-04, DL-05
+**Success Criteria** (what must be TRUE):
+  1. `public/newsletter_archive/` exists and contains PDFs for every available issue from 2008 through 2024
+  2. Each PDF filename follows year-edition format (e.g., `2008-02-mar-apr.pdf`, `2020-special-covid.pdf`)
+  3. The missing 2012 Jul/Aug issue is not present (gracefully skipped, not a broken placeholder)
+  4. No 2025 Q1/Q2 PDFs are duplicated from `public/` into the archive directory
+**Plans**: TBD
+
+#### Phase 5: Reference Data
+
+**Goal**: A JSON catalogue maps every archived PDF to its local path, year, and edition
+**Depends on**: Phase 4
+**Requirements**: REF-01, REF-02
+**Success Criteria** (what must be TRUE):
+  1. `data/newsletters/archived-newsletters.json` exists and contains an entry for every PDF in `public/newsletter_archive/`
+  2. Each entry includes local path, year, and edition fields following the structure of `data/newsletters/newsletters.json`
+  3. The 2012 Jul/Aug entry is present in the JSON and marked as unavailable
+**Plans**: TBD
+
+#### Phase 6: Archive Page
+
+**Goal**: Visitors to archive.html can browse and download all archived newsletters organized by year
+**Depends on**: Phase 5
+**Requirements**: PAGE-01, PAGE-02, PAGE-03, PAGE-04
+**Success Criteria** (what must be TRUE):
+  1. archive.html displays year-grouped sections from 2008 through 2024 with working download links for each available issue
+  2. The existing 2025-2026 rich card sections remain visible and unchanged above the archived years
+  3. The 2012 Jul/Aug slot shows a "Not Available" label rather than a broken link
+  4. The page renders with the same fonts, colors, and layout patterns as the rest of the site
+**Plans**: TBD
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -22,3 +62,6 @@
 | 1. Asset Loading | v1.0 | 2/2 | Complete | 2026-02-16 |
 | 2. Build & Deployment | v1.0 | 2/2 | Complete | 2026-02-16 |
 | 3. Display & UX Fixes | v1.0 | 3/3 | Complete | 2026-02-16 |
+| 4. PDF Downloads | v1.1 | 0/? | Not started | - |
+| 5. Reference Data | v1.1 | 0/? | Not started | - |
+| 6. Archive Page | v1.1 | 0/? | Not started | - |
