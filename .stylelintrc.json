@@ -9,7 +9,8 @@
     "no-descending-specificity": null,
     "font-family-no-missing-generic-family-keyword": null,
     "property-no-vendor-prefix": null,
-    "value-no-vendor-prefix": null
+    "value-no-vendor-prefix": null,
+    "declaration-property-value-no-unknown": null
   },
   "ignoreFiles": [
     "dist/**",
