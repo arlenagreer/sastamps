@@ -38,7 +38,10 @@ The website serves as the primary digital presence for SAPA, providing members a
 
 ### Active
 
-(No active requirements — next milestone not yet planned)
+- [ ] Download archived newsletter PDFs (2008-2024) from Dropbox/Google Drive to local repository
+- [ ] Create `public/newsletter_archive/` directory with all archived PDFs
+- [ ] Create reference JSON file mapping each PDF to its path, year, and edition index
+- [ ] Update `archive.html` with year-grouped download links for all archived newsletters
 
 ### Out of Scope
 
@@ -74,5 +77,15 @@ Shipped v1.0 on 2026-02-16. All 9 issues from February 2026 site inspection reso
 | Relative score normalization (top=100%) | More intuitive than absolute capping for users | ✓ Good — search results display clearly |
 | Homepage footer as canonical template | Single source of truth for footer consistency | ✓ Good — all 11 pages match |
 
+## Current Milestone: v1.1 Restore Newsletter Archive
+
+**Goal:** Download ~90 archived newsletter PDFs (2008-2024) from external hosting and integrate them into the repository and archive page.
+
+**Target features:**
+- Download all archived PDFs to `public/newsletter_archive/`
+- Create reference JSON mapping each PDF to path, year, edition
+- Update `archive.html` with simple year-grouped download links
+- Skip 2025+ issues already on the site
+
 ---
-*Last updated: 2026-02-16 after v1.0 milestone*
+*Last updated: 2026-03-09 after v1.1 milestone started*

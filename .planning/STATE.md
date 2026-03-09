@@ -2,19 +2,17 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-16)
+See: .planning/PROJECT.md (updated 2026-03-09)
 
 **Core value:** Primary digital presence for SAPA — meeting schedules, newsletters, membership info, educational resources
-**Current focus:** Planning next milestone
+**Current focus:** v1.1 Restore Newsletter Archive
 
 ## Current Position
 
-Phase: — (milestone complete)
+Phase: Not started (defining requirements)
 Plan: —
-Status: v1.0 shipped
-Last activity: 2026-02-16 — Milestone v1.0 Fix Site Issues completed
-
-Progress: [██████████] 100% (v1.0)
+Status: Defining requirements
+Last activity: 2026-03-09 — Milestone v1.1 started
 
 ## Performance Metrics
 
@@ -35,7 +33,7 @@ Progress: [██████████] 100% (v1.0)
 
 ### Decisions
 
-All decisions archived in PROJECT.md Key Decisions table.
+All v1.0 decisions archived in PROJECT.md Key Decisions table.
 
 ### Pending Todos
 
@@ -56,6 +54,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-16
-Stopped at: Milestone v1.0 complete
+Last session: 2026-03-09
+Stopped at: Milestone v1.1 requirements definition
 Resume file: None
