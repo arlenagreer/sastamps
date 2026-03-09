@@ -11,6 +11,7 @@
     "build:js:legacy": "esbuild js/script.js --bundle --minify --outfile=dist/js/script.min.js",
     "analyze:bundle": "node esbuild.config.js && cat dist/bundle-analysis.json",
     "optimize:images": "npm run optimize:webp && npm run optimize:png && npm run optimize:responsive",
+    "download:newsletters": "node scripts/download-newsletters.mjs",
     "optimize:webp": "sharp-cli --input 'images/*.png' --output-dir dist/images --format webp --quality 80",
     "optimize:png": "sharp-cli --input 'images/*.png' --output-dir dist/images --format png --quality 80",
     "optimize:responsive": "npm run responsive:sm && npm run responsive:md && npm run responsive:lg",

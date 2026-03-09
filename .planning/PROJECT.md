@@ -18,7 +18,10 @@ The website serves as the primary digital presence for SAPA, providing members a
 - ✓ About page with club history, leadership, and mission
 - ✓ Meetings page with calendar widget, schedule table, and Google Maps embed
 - ✓ Newsletter page with current issue details and editor information
-- ✓ Newsletter archive with PDF downloads
+- ✓ Newsletter archive with PDF downloads — v1.0
+- ✓ Download archived newsletter PDFs (2008-2024) from Dropbox/Google Drive — v1.1
+- ✓ JSON catalogue mapping 99 newsletter entries to local paths — v1.1
+- ✓ Year-grouped archive page with safe DOM rendering — v1.1
 - ✓ Membership page with benefits, philosophy, and application download
 - ✓ Resources page with educational materials, search/filter, and categories
 - ✓ Glossary page with philatelic terms, search, and cross-references
@@ -38,10 +41,7 @@ The website serves as the primary digital presence for SAPA, providing members a
 
 ### Active
 
-- [ ] Download archived newsletter PDFs (2008-2024) from Dropbox/Google Drive to local repository
-- [ ] Create `public/newsletter_archive/` directory with all archived PDFs
-- [ ] Create reference JSON file mapping each PDF to its path, year, and edition index
-- [ ] Update `archive.html` with year-grouped download links for all archived newsletters
+(None yet — define for next milestone)
 
 ### Out of Scope
 
@@ -52,11 +52,12 @@ The website serves as the primary digital presence for SAPA, providing members a
 
 ## Context
 
-Shipped v1.0 on 2026-02-16. All 9 issues from February 2026 site inspection resolved.
+Shipped v1.1 on 2026-03-09. Newsletter archive restored with 98 PDFs (2008-2024).
 - 11 HTML pages with consistent design, assets, and footer
 - Build system: ESBuild with tree-shaking, 7 page-specific bundles (~191KB total)
 - Tech stack: Vanilla JS ES6+, HTML5, CSS3/PostCSS, Lunr.js search, vanilla-calendar-pro
 - Deployed on GitHub Pages
+- Newsletter archive: 98 PDFs in `public/newsletter_archive/`, JSON catalogue with 99 entries
 - Known tech debt: 3 orphaned JS modules (data-loader, template-engine, pagination) built but unused
 
 ## Constraints
@@ -76,16 +77,9 @@ Shipped v1.0 on 2026-02-16. All 9 issues from February 2026 site inspection reso
 | Remove sitemap link (not create sitemap.xml) | Simpler fix, sitemap not critical for static club site | ✓ Good — no broken link |
 | Relative score normalization (top=100%) | More intuitive than absolute capping for users | ✓ Good — search results display clearly |
 | Homepage footer as canonical template | Single source of truth for footer consistency | ✓ Good — all 11 pages match |
-
-## Current Milestone: v1.1 Restore Newsletter Archive
-
-**Goal:** Download ~90 archived newsletter PDFs (2008-2024) from external hosting and integrate them into the repository and archive page.
-
-**Target features:**
-- Download all archived PDFs to `public/newsletter_archive/`
-- Create reference JSON mapping each PDF to path, year, edition
-- Update `archive.html` with simple year-grouped download links
-- Skip 2025+ issues already on the site
+| Safe DOM rendering for archive | No innerHTML even with trusted JSON — XSS prevention | ✓ Good — createElement/textContent throughout |
+| Compact list layout for archived years | Visual contrast with rich cards for recent issues | ✓ Good — dense scanning for 17 years of content |
+| Lean JSON schema for catalogue | Only programmatically-derivable fields, not manual metadata | ✓ Good — 99 entries auto-generated |
 
 ---
-*Last updated: 2026-03-09 after v1.1 milestone started*
+*Last updated: 2026-03-09 after v1.1 milestone*

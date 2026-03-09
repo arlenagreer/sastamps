@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Archived Newsletter Schema",
+  "description": "Schema for SAPA PHILATEX archived newsletter catalogue (2008-2024)",
+  "type": "object",
+  "properties": {
+    "archivedNewsletters": {
+      "type": "array",
+      "description": "Array of archived newsletter entries sorted chronologically",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier in format YYYY-NN, YYYY-QN, or YYYY-special-covid",
+            "pattern": "^[0-9]{4}-(0[1-6]|Q[2-4]|special-covid)$"
+          },
+          "title": {
+            "type": "string",
+            "description": "Full title of the newsletter issue"
+          },
+          "year": {
+            "type": "integer",
+            "minimum": 2008,
+            "maximum": 2024,
+            "description": "Year of publication"
+          },
+          "edition": {
+            "type": "string",
+            "description": "Edition identifier",
+            "enum": ["01", "02", "03", "04", "05", "06", "Q2", "Q3", "Q4", "special-covid"]
+          },
+          "editionLabel": {
+            "type": "string",
+            "description": "Human-readable edition label"
+          },
+          "filePath": {
+            "type": ["string", "null"],
+            "description": "Relative path to the PDF file, or null if unavailable",
+            "pattern": "^public/newsletter_archive/.*\\.pdf$"
+          },
+          "status": {
+            "type": "string",
+            "description": "Availability status of the newsletter",
+            "enum": ["available", "unavailable"]
+          }
+        },
+        "required": ["id", "title", "year", "edition", "editionLabel", "filePath", "status"],
+        "additionalProperties": false
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Catalogue metadata",
+      "properties": {
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp of last update"
+        },
+        "totalIssues": {
+          "type": "integer",
+          "description": "Total number of newsletter entries"
+        },
+        "availableIssues": {
+          "type": "integer",
+          "description": "Number of entries with available PDFs"
+        },
+        "yearRange": {
+          "type": "object",
+          "properties": {
+            "start": {
+              "type": "integer",
+              "description": "First year in the archive"
+            },
+            "end": {
+              "type": "integer",
+              "description": "Last year in the archive"
+            }
+          },
+          "required": ["start", "end"],
+          "additionalProperties": false
+        },
+        "version": {
+          "type": "string",
+          "description": "Schema version"
+        }
+      },
+      "required": ["lastUpdated", "totalIssues", "availableIssues", "yearRange", "version"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["archivedNewsletters", "metadata"],
+  "additionalProperties": false
+}

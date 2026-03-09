@@ -1,0 +1,905 @@
+{
+  "archivedNewsletters": [
+    {
+      "id": "2008-02",
+      "title": "SAPA PHILATEX March/April 2008",
+      "year": 2008,
+      "edition": "02",
+      "editionLabel": "March/April",
+      "filePath": "public/newsletter_archive/2008-02-mar-apr.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2008-03",
+      "title": "SAPA PHILATEX May/June 2008",
+      "year": 2008,
+      "edition": "03",
+      "editionLabel": "May/June",
+      "filePath": "public/newsletter_archive/2008-03-may-jun.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2008-04",
+      "title": "SAPA PHILATEX July/August 2008",
+      "year": 2008,
+      "edition": "04",
+      "editionLabel": "July/August",
+      "filePath": "public/newsletter_archive/2008-04-jul-aug.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2008-05",
+      "title": "SAPA PHILATEX September/October 2008",
+      "year": 2008,
+      "edition": "05",
+      "editionLabel": "September/October",
+      "filePath": "public/newsletter_archive/2008-05-sep-oct.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2008-06",
+      "title": "SAPA PHILATEX November/December 2008",
+      "year": 2008,
+      "edition": "06",
+      "editionLabel": "November/December",
+      "filePath": "public/newsletter_archive/2008-06-nov-dec.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2009-01",
+      "title": "SAPA PHILATEX January/February 2009",
+      "year": 2009,
+      "edition": "01",
+      "editionLabel": "January/February",
+      "filePath": "public/newsletter_archive/2009-01-jan-feb.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2009-02",
+      "title": "SAPA PHILATEX March/April 2009",
+      "year": 2009,
+      "edition": "02",
+      "editionLabel": "March/April",
+      "filePath": "public/newsletter_archive/2009-02-mar-apr.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2009-03",
+      "title": "SAPA PHILATEX May/June 2009",
+      "year": 2009,
+      "edition": "03",
+      "editionLabel": "May/June",
+      "filePath": "public/newsletter_archive/2009-03-may-jun.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2009-04",
+      "title": "SAPA PHILATEX July/August 2009",
+      "year": 2009,
+      "edition": "04",
+      "editionLabel": "July/August",
+      "filePath": "public/newsletter_archive/2009-04-jul-aug.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2009-05",
+      "title": "SAPA PHILATEX September/October 2009",
+      "year": 2009,
+      "edition": "05",
+      "editionLabel": "September/October",
+      "filePath": "public/newsletter_archive/2009-05-sep-oct.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2009-06",
+      "title": "SAPA PHILATEX November/December 2009",
+      "year": 2009,
+      "edition": "06",
+      "editionLabel": "November/December",
+      "filePath": "public/newsletter_archive/2009-06-nov-dec.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2010-01",
+      "title": "SAPA PHILATEX January/February 2010",
+      "year": 2010,
+      "edition": "01",
+      "editionLabel": "January/February",
+      "filePath": "public/newsletter_archive/2010-01-jan-feb.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2010-02",
+      "title": "SAPA PHILATEX March/April 2010",
+      "year": 2010,
+      "edition": "02",
+      "editionLabel": "March/April",
+      "filePath": "public/newsletter_archive/2010-02-mar-apr.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2010-03",
+      "title": "SAPA PHILATEX May/June 2010",
+      "year": 2010,
+      "edition": "03",
+      "editionLabel": "May/June",
+      "filePath": "public/newsletter_archive/2010-03-may-jun.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2010-04",
+      "title": "SAPA PHILATEX July/August 2010",
+      "year": 2010,
+      "edition": "04",
+      "editionLabel": "July/August",
+      "filePath": "public/newsletter_archive/2010-04-jul-aug.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2010-05",
+      "title": "SAPA PHILATEX September/October 2010",
+      "year": 2010,
+      "edition": "05",
+      "editionLabel": "September/October",
+      "filePath": "public/newsletter_archive/2010-05-sep-oct.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2010-06",
+      "title": "SAPA PHILATEX November/December 2010",
+      "year": 2010,
+      "edition": "06",
+      "editionLabel": "November/December",
+      "filePath": "public/newsletter_archive/2010-06-nov-dec.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2011-01",
+      "title": "SAPA PHILATEX January/February 2011",
+      "year": 2011,
+      "edition": "01",
+      "editionLabel": "January/February",
+      "filePath": "public/newsletter_archive/2011-01-jan-feb.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2011-02",
+      "title": "SAPA PHILATEX March/April 2011",
+      "year": 2011,
+      "edition": "02",
+      "editionLabel": "March/April",
+      "filePath": "public/newsletter_archive/2011-02-mar-apr.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2011-03",
+      "title": "SAPA PHILATEX May/June 2011",
+      "year": 2011,
+      "edition": "03",
+      "editionLabel": "May/June",
+      "filePath": "public/newsletter_archive/2011-03-may-jun.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2011-04",
+      "title": "SAPA PHILATEX July/August 2011",
+      "year": 2011,
+      "edition": "04",
+      "editionLabel": "July/August",
+      "filePath": "public/newsletter_archive/2011-04-jul-aug.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2011-05",
+      "title": "SAPA PHILATEX September/October 2011",
+      "year": 2011,
+      "edition": "05",
+      "editionLabel": "September/October",
+      "filePath": "public/newsletter_archive/2011-05-sep-oct.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2011-06",
+      "title": "SAPA PHILATEX November/December 2011",
+      "year": 2011,
+      "edition": "06",
+      "editionLabel": "November/December",
+      "filePath": "public/newsletter_archive/2011-06-nov-dec.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2012-01",
+      "title": "SAPA PHILATEX January/February 2012",
+      "year": 2012,
+      "edition": "01",
+      "editionLabel": "January/February",
+      "filePath": "public/newsletter_archive/2012-01-jan-feb.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2012-02",
+      "title": "SAPA PHILATEX March/April 2012",
+      "year": 2012,
+      "edition": "02",
+      "editionLabel": "March/April",
+      "filePath": "public/newsletter_archive/2012-02-mar-apr.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2012-03",
+      "title": "SAPA PHILATEX May/June 2012",
+      "year": 2012,
+      "edition": "03",
+      "editionLabel": "May/June",
+      "filePath": "public/newsletter_archive/2012-03-may-jun.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2012-04",
+      "title": "SAPA PHILATEX July/August 2012",
+      "year": 2012,
+      "edition": "04",
+      "editionLabel": "July/August",
+      "filePath": null,
+      "status": "unavailable"
+    },
+    {
+      "id": "2012-05",
+      "title": "SAPA PHILATEX September/October 2012",
+      "year": 2012,
+      "edition": "05",
+      "editionLabel": "September/October",
+      "filePath": "public/newsletter_archive/2012-05-sep-oct.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2012-06",
+      "title": "SAPA PHILATEX November/December 2012",
+      "year": 2012,
+      "edition": "06",
+      "editionLabel": "November/December",
+      "filePath": "public/newsletter_archive/2012-06-nov-dec.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2013-01",
+      "title": "SAPA PHILATEX January/February 2013",
+      "year": 2013,
+      "edition": "01",
+      "editionLabel": "January/February",
+      "filePath": "public/newsletter_archive/2013-01-jan-feb.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2013-02",
+      "title": "SAPA PHILATEX March/April 2013",
+      "year": 2013,
+      "edition": "02",
+      "editionLabel": "March/April",
+      "filePath": "public/newsletter_archive/2013-02-mar-apr.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2013-03",
+      "title": "SAPA PHILATEX May/June 2013",
+      "year": 2013,
+      "edition": "03",
+      "editionLabel": "May/June",
+      "filePath": "public/newsletter_archive/2013-03-may-jun.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2013-04",
+      "title": "SAPA PHILATEX July/August 2013",
+      "year": 2013,
+      "edition": "04",
+      "editionLabel": "July/August",
+      "filePath": "public/newsletter_archive/2013-04-jul-aug.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2013-05",
+      "title": "SAPA PHILATEX September/October 2013",
+      "year": 2013,
+      "edition": "05",
+      "editionLabel": "September/October",
+      "filePath": "public/newsletter_archive/2013-05-sep-oct.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2013-06",
+      "title": "SAPA PHILATEX November/December 2013",
+      "year": 2013,
+      "edition": "06",
+      "editionLabel": "November/December",
+      "filePath": "public/newsletter_archive/2013-06-nov-dec.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2014-01",
+      "title": "SAPA PHILATEX January/February 2014",
+      "year": 2014,
+      "edition": "01",
+      "editionLabel": "January/February",
+      "filePath": "public/newsletter_archive/2014-01-jan-feb.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2014-02",
+      "title": "SAPA PHILATEX March/April 2014",
+      "year": 2014,
+      "edition": "02",
+      "editionLabel": "March/April",
+      "filePath": "public/newsletter_archive/2014-02-mar-apr.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2014-03",
+      "title": "SAPA PHILATEX May/June 2014",
+      "year": 2014,
+      "edition": "03",
+      "editionLabel": "May/June",
+      "filePath": "public/newsletter_archive/2014-03-may-jun.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2014-04",
+      "title": "SAPA PHILATEX July/August 2014",
+      "year": 2014,
+      "edition": "04",
+      "editionLabel": "July/August",
+      "filePath": "public/newsletter_archive/2014-04-jul-aug.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2014-05",
+      "title": "SAPA PHILATEX September/October 2014",
+      "year": 2014,
+      "edition": "05",
+      "editionLabel": "September/October",
+      "filePath": "public/newsletter_archive/2014-05-sep-oct.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2014-06",
+      "title": "SAPA PHILATEX November/December 2014",
+      "year": 2014,
+      "edition": "06",
+      "editionLabel": "November/December",
+      "filePath": "public/newsletter_archive/2014-06-nov-dec.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2015-01",
+      "title": "SAPA PHILATEX January/February 2015",
+      "year": 2015,
+      "edition": "01",
+      "editionLabel": "January/February",
+      "filePath": "public/newsletter_archive/2015-01-jan-feb.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2015-02",
+      "title": "SAPA PHILATEX March/April 2015",
+      "year": 2015,
+      "edition": "02",
+      "editionLabel": "March/April",
+      "filePath": "public/newsletter_archive/2015-02-mar-apr.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2015-03",
+      "title": "SAPA PHILATEX May/June 2015",
+      "year": 2015,
+      "edition": "03",
+      "editionLabel": "May/June",
+      "filePath": "public/newsletter_archive/2015-03-may-jun.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2015-04",
+      "title": "SAPA PHILATEX July/August 2015",
+      "year": 2015,
+      "edition": "04",
+      "editionLabel": "July/August",
+      "filePath": "public/newsletter_archive/2015-04-jul-aug.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2015-05",
+      "title": "SAPA PHILATEX September/October 2015",
+      "year": 2015,
+      "edition": "05",
+      "editionLabel": "September/October",
+      "filePath": "public/newsletter_archive/2015-05-sep-oct.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2015-06",
+      "title": "SAPA PHILATEX November/December 2015",
+      "year": 2015,
+      "edition": "06",
+      "editionLabel": "November/December",
+      "filePath": "public/newsletter_archive/2015-06-nov-dec.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2016-01",
+      "title": "SAPA PHILATEX January/February 2016",
+      "year": 2016,
+      "edition": "01",
+      "editionLabel": "January/February",
+      "filePath": "public/newsletter_archive/2016-01-jan-feb.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2016-02",
+      "title": "SAPA PHILATEX March/April 2016",
+      "year": 2016,
+      "edition": "02",
+      "editionLabel": "March/April",
+      "filePath": "public/newsletter_archive/2016-02-mar-apr.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2016-03",
+      "title": "SAPA PHILATEX May/June 2016",
+      "year": 2016,
+      "edition": "03",
+      "editionLabel": "May/June",
+      "filePath": "public/newsletter_archive/2016-03-may-jun.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2016-04",
+      "title": "SAPA PHILATEX July/August 2016",
+      "year": 2016,
+      "edition": "04",
+      "editionLabel": "July/August",
+      "filePath": "public/newsletter_archive/2016-04-jul-aug.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2016-05",
+      "title": "SAPA PHILATEX September/October 2016",
+      "year": 2016,
+      "edition": "05",
+      "editionLabel": "September/October",
+      "filePath": "public/newsletter_archive/2016-05-sep-oct.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2016-06",
+      "title": "SAPA PHILATEX November/December 2016",
+      "year": 2016,
+      "edition": "06",
+      "editionLabel": "November/December",
+      "filePath": "public/newsletter_archive/2016-06-nov-dec.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2017-01",
+      "title": "SAPA PHILATEX January/February 2017",
+      "year": 2017,
+      "edition": "01",
+      "editionLabel": "January/February",
+      "filePath": "public/newsletter_archive/2017-01-jan-feb.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2017-02",
+      "title": "SAPA PHILATEX March/April 2017",
+      "year": 2017,
+      "edition": "02",
+      "editionLabel": "March/April",
+      "filePath": "public/newsletter_archive/2017-02-mar-apr.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2017-03",
+      "title": "SAPA PHILATEX May/June 2017",
+      "year": 2017,
+      "edition": "03",
+      "editionLabel": "May/June",
+      "filePath": "public/newsletter_archive/2017-03-may-jun.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2017-04",
+      "title": "SAPA PHILATEX July/August 2017",
+      "year": 2017,
+      "edition": "04",
+      "editionLabel": "July/August",
+      "filePath": "public/newsletter_archive/2017-04-jul-aug.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2017-05",
+      "title": "SAPA PHILATEX September/October 2017",
+      "year": 2017,
+      "edition": "05",
+      "editionLabel": "September/October",
+      "filePath": "public/newsletter_archive/2017-05-sep-oct.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2017-06",
+      "title": "SAPA PHILATEX November/December 2017",
+      "year": 2017,
+      "edition": "06",
+      "editionLabel": "November/December",
+      "filePath": "public/newsletter_archive/2017-06-nov-dec.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2018-01",
+      "title": "SAPA PHILATEX January/February 2018",
+      "year": 2018,
+      "edition": "01",
+      "editionLabel": "January/February",
+      "filePath": "public/newsletter_archive/2018-01-jan-feb.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2018-02",
+      "title": "SAPA PHILATEX March/April 2018",
+      "year": 2018,
+      "edition": "02",
+      "editionLabel": "March/April",
+      "filePath": "public/newsletter_archive/2018-02-mar-apr.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2018-03",
+      "title": "SAPA PHILATEX May/June 2018",
+      "year": 2018,
+      "edition": "03",
+      "editionLabel": "May/June",
+      "filePath": "public/newsletter_archive/2018-03-may-jun.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2018-04",
+      "title": "SAPA PHILATEX July/August 2018",
+      "year": 2018,
+      "edition": "04",
+      "editionLabel": "July/August",
+      "filePath": "public/newsletter_archive/2018-04-jul-aug.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2018-05",
+      "title": "SAPA PHILATEX September/October 2018",
+      "year": 2018,
+      "edition": "05",
+      "editionLabel": "September/October",
+      "filePath": "public/newsletter_archive/2018-05-sep-oct.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2018-06",
+      "title": "SAPA PHILATEX November/December 2018",
+      "year": 2018,
+      "edition": "06",
+      "editionLabel": "November/December",
+      "filePath": "public/newsletter_archive/2018-06-nov-dec.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2019-01",
+      "title": "SAPA PHILATEX January/February 2019",
+      "year": 2019,
+      "edition": "01",
+      "editionLabel": "January/February",
+      "filePath": "public/newsletter_archive/2019-01-jan-feb.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2019-02",
+      "title": "SAPA PHILATEX March/April 2019",
+      "year": 2019,
+      "edition": "02",
+      "editionLabel": "March/April",
+      "filePath": "public/newsletter_archive/2019-02-mar-apr.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2019-03",
+      "title": "SAPA PHILATEX May/June 2019",
+      "year": 2019,
+      "edition": "03",
+      "editionLabel": "May/June",
+      "filePath": "public/newsletter_archive/2019-03-may-jun.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2019-04",
+      "title": "SAPA PHILATEX July/August 2019",
+      "year": 2019,
+      "edition": "04",
+      "editionLabel": "July/August",
+      "filePath": "public/newsletter_archive/2019-04-jul-aug.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2019-05",
+      "title": "SAPA PHILATEX September/October 2019",
+      "year": 2019,
+      "edition": "05",
+      "editionLabel": "September/October",
+      "filePath": "public/newsletter_archive/2019-05-sep-oct.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2019-06",
+      "title": "SAPA PHILATEX November/December 2019",
+      "year": 2019,
+      "edition": "06",
+      "editionLabel": "November/December",
+      "filePath": "public/newsletter_archive/2019-06-nov-dec.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2020-01",
+      "title": "SAPA PHILATEX January/February 2020",
+      "year": 2020,
+      "edition": "01",
+      "editionLabel": "January/February",
+      "filePath": "public/newsletter_archive/2020-01-jan-feb.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2020-02",
+      "title": "SAPA PHILATEX March/April 2020",
+      "year": 2020,
+      "edition": "02",
+      "editionLabel": "March/April",
+      "filePath": "public/newsletter_archive/2020-02-mar-apr.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2020-special-covid",
+      "title": "SAPA PHILATEX Special Covid-19 Edition 2020",
+      "year": 2020,
+      "edition": "special-covid",
+      "editionLabel": "Special Covid-19 Edition",
+      "filePath": "public/newsletter_archive/2020-special-covid.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2020-03",
+      "title": "SAPA PHILATEX May/June 2020",
+      "year": 2020,
+      "edition": "03",
+      "editionLabel": "May/June",
+      "filePath": "public/newsletter_archive/2020-03-may-jun.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2020-04",
+      "title": "SAPA PHILATEX July/August 2020",
+      "year": 2020,
+      "edition": "04",
+      "editionLabel": "July/August",
+      "filePath": "public/newsletter_archive/2020-04-jul-aug.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2020-05",
+      "title": "SAPA PHILATEX September/October 2020",
+      "year": 2020,
+      "edition": "05",
+      "editionLabel": "September/October",
+      "filePath": "public/newsletter_archive/2020-05-sep-oct.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2020-06",
+      "title": "SAPA PHILATEX November/December 2020",
+      "year": 2020,
+      "edition": "06",
+      "editionLabel": "November/December",
+      "filePath": "public/newsletter_archive/2020-06-nov-dec.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2021-01",
+      "title": "SAPA PHILATEX January/February 2021",
+      "year": 2021,
+      "edition": "01",
+      "editionLabel": "January/February",
+      "filePath": "public/newsletter_archive/2021-01-jan-feb.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2021-02",
+      "title": "SAPA PHILATEX March/April 2021",
+      "year": 2021,
+      "edition": "02",
+      "editionLabel": "March/April",
+      "filePath": "public/newsletter_archive/2021-02-mar-apr.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2021-03",
+      "title": "SAPA PHILATEX May/June 2021",
+      "year": 2021,
+      "edition": "03",
+      "editionLabel": "May/June",
+      "filePath": "public/newsletter_archive/2021-03-may-jun.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2021-04",
+      "title": "SAPA PHILATEX July/August 2021",
+      "year": 2021,
+      "edition": "04",
+      "editionLabel": "July/August",
+      "filePath": "public/newsletter_archive/2021-04-jul-aug.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2021-05",
+      "title": "SAPA PHILATEX September/October 2021",
+      "year": 2021,
+      "edition": "05",
+      "editionLabel": "September/October",
+      "filePath": "public/newsletter_archive/2021-05-sep-oct.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2021-06",
+      "title": "SAPA PHILATEX November/December 2021",
+      "year": 2021,
+      "edition": "06",
+      "editionLabel": "November/December",
+      "filePath": "public/newsletter_archive/2021-06-nov-dec.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2022-01",
+      "title": "SAPA PHILATEX January/February 2022",
+      "year": 2022,
+      "edition": "01",
+      "editionLabel": "January/February",
+      "filePath": "public/newsletter_archive/2022-01-jan-feb.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2022-02",
+      "title": "SAPA PHILATEX March/April 2022",
+      "year": 2022,
+      "edition": "02",
+      "editionLabel": "March/April",
+      "filePath": "public/newsletter_archive/2022-02-mar-apr.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2022-03",
+      "title": "SAPA PHILATEX May/June 2022",
+      "year": 2022,
+      "edition": "03",
+      "editionLabel": "May/June",
+      "filePath": "public/newsletter_archive/2022-03-may-jun.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2022-04",
+      "title": "SAPA PHILATEX July/August 2022",
+      "year": 2022,
+      "edition": "04",
+      "editionLabel": "July/August",
+      "filePath": "public/newsletter_archive/2022-04-jul-aug.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2022-05",
+      "title": "SAPA PHILATEX September/October 2022",
+      "year": 2022,
+      "edition": "05",
+      "editionLabel": "September/October",
+      "filePath": "public/newsletter_archive/2022-05-sep-oct.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2022-06",
+      "title": "SAPA PHILATEX November/December 2022",
+      "year": 2022,
+      "edition": "06",
+      "editionLabel": "November/December",
+      "filePath": "public/newsletter_archive/2022-06-nov-dec.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2023-01",
+      "title": "SAPA PHILATEX January/February 2023",
+      "year": 2023,
+      "edition": "01",
+      "editionLabel": "January/February",
+      "filePath": "public/newsletter_archive/2023-01-jan-feb.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2023-02",
+      "title": "SAPA PHILATEX March/April 2023",
+      "year": 2023,
+      "edition": "02",
+      "editionLabel": "March/April",
+      "filePath": "public/newsletter_archive/2023-02-mar-apr.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2023-03",
+      "title": "SAPA PHILATEX May/June 2023",
+      "year": 2023,
+      "edition": "03",
+      "editionLabel": "May/June",
+      "filePath": "public/newsletter_archive/2023-03-may-jun.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2023-04",
+      "title": "SAPA PHILATEX July/August 2023",
+      "year": 2023,
+      "edition": "04",
+      "editionLabel": "July/August",
+      "filePath": "public/newsletter_archive/2023-04-jul-aug.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2023-05",
+      "title": "SAPA PHILATEX September/October 2023",
+      "year": 2023,
+      "edition": "05",
+      "editionLabel": "September/October",
+      "filePath": "public/newsletter_archive/2023-05-sep-oct.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2023-06",
+      "title": "SAPA PHILATEX November/December 2023",
+      "year": 2023,
+      "edition": "06",
+      "editionLabel": "November/December",
+      "filePath": "public/newsletter_archive/2023-06-nov-dec.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2024-Q2",
+      "title": "SAPA PHILATEX Second Quarter 2024",
+      "year": 2024,
+      "edition": "Q2",
+      "editionLabel": "Second Quarter: April, May, June",
+      "filePath": "public/newsletter_archive/2024-q2-apr-may-jun.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2024-Q3",
+      "title": "SAPA PHILATEX Third Quarter 2024",
+      "year": 2024,
+      "edition": "Q3",
+      "editionLabel": "Third Quarter: July, August, September",
+      "filePath": "public/newsletter_archive/2024-q3-jul-aug-sep.pdf",
+      "status": "available"
+    },
+    {
+      "id": "2024-Q4",
+      "title": "SAPA PHILATEX Fourth Quarter 2024",
+      "year": 2024,
+      "edition": "Q4",
+      "editionLabel": "Fourth Quarter: October, November, December",
+      "filePath": "public/newsletter_archive/2024-q4-oct-nov-dec.pdf",
+      "status": "available"
+    }
+  ],
+  "metadata": {
+    "lastUpdated": "2026-03-09T00:00:00.000Z",
+    "totalIssues": 99,
+    "availableIssues": 98,
+    "yearRange": {
+      "start": 2008,
+      "end": 2024
+    },
+    "version": "1.0"
+  }
+}

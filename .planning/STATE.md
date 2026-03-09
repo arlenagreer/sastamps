@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Restore Newsletter Archive
-status: executing
-stopped_at: Phase 4 context gathered
-last_updated: "2026-03-09T17:04:43.798Z"
-last_activity: 2026-03-09 — Phase 06 plan 01 executed (3 tasks, archived newsletters rendered)
+status: archived
+stopped_at: Milestone v1.1 archived
+last_updated: "2026-03-09T18:45:00.000Z"
+last_activity: 2026-03-09 — v1.1 milestone archived (3 phases, 4 plans, 11 requirements)
 progress:
   total_phases: 3
-  completed_phases: 2
-  total_plans: 3
-  completed_plans: 3
-  percent: 0
+  completed_phases: 3
+  total_plans: 4
+  completed_plans: 4
+  percent: 100
 ---
 
 # Project State
@@ -21,16 +21,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-09)
 
 **Core value:** Primary digital presence for SAPA — meeting schedules, newsletters, membership info, educational resources
-**Current focus:** Phase 6 — Archive Page (v1.1 Restore Newsletter Archive)
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-Phase: 6 of 6 (Archive Page)
-Plan: 1 of 1 in current phase
-Status: Plan 06-01 complete, phase executing
-Last activity: 2026-03-09 — Phase 06 plan 01 executed (3 tasks, archived newsletters rendered)
-
-Progress: [░░░░░░░░░░] 0% (v1.1 — 0/3 phases complete)
+Milestone v1.1 archived. Ready for next milestone.
+Last activity: 2026-03-09 - Completed quick task 1: Rebuild stale archive JS bundle to show older newsletter links
 
 ## Performance Metrics
 
@@ -39,21 +35,15 @@ Progress: [░░░░░░░░░░] 0% (v1.1 — 0/3 phases complete)
 - Average duration: 2.1 min
 - Total execution time: ~15 min
 
-**By Phase:**
-
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 1 | 2 | ~4 min | 2 min |
-| 2 | 2 | 3 min | 1.5 min |
-| 3 | 3 | 8 min | 2.7 min |
-
-*Updated after each plan completion*
+**Velocity (v1.1):**
+- Total plans completed: 4
+- Timeline: 1 day (2026-03-09)
 
 ## Accumulated Context
 
 ### Decisions
 
-All v1.0 decisions archived in PROJECT.md Key Decisions table.
+All v1.0 and v1.1 decisions archived in PROJECT.md Key Decisions table.
 
 ### Pending Todos
 
@@ -66,8 +56,8 @@ All v1.0 decisions archived in PROJECT.md Key Decisions table.
 
 None.
 
-## Session Continuity
+### Quick Tasks Completed
 
-Last session: 2026-03-09T16:39:31.418Z
-Stopped at: Phase 4 context gathered
-Resume file: .planning/phases/04-pdf-downloads/04-CONTEXT.md
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 1 | Rebuild stale archive JS bundle to show older newsletter links | 2026-03-09 | dc4cf71 | [1-i-don-t-see-the-links-to-older-editions-](./quick/1-i-don-t-see-the-links-to-older-editions-/) |
