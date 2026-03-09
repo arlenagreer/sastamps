@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Restore Newsletter Archive
 status: planning
-stopped_at: Phase 6 context gathered
-last_updated: "2026-03-09T16:39:13.658Z"
+stopped_at: Phase 5 context gathered
+last_updated: "2026-03-09T16:39:27.697Z"
 last_activity: 2026-03-09 — v1.1 roadmap created (3 phases, 11 requirements mapped)
 progress:
   total_phases: 3
@@ -68,6 +68,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-09T16:39:13.656Z
-Stopped at: Phase 6 context gathered
-Resume file: .planning/phases/06-archive-page/06-CONTEXT.md
+Last session: 2026-03-09T16:39:27.695Z
+Stopped at: Phase 5 context gathered
+Resume file: .planning/milestones/v1.1-phases/05-reference-data/05-CONTEXT.md
