@@ -61,6 +61,9 @@ async function build() {
         console.log('1. Optimizing CSS...');
         await runCommand('node', ['scripts/extract-critical-css.js']);
 
+        console.log('\n1b. Fixing HTML validation issues...');
+        await runCommand('node', ['scripts/fix-html-validation.js']);
+
         console.log('\n2. Optimizing images...');
         await runCommand('node', ['scripts/optimize-images.js']);
         await runCommand('node', ['scripts/update-image-tags.js']);
