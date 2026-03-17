@@ -15,7 +15,7 @@ function fixHTMLFile(filePath) {
   content = content.split('\n').map(line => line.trimEnd()).join('\n');
   if (content.length !== originalLength) {
     changesMade = true;
-    console.log(`  ✓ Removed trailing whitespace`);
+    console.log('  ✓ Removed trailing whitespace');
   }
   
   // 2. Fix duplicate critical-css IDs
@@ -33,35 +33,44 @@ function fixHTMLFile(filePath) {
     console.log(`  ✓ Fixed ${criticalCssCount - 1} duplicate critical-css IDs`);
   }
   
-  // 3. Fix raw ampersands (must be &amp;)
-  const ampersandRegex = /&(?!amp;|lt;|gt;|quot;|#\d+;|#x[0-9a-fA-F]+;)/g;
-  const ampersandMatches = content.match(ampersandRegex);
-  if (ampersandMatches) {
-    content = content.replace(ampersandRegex, '&amp;');
+  // 3. Fix raw ampersands in HTML content only (skip <style> and <script> blocks)
+  let ampersandFixCount = 0;
+  content = content.replace(
+    /(<style[\s>][\s\S]*?<\/style>|<script[\s>][\s\S]*?<\/script>)|(&(?![a-zA-Z][a-zA-Z0-9]*;|#\d+;|#x[0-9a-fA-F]+;))/gi,
+    (match, block, _rawAmp) => {
+      if (block) {
+        return block; // Preserve <style>/<script> content unchanged
+      }
+      ampersandFixCount++;
+      return '&amp;';
+    }
+  );
+  if (ampersandFixCount > 0) {
     changesMade = true;
-    console.log(`  ✓ Fixed ${ampersandMatches.length} raw ampersands`);
+    console.log(`  ✓ Fixed ${ampersandFixCount} raw ampersands`);
   }
   
   // 4. Remove redundant role="contentinfo" on footer
   const footerRoleRegex = /<footer([^>]*)\s+role="contentinfo"([^>]*)>/g;
   if (footerRoleRegex.test(content)) {
+    footerRoleRegex.lastIndex = 0; // Reset after .test()
     content = content.replace(footerRoleRegex, '<footer$1$2>');
     changesMade = true;
-    console.log(`  ✓ Removed redundant role="contentinfo" from footer`);
+    console.log('  ✓ Removed redundant role="contentinfo" from footer');
   }
   
   // 5. Ensure file ends with newline
   if (!content.endsWith('\n')) {
     content += '\n';
     changesMade = true;
-    console.log(`  ✓ Added final newline`);
+    console.log('  ✓ Added final newline');
   }
   
   if (changesMade) {
     fs.writeFileSync(filePath, content, 'utf8');
-    console.log(`  ✅ File updated successfully`);
+    console.log('  ✅ File updated successfully');
   } else {
-    console.log(`  ℹ️  No changes needed`);
+    console.log('  ℹ️  No changes needed');
   }
   
   return changesMade;
