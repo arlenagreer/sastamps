@@ -4,7 +4,7 @@
  */
 
 import { debounce } from '../utils/performance.js';
-import { safeQuerySelector } from '../utils/safe-dom.js';
+import { safeQuerySelector, escapeHTML } from '../utils/safe-dom.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { createLogger } from '../utils/logger.js';
 import {
@@ -108,7 +108,7 @@ async function initializeMeetingsCalendar() {
     logger.error('Failed to initialize meetings calendar:', error);
     calendarContainer.innerHTML = `
             <div class="error-message">
-                <p>${ERROR_MESSAGES.CALENDAR_UNAVAILABLE}</p>
+                <p>${escapeHTML(ERROR_MESSAGES.CALENDAR_UNAVAILABLE)}</p>
                 <button onclick="location.reload()">Refresh Page</button>
             </div>
         `;
@@ -215,37 +215,37 @@ async function loadMeetingsList(container) {
       .sort((a, b) => new Date(`${a.date  }T00:00:00`) - new Date(`${b.date  }T00:00:00`)); // Sort ascending for chronological order
 
     const html = meetings.map(meeting => `
-            <article class="meeting-item" data-date="${meeting.date}" data-type="${meeting.type || 'regular'}">
+            <article class="meeting-item" data-date="${escapeHTML(meeting.date)}" data-type="${escapeHTML(meeting.type || 'regular')}">
                 <header class="meeting-header">
-                    <h3>${meeting.title}</h3>
-                    <time datetime="${meeting.date}" class="meeting-date">
-                        ${new Date(`${meeting.date  }T00:00:00`).toLocaleDateString('en-US', {
+                    <h3>${escapeHTML(meeting.title)}</h3>
+                    <time datetime="${escapeHTML(meeting.date)}" class="meeting-date">
+                        ${escapeHTML(new Date(`${meeting.date}T00:00:00`).toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric'
-  })}
+  }))}
                     </time>
                 </header>
-                
+
                 <div class="meeting-details">
-                    <p><strong>Time:</strong> ${formatMeetingTime(meeting.time)}</p>
-                    <p><strong>Location:</strong> ${formatMeetingLocation(meeting.location)}</p>
-                    ${meeting.description ? `<p class="meeting-description">${meeting.description}</p>` : ''}
+                    <p><strong>Time:</strong> ${escapeHTML(formatMeetingTime(meeting.time))}</p>
+                    <p><strong>Location:</strong> ${escapeHTML(formatMeetingLocation(meeting.location))}</p>
+                    ${meeting.description ? `<p class="meeting-description">${escapeHTML(meeting.description)}</p>` : ''}
                     ${meeting.agenda ? `
                         <details class="meeting-agenda">
                             <summary>Agenda</summary>
                             <ul>
-                                ${meeting.agenda.map(item => `<li>${item}</li>`).join('')}
+                                ${meeting.agenda.map(item => `<li>${escapeHTML(typeof item === 'string' ? item : item.item || '')}</li>`).join('')}
                             </ul>
                         </details>
                     ` : ''}
                 </div>
-                
+
                 <footer class="meeting-actions">
-                    <button class="btn-rsvp" data-meeting-id="${meeting.id}">RSVP</button>
-                    <button class="btn-reminder" data-meeting-id="${meeting.id}">Set Reminder</button>
-                    ${meeting.calendarLink ? `<a href="${meeting.calendarLink}" class="btn-calendar">Add to Calendar</a>` : ''}
+                    <button class="btn-rsvp" data-meeting-id="${escapeHTML(meeting.id)}">RSVP</button>
+                    <button class="btn-reminder" data-meeting-id="${escapeHTML(meeting.id)}">Set Reminder</button>
+                    ${meeting.calendarLink ? `<a href="${escapeHTML(meeting.calendarLink)}" class="btn-calendar">Add to Calendar</a>` : ''}
                 </footer>
             </article>
         `).join('');
@@ -257,7 +257,7 @@ async function loadMeetingsList(container) {
 
   } catch (error) {
     logger.error('Failed to load meetings list:', error);
-    container.innerHTML = `<p class="error-message">${ERROR_MESSAGES.MEETING_LOAD_FAILED}</p>`;
+    container.innerHTML = `<p class="error-message">${escapeHTML(ERROR_MESSAGES.MEETING_LOAD_FAILED)}</p>`;
   }
 }
 
@@ -282,7 +282,7 @@ function initializeMeetingFilters(container) {
             <label for="type-filter">Type:</label>
             <select id="type-filter">
                 ${FILTER_OPTIONS.MEETING_TYPES.map(type =>
-    `<option value="${type.value}">${type.label}</option>`
+    `<option value="${escapeHTML(type.value)}">${escapeHTML(type.label)}</option>`
   ).join('')}
             </select>
         </div>
@@ -428,7 +428,7 @@ function initializeRSVPSystem() {
   // Load existing RSVPs
   const rsvps = JSON.parse(localStorage.getItem(STORAGE_KEYS.MEETING_RSVPS) || '{}');
   Object.keys(rsvps).forEach(meetingId => {
-    const button = document.querySelector(`[data-meeting-id="${meetingId}"]`);
+    const button = Array.from(document.querySelectorAll('[data-meeting-id]')).find(el => el.dataset.meetingId === meetingId);
     if (button && button.classList.contains('btn-rsvp')) {
       button.textContent = 'RSVP Confirmed';
       button.classList.add('rsvp-confirmed');

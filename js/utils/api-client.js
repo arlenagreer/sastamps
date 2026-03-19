@@ -276,4 +276,9 @@ export function clearExpiredCache() {
 }
 
 // Clear expired cache periodically
-setInterval(clearExpiredCache, TIMING.REMINDER_CHECK_INTERVAL);
+let _cacheCleanupInterval = setInterval(clearExpiredCache, TIMING.REMINDER_CHECK_INTERVAL);
+
+export function stopCacheCleanup() {
+  clearInterval(_cacheCleanupInterval);
+  _cacheCleanupInterval = null;
+}

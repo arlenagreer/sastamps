@@ -5,8 +5,11 @@
 
 const crypto = require('crypto');
 
-// CSRF secret (in production, use environment variable)
-const CSRF_SECRET = process.env.CSRF_SECRET || 'fallback-secret-key-change-in-production';
+// CSRF secret - must be configured via environment variable
+const CSRF_SECRET = process.env.CSRF_SECRET;
+if (!CSRF_SECRET) {
+  throw new Error('CSRF_SECRET environment variable is required');
+}
 
 // Email validation regex
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -104,10 +107,16 @@ function validateCSRFToken(token) {
         .update(timestamp)
         .digest('hex');
     
-    return crypto.timingSafeEqual(
-        Buffer.from(signature, 'hex'),
-        Buffer.from(expectedSignature, 'hex')
-    );
+    try {
+        const sigBuffer = Buffer.from(signature, 'hex');
+        const expectedBuffer = Buffer.from(expectedSignature, 'hex');
+        if (sigBuffer.length !== expectedBuffer.length) {
+            return false;
+        }
+        return crypto.timingSafeEqual(sigBuffer, expectedBuffer);
+    } catch {
+        return false;
+    }
 }
 
 exports.handler = async (event, context) => {

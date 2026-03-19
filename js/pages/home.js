@@ -5,7 +5,7 @@
 
 // Core utilities (will be tree-shaken if not used)
 import { debounce } from '../utils/performance.js';
-import { safeQuerySelector } from '../utils/safe-dom.js';
+import { safeQuerySelector, escapeHTML } from '../utils/safe-dom.js';
 import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('HomePage');
@@ -179,9 +179,9 @@ async function loadRecentNewsletters(container) {
 
     const html = recentNewsletters.map(newsletter => `
             <div class="newsletter-preview-item">
-                <h4><a href="${newsletter.pdfUrl}" target="_blank">${newsletter.title}</a></h4>
-                <p class="newsletter-date">${new Date(newsletter.date).toLocaleDateString()}</p>
-                <p class="newsletter-summary">${newsletter.summary || 'Latest newsletter from SAPA'}</p>
+                <h4><a href="${escapeHTML(newsletter.pdfUrl)}" target="_blank" rel="noopener">${escapeHTML(newsletter.title)}</a></h4>
+                <p class="newsletter-date">${escapeHTML(new Date(newsletter.date).toLocaleDateString())}</p>
+                <p class="newsletter-summary">${escapeHTML(newsletter.summary || 'Latest newsletter from SAPA')}</p>
             </div>
         `).join('');
 

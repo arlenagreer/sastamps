@@ -3,6 +3,7 @@
  * Tree-shakable global error handling setup
  */
 
+import { escapeHTML } from './safe-dom.js';
 import { createLogger } from './logger.js';
 import { ERROR_MESSAGES, TIMING, CSS_CLASSES as _CSS_CLASSES } from '../constants/index.js';
 import { ENV } from '../config/index.js';
@@ -55,7 +56,7 @@ function showErrorBanner(message) {
   banner.className = 'error-banner';
   banner.innerHTML = `
         <div class="error-content">
-            <span class="error-message">${message}</span>
+            <span class="error-message">${escapeHTML(message)}</span>
             <button class="error-dismiss" aria-label="Dismiss error">×</button>
         </div>
     `;

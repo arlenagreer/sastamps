@@ -3,6 +3,7 @@
  * Provides opt-in localStorage-based reminders for upcoming SAPA meetings
  */
 
+import { escapeHTML } from './utils/safe-dom.js';
 import {
   REMINDER,
   TIMING,
@@ -326,11 +327,11 @@ export class ReminderSystem {
     notification.innerHTML = `
             <div class="reminder-content">
                 <div class="reminder-header">
-                    <strong>${options.title}</strong>
+                    <strong>${escapeHTML(options.title)}</strong>
                     <button class="reminder-close" aria-label="Close notification">×</button>
                 </div>
-                <div class="reminder-message">${options.message}</div>
-                <div class="reminder-details">${options.details}</div>
+                <div class="reminder-message">${escapeHTML(options.message)}</div>
+                <div class="reminder-details">${escapeHTML(options.details)}</div>
                 <div class="reminder-actions">
                     <button class="btn btn-sm btn-primary reminder-view">View Details</button>
                     <button class="btn btn-sm btn-light reminder-dismiss">Dismiss</button>

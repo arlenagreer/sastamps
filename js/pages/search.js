@@ -345,7 +345,7 @@ function showSearchError(message) {
     container.innerHTML = `
             <div class="search-error">
                 <h3>Search Error</h3>
-                <p>${message}</p>
+                <p>${escapeHTML(message)}</p>
                 <button onclick="location.reload()" class="btn-secondary">Refresh Page</button>
             </div>
         `;
@@ -377,11 +377,16 @@ function applySearchFilters() {
 }
 
 function clearSearchFilters() {
-  safeQuerySelector('#content-type-filter').value = '';
-  safeQuerySelector('#date-range-filter').value = '';
-  safeQuerySelector('#date-from').value = '';
-  safeQuerySelector('#date-to').value = '';
-  safeQuerySelector('#sort-filter').value = 'relevance';
+  const contentType = safeQuerySelector('#content-type-filter');
+  if (contentType) contentType.value = '';
+  const dateRange = safeQuerySelector('#date-range-filter');
+  if (dateRange) dateRange.value = '';
+  const dateFrom = safeQuerySelector('#date-from');
+  if (dateFrom) dateFrom.value = '';
+  const dateTo = safeQuerySelector('#date-to');
+  if (dateTo) dateTo.value = '';
+  const sortFilter = safeQuerySelector('#sort-filter');
+  if (sortFilter) sortFilter.value = 'relevance';
 
   // Hide custom date range
   const customRange = safeQuerySelector('.date-range-custom');

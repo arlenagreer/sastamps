@@ -3,6 +3,8 @@
  * Handles modal dialogs for event details and other content
  */
 
+import { escapeHTML } from './utils/safe-dom.js';
+
 export class Modal {
   constructor() {
     this.modal = null;
@@ -178,11 +180,11 @@ export class Modal {
                 <div class="event-meta">
                     <div class="event-date">
                         <i class="fas fa-calendar"></i>
-                        <span>${formattedDate}</span>
+                        <span>${escapeHTML(formattedDate)}</span>
                     </div>
                     <div class="event-type">
                         <i class="fas fa-tag"></i>
-                        <span class="type-badge type-${meeting.type}">${this.capitalizeFirst(meeting.type)}</span>
+                        <span class="type-badge type-${escapeHTML(meeting.type)}">${escapeHTML(this.capitalizeFirst(meeting.type))}</span>
                     </div>
                 </div>
 
@@ -210,9 +212,9 @@ export class Modal {
             <div class="detail-section">
                 <h3><i class="fas fa-clock"></i> Schedule</h3>
                 <div class="time-details">
-                    ${time.doorsOpen ? `<div class="time-item"><strong>Doors Open:</strong> ${time.doorsOpen}</div>` : ''}
-                    ${time.meetingStart ? `<div class="time-item"><strong>Meeting Start:</strong> ${time.meetingStart}</div>` : ''}
-                    ${time.meetingEnd ? `<div class="time-item"><strong>Meeting End:</strong> ${time.meetingEnd}</div>` : ''}
+                    ${time.doorsOpen ? `<div class="time-item"><strong>Doors Open:</strong> ${escapeHTML(time.doorsOpen)}</div>` : ''}
+                    ${time.meetingStart ? `<div class="time-item"><strong>Meeting Start:</strong> ${escapeHTML(time.meetingStart)}</div>` : ''}
+                    ${time.meetingEnd ? `<div class="time-item"><strong>Meeting End:</strong> ${escapeHTML(time.meetingEnd)}</div>` : ''}
                 </div>
             </div>
         `;
@@ -232,10 +234,10 @@ export class Modal {
             <div class="detail-section">
                 <h3><i class="fas fa-map-marker-alt"></i> Location</h3>
                 <div class="location-details">
-                    <div class="location-name">${location.name}</div>
-                    ${location.building ? `<div class="location-building">${location.building}</div>` : ''}
-                    ${location.room ? `<div class="location-room">${location.room}</div>` : ''}
-                    ${fullAddress ? `<div class="location-address">${fullAddress}</div>` : ''}
+                    <div class="location-name">${escapeHTML(location.name)}</div>
+                    ${location.building ? `<div class="location-building">${escapeHTML(location.building)}</div>` : ''}
+                    ${location.room ? `<div class="location-room">${escapeHTML(location.room)}</div>` : ''}
+                    ${fullAddress ? `<div class="location-address">${escapeHTML(fullAddress)}</div>` : ''}
                 </div>
             </div>
         `;
@@ -251,8 +253,8 @@ export class Modal {
             <div class="detail-section">
                 <h3><i class="fas fa-user"></i> Presenter</h3>
                 <div class="presenter-details">
-                    <div class="presenter-name">${presenter.name}</div>
-                    ${presenter.bio ? `<div class="presenter-bio">${presenter.bio}</div>` : ''}
+                    <div class="presenter-name">${escapeHTML(presenter.name)}</div>
+                    ${presenter.bio ? `<div class="presenter-bio">${escapeHTML(presenter.bio)}</div>` : ''}
                 </div>
             </div>
         `;
@@ -268,7 +270,7 @@ export class Modal {
             <div class="detail-section">
                 <h3><i class="fas fa-info-circle"></i> Description</h3>
                 <div class="description-content">
-                    ${description}
+                    ${escapeHTML(description)}
                 </div>
             </div>
         `;
@@ -282,10 +284,10 @@ export class Modal {
   buildAgendaSection(agenda) {
     const agendaItems = agenda.map(item => `
             <div class="agenda-item">
-                <div class="agenda-time">${item.time}</div>
+                <div class="agenda-time">${escapeHTML(item.time)}</div>
                 <div class="agenda-content">
-                    <div class="agenda-title">${item.item}</div>
-                    ${item.presenter ? `<div class="agenda-presenter">Presenter: ${item.presenter}</div>` : ''}
+                    <div class="agenda-title">${escapeHTML(item.item)}</div>
+                    ${item.presenter ? `<div class="agenda-presenter">Presenter: ${escapeHTML(item.presenter)}</div>` : ''}
                 </div>
             </div>
         `).join('');
@@ -306,7 +308,7 @@ export class Modal {
      * @returns {string} HTML content
      */
   buildSpecialNotesSection(notes) {
-    const noteItems = notes.map(note => `<li>${note}</li>`).join('');
+    const noteItems = notes.map(note => `<li>${escapeHTML(note)}</li>`).join('');
 
     return `
             <div class="detail-section">
@@ -345,7 +347,7 @@ export class Modal {
     }
 
     if (requirements.bringItems && requirements.bringItems.length > 0) {
-      const items = requirements.bringItems.map(item => `<li>${item}</li>`).join('');
+      const items = requirements.bringItems.map(item => `<li>${escapeHTML(item)}</li>`).join('');
       content += `<div class="requirement-item">
                 <strong>Bring:</strong>
                 <ul>${items}</ul>
@@ -366,15 +368,15 @@ export class Modal {
             <div class="detail-section">
                 <h3><i class="fas fa-envelope"></i> Contact</h3>
                 <div class="contact-details">
-                    <div class="contact-name">${contact.name}</div>
+                    <div class="contact-name">${escapeHTML(contact.name)}</div>
                     ${contact.email ? `<div class="contact-email">
-                        <a href="mailto:${contact.email}">
-                            <i class="fas fa-envelope"></i> ${contact.email}
+                        <a href="mailto:${escapeHTML(contact.email)}">
+                            <i class="fas fa-envelope"></i> ${escapeHTML(contact.email)}
                         </a>
                     </div>` : ''}
                     ${contact.phone ? `<div class="contact-phone">
-                        <a href="tel:${contact.phone}">
-                            <i class="fas fa-phone"></i> ${contact.phone}
+                        <a href="tel:${escapeHTML(contact.phone)}">
+                            <i class="fas fa-phone"></i> ${escapeHTML(contact.phone)}
                         </a>
                     </div>` : ''}
                 </div>

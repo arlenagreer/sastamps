@@ -55,7 +55,6 @@ class SearchEngine {
 
     try {
       await this.ensureLunrLoaded();
-      await this.ensureLunrLoaded();
 
       // Load search index and documents in parallel
       const [indexData, documentsData] = await Promise.all([

@@ -5,7 +5,7 @@
 
 import { ErrorBoundary } from './error-boundary.js';
 import { calendarLazyLoader } from './lazy-loader.js';
-import { safeLocalStorageGet, safeLocalStorageSet, safeQuerySelector } from './utils/safe-dom.js';
+import { safeLocalStorageGet, safeLocalStorageSet, safeQuerySelector, escapeHTML } from './utils/safe-dom.js';
 import { createLogger } from './utils/logger.js';
 
 // Create logger for this module
@@ -1205,9 +1205,9 @@ function setupDynamicContentBoundaries() {
             if (newsletters && newsletters.length > 0) {
               element.innerHTML = newsletters.map(newsletter => `
                                 <div class="newsletter-item">
-                                    <h4>${newsletter.title}</h4>
-                                    <p>${newsletter.description}</p>
-                                    <a href="${newsletter.url}" target="_blank" class="btn btn-primary">
+                                    <h4>${escapeHTML(newsletter.title)}</h4>
+                                    <p>${escapeHTML(newsletter.description)}</p>
+                                    <a href="${escapeHTML(newsletter.url)}" target="_blank" rel="noopener" class="btn btn-primary">
                                         <i class="fas fa-file-pdf"></i> View PDF
                                     </a>
                                 </div>

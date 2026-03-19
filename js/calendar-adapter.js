@@ -3,6 +3,7 @@
  * Converts SAPA meeting data to Vanilla Calendar Pro format
  */
 
+import { escapeHTML } from './utils/safe-dom.js';
 import { createLogger } from './utils/logger.js';
 
 const logger = createLogger('CalendarAdapter');
@@ -149,9 +150,9 @@ export class CalendarAdapter {
     const typeClass = `event-${meeting.type}`;
 
     return `
-            <div class="calendar-event ${typeClass} ${statusClass}">
-                <div class="event-time">${timeDisplay}</div>
-                <div class="event-title">${meeting.title}</div>
+            <div class="calendar-event ${escapeHTML(typeClass)} ${escapeHTML(statusClass)}">
+                <div class="event-time">${escapeHTML(timeDisplay)}</div>
+                <div class="event-title">${escapeHTML(meeting.title)}</div>
                 ${meeting.cancelled ? '<div class="event-cancelled">CANCELLED</div>' : ''}
             </div>
         `;
@@ -164,17 +165,17 @@ export class CalendarAdapter {
      */
   buildPopoverHTML(meeting) {
     const location = meeting.location ?
-      `${meeting.location.name}<br>${meeting.location.address?.street}` :
+      `${escapeHTML(meeting.location.name)}<br>${escapeHTML(meeting.location.address?.street || '')}` :
       'Location TBD';
 
     const timeInfo = meeting.time ? `
             <strong>Schedule:</strong><br>
-            Doors: ${meeting.time.doorsOpen}<br>
-            Meeting: ${meeting.time.meetingStart} - ${meeting.time.meetingEnd}
+            Doors: ${escapeHTML(meeting.time.doorsOpen)}<br>
+            Meeting: ${escapeHTML(meeting.time.meetingStart)} - ${escapeHTML(meeting.time.meetingEnd)}
         ` : '';
 
     const presenter = meeting.presenter ?
-      `<br><strong>Presenter:</strong> ${meeting.presenter.name}` : '';
+      `<br><strong>Presenter:</strong> ${escapeHTML(meeting.presenter.name)}` : '';
 
     const cancelledNote = meeting.cancelled ?
       '<div class="cancelled-notice"><strong>⚠️ CANCELLED</strong></div>' : '';
@@ -182,16 +183,16 @@ export class CalendarAdapter {
     return `
             <div class="meeting-popover">
                 ${cancelledNote}
-                <h4>${meeting.title}</h4>
+                <h4>${escapeHTML(meeting.title)}</h4>
                 <div class="meeting-details">
-                    <strong>Date:</strong> ${this.formatDisplayDate(new Date(meeting.date + 'T00:00:00'))}<br>
+                    <strong>Date:</strong> ${escapeHTML(this.formatDisplayDate(new Date(meeting.date + 'T00:00:00')))}<br>
                     ${timeInfo}
                     <br><strong>Location:</strong><br>
                     ${location}
                     ${presenter}
                     <br><br>
                     <div class="meeting-description">
-                        ${meeting.description || ''}
+                        ${escapeHTML(meeting.description || '')}
                     </div>
                 </div>
             </div>

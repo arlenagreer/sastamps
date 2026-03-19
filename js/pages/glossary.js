@@ -158,7 +158,7 @@ async function loadGlossaryFilters(container) {
                         </label>
                         <select id="category-filter" aria-label="Filter by category">
                             <option value="">All Categories</option>
-                            ${categories.map(cat => `<option value="${cat}">${formatCategory(cat)}</option>`).join('')}
+                            ${categories.map(cat => `<option value="${escapeHTML(cat)}">${escapeHTML(formatCategory(cat))}</option>`).join('')}
                         </select>
                     </div>
                     
@@ -168,7 +168,7 @@ async function loadGlossaryFilters(container) {
                         </label>
                         <select id="difficulty-filter" aria-label="Filter by difficulty">
                             <option value="">All Levels</option>
-                            ${difficulties.map(diff => `<option value="${diff}">${formatDifficulty(diff)}</option>`).join('')}
+                            ${difficulties.map(diff => `<option value="${escapeHTML(diff)}">${escapeHTML(formatDifficulty(diff))}</option>`).join('')}
                         </select>
                     </div>
                     
@@ -353,7 +353,7 @@ function renderTermCard(term) {
   const category = formatCategory(term.category);
 
   return `
-        <div class="glossary-term" id="term-${term.id}" data-term-id="${term.id}">
+        <div class="glossary-term" id="term-${escapeHTML(term.id)}" data-term-id="${escapeHTML(term.id)}">
             <div class="term-header">
                 <div class="term-title-group">
                     <h3 class="term-title">${escapeHTML(term.term)}</h3>
@@ -364,8 +364,8 @@ function renderTermCard(term) {
 }
                 </div>
                 <div class="term-meta">
-                    <span class="difficulty-badge difficulty-${term.difficulty}">${difficulty}</span>
-                    <span class="category-badge">${category}</span>
+                    <span class="difficulty-badge difficulty-${escapeHTML(term.difficulty)}">${escapeHTML(difficulty)}</span>
+                    <span class="category-badge">${escapeHTML(category)}</span>
                     <i class="fas fa-chevron-down expand-icon"></i>
                 </div>
             </div>
@@ -408,7 +408,7 @@ function renderTermCard(term) {
                         <h4><i class="fas fa-link"></i> Related Terms</h4>
                         <div class="related-terms-list">
                             ${term.relatedTerms.map(relatedId =>
-    `<a href="#term-${relatedId}" class="related-term" data-term-id="${relatedId}">${formatTermId(relatedId)}</a>`
+    `<a href="#term-${escapeHTML(relatedId)}" class="related-term" data-term-id="${escapeHTML(relatedId)}">${escapeHTML(formatTermId(relatedId))}</a>`
   ).join('')}
                         </div>
                     </div>
@@ -460,11 +460,11 @@ async function performSearch(query, resultsContainer) {
                 <div class="search-results-list">
                     ${results.map(term => `
                         <div class="search-result-item">
-                            <h4><a href="#term-${term.id}" onclick="scrollToTerm('${term.id}')">${escapeHTML(term.term)}</a></h4>
+                            <h4><a href="#term-${escapeHTML(term.id)}" class="search-result-link" data-term-id="${escapeHTML(term.id)}">${escapeHTML(term.term)}</a></h4>
                             <p class="result-definition">${escapeHTML(term.definition)}</p>
                             <div class="result-meta">
-                                <span class="result-category">${formatCategory(term.category)}</span>
-                                <span class="result-difficulty">${formatDifficulty(term.difficulty)}</span>
+                                <span class="result-category">${escapeHTML(formatCategory(term.category))}</span>
+                                <span class="result-difficulty">${escapeHTML(formatDifficulty(term.difficulty))}</span>
                             </div>
                         </div>
                     `).join('')}
@@ -473,6 +473,17 @@ async function performSearch(query, resultsContainer) {
     }
 
     resultsContainer.style.display = 'block';
+
+    // Bind click handlers for search result links
+    resultsContainer.querySelectorAll('.search-result-link').forEach(link => {
+      addEventListenerWithCleanup(link, 'click', (e) => {
+        e.preventDefault();
+        const termId = e.currentTarget.dataset.termId;
+        if (termId) {
+          scrollToTerm(termId);
+        }
+      });
+    });
 
   } catch (error) {
     logger.error('Search failed:', error);

@@ -3,6 +3,7 @@
  * Handles loading and rendering meeting data from JSON
  */
 
+import { escapeHTML } from '../utils/safe-dom.js';
 import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('MeetingLoader');
@@ -304,14 +305,14 @@ class MeetingLoader {
     }
 
     // Build meeting text with proper formatting
-    let meetingText = `${dayOfMonth} ${meetingType}`;
+    let meetingText = `${dayOfMonth} ${escapeHTML(meetingType)}`;
     if (details && !isCancelled) {
       if (meeting.type === 'regular' && meeting.presenter) {
         // Program meetings with presenter details
-        meetingText += `<br><span style="font-size: 0.9rem;">"${meeting.title}" by ${meeting.presenter.name}</span>`;
+        meetingText += `<br><span style="font-size: 0.9rem;">"${escapeHTML(meeting.title)}" by ${escapeHTML(meeting.presenter.name)}</span>`;
       } else if (details.includes('Day')) {
         // Holiday details
-        meetingText += `<br><span style="font-size: 0.9rem; font-weight: normal;">${details.replace(/[()]/g, '')}</span>`;
+        meetingText += `<br><span style="font-size: 0.9rem; font-weight: normal;">${escapeHTML(details.replace(/[()]/g, ''))}</span>`;
       }
     }
 
@@ -320,7 +321,7 @@ class MeetingLoader {
                 <div class="meeting-entry">
                     <span>${meetingText}</span>
                     ${calendarLink && !isCancelled ? `
-                        <a href="${calendarLink}" class="calendar-link" download>
+                        <a href="${escapeHTML(calendarLink)}" class="calendar-link" download>
                             <i class="fas fa-calendar-plus" title="Add to Calendar"></i>
                         </a>
                     ` : ''}
@@ -426,25 +427,25 @@ class MeetingLoader {
     return `
             <div class="${cardClass}">
                 <div class="meeting-header">
-                    <div class="meeting-date">${formattedDate}</div>
+                    <div class="meeting-date">${escapeHTML(formattedDate)}</div>
                     <div class="meeting-time">
-                        ${meeting.time?.doorsOpen ? `Doors: ${meeting.time.doorsOpen}` : ''}
-                        ${meeting.time?.meetingStart ? ` | Meeting: ${meeting.time.meetingStart}` : ''}
+                        ${meeting.time?.doorsOpen ? `Doors: ${escapeHTML(meeting.time.doorsOpen)}` : ''}
+                        ${meeting.time?.meetingStart ? ` | Meeting: ${escapeHTML(meeting.time.meetingStart)}` : ''}
                     </div>
                 </div>
                 <div class="meeting-content">
-                    <h4 class="meeting-title">${meetingType}</h4>
-                    ${details ? `<p class="meeting-details">${details}</p>` : ''}
-                    ${showDetails && meeting.description ? `<p class="meeting-description">${meeting.description}</p>` : ''}
+                    <h4 class="meeting-title">${escapeHTML(meetingType)}</h4>
+                    ${details ? `<p class="meeting-details">${escapeHTML(details)}</p>` : ''}
+                    ${showDetails && meeting.description ? `<p class="meeting-description">${escapeHTML(meeting.description)}</p>` : ''}
                     ${meeting.tags && meeting.tags.length > 0 ? `
                         <div class="meeting-tags">
-                            ${meeting.tags.map(tag => `<span class="tag">${this.formatLabel(tag)}</span>`).join('')}
+                            ${meeting.tags.map(tag => `<span class="tag">${escapeHTML(this.formatLabel(tag))}</span>`).join('')}
                         </div>
                     ` : ''}
                 </div>
                 ${!meeting.cancelled ? `
                     <div class="meeting-actions">
-                        <a href="${calendarLink}" class="btn btn-sm btn-outline" download>
+                        <a href="${escapeHTML(calendarLink)}" class="btn btn-sm btn-outline" download>
                             <i class="fas fa-calendar-plus"></i> Add to Calendar
                         </a>
                     </div>

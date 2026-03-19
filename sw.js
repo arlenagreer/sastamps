@@ -87,12 +87,22 @@ self.addEventListener('fetch', (event) => {
             // Clone the response
             const responseToCache = response.clone();
 
-            // Cache the response for future use
+            // Cache the response with size limit
             caches.open(CACHE_NAME)
-              .then((cache) => {
+              .then(async (cache) => {
                 // Only cache successful responses for same-origin requests
                 if (event.request.url.startsWith(self.location.origin)) {
                   cache.put(event.request, responseToCache);
+
+                  // Evict oldest entries if cache exceeds max size
+                  const MAX_CACHE_ENTRIES = 100;
+                  const keys = await cache.keys();
+                  if (keys.length > MAX_CACHE_ENTRIES) {
+                    const toDelete = keys.length - MAX_CACHE_ENTRIES;
+                    for (let i = 0; i < toDelete; i++) {
+                      cache.delete(keys[i]);
+                    }
+                  }
                 }
               });
 

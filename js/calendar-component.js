@@ -7,6 +7,7 @@ import { Calendar } from 'vanilla-calendar-pro';
 import { calendarAdapter } from './calendar-adapter.js';
 import { modal } from './modal.js';
 import { reminderSystem } from './reminder-system.js';
+import { escapeHTML } from './utils/safe-dom.js';
 import { createLogger } from './utils/logger.js';
 
 const logger = createLogger('CalendarComponent');
@@ -43,14 +44,12 @@ export class CalendarComponent {
             .then(data => {
               const calendar = new CalendarComponent(element.id, data);
               calendar.isLazyLoaded = true;
-              calendar.init();
               resolve(calendar);
             })
             .catch(reject);
         } else {
           const calendar = new CalendarComponent(element.id, meetingsData);
           calendar.isLazyLoaded = true;
-          calendar.init();
           resolve(calendar);
         }
       } catch (error) {
@@ -348,7 +347,7 @@ export class CalendarComponent {
       container.innerHTML = `
                 <div class="calendar-error">
                     <h3>Calendar Error</h3>
-                    <p>${message}</p>
+                    <p>${escapeHTML(message)}</p>
                     <button onclick="location.reload()" class="btn btn-primary">Reload Page</button>
                 </div>
             `;

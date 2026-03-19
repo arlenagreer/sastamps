@@ -10,11 +10,15 @@
  * Set comprehensive security headers
  */
 function setSecurityHeaders() {
+    // Generate a per-request nonce for inline scripts/styles
+    $nonce = base64_encode(random_bytes(16));
+    $GLOBALS['csp_nonce'] = $nonce;
+
     // Content Security Policy (CSP)
     $cspDirectives = [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://cdnjs.cloudflare.com",
-        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
+        "script-src 'self' 'nonce-$nonce' https://www.googletagmanager.com https://www.google-analytics.com https://cdnjs.cloudflare.com",
+        "style-src 'self' 'nonce-$nonce' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
         "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com",
         "img-src 'self' data: https://www.google-analytics.com",
         "connect-src 'self' https://www.google-analytics.com",
@@ -120,7 +124,7 @@ function validateInputSafety($input) {
     $dangerousPatterns = [
         '/(<script|<\/script|javascript:|vbscript:|onload=|onerror=)/i',
         '/(union\s+select|drop\s+table|delete\s+from|insert\s+into)/i',
-        '/(\||\&\&|\;|\$\(|\`)/i'
+        '/(\&\&|\$\(|\`)/i'
     ];
     
     foreach ($dangerousPatterns as $pattern) {

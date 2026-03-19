@@ -54,11 +54,14 @@ function validatePhone($phone) {
     return preg_match('/^[0-9]{10}$/', $cleaned);
 }
 
-// Rate limiting check
+// Rate limiting check (file-based, shared across sessions)
 $clientIP = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
 if (!checkRateLimit($clientIP, 3, 3600)) { // 3 submissions per hour
     $response['errors']['rate_limit'] = 'Too many submissions. Please wait before trying again.';
     logSecurityEvent('rate_limit_exceeded', 'Contact form rate limit exceeded', ['ip' => $clientIP]);
+    http_response_code(429);
+    echo json_encode($response);
+    exit();
 }
 
 // Enhanced input safety validation
@@ -159,30 +162,8 @@ foreach ($spam_patterns as $pattern) {
     }
 }
 
-// Rate limiting check (simple implementation)
-session_start();
-$session_key = 'contact_form_submissions';
-$max_submissions = 3;
-$time_window = 3600; // 1 hour
-
-if (!isset($_SESSION[$session_key])) {
-    $_SESSION[$session_key] = [];
-}
-
-// Clean old submissions
-$_SESSION[$session_key] = array_filter($_SESSION[$session_key], function($timestamp) use ($time_window) {
-    return time() - $timestamp < $time_window;
-});
-
-if (count($_SESSION[$session_key]) >= $max_submissions) {
-    $response['errors']['rate_limit'] = 'Too many submissions. Please try again later.';
-}
-
 // If no errors, process the form
 if (empty($response['errors'])) {
-    // Add submission timestamp
-    $_SESSION[$session_key][] = time();
-    
     // Configure email settings
     $to = 'contact@sapa-stamps.org'; // Replace with actual email
     $email_subject = "[SAPA Contact Form] " . $subject;

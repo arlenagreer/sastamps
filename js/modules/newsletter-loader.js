@@ -3,6 +3,7 @@
  * Handles loading and rendering newsletter data from JSON
  */
 
+import { escapeHTML } from '../utils/safe-dom.js';
 import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('NewsletterLoader');
@@ -304,52 +305,52 @@ class NewsletterLoader {
     const tags = newsletter.tags || [];
 
     return `
-            <div class="archive-item" data-year="${newsletter.year}" data-quarter="${newsletter.quarter}">
+            <div class="archive-item" data-year="${escapeHTML(String(newsletter.year))}" data-quarter="${escapeHTML(newsletter.quarter)}">
                 <div class="archive-item-header">
                     <h3>SAPA PHILATEX</h3>
-                    <p>${newsletter.quarter} Quarter ${newsletter.year}</p>
+                    <p>${escapeHTML(newsletter.quarter)} Quarter ${escapeHTML(String(newsletter.year))}</p>
                 </div>
                 <div class="archive-item-content">
-                    <p><strong>Published:</strong> ${publishDate}</p>
-                    <p class="newsletter-description">${newsletter.description}</p>
-                    
+                    <p><strong>Published:</strong> ${escapeHTML(publishDate)}</p>
+                    <p class="newsletter-description">${escapeHTML(newsletter.description)}</p>
+
                     ${featuredArticles.length > 0 ? `
                         <div class="featured-articles">
                             <h4>Featured Articles:</h4>
                             <ul>
                                 ${featuredArticles.map(article => `
                                     <li>
-                                        <strong>${article.title}</strong>
-                                        ${article.author ? ` by ${article.author}` : ''}
-                                        ${article.page ? ` (p. ${article.page})` : ''}
-                                        ${article.category ? ` <em>[${article.category}]</em>` : ''}
+                                        <strong>${escapeHTML(article.title)}</strong>
+                                        ${article.author ? ` by ${escapeHTML(article.author)}` : ''}
+                                        ${article.page ? ` (p. ${escapeHTML(String(article.page))})` : ''}
+                                        ${article.category ? ` <em>[${escapeHTML(article.category)}]</em>` : ''}
                                     </li>
                                 `).join('')}
                             </ul>
                         </div>
                     ` : ''}
-                    
+
                     ${highlights.length > 0 ? `
                         <div class="highlights">
                             <h4>Highlights:</h4>
                             <ul>
-                                ${highlights.map(highlight => `<li>${highlight}</li>`).join('')}
+                                ${highlights.map(highlight => `<li>${escapeHTML(highlight)}</li>`).join('')}
                             </ul>
                         </div>
                     ` : ''}
-                    
+
                     ${tags.length > 0 ? `
                         <div class="newsletter-tags">
-                            ${tags.map(tag => `<span class="tag">${this.formatLabel(tag)}</span>`).join('')}
+                            ${tags.map(tag => `<span class="tag">${escapeHTML(this.formatLabel(tag))}</span>`).join('')}
                         </div>
                     ` : ''}
-                    
+
                     <div class="newsletter-meta">
-                        ${newsletter.pageCount ? `<span class="meta-item"><i class="fas fa-file-alt"></i> ${newsletter.pageCount} pages</span>` : ''}
-                        ${newsletter.fileSize ? `<span class="meta-item"><i class="fas fa-download"></i> ${newsletter.fileSize}</span>` : ''}
+                        ${newsletter.pageCount ? `<span class="meta-item"><i class="fas fa-file-alt"></i> ${escapeHTML(String(newsletter.pageCount))} pages</span>` : ''}
+                        ${newsletter.fileSize ? `<span class="meta-item"><i class="fas fa-download"></i> ${escapeHTML(newsletter.fileSize)}</span>` : ''}
                     </div>
-                    
-                    <a href="${newsletter.filePath}" class="btn btn-primary" target="_blank">
+
+                    <a href="${escapeHTML(newsletter.filePath)}" class="btn btn-primary" target="_blank" rel="noopener">
                         <i class="fas fa-file-pdf"></i> Download PDF
                     </a>
                 </div>

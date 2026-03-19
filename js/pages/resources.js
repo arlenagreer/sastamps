@@ -4,7 +4,7 @@
  */
 
 import { debounce } from '../utils/performance.js';
-import { safeQuerySelector } from '../utils/safe-dom.js';
+import { safeQuerySelector, escapeHTML } from '../utils/safe-dom.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { formatDate } from '../utils/helpers.js';
 import { createLogger } from '../utils/logger.js';
@@ -73,41 +73,41 @@ function displayFeaturedResources(resources) {
   }
 
   const html = featuredResources.map(resource => `
-        <div class="resource-card featured-resource" data-id="${resource.id}" data-category="${resource.category}" data-difficulty="${resource.difficulty}">
+        <div class="resource-card featured-resource" data-id="${escapeHTML(resource.id)}" data-category="${escapeHTML(resource.category)}" data-difficulty="${escapeHTML(resource.difficulty)}">
             <div class="resource-header">
-                <h3>${resource.title}</h3>
+                <h3>${escapeHTML(resource.title)}</h3>
                 <div class="resource-badges">
-                    <span class="difficulty-badge difficulty-${resource.difficulty}">${resource.difficulty}</span>
-                    ${resource.estimatedReadTime ? `<span class="read-time">📖 ${resource.estimatedReadTime} min read</span>` : ''}
+                    <span class="difficulty-badge difficulty-${escapeHTML(resource.difficulty)}">${escapeHTML(resource.difficulty)}</span>
+                    ${resource.estimatedReadTime ? `<span class="read-time">📖 ${escapeHTML(String(resource.estimatedReadTime))} min read</span>` : ''}
                 </div>
             </div>
-            
+
             <div class="resource-content">
-                <p class="resource-summary">${resource.summary}</p>
-                
+                <p class="resource-summary">${escapeHTML(resource.summary)}</p>
+
                 <div class="resource-meta">
-                    <span class="resource-type">📄 ${formatResourceType(resource.type)}</span>
-                    <span class="resource-category">🏷️ ${formatCategory(resource.category)}</span>
-                    ${resource.author ? `<span class="resource-author">✍️ ${resource.author.name}</span>` : ''}
+                    <span class="resource-type">📄 ${escapeHTML(formatResourceType(resource.type))}</span>
+                    <span class="resource-category">🏷️ ${escapeHTML(formatCategory(resource.category))}</span>
+                    ${resource.author ? `<span class="resource-author">✍️ ${escapeHTML(resource.author.name)}</span>` : ''}
                 </div>
-                
+
                 ${resource.tags && resource.tags.length > 0 ? `
                     <div class="resource-tags">
-                        ${resource.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        ${resource.tags.map(tag => `<span class="tag">${escapeHTML(tag)}</span>`).join('')}
                     </div>
                 ` : ''}
             </div>
-            
+
             <div class="resource-actions">
-                <button class="btn-primary btn-read-resource" data-resource-id="${resource.id}">
+                <button class="btn-primary btn-read-resource" data-resource-id="${escapeHTML(resource.id)}">
                     📖 Read Guide
                 </button>
                 ${resource.sections && resource.sections.length > 0 ? `
-                    <button class="btn-secondary btn-view-sections" data-resource-id="${resource.id}">
+                    <button class="btn-secondary btn-view-sections" data-resource-id="${escapeHTML(resource.id)}">
                         📋 View Sections
                     </button>
                 ` : ''}
-                <button class="btn-outline btn-bookmark" data-resource-id="${resource.id}" aria-label="Bookmark resource">
+                <button class="btn-outline btn-bookmark" data-resource-id="${escapeHTML(resource.id)}" aria-label="Bookmark resource">
                     🔖
                 </button>
             </div>
@@ -126,27 +126,27 @@ function displayCategorizedResources(resources, categories) {
     const categoryResources = resources.filter(resource => resource.category === category.id);
 
     return `
-            <div class="category-card" data-category="${category.id}">
+            <div class="category-card" data-category="${escapeHTML(category.id)}">
                 <div class="category-header">
-                    <h3>${category.name}</h3>
-                    <p class="category-description">${category.description}</p>
+                    <h3>${escapeHTML(category.name)}</h3>
+                    <p class="category-description">${escapeHTML(category.description)}</p>
                     <span class="resource-count">${categoryResources.length} resource${categoryResources.length !== 1 ? 's' : ''}</span>
                 </div>
-                
+
                 <div class="category-resources">
                     ${categoryResources.slice(0, 3).map(resource => `
                         <div class="resource-preview">
-                            <h4><a href="#" class="resource-link" data-resource-id="${resource.id}">${resource.title}</a></h4>
-                            <p class="resource-preview-summary">${resource.summary.substring(0, 100)}...</p>
+                            <h4><a href="#" class="resource-link" data-resource-id="${escapeHTML(resource.id)}">${escapeHTML(resource.title)}</a></h4>
+                            <p class="resource-preview-summary">${escapeHTML(resource.summary.substring(0, 100))}...</p>
                             <div class="resource-preview-meta">
-                                <span class="difficulty-badge difficulty-${resource.difficulty}">${resource.difficulty}</span>
-                                ${resource.estimatedReadTime ? `<span class="read-time">${resource.estimatedReadTime} min</span>` : ''}
+                                <span class="difficulty-badge difficulty-${escapeHTML(resource.difficulty)}">${escapeHTML(resource.difficulty)}</span>
+                                ${resource.estimatedReadTime ? `<span class="read-time">${escapeHTML(String(resource.estimatedReadTime))} min</span>` : ''}
                             </div>
                         </div>
                     `).join('')}
-                    
+
                     ${categoryResources.length > 3 ? `
-                        <button class="btn-outline btn-view-all-category" data-category="${category.id}">
+                        <button class="btn-outline btn-view-all-category" data-category="${escapeHTML(category.id)}">
                             View All ${categoryResources.length} Resources
                         </button>
                     ` : ''}
@@ -164,29 +164,29 @@ function displayAllResources(resources) {
   if (!container) {return;}
 
   const html = resources.map(resource => `
-        <div class="resource-item" data-id="${resource.id}" data-category="${resource.category}" data-difficulty="${resource.difficulty}">
+        <div class="resource-item" data-id="${escapeHTML(resource.id)}" data-category="${escapeHTML(resource.category)}" data-difficulty="${escapeHTML(resource.difficulty)}">
             <div class="resource-item-header">
-                <h3><a href="#" class="resource-link" data-resource-id="${resource.id}">${resource.title}</a></h3>
+                <h3><a href="#" class="resource-link" data-resource-id="${escapeHTML(resource.id)}">${escapeHTML(resource.title)}</a></h3>
                 <div class="resource-badges">
-                    <span class="difficulty-badge difficulty-${resource.difficulty}">${resource.difficulty}</span>
+                    <span class="difficulty-badge difficulty-${escapeHTML(resource.difficulty)}">${escapeHTML(resource.difficulty)}</span>
                     ${resource.featured ? '<span class="featured-badge">⭐ Featured</span>' : ''}
                 </div>
             </div>
-            
-            <p class="resource-summary">${resource.summary}</p>
-            
+
+            <p class="resource-summary">${escapeHTML(resource.summary)}</p>
+
             <div class="resource-meta">
-                <span class="resource-type">📄 ${formatResourceType(resource.type)}</span>
-                <span class="resource-category">🏷️ ${formatCategory(resource.category)}</span>
-                ${resource.estimatedReadTime ? `<span class="read-time">📖 ${resource.estimatedReadTime} min read</span>` : ''}
-                ${resource.dateUpdated ? `<span class="last-updated">📅 Updated ${formatDate(resource.dateUpdated)}</span>` : ''}
+                <span class="resource-type">📄 ${escapeHTML(formatResourceType(resource.type))}</span>
+                <span class="resource-category">🏷️ ${escapeHTML(formatCategory(resource.category))}</span>
+                ${resource.estimatedReadTime ? `<span class="read-time">📖 ${escapeHTML(String(resource.estimatedReadTime))} min read</span>` : ''}
+                ${resource.dateUpdated ? `<span class="last-updated">📅 Updated ${escapeHTML(formatDate(resource.dateUpdated))}</span>` : ''}
             </div>
-            
+
             <div class="resource-actions">
-                <button class="btn-primary btn-read-resource" data-resource-id="${resource.id}">
+                <button class="btn-primary btn-read-resource" data-resource-id="${escapeHTML(resource.id)}">
                     Read Guide
                 </button>
-                <button class="btn-outline btn-bookmark" data-resource-id="${resource.id}" aria-label="Bookmark resource">
+                <button class="btn-outline btn-bookmark" data-resource-id="${escapeHTML(resource.id)}" aria-label="Bookmark resource">
                     🔖 Bookmark
                 </button>
             </div>
@@ -396,36 +396,36 @@ async function openResourceModal(resourceId) {
     const modalContent = `
             <div class="resource-modal">
                 <div class="resource-modal-header">
-                    <h2>${resource.title}</h2>
+                    <h2>${escapeHTML(resource.title)}</h2>
                     <div class="resource-modal-meta">
-                        <span class="difficulty-badge difficulty-${resource.difficulty}">${resource.difficulty}</span>
-                        ${resource.estimatedReadTime ? `<span class="read-time">📖 ${resource.estimatedReadTime} min read</span>` : ''}
-                        ${resource.author ? `<span class="author">✍️ ${resource.author.name}</span>` : ''}
+                        <span class="difficulty-badge difficulty-${escapeHTML(resource.difficulty)}">${escapeHTML(resource.difficulty)}</span>
+                        ${resource.estimatedReadTime ? `<span class="read-time">📖 ${escapeHTML(String(resource.estimatedReadTime))} min read</span>` : ''}
+                        ${resource.author ? `<span class="author">✍️ ${escapeHTML(resource.author.name)}</span>` : ''}
                     </div>
                 </div>
-                
+
                 <div class="resource-modal-content">
                     ${formatResourceContent(resource.content)}
-                    
+
                     ${resource.externalLinks && resource.externalLinks.length > 0 ? `
                         <div class="external-links-section">
                             <h3>Additional Resources</h3>
                             <ul class="external-links-list">
                                 ${resource.externalLinks.map(link => `
                                     <li>
-                                        <a href="${link.url}" target="_blank" rel="noopener">
-                                            ${link.title}
+                                        <a href="${escapeHTML(link.url)}" target="_blank" rel="noopener">
+                                            ${escapeHTML(link.title)}
                                         </a>
-                                        ${link.description ? `<span class="link-description">${link.description}</span>` : ''}
+                                        ${link.description ? `<span class="link-description">${escapeHTML(link.description)}</span>` : ''}
                                     </li>
                                 `).join('')}
                             </ul>
                         </div>
                     ` : ''}
                 </div>
-                
+
                 <div class="resource-modal-actions">
-                    <button class="btn-outline btn-bookmark-modal" data-resource-id="${resource.id}">
+                    <button class="btn-outline btn-bookmark-modal" data-resource-id="${escapeHTML(resource.id)}">
                         🔖 Bookmark
                     </button>
                     <button class="btn-secondary btn-print" onclick="window.print()">
@@ -581,21 +581,21 @@ async function showResourceSections(resourceId) {
     const modalContent = `
             <div class="resource-sections-modal">
                 <div class="resource-modal-header">
-                    <h2>${resource.title} - Sections</h2>
+                    <h2>${escapeHTML(resource.title)} - Sections</h2>
                     <p class="sections-count">${resource.sections.length} sections available</p>
                 </div>
-                
+
                 <div class="sections-list">
                     ${resource.sections.sort((a, b) => a.order - b.order).map(section => `
                         <div class="section-item">
-                            <h3>${section.order}. ${section.title}</h3>
-                            <p>${section.content}</p>
+                            <h3>${escapeHTML(String(section.order))}. ${escapeHTML(section.title)}</h3>
+                            <p>${escapeHTML(section.content)}</p>
                         </div>
                     `).join('')}
                 </div>
-                
+
                 <div class="resource-modal-actions">
-                    <button class="btn-primary btn-read-full" data-resource-id="${resource.id}">
+                    <button class="btn-primary btn-read-full" data-resource-id="${escapeHTML(resource.id)}">
                         📖 Read Full Guide
                     </button>
                     <button class="btn-secondary btn-close-modal">
@@ -689,8 +689,9 @@ function filterByCategory(categoryId) {
 }
 
 function formatResourceContent(content) {
-  // Convert markdown-like content to HTML
-  return content
+  // Escape HTML first to prevent XSS, then apply markdown-like formatting
+  const escaped = escapeHTML(content);
+  return escaped
     .replace(/\n## (.*?)\n/g, '<h3>$1</h3>')
     .replace(/\n### (.*?)\n/g, '<h4>$1</h4>')
     .replace(/\n\*\*(.*?)\*\*/g, '<strong>$1</strong>')
@@ -729,7 +730,7 @@ function showResourcesError(message) {
     container.innerHTML = `
             <div class="error-message">
                 <h3>Unable to Load Resources</h3>
-                <p>${message}</p>
+                <p>${escapeHTML(message)}</p>
                 <button onclick="location.reload()" class="btn-secondary">Refresh Page</button>
             </div>
         `;
