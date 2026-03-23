@@ -59,29 +59,29 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| NL-01 | — | Pending |
-| NL-02 | — | Pending |
-| NL-03 | — | Pending |
-| NL-04 | — | Pending |
-| MTG-01 | — | Pending |
-| MTG-02 | — | Pending |
-| MTG-03 | — | Pending |
-| MTG-04 | — | Pending |
-| HOME-01 | — | Pending |
-| HOME-02 | — | Pending |
-| HOME-03 | — | Pending |
-| VER-01 | — | Pending |
-| VER-02 | — | Pending |
-| VER-03 | — | Pending |
-| ANN-01 | — | Pending |
-| ANN-02 | — | Pending |
-| ANN-03 | — | Pending |
+| NL-01 | Phase 7 | Pending |
+| NL-02 | Phase 7 | Pending |
+| NL-03 | Phase 8 | Pending |
+| NL-04 | Phase 8 | Pending |
+| MTG-01 | Phase 7 | Pending |
+| MTG-02 | Phase 8 | Pending |
+| MTG-03 | Phase 8 | Pending |
+| MTG-04 | Phase 7 | Pending |
+| HOME-01 | Phase 8 | Pending |
+| HOME-02 | Phase 8 | Pending |
+| HOME-03 | Phase 8 | Pending |
+| VER-01 | Phase 9 | Pending |
+| VER-02 | Phase 9 | Pending |
+| VER-03 | Phase 9 | Pending |
+| ANN-01 | Phase 9 | Pending |
+| ANN-02 | Phase 9 | Pending |
+| ANN-03 | Phase 9 | Pending |
 
 **Coverage:**
-- v1.2 requirements: 16 total
-- Mapped to phases: 0
-- Unmapped: 16 ⚠️
+- v1.2 requirements: 17 total
+- Mapped to phases: 17
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-23*
-*Last updated: 2026-03-23 after initial definition*
+*Last updated: 2026-03-23 after roadmap creation (v1.2 phases 7-9)*
