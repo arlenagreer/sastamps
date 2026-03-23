@@ -1,32 +1,34 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: Restore Newsletter Archive
-status: archived
-stopped_at: Milestone v1.1 archived
-last_updated: "2026-03-09T18:45:00.000Z"
-last_activity: 2026-03-09 — v1.1 milestone archived (3 phases, 4 plans, 11 requirements)
+milestone: v1.2
+milestone_name: Philatex Q2 2026 Content Update
+status: active
+stopped_at: null
+last_updated: "2026-03-23T00:00:00.000Z"
+last_activity: 2026-03-23 — Milestone v1.2 started
 progress:
-  total_phases: 3
-  completed_phases: 3
-  total_plans: 4
-  completed_plans: 4
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-09)
+See: .planning/PROJECT.md (updated 2026-03-23)
 
 **Core value:** Primary digital presence for SAPA — meeting schedules, newsletters, membership info, educational resources
-**Current focus:** Planning next milestone
+**Current focus:** v1.2 Philatex Q2 2026 Content Update
 
 ## Current Position
 
-Milestone v1.1 archived. Ready for next milestone.
-Last activity: 2026-03-09 - Completed quick task 1: Rebuild stale archive JS bundle to show older newsletter links
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-23 — Milestone v1.2 started
 
 ## Performance Metrics
 

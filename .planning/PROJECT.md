@@ -41,7 +41,18 @@ The website serves as the primary digital presence for SAPA, providing members a
 
 ### Active
 
-(None yet — define for next milestone)
+<!-- Current scope: v1.2 Philatex Q2 2026 Content Update -->
+
+- [ ] Add Q2 2026 newsletter PDF and update newsletters.json metadata
+- [ ] Update newsletter.html Current Issue and 2026 Archive sections
+- [ ] Add 13 Q2 meeting entries (Apr-Jun 2026) to meetings.json
+- [ ] Update meetings.html schedule section and download schedule button
+- [ ] Generate ICS calendar files for Q2 2026 meetings
+- [ ] Verify/update Board of Governors roster (Rick Cross as Secretary)
+- [ ] Add TSDA stamp show schedule (including San Antonio May 8-9)
+- [ ] Update homepage: Upcoming Meeting, Read Latest Issue link, Latest Issue Highlights
+- [ ] Add announcements: new members, condolence, annual picnic, upcoming program
+- [ ] Verify mailing address on contact page
 
 ### Out of Scope
 
@@ -53,6 +64,7 @@ The website serves as the primary digital presence for SAPA, providing members a
 ## Context
 
 Shipped v1.1 on 2026-03-09. Newsletter archive restored with 98 PDFs (2008-2024).
+Starting v1.2 on 2026-03-23. Philatex Q2 2026 (Vol. 132, Issue #2) arrived — content update cycle.
 - 11 HTML pages with consistent design, assets, and footer
 - Build system: ESBuild with tree-shaking, 7 page-specific bundles (~191KB total)
 - Tech stack: Vanilla JS ES6+, HTML5, CSS3/PostCSS, Lunr.js search, vanilla-calendar-pro
@@ -81,5 +93,19 @@ Shipped v1.1 on 2026-03-09. Newsletter archive restored with 98 PDFs (2008-2024)
 | Compact list layout for archived years | Visual contrast with rich cards for recent issues | ✓ Good — dense scanning for 17 years of content |
 | Lean JSON schema for catalogue | Only programmatically-derivable fields, not manual metadata | ✓ Good — 99 entries auto-generated |
 
+## Current Milestone: v1.2 Philatex Q2 2026 Content Update
+
+**Goal:** Update the website with all content from the Philatex Second Quarter 2026 newsletter (Vol. 132, Issue #2)
+
+**Target features:**
+- Newsletter PDF publication and metadata update
+- Q2 2026 meeting schedule (April–June, 13 meetings)
+- ICS calendar files for Q2 meetings
+- Homepage content refresh (upcoming meetings, latest issue, highlights)
+- Board of Governors verification
+- TSDA stamp show schedule
+- Announcements (new members, condolence, picnic, program)
+- Contact/mailing address verification
+
 ---
-*Last updated: 2026-03-09 after v1.1 milestone*
+*Last updated: 2026-03-23 after v1.2 milestone start*
