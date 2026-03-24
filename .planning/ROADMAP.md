@@ -70,7 +70,11 @@ Plans:
   3. All extracted data is validated against data/schemas/ before any file is written; schema violations are flagged, not silently accepted
   4. Ambiguous or low-confidence extractions are marked [UNVERIFIED] in staged output so the human can spot them at review time
   5. After updating meetings.json, the agent runs `npm run build:js` to rebuild ESBuild bundles; all of newsletters.json, meetings.json, ICS calendar files, homepage, newsletter page, and meetings page are updated
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 11-01-PLAN.md — Extend newsletter schema and create philatex-newsletter-agent definition with full extraction/update workflow
+- [ ] 11-02-PLAN.md — Wire agent into SKILL.md with spawning instructions and post-agent verification
 
 ### Phase 12: Human Checkpoint Design
 **Goal**: Before any commit, the agent surfaces a structured review summary — key facts first, full diff secondary — so the human can confidently approve or reject the staged changes
@@ -96,5 +100,5 @@ Plans:
 | 8. Page Updates | v1.2 | 1/1 | Complete | 2026-03-23 |
 | 9. Verification and Announcements | v1.2 | 1/1 | Complete | 2026-03-23 |
 | 10. Skill Scaffold | v1.3 | 1/1 | Complete   | 2026-03-24 |
-| 11. Extraction and Update Workflow | v1.3 | 0/? | Not started | - |
+| 11. Extraction and Update Workflow | v1.3 | 0/2 | Not started | - |
 | 12. Human Checkpoint Design | v1.3 | 0/? | Not started | - |
