@@ -41,7 +41,7 @@
 **Milestone Goal:** Codify the v1.2 quarterly update workflow into a reusable `/philatex-update` skill that Claude can invoke to read a newsletter PDF, extract content, update all affected site files, and pause for human review before committing.
 
 - [x] **Phase 10: Skill Scaffold** - Create the `/philatex-update` entry point with permitted-file scope and idempotency check (completed 2026-03-24)
-- [ ] **Phase 11: Extraction and Update Workflow** - Encode PDF reading, content extraction, schema validation, and all site file updates
+- [x] **Phase 11: Extraction and Update Workflow** - Encode PDF reading, content extraction, schema validation, and all site file updates (completed 2026-03-24)
 - [ ] **Phase 12: Human Checkpoint Design** - Structure the review pause so it leads with key facts and surfaces [UNVERIFIED] items before committing
 
 ## Phase Details
@@ -74,7 +74,7 @@ Plans:
 
 Plans:
 - [x] 11-01-PLAN.md — Extend newsletter schema and create philatex-newsletter-agent definition with full extraction/update workflow
-- [ ] 11-02-PLAN.md — Wire agent into SKILL.md with spawning instructions and post-agent verification
+- [x] 11-02-PLAN.md — Wire agent into SKILL.md with spawning instructions and post-agent verification
 
 ### Phase 12: Human Checkpoint Design
 **Goal**: Before any commit, the agent surfaces a structured review summary — key facts first, full diff secondary — so the human can confidently approve or reject the staged changes
@@ -100,5 +100,5 @@ Plans:
 | 8. Page Updates | v1.2 | 1/1 | Complete | 2026-03-23 |
 | 9. Verification and Announcements | v1.2 | 1/1 | Complete | 2026-03-23 |
 | 10. Skill Scaffold | v1.3 | 1/1 | Complete   | 2026-03-24 |
-| 11. Extraction and Update Workflow | v1.3 | 1/2 | In Progress|  |
+| 11. Extraction and Update Workflow | v1.3 | 2/2 | Complete | 2026-03-24 |
 | 12. Human Checkpoint Design | v1.3 | 0/? | Not started | - |
