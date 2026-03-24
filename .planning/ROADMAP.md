@@ -55,7 +55,10 @@
   2. If the newsletter edition already exists in newsletters.json, the skill reports a duplicate and stops without modifying any files
   3. The skill file contains a reference checklist with exact JSON field names, HTML section IDs, and ICS file naming conventions
   4. The permitted-file list (files the agent may touch) is explicitly enumerated in the skill — any file outside the list requires human confirmation
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 10-01-PLAN.md — Create /philatex-update SKILL.md with duplicate check, reference checklist, and permitted-file scope
 
 ### Phase 11: Extraction and Update Workflow
 **Goal**: After invocation, the agent reads the newsletter PDF, extracts all structured content, validates against JSON schemas, and updates every affected site file — including ICS calendar files and an ESBuild rebuild
@@ -92,6 +95,6 @@
 | 7. Newsletter and Data | v1.2 | 1/1 | Complete | 2026-03-23 |
 | 8. Page Updates | v1.2 | 1/1 | Complete | 2026-03-23 |
 | 9. Verification and Announcements | v1.2 | 1/1 | Complete | 2026-03-23 |
-| 10. Skill Scaffold | v1.3 | 0/? | Not started | - |
+| 10. Skill Scaffold | v1.3 | 0/1 | Not started | - |
 | 11. Extraction and Update Workflow | v1.3 | 0/? | Not started | - |
 | 12. Human Checkpoint Design | v1.3 | 0/? | Not started | - |
