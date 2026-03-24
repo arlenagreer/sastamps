@@ -48,9 +48,13 @@ The website serves as the primary digital presence for SAPA, providing members a
 
 ### Active
 
-<!-- Next milestone scope TBD -->
+<!-- Current scope: v1.3 Philatex Update Agent -->
 
-(None yet — start `/gsd:new-milestone` to define next scope)
+- [ ] `/philatex-update` skill as entry point (accepts PDF path)
+- [ ] Custom agent definition for non-linear newsletter processing
+- [ ] PDF reading with newsletter review/proofreading and layout feedback
+- [ ] Automated content extraction and site updates (data files, HTML pages, metadata)
+- [ ] Human checkpoint before committing changes
 
 ### Out of Scope
 
@@ -64,6 +68,7 @@ The website serves as the primary digital presence for SAPA, providing members a
 ## Context
 
 Shipped v1.2 on 2026-03-23. Q2 2026 content update complete with newsletter, meetings, and announcements.
+- v1.3 goal: codify the v1.2 update workflow into a reusable agent + skill for future editions
 - 11 HTML pages with consistent design, assets, and footer
 - Build system: ESBuild with tree-shaking, 7 page-specific bundles (~191KB total)
 - Tech stack: Vanilla JS ES6+, HTML5, CSS3/PostCSS, Lunr.js search, vanilla-calendar-pro
@@ -96,4 +101,22 @@ Shipped v1.2 on 2026-03-23. Q2 2026 content update complete with newsletter, mee
 | Quarter look-ahead logic for homepage | Show next quarter meetings within 14 days of quarter start | ✓ Good — smoother transition between quarters |
 
 ---
-*Last updated: 2026-03-23 after v1.2 milestone*
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd:transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd:complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
+
+---
+*Last updated: 2026-03-24 after v1.3 milestone start*
