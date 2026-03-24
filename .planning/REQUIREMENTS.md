@@ -55,22 +55,22 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SKILL-01 | — | Pending |
-| SKILL-02 | — | Pending |
-| SKILL-03 | — | Pending |
-| CONT-01 | — | Pending |
-| CONT-02 | — | Pending |
-| CONT-03 | — | Pending |
-| CONT-04 | — | Pending |
-| WORK-01 | — | Pending |
-| WORK-02 | — | Pending |
-| WORK-03 | — | Pending |
+| SKILL-01 | Phase 10 | Pending |
+| SKILL-02 | Phase 10 | Pending |
+| SKILL-03 | Phase 10 | Pending |
+| CONT-01 | Phase 11 | Pending |
+| CONT-02 | Phase 11 | Pending |
+| CONT-03 | Phase 11 | Pending |
+| CONT-04 | Phase 11 | Pending |
+| WORK-02 | Phase 11 | Pending |
+| WORK-03 | Phase 11 | Pending |
+| WORK-01 | Phase 12 | Pending |
 
 **Coverage:**
 - v1.3 requirements: 10 total
-- Mapped to phases: 0
-- Unmapped: 10 ⚠️
+- Mapped to phases: 10
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-24*
-*Last updated: 2026-03-24 after initial definition*
+*Last updated: 2026-03-24 after roadmap creation*
