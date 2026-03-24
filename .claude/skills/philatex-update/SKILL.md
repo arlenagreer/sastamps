@@ -13,6 +13,7 @@ allowed-tools:
   - Bash
   - Grep
   - Glob
+  - AskUserQuestion
 ---
 
 # /philatex-update
@@ -108,7 +109,59 @@ After the agent completes, verify its work before proceeding to checkpoint:
 
 If verification passes, proceed to the human checkpoint (Phase 12).
 
-**Post-agent behavior:** After Step 6 verification passes, the skill presents the human checkpoint (Phase 12). The checkpoint leads with key facts and [UNVERIFIED] items before showing diffs. The commit happens ONLY after human approval.
+**Post-agent behavior:** After Step 6 verification passes, proceed to Step 7 (Human Checkpoint).
+
+## Step 7: Human Checkpoint
+
+After Step 6 verification passes, present the human checkpoint. This is the ONLY place where the skill pauses for human input.
+
+### 7a. Key-Facts Summary
+
+Build a 10-item key-facts summary from the agent's Step 9 output. Present these 10 FIXED categories in this EXACT order (red-flags-first):
+
+1. `[UNVERIFIED] count` -- "0 items" or "N items -- REVIEW REQUIRED". Source: agent summary [UNVERIFIED] Markers count.
+2. `Schema validation status` -- "All passed" or "N warnings: {details}". Source: agent summary Schema Validation.
+3. `Newsletter ID + title` -- e.g., "2026-Q3: The Philatex -- Third Quarter 2026". Source: agent summary Edition block.
+4. `Quarter date range` -- e.g., "July-September 2026". Derive from QUARTER_NAME context variable.
+5. `Meetings added` -- count and date span, e.g., "13 meetings, Jul 3 - Sep 25". Source: agent summary Data Statistics.
+6. `Officer changes` -- names and roles or "No changes". Source: agent summary (compare about.html modifications).
+7. `New members` -- count and names or "None". Source: agent summary announcements.
+8. `Announcements` -- count and brief list. Source: agent summary announcements.
+9. `TSDA shows` -- count and date range or "None". Source: agent summary.
+10. `Files modified` -- count with category breakdown, e.g., "17 files: 2 data, 5 HTML, 13 ICS, 1 build". Source: agent summary Files Created + Files Modified.
+
+Present the 10 items as a numbered list. The entire summary MUST fit under 20 lines. Items 1-2 are red flags -- if either is non-zero/non-pass, add a visible warning line above the summary:
+
+```
+--- RED FLAGS DETECTED -- Review items 1-2 carefully ---
+```
+
+### 7b. Changes by Category
+
+After the key-facts summary, show a "Changes by Category" section grouping modified files by type:
+
+- **Data Files:** list each with `+N -M` line counts and semantic annotation (e.g., "newsletters.json (+45 -3) -- 1 new edition entry")
+- **HTML Pages:** list each with `+N -M` and annotation
+- **ICS Calendar:** collapse to single summary line, e.g., "13 individual + 1 quarterly .ics files generated"
+- **Build Output:** note rebuild status
+
+Get line counts using `git diff --stat` on each modified file. This section shows SCOPE, not content -- the key-facts summary already covers semantics. The human can run `git diff <file>` for line-by-line detail.
+
+### 7c. Proposed Commit Message
+
+Propose a conventional commit message for the update, e.g.:
+
+```
+content(Q3-2026): add Third Quarter 2026 newsletter update
+```
+
+Show this at the end of the checkpoint so the human can review or adjust it.
+
+### 7d. Approve/Reject Prompt
+
+After presenting the summary and diff overview, prompt the human for a decision. Present two explicit options: **Approve** (commit all staged changes) or **Reject** (revert all changes). The human may also type free-form feedback instead of selecting an option -- this triggers the fix-and-retry loop.
+
+If the human types feedback (anything other than "approve" or "reject"), treat it as a correction request. Make the requested changes, then re-present the full checkpoint from 7a. This loop continues until the human approves or rejects.
 
 ---
 
