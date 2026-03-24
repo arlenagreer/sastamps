@@ -80,7 +80,7 @@ When the duplicate check passes:
    - Constructed edition ID (e.g., "2026-Q3")
 3. The Phase 11 agent handles all content extraction, data file updates, HTML updates, ICS generation, and schema validation.
 
-> TODO: Phase 11 will define the agent at `.claude/agents/philatex-newsletter-agent.md`
+4. Spawn the agent defined at `.claude/agents/philatex-newsletter-agent.md` with the context variables above.
 
 **Post-agent behavior:** The skill resumes after the agent completes to handle the human checkpoint (Phase 12). The commit happens in the skill after checkpoint approval, not in the agent.
 
@@ -95,7 +95,7 @@ A quick-reference card for the downstream agent. For full field definitions, see
 **`data/newsletters/newsletters.json`**
 - Key fields: `id` (YYYY-QN), `title`, `quarter` (First/Second/Third/Fourth), `year`, `publishDate` (YYYY-MM-DD, first day of quarter), `filePath` (public/SAPA-PHILATEX-...), `description`, `featuredArticles[]`, `highlights[]`, `tags[]`, `pageCount`, `fileSize`, `status`
 - Validate against: `data/schemas/newsletter.schema.json`
-- Known gap: `featuredArticles.category` enum does not include "Calendar" or "Humor" -- flag any articles using these categories for human review rather than silently inserting them
+- Schema includes "Calendar" and "Humor" in `featuredArticles.category` enum (added in Phase 11)
 
 **`data/meetings/meetings.json`**
 - Key fields: `id` (YYYY-MM-DD), `date`, `time` (doorsOpen required), `location`, `type` (regular/business/auction/exhibition/social/special/picnic/holiday), `title`, `presenter`, `cancelled`
