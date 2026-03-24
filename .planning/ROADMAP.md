@@ -84,7 +84,10 @@ Plans:
   1. Agent pauses and presents a checkpoint before running any git commit
   2. The checkpoint leads with a 10-item key-facts summary (dates, new entries, officer changes, [UNVERIFIED] count) before showing diffs
   3. Human can approve changes to proceed to commit, or reject to discard staged changes with no files modified
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 12-01-PLAN.md — Add checkpoint presentation, approval/rejection handling, and commit steps to SKILL.md
 
 ## Progress
 
@@ -101,4 +104,4 @@ Plans:
 | 9. Verification and Announcements | v1.2 | 1/1 | Complete | 2026-03-23 |
 | 10. Skill Scaffold | v1.3 | 1/1 | Complete   | 2026-03-24 |
 | 11. Extraction and Update Workflow | v1.3 | 2/2 | Complete | 2026-03-24 |
-| 12. Human Checkpoint Design | v1.3 | 0/? | Not started | - |
+| 12. Human Checkpoint Design | v1.3 | 0/1 | Planning | - |
