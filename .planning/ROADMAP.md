@@ -5,7 +5,7 @@
 - ✅ **v1.0 Fix Site Issues** — Phases 1-3 (shipped 2026-02-16)
 - ✅ **v1.1 Restore Newsletter Archive** — Phases 4-6 (shipped 2026-03-09)
 - ✅ **v1.2 Philatex Q2 2026 Content Update** — Phases 7-9 (shipped 2026-03-23)
-- 🚧 **v1.3 Philatex Update Agent** — Phases 10-12 (in progress)
+- ✅ **v1.3 Philatex Update Agent** — Phases 10-12 (shipped 2026-03-24)
 
 ## Phases
 
@@ -36,13 +36,13 @@
 
 </details>
 
-### 🚧 v1.3 Philatex Update Agent (In Progress)
+### ✅ v1.3 Philatex Update Agent (Shipped 2026-03-24)
 
 **Milestone Goal:** Codify the v1.2 quarterly update workflow into a reusable `/philatex-update` skill that Claude can invoke to read a newsletter PDF, extract content, update all affected site files, and pause for human review before committing.
 
 - [x] **Phase 10: Skill Scaffold** - Create the `/philatex-update` entry point with permitted-file scope and idempotency check (completed 2026-03-24)
 - [x] **Phase 11: Extraction and Update Workflow** - Encode PDF reading, content extraction, schema validation, and all site file updates (completed 2026-03-24)
-- [ ] **Phase 12: Human Checkpoint Design** - Structure the review pause so it leads with key facts and surfaces [UNVERIFIED] items before committing
+- [x] **Phase 12: Human Checkpoint Design** - Structure the review pause so it leads with key facts and surfaces [UNVERIFIED] items before committing (completed 2026-03-24)
 
 ## Phase Details
 
@@ -87,7 +87,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 12-01-PLAN.md — Add checkpoint presentation, approval/rejection handling, and commit steps to SKILL.md
+- [x] 12-01-PLAN.md — Add checkpoint presentation, approval/rejection handling, and commit steps to SKILL.md
 
 ## Progress
 
@@ -104,4 +104,4 @@ Plans:
 | 9. Verification and Announcements | v1.2 | 1/1 | Complete | 2026-03-23 |
 | 10. Skill Scaffold | v1.3 | 1/1 | Complete   | 2026-03-24 |
 | 11. Extraction and Update Workflow | v1.3 | 2/2 | Complete | 2026-03-24 |
-| 12. Human Checkpoint Design | v1.3 | 0/1 | Planning | - |
+| 12. Human Checkpoint Design | v1.3 | 1/1 | Complete | 2026-03-24 |

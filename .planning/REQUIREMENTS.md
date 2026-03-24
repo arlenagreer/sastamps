@@ -22,7 +22,7 @@ Requirements for the Philatex Update Agent skill and agent. Each maps to roadmap
 
 ### Workflow & Safety
 
-- [ ] **WORK-01**: Agent pauses for human review before committing any changes
+- [x] **WORK-01**: Agent pauses for human review before committing any changes
 - [x] **WORK-02**: Agent runs `npm run build:js` after updating data files to rebuild ESBuild bundles
 - [x] **WORK-03**: Agent updates all affected files — meetings.json, newsletters.json, ICS calendar files, homepage, newsletter page, meetings page, and archive metadata
 
@@ -64,7 +64,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONT-04 | Phase 11 | Complete |
 | WORK-02 | Phase 11 | Complete |
 | WORK-03 | Phase 11 | Complete |
-| WORK-01 | Phase 12 | Pending |
+| WORK-01 | Phase 12 | Complete |
 
 **Coverage:**
 - v1.3 requirements: 10 total

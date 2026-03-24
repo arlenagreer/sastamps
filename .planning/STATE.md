@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Philatex Update Agent
-status: planning
-stopped_at: Completed 11-02-PLAN.md
-last_updated: "2026-03-24T20:20:22.154Z"
-last_activity: 2026-03-24 — Phase 11 completed; agent wired into skill with post-agent verification
+status: complete
+stopped_at: Completed 12-01-PLAN.md — v1.3 milestone complete
+last_updated: "2026-03-24T20:41:16Z"
+last_activity: 2026-03-24 — Phase 12 completed; human checkpoint added to SKILL.md; v1.3 milestone complete
 progress:
   total_phases: 3
-  completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
-  percent: 66
+  completed_phases: 3
+  total_plans: 4
+  completed_plans: 4
+  percent: 100
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-24)
 ## Current Position
 
 Phase: 12 of 12 (Human Checkpoint Design)
-Plan: 0 of ? in current phase
-Status: Ready to plan
-Last activity: 2026-03-24 — Phase 11 completed (2/2 plans); agent wired into skill
+Plan: 1 of 1 in current phase
+Status: Complete — v1.3 milestone shipped
+Last activity: 2026-03-24 — Phase 12 completed (1/1 plan); human checkpoint with approve/reject flow
 
-Progress: [██████░░░░] 66% (v1.3)
+Progress: [██████████] 100% (v1.3)
 
 ## Performance Metrics
 
@@ -65,6 +65,7 @@ Recent decisions affecting current work:
 - [Phase 11]: Agent definition is self-contained Markdown with YAML frontmatter, 9 numbered steps, and 10 important rules
 - [Phase 11]: ICS generation uses existing files as format templates; Category enum alphabetically ordered after Calendar/Humor extension
 - [Phase 11]: Agent spawning passes 4 context vars + 5 required pre-read files; post-agent verification gates checkpoint on build/file/marker checks
+- [Phase 12]: 10-item key-facts checkpoint with red-flags-first ordering; binary approve/reject with conversational fix-and-retry; all-or-nothing atomic revert on rejection
 
 ### Pending Todos
 
@@ -78,7 +79,7 @@ Recent decisions affecting current work:
 
 - ~~Phase 11: ICS calendar file generation mechanism from v1.2 not examined~~ — RESOLVED: Agent uses existing ICS files as format templates
 - ~~Phase 11: `featuredArticles.category` schema enum gap~~ — RESOLVED: Calendar and Humor added to enum in Plan 01
-- Phase 12: `AskUserQuestion` tool behavior in main-conversation skill context needs verification during implementation
+- ~~Phase 12: `AskUserQuestion` tool behavior in main-conversation skill context needs verification during implementation~~ -- RESOLVED: AskUserQuestion added to allowed-tools; behavior documented in Step 7d
 
 ### Quick Tasks Completed
 
@@ -89,9 +90,10 @@ Recent decisions affecting current work:
 | Phase 10 P01 | 7m 24s | 2 tasks | 1 files |
 | Phase 11 P01 | 27min | 2 tasks | 3 files |
 | Phase 11 P02 | 1min | 1 task | 1 file |
+| Phase 12 P01 | 2min | 2 tasks | 1 file |
 
 ## Session Continuity
 
-Last session: 2026-03-24T20:20:22.151Z
-Stopped at: Completed 11-02-PLAN.md
+Last session: 2026-03-24T20:41:16Z
+Stopped at: Completed 12-01-PLAN.md — v1.3 milestone complete
 Resume file: None
