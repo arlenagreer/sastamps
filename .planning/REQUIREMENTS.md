@@ -9,9 +9,9 @@ Requirements for the Philatex Update Agent skill and agent. Each maps to roadmap
 
 ### Skill Infrastructure
 
-- [ ] **SKILL-01**: User can invoke `/philatex-update <pdf-path>` to start the update workflow
-- [ ] **SKILL-02**: Skill includes a reference checklist with JSON field names, HTML section IDs, and ICS file conventions
-- [ ] **SKILL-03**: Skill checks whether the newsletter edition already exists in the catalogue before processing
+- [x] **SKILL-01**: User can invoke `/philatex-update <pdf-path>` to start the update workflow
+- [x] **SKILL-02**: Skill includes a reference checklist with JSON field names, HTML section IDs, and ICS file conventions
+- [x] **SKILL-03**: Skill checks whether the newsletter edition already exists in the catalogue before processing
 
 ### Content Processing
 
@@ -55,9 +55,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SKILL-01 | Phase 10 | Pending |
-| SKILL-02 | Phase 10 | Pending |
-| SKILL-03 | Phase 10 | Pending |
+| SKILL-01 | Phase 10 | Complete |
+| SKILL-02 | Phase 10 | Complete |
+| SKILL-03 | Phase 10 | Complete |
 | CONT-01 | Phase 11 | Pending |
 | CONT-02 | Phase 11 | Pending |
 | CONT-03 | Phase 11 | Pending |

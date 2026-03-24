@@ -40,7 +40,7 @@
 
 **Milestone Goal:** Codify the v1.2 quarterly update workflow into a reusable `/philatex-update` skill that Claude can invoke to read a newsletter PDF, extract content, update all affected site files, and pause for human review before committing.
 
-- [ ] **Phase 10: Skill Scaffold** - Create the `/philatex-update` entry point with permitted-file scope and idempotency check
+- [x] **Phase 10: Skill Scaffold** - Create the `/philatex-update` entry point with permitted-file scope and idempotency check (completed 2026-03-24)
 - [ ] **Phase 11: Extraction and Update Workflow** - Encode PDF reading, content extraction, schema validation, and all site file updates
 - [ ] **Phase 12: Human Checkpoint Design** - Structure the review pause so it leads with key facts and surfaces [UNVERIFIED] items before committing
 
@@ -58,7 +58,7 @@
 **Plans**: 1 plan
 
 Plans:
-- [ ] 10-01-PLAN.md — Create /philatex-update SKILL.md with duplicate check, reference checklist, and permitted-file scope
+- [x] 10-01-PLAN.md — Create /philatex-update SKILL.md with duplicate check, reference checklist, and permitted-file scope
 
 ### Phase 11: Extraction and Update Workflow
 **Goal**: After invocation, the agent reads the newsletter PDF, extracts all structured content, validates against JSON schemas, and updates every affected site file — including ICS calendar files and an ESBuild rebuild
@@ -95,6 +95,6 @@ Plans:
 | 7. Newsletter and Data | v1.2 | 1/1 | Complete | 2026-03-23 |
 | 8. Page Updates | v1.2 | 1/1 | Complete | 2026-03-23 |
 | 9. Verification and Announcements | v1.2 | 1/1 | Complete | 2026-03-23 |
-| 10. Skill Scaffold | v1.3 | 0/1 | Not started | - |
+| 10. Skill Scaffold | v1.3 | 1/1 | Complete   | 2026-03-24 |
 | 11. Extraction and Update Workflow | v1.3 | 0/? | Not started | - |
 | 12. Human Checkpoint Design | v1.3 | 0/? | Not started | - |
