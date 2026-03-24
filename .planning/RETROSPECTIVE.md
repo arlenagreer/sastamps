@@ -40,6 +40,43 @@
 
 ---
 
+## Milestone: v1.2 — Philatex Q2 2026 Content Update
+
+**Shipped:** 2026-03-23
+**Phases:** 3 | **Plans:** N/A (single commit)
+
+### What Was Built
+- Q2 2026 newsletter PDF published with updated metadata catalogue
+- 13 April-June 2026 meeting entries with ICS calendar files
+- Homepage refresh: upcoming meetings, latest issue, highlights with quarter look-ahead
+- Newsletter and meetings page updates with Q2 2026 content
+- BOG roster update, TSDA shows, announcements (new members, picnic, program)
+
+### What Worked
+- Single-commit approach for cohesive content update — all changes interdependent, no need for phased execution
+- Requirements were well-defined from the newsletter source document, making implementation straightforward
+- Commit message thoroughly documented all changes for future reference
+
+### What Was Inefficient
+- No phase SUMMARY.md files created — work done outside GSD workflow means no planning trail
+- Milestone completion required manual verification of requirements instead of automated audit
+- STATE.md showed 0% progress despite work being complete
+
+### Patterns Established
+- Quarterly content update pattern: newsletter PDF + meetings JSON + ICS files + page updates
+- Quarter look-ahead logic for homepage (show next quarter within 14 days)
+
+### Key Lessons
+1. For small, cohesive content updates, single-commit execution is more efficient than phased GSD workflow
+2. Even when skipping phases, update STATE.md to reflect actual progress
+3. Content updates from a single source document (newsletter) can map cleanly to requirements
+
+### Cost Observations
+- Sessions: 1
+- Notable: Entire milestone defined and executed in a single session
+
+---
+
 ## Cross-Milestone Trends
 
 ### Process Evolution
@@ -48,8 +85,10 @@
 |-----------|--------|-------|------------|
 | v1.0 | 3 | 7 | Initial GSD setup, established phase/plan patterns |
 | v1.1 | 3 | 4 | Added milestone audit step, caught documentation gaps |
+| v1.2 | 3 | N/A | Single-commit content update, skipped phased execution |
 
 ### Top Lessons (Verified Across Milestones)
 
 1. Complete documentation during execution rather than retroactively — saves rework at milestone close
 2. Safe DOM patterns (no innerHTML) should be the default for any dynamic rendering
+3. Small, cohesive content updates from a single source document can skip phased execution without losing quality

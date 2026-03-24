@@ -2,7 +2,7 @@
 
 ## What This Is
 
-The San Antonio Philatelic Association website — a production static site for a stamp collecting club founded in 1896. Built with vanilla JavaScript ES6+, HTML5, CSS3 with PostCSS, and ESBuild for bundling. Deployed on GitHub Pages at sastamps.org. All 11 pages have consistent design, working assets, and page-specific JS bundles.
+The San Antonio Philatelic Association website — a production static site for a stamp collecting club founded in 1896. Built with vanilla JavaScript ES6+, HTML5, CSS3 with PostCSS, and ESBuild for bundling. Deployed on GitHub Pages at sastamps.org. All 11 pages have consistent design, working assets, and page-specific JS bundles. Content current through Q2 2026 (Vol. 132, Issue #2).
 
 ## Core Value
 
@@ -38,21 +38,19 @@ The website serves as the primary digital presence for SAPA, providing members a
 - ✓ 404 page rebuilt with correct info and current design — v1.0
 - ✓ Search scores normalized to relative percentages — v1.0
 - ✓ Footer consistent 3-column layout across all 11 pages — v1.0
+- ✓ Q2 2026 newsletter PDF published and metadata updated — v1.2
+- ✓ 13 Q2 meeting entries (Apr-Jun 2026) with ICS calendar files — v1.2
+- ✓ Newsletter, meetings, and homepage updated with Q2 2026 content — v1.2
+- ✓ BOG roster updated (Steve Mabie Treasurer, Arlen Greer Webmaster) — v1.2
+- ✓ TSDA stamp show schedule added to meetings page — v1.2
+- ✓ Announcements: new members, picnic, program highlights — v1.2
+- ✓ Mailing address verified on contact page — v1.2
 
 ### Active
 
-<!-- Current scope: v1.2 Philatex Q2 2026 Content Update -->
+<!-- Next milestone scope TBD -->
 
-- [ ] Add Q2 2026 newsletter PDF and update newsletters.json metadata
-- [ ] Update newsletter.html Current Issue and 2026 Archive sections
-- [ ] Add 13 Q2 meeting entries (Apr-Jun 2026) to meetings.json
-- [ ] Update meetings.html schedule section and download schedule button
-- [ ] Generate ICS calendar files for Q2 2026 meetings
-- [ ] Verify/update Board of Governors roster (Rick Cross as Secretary)
-- [ ] Add TSDA stamp show schedule (including San Antonio May 8-9)
-- [ ] Update homepage: Upcoming Meeting, Read Latest Issue link, Latest Issue Highlights
-- [ ] Add announcements: new members, condolence, annual picnic, upcoming program
-- [ ] Verify mailing address on contact page
+(None yet — start `/gsd:new-milestone` to define next scope)
 
 ### Out of Scope
 
@@ -60,17 +58,19 @@ The website serves as the primary digital presence for SAPA, providing members a
 - User accounts or authentication — not needed for a club informational site
 - CMS integration — content managed via JSON data files and HTML
 - PWA offline functionality — sw.js/manifest scope limited to removing 404 errors
+- Automated newsletter ingestion pipeline — manual update process sufficient for quarterly cadence
+- Member directory or member count display — privacy considerations
 
 ## Context
 
-Shipped v1.1 on 2026-03-09. Newsletter archive restored with 98 PDFs (2008-2024).
-Starting v1.2 on 2026-03-23. Philatex Q2 2026 (Vol. 132, Issue #2) arrived — content update cycle.
+Shipped v1.2 on 2026-03-23. Q2 2026 content update complete with newsletter, meetings, and announcements.
 - 11 HTML pages with consistent design, assets, and footer
 - Build system: ESBuild with tree-shaking, 7 page-specific bundles (~191KB total)
 - Tech stack: Vanilla JS ES6+, HTML5, CSS3/PostCSS, Lunr.js search, vanilla-calendar-pro
 - Deployed on GitHub Pages
-- Newsletter archive: 98 PDFs in `public/newsletter_archive/`, JSON catalogue with 99 entries
+- Newsletter archive: 99 PDFs in `public/newsletter_archive/` + Q2 2026, JSON catalogue with 100 entries
 - Known tech debt: 3 orphaned JS modules (data-loader, template-engine, pagination) built but unused
+- Quarter look-ahead logic added for homepage (shows next quarter within 14 days)
 
 ## Constraints
 
@@ -92,20 +92,8 @@ Starting v1.2 on 2026-03-23. Philatex Q2 2026 (Vol. 132, Issue #2) arrived — c
 | Safe DOM rendering for archive | No innerHTML even with trusted JSON — XSS prevention | ✓ Good — createElement/textContent throughout |
 | Compact list layout for archived years | Visual contrast with rich cards for recent issues | ✓ Good — dense scanning for 17 years of content |
 | Lean JSON schema for catalogue | Only programmatically-derivable fields, not manual metadata | ✓ Good — 99 entries auto-generated |
-
-## Current Milestone: v1.2 Philatex Q2 2026 Content Update
-
-**Goal:** Update the website with all content from the Philatex Second Quarter 2026 newsletter (Vol. 132, Issue #2)
-
-**Target features:**
-- Newsletter PDF publication and metadata update
-- Q2 2026 meeting schedule (April–June, 13 meetings)
-- ICS calendar files for Q2 meetings
-- Homepage content refresh (upcoming meetings, latest issue, highlights)
-- Board of Governors verification
-- TSDA stamp show schedule
-- Announcements (new members, condolence, picnic, program)
-- Contact/mailing address verification
+| Single-commit content update for v1.2 | All Q2 2026 changes interdependent, phased execution unnecessary | ✓ Good — clean delivery, all 17 requirements met |
+| Quarter look-ahead logic for homepage | Show next quarter meetings within 14 days of quarter start | ✓ Good — smoother transition between quarters |
 
 ---
-*Last updated: 2026-03-23 after v1.2 milestone start*
+*Last updated: 2026-03-23 after v1.2 milestone*

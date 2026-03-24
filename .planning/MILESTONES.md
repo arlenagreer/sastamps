@@ -1,5 +1,22 @@
 # Milestones
 
+## v1.2 Philatex Q2 2026 Content Update (Shipped: 2026-03-23)
+
+**Phases:** 3 | **Plans:** N/A (single commit) | **Commits:** 1 | **Files changed:** 31
+**Git range:** `88fc137`
+
+**Key accomplishments:**
+1. Published Q2 2026 newsletter PDF and updated metadata catalogue
+2. Added 13 April-June 2026 meeting entries with ICS calendar files
+3. Updated homepage with upcoming meetings, latest issue, and highlights
+4. Updated newsletter page current issue and 2026 archive sections
+5. Updated BOG roster (Steve Mabie as Treasurer, Arlen Greer as Webmaster)
+6. Added announcements: new members, annual picnic, Joe Perez program, TSDA shows
+
+**Archive:** `milestones/v1.2-ROADMAP.md`, `milestones/v1.2-REQUIREMENTS.md`
+
+---
+
 ## v1.1 Restore Newsletter Archive (Shipped: 2026-03-09)
 
 **Phases:** 3 | **Plans:** 4 | **Commits:** 15 | **Files changed:** 13
