@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Philatex Update Agent
 status: planning
-stopped_at: Completed 10-01-PLAN.md
-last_updated: "2026-03-24T19:45:19.684Z"
+stopped_at: Completed 11-01-PLAN.md
+last_updated: "2026-03-24T20:20:22.154Z"
 last_activity: 2026-03-24 — Roadmap created; phases 10-12 defined
 progress:
   total_phases: 3
   completed_phases: 1
-  total_plans: 1
-  completed_plans: 1
+  total_plans: 3
+  completed_plans: 2
   percent: 0
 ---
 
@@ -62,6 +62,8 @@ Recent decisions affecting current work:
 - v1.3: Deny-by-default file scope — enumerate permitted files, require human confirmation for anything outside
 - v1.3: Two-phase workflow: extract+stage first, then checkpoint, then commit
 - [Phase 10]: SKILL.md uses simple standalone pattern with numbered steps; complexity deferred to Phase 11 agent
+- [Phase 11]: Agent definition is self-contained Markdown with YAML frontmatter, 9 numbered steps, and 10 important rules
+- [Phase 11]: ICS generation uses existing files as format templates; Category enum alphabetically ordered after Calendar/Humor extension
 
 ### Pending Todos
 
@@ -84,9 +86,10 @@ Recent decisions affecting current work:
 | 1 | Rebuild stale archive JS bundle to show older newsletter links | 2026-03-09 | dc4cf71 | [1-i-don-t-see-the-links-to-older-editions-](./quick/1-i-don-t-see-the-links-to-older-editions-/) |
 | 2 | Review SAPA Philatex Q2 2026 newsletter with proofreading and layout recommendations | 2026-03-24 | acf6640 | [2-review-sapa-philatex-q2-2026-newsletter-](./quick/2-review-sapa-philatex-q2-2026-newsletter-/) |
 | Phase 10 P01 | 7m 24s | 2 tasks | 1 files |
+| Phase 11 P01 | 27min | 2 tasks | 3 files |
 
 ## Session Continuity
 
-Last session: 2026-03-24T19:45:19.681Z
-Stopped at: Completed 10-01-PLAN.md
+Last session: 2026-03-24T20:20:22.151Z
+Stopped at: Completed 11-01-PLAN.md
 Resume file: None

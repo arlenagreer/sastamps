@@ -15,16 +15,16 @@ Requirements for the Philatex Update Agent skill and agent. Each maps to roadmap
 
 ### Content Processing
 
-- [ ] **CONT-01**: Agent reads the newsletter PDF and extracts structured content (meetings, announcements, officers, TSDA shows)
-- [ ] **CONT-02**: Agent reviews/proofreads the newsletter and generates a feedback report (typos, layout, content issues)
-- [ ] **CONT-03**: Agent validates all extracted data against existing JSON schemas before writing
-- [ ] **CONT-04**: Agent marks ambiguous or low-confidence extractions as [UNVERIFIED] for human review
+- [x] **CONT-01**: Agent reads the newsletter PDF and extracts structured content (meetings, announcements, officers, TSDA shows)
+- [x] **CONT-02**: Agent reviews/proofreads the newsletter and generates a feedback report (typos, layout, content issues)
+- [x] **CONT-03**: Agent validates all extracted data against existing JSON schemas before writing
+- [x] **CONT-04**: Agent marks ambiguous or low-confidence extractions as [UNVERIFIED] for human review
 
 ### Workflow & Safety
 
 - [ ] **WORK-01**: Agent pauses for human review before committing any changes
-- [ ] **WORK-02**: Agent runs `npm run build:js` after updating data files to rebuild ESBuild bundles
-- [ ] **WORK-03**: Agent updates all affected files — meetings.json, newsletters.json, ICS calendar files, homepage, newsletter page, meetings page, and archive metadata
+- [x] **WORK-02**: Agent runs `npm run build:js` after updating data files to rebuild ESBuild bundles
+- [x] **WORK-03**: Agent updates all affected files — meetings.json, newsletters.json, ICS calendar files, homepage, newsletter page, meetings page, and archive metadata
 
 ## Future Requirements
 
@@ -58,12 +58,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SKILL-01 | Phase 10 | Complete |
 | SKILL-02 | Phase 10 | Complete |
 | SKILL-03 | Phase 10 | Complete |
-| CONT-01 | Phase 11 | Pending |
-| CONT-02 | Phase 11 | Pending |
-| CONT-03 | Phase 11 | Pending |
-| CONT-04 | Phase 11 | Pending |
-| WORK-02 | Phase 11 | Pending |
-| WORK-03 | Phase 11 | Pending |
+| CONT-01 | Phase 11 | Complete |
+| CONT-02 | Phase 11 | Complete |
+| CONT-03 | Phase 11 | Complete |
+| CONT-04 | Phase 11 | Complete |
+| WORK-02 | Phase 11 | Complete |
+| WORK-03 | Phase 11 | Complete |
 | WORK-01 | Phase 12 | Pending |
 
 **Coverage:**

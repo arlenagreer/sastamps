@@ -73,7 +73,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 11-01-PLAN.md — Extend newsletter schema and create philatex-newsletter-agent definition with full extraction/update workflow
+- [x] 11-01-PLAN.md — Extend newsletter schema and create philatex-newsletter-agent definition with full extraction/update workflow
 - [ ] 11-02-PLAN.md — Wire agent into SKILL.md with spawning instructions and post-agent verification
 
 ### Phase 12: Human Checkpoint Design
@@ -100,5 +100,5 @@ Plans:
 | 8. Page Updates | v1.2 | 1/1 | Complete | 2026-03-23 |
 | 9. Verification and Announcements | v1.2 | 1/1 | Complete | 2026-03-23 |
 | 10. Skill Scaffold | v1.3 | 1/1 | Complete   | 2026-03-24 |
-| 11. Extraction and Update Workflow | v1.3 | 0/2 | Not started | - |
+| 11. Extraction and Update Workflow | v1.3 | 1/2 | In Progress|  |
 | 12. Human Checkpoint Design | v1.3 | 0/? | Not started | - |
