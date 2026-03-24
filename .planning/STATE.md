@@ -65,4 +65,4 @@ None.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 1 | Rebuild stale archive JS bundle to show older newsletter links | 2026-03-09 | dc4cf71 | [1-i-don-t-see-the-links-to-older-editions-](./quick/1-i-don-t-see-the-links-to-older-editions-/) |
-| 2 | Review SAPA Philatex Q2 2026 newsletter with proofreading and layout recommendations | 2026-03-24 | pending | [2-review-sapa-philatex-q2-2026-newsletter-](./quick/2-review-sapa-philatex-q2-2026-newsletter-/) |
+| 2 | Review SAPA Philatex Q2 2026 newsletter with proofreading and layout recommendations | 2026-03-24 | acf6640 | [2-review-sapa-philatex-q2-2026-newsletter-](./quick/2-review-sapa-philatex-q2-2026-newsletter-/) |
