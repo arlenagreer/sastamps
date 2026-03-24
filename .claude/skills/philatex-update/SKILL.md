@@ -2,10 +2,10 @@
 name: philatex-update
 description: |
   Update the SAPA website with content from a new Philatex newsletter PDF.
-  Reads the PDF, checks for duplicate editions, then hands off to the
-  extraction and update workflow. Use when asked to "update newsletter",
-  "process Philatex", "update site with new Philatex", or given a PDF path
-  with "/philatex-update".
+  Reads the PDF, checks for duplicate editions, extracts content, updates
+  site files, and presents changes for review. Use when asked to "update
+  newsletter", "process Philatex", "update site with new Philatex", or
+  given a PDF path with "/philatex-update".
 allowed-tools:
   - Read
   - Write
@@ -17,7 +17,7 @@ allowed-tools:
 
 # /philatex-update
 
-Quarterly newsletter update workflow for the San Antonio Philatelic Association website. This skill validates a new Philatex PDF, identifies its edition, checks for duplicates, and hands off to the extraction agent.
+Quarterly newsletter update workflow for the San Antonio Philatelic Association website. This skill validates a new Philatex PDF, identifies its edition, checks for duplicates, extracts content via the philatex-newsletter-agent, verifies the agent's work, and presents changes for human review before committing.
 
 ## Step 1: Input Parsing
 
@@ -68,21 +68,47 @@ Before any file modifications, check whether this edition has already been proce
 
 **If no match is found:** proceed to Step 5.
 
-## Step 5: Handoff to Extraction Workflow
+## Step 5: Extraction and Update Workflow
 
 When the duplicate check passes:
 
 1. Report: "Edition {ID} is new. Proceeding with extraction and update workflow."
-2. Pass the following context to the Phase 11 agent:
-   - PDF file path
-   - Identified edition year (e.g., 2026)
-   - Identified quarter name (e.g., "Third")
-   - Constructed edition ID (e.g., "2026-Q3")
-3. The Phase 11 agent handles all content extraction, data file updates, HTML updates, ICS generation, and schema validation.
+2. Spawn the extraction agent with the following context:
 
-4. Spawn the agent defined at `.claude/agents/philatex-newsletter-agent.md` with the context variables above.
+   Agent: `philatex-newsletter-agent`
+   Context to pass:
+   - PDF_PATH: the validated PDF file path (absolute)
+   - EDITION_YEAR: the identified year (e.g., 2026)
+   - QUARTER_NAME: the identified quarter name (e.g., "Third")
+   - EDITION_ID: the constructed edition ID (e.g., "2026-Q3")
 
-**Post-agent behavior:** The skill resumes after the agent completes to handle the human checkpoint (Phase 12). The commit happens in the skill after checkpoint approval, not in the agent.
+   Files the agent must read before starting:
+   - `.claude/agents/philatex-newsletter-agent.md` (its own instructions)
+   - `data/schemas/newsletter.schema.json` (validation target)
+   - `data/schemas/meeting.schema.json` (validation target)
+   - `data/newsletters/newsletters.json` (current catalogue)
+   - `data/meetings/meetings.json` (current meetings)
+
+3. The agent handles all extraction, validation, data file updates, ICS generation, HTML updates, and ESBuild rebuild.
+4. The agent does NOT commit. It returns a structured summary of all changes.
+
+## Step 6: Post-Agent Verification
+
+After the agent completes, verify its work before proceeding to checkpoint:
+
+1. Confirm the agent reported build success (`npm run build:js` exit code 0)
+2. Confirm all expected files were modified:
+   - `data/newsletters/newsletters.json` (must contain new edition ID)
+   - `data/meetings/meetings.json` (must contain new quarter dates)
+   - At least one ICS file in `data/calendar/` for the new quarter
+   - Quarterly aggregate ICS in `public/`
+   - `index.html`, `newsletter.html`, `meetings.html` updated
+3. Count [UNVERIFIED] markers across all modified files
+4. If the agent reported any errors or failed the build, report the failure and STOP
+
+If verification passes, proceed to the human checkpoint (Phase 12).
+
+**Post-agent behavior:** After Step 6 verification passes, the skill presents the human checkpoint (Phase 12). The checkpoint leads with key facts and [UNVERIFIED] items before showing diffs. The commit happens ONLY after human approval.
 
 ---
 
@@ -163,3 +189,4 @@ summary rather than making them.
 3. **This skill does NOT ask the user what edition the PDF is.** It reads the PDF to determine the edition automatically.
 4. **The duplicate check is mandatory.** Never skip it, even if the user says "just update it."
 5. **The permitted-file list is the source of truth for scope.** Any modification outside this list must be flagged, not performed.
+6. **After the agent completes, verify its summary before presenting the checkpoint.** If the build failed or required files were not updated, do NOT proceed to checkpoint.
