@@ -1,6 +1,54 @@
 {
   "newsletters": [
     {
+      "id": "2026-Q2",
+      "title": "SAPA PHILATEX Second Quarter 2026",
+      "quarter": "Second",
+      "year": 2026,
+      "publishDate": "2026-04-01",
+      "filePath": "public/SAPA-PHILATEX-Second-Quarter-2026.pdf",
+      "description": "Second Quarter 2026 newsletter featuring the April-June meeting calendar, Stamp Program announcement for Joe Perez's 'Spanish Participation in the American Revolution', annual club picnic details, new member announcements, feature article on Farley's Follies, and website archive updates.",
+      "featuredArticles": [
+        {
+          "title": "Q2 2026 Meeting Calendar",
+          "category": "Calendar",
+          "page": 1
+        },
+        {
+          "title": "Farley's Follies",
+          "category": "Feature",
+          "page": 3
+        },
+        {
+          "title": "Annual Club Picnic Announcement",
+          "category": "News",
+          "page": 2
+        },
+        {
+          "title": "New Members Welcome",
+          "category": "News",
+          "page": 2
+        },
+        {
+          "title": "Talking Stamps",
+          "category": "Humor",
+          "page": 3
+        }
+      ],
+      "highlights": [
+        "Complete April-June 2026 meeting schedule",
+        "Joe Perez stamp program on Spanish Participation in the American Revolution",
+        "Annual club picnic on June 19",
+        "Three new members: Becky Peterson, Greg Peterson, Leo Palencia",
+        "Feature article on Farley's Follies stamp scandal",
+        "Website archive now available back to March 2008"
+      ],
+      "tags": ["2026", "Q2", "meetings", "picnic", "new-members", "farleys-follies", "stamp-program"],
+      "pageCount": 3,
+      "fileSize": "577 KB",
+      "status": "published"
+    },
+    {
       "id": "2026-Q1",
       "title": "SAPA PHILATEX First Quarter 2026",
       "quarter": "First",
@@ -150,9 +198,9 @@
     }
   ],
   "metadata": {
-    "lastUpdated": "2026-01-01T00:00:00.000Z",
-    "totalIssues": 4,
-    "latestIssue": "2026-Q1",
+    "lastUpdated": "2026-04-01T00:00:00.000Z",
+    "totalIssues": 5,
+    "latestIssue": "2026-Q2",
     "version": "1.0"
   }
 }

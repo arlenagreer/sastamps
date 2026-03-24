@@ -4087,8 +4087,8 @@ thead {
                         <div class="calendar-downloads text-center mt-4" style="background-color: var(--light); padding: 1.5rem; border-radius: var(--radius-md);">
                             <div class="grid" style="grid-template-columns: 1fr auto 1fr; gap: 2rem; align-items: center;">
                                 <div>
-                                    <a href="public/sapa-q1-2026-meetings.ics" class="btn btn-primary" download style="width: 100%;">
-                                        <i class="fas fa-calendar-alt"></i> Download Complete Q1 2026 Schedule
+                                    <a href="public/sapa-q2-2026-meetings.ics" class="btn btn-primary" download style="width: 100%;">
+                                        <i class="fas fa-calendar-alt"></i> Download Complete Q2 2026 Schedule
                                     </a>
                                 </div>
                                 <div style="color: var(--primary); font-weight: bold;">OR</div>
@@ -4102,8 +4102,52 @@ thead {
             </div>
         </section>
 
-        <!-- Map Section -->
+        <!-- TSDA Stamp Shows Section -->
         <section class="section">
+            <div class="container">
+                <h2 class="section-title"><i class="fas fa-store" style="margin-right: 0.5rem;"></i>Upcoming TSDA Stamp Shows</h2>
+                <p class="text-center mb-3">The Texas Stamp Dealers Association hosts shows throughout the state. Hours: Friday 10 AM – 5 PM, Saturday 9 AM – 4 PM</p>
+                <div class="card">
+                    <div class="card-content" style="padding: 0;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <caption class="sr-only">Upcoming TSDA Stamp Shows for Q2 2026</caption>
+                            <thead>
+                                <tr style="background-color: var(--primary); color: white;">
+                                    <th scope="col" style="padding: 0.75rem; text-align: left;">Dates</th>
+                                    <th scope="col" style="padding: 0.75rem; text-align: left;">Show</th>
+                                    <th scope="col" style="padding: 0.75rem; text-align: left;">Location</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background-color: rgba(255, 255, 255, 0.8);">
+                                    <td style="padding: 0.75rem; border-bottom: 1px solid #ddd;">April 10–11</td>
+                                    <td style="padding: 0.75rem; border-bottom: 1px solid #ddd;">Dallas TSDA</td>
+                                    <td style="padding: 0.75rem; border-bottom: 1px solid #ddd;">Holiday Inn &amp; Suites, 3220 Craig Drive, McKinney</td>
+                                </tr>
+                                <tr style="background-color: rgba(255, 255, 255, 0.6);">
+                                    <td style="padding: 0.75rem; border-bottom: 1px solid #ddd;">April 17–18</td>
+                                    <td style="padding: 0.75rem; border-bottom: 1px solid #ddd;">Houston TSDA</td>
+                                    <td style="padding: 0.75rem; border-bottom: 1px solid #ddd;">Hilton Garden Inn, 12245 Katy Freeway, Houston</td>
+                                </tr>
+                                <tr style="background-color: rgba(255, 255, 255, 0.8);">
+                                    <td style="padding: 0.75rem; border-bottom: 1px solid #ddd; font-weight: bold; color: var(--primary);">May 8–9</td>
+                                    <td style="padding: 0.75rem; border-bottom: 1px solid #ddd; font-weight: bold; color: var(--primary);">San Antonio TSDA</td>
+                                    <td style="padding: 0.75rem; border-bottom: 1px solid #ddd; font-weight: bold; color: var(--primary);">Norris Conference Center, 618 NW Loop 410, San Antonio</td>
+                                </tr>
+                                <tr style="background-color: rgba(255, 255, 255, 0.6);">
+                                    <td style="padding: 0.75rem;">June 26–27</td>
+                                    <td style="padding: 0.75rem;">Dallas TSDA</td>
+                                    <td style="padding: 0.75rem;">Holiday Inn &amp; Suites, 3220 Craig Drive, McKinney</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Map Section -->
+        <section class="section" style="background-color: var(--light);">
             <div class="container">
                 <h2 class="section-title">Find Us</h2>
                 <div class="card">
@@ -4469,7 +4513,7 @@ thead {
                 const container = document.getElementById('meeting-schedule-container');
                 if (container) {
                     loader.renderMeetingsTable(container, {
-                        dateRange: 'Q1-2026',
+                        dateRange: 'Q2-2026',
                         showCalendarLinks: true,
                         responsive: true
                     });
@@ -4490,19 +4534,19 @@ thead {
                 container.innerHTML = `
                     <div class="fallback-content">
                         <h3 class="text-primary mb-3">Meeting Schedule</h3>
-                        <p class="mb-4">We meet most Fridays during Q1 2026. Doors open at 6:30 PM, meetings begin at 7:30 PM.</p>
+                        <p class="mb-4">We meet most Fridays during Q2 2026. Doors open at 6:30 PM, meetings begin at 7:30 PM.</p>
                         <div class="grid-auto-fit mb-4">
                             <div style="background: white; padding: 1rem; border-radius: var(--radius-sm);">
-                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">January 2026</h4>
+                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">April 2026</h4>
                                 <p style="margin: 0;">BOG &amp; Show and Tell, Auction, Bourse sessions</p>
                             </div>
                             <div style="background: white; padding: 1rem; border-radius: var(--radius-sm);">
-                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">February 2026</h4>
-                                <p style="margin: 0;">BOG &amp; Show and Tell, Auction, Bourse sessions</p>
-                            </div>
-                            <div style="background: white; padding: 1rem; border-radius: var(--radius-sm);">
-                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">March 2026</h4>
+                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">May 2026</h4>
                                 <p style="margin: 0;">BOG &amp; Show and Tell, Auction, Bourse, Stamp Program</p>
+                            </div>
+                            <div style="background: white; padding: 1rem; border-radius: var(--radius-sm);">
+                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">June 2026</h4>
+                                <p style="margin: 0;">BOG &amp; Show and Tell, Auction, Club Picnic, Bourse</p>
                             </div>
                         </div>
                         <p style="margin: 0; color: var(--medium);">
@@ -4537,19 +4581,19 @@ thead {
                 container.innerHTML = `
                     <div class="fallback-content">
                         <h3 class="text-primary mb-3">Meeting Schedule</h3>
-                        <p class="mb-4">We meet most Fridays during Q1 2026. Doors open at 6:30 PM, meetings begin at 7:30 PM.</p>
+                        <p class="mb-4">We meet most Fridays during Q2 2026. Doors open at 6:30 PM, meetings begin at 7:30 PM.</p>
                         <div class="grid-auto-fit mb-4">
                             <div style="background: white; padding: 1rem; border-radius: var(--radius-sm);">
-                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">January 2026</h4>
+                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">April 2026</h4>
                                 <p style="margin: 0;">BOG &amp; Show and Tell, Auction, Bourse sessions</p>
                             </div>
                             <div style="background: white; padding: 1rem; border-radius: var(--radius-sm);">
-                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">February 2026</h4>
-                                <p style="margin: 0;">BOG &amp; Show and Tell, Auction, Bourse sessions</p>
-                            </div>
-                            <div style="background: white; padding: 1rem; border-radius: var(--radius-sm);">
-                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">March 2026</h4>
+                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">May 2026</h4>
                                 <p style="margin: 0;">BOG &amp; Show and Tell, Auction, Bourse, Stamp Program</p>
+                            </div>
+                            <div style="background: white; padding: 1rem; border-radius: var(--radius-sm);">
+                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">June 2026</h4>
+                                <p style="margin: 0;">BOG &amp; Show and Tell, Auction, Club Picnic, Bourse</p>
                             </div>
                         </div>
                         <p style="margin: 0; color: var(--medium);">

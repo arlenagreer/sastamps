@@ -1,0 +1,165 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//San Antonio Philatelic Association//SAPA Meeting Calendar//EN
+CALSCALE:GREGORIAN
+X-WR-CALNAME:SAPA Q2 2026 Meetings
+X-WR-TIMEZONE:America/Chicago
+X-WR-CALDESC:San Antonio Philatelic Association Second Quarter 2026 Meeting Schedule
+
+BEGIN:VEVENT
+DTSTART:20260403T183000
+DTEND:20260403T183100
+DTSTAMP:20260401T000000Z
+UID:sapa-2026-04-03@sastamps.org
+SUMMARY:NO MEETING - Good Friday
+DESCRIPTION:No meeting scheduled due to Good Friday holiday. Next meeting: April 10\, 2026.
+LOCATION:Meeting Cancelled
+CATEGORIES:cancelled,holiday,good-friday
+STATUS:CANCELLED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260410T183000
+DTEND:20260410T210000
+DTSTAMP:20260401T000000Z
+UID:sapa-2026-04-10@sastamps.org
+SUMMARY:Board of Governors Meeting & Show and Tell
+DESCRIPTION:Monthly Board of Governors meeting followed by member show and tell presentations. Guests welcome!
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:business,show-and-tell,board-meeting,guests-welcome
+STATUS:CONFIRMED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260417T183000
+DTEND:20260417T210000
+DTSTAMP:20260401T000000Z
+UID:sapa-2026-04-17@sastamps.org
+SUMMARY:Club Auction
+DESCRIPTION:Monthly club auction featuring member consignments and donated materials. Cash or check accepted for purchases. Guests welcome!
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:auction,buying,selling,consignment,guests-welcome
+STATUS:CONFIRMED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260424T183000
+DTEND:20260424T210000
+DTSTAMP:20260401T000000Z
+UID:sapa-2026-04-24@sastamps.org
+SUMMARY:Stamp Bourse
+DESCRIPTION:Monthly bourse featuring dealer tables and opportunities for buying\, selling\, and trading stamps and covers. Dealer table rental: $10 for members\, $15 for non-members. Guests welcome!
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:bourse,dealers,trading,buying,selling,guests-welcome
+STATUS:CONFIRMED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260501T183000
+DTEND:20260501T210000
+DTSTAMP:20260401T000000Z
+UID:sapa-2026-05-01@sastamps.org
+SUMMARY:Board of Governors Meeting & Show and Tell
+DESCRIPTION:Monthly Board of Governors meeting followed by member show and tell presentations. Guests welcome!
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:business,show-and-tell,board-meeting,guests-welcome
+STATUS:CONFIRMED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260508T183000
+DTEND:20260508T210000
+DTSTAMP:20260401T000000Z
+UID:sapa-2026-05-08@sastamps.org
+SUMMARY:Club Auction
+DESCRIPTION:Monthly club auction featuring member consignments and donated materials. Cash or check accepted for purchases. Guests welcome!
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:auction,buying,selling,consignment,guests-welcome
+STATUS:CONFIRMED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260515T183000
+DTEND:20260515T210000
+DTSTAMP:20260401T000000Z
+UID:sapa-2026-05-15@sastamps.org
+SUMMARY:Stamp Bourse
+DESCRIPTION:Monthly bourse featuring dealer tables and opportunities for buying\, selling\, and trading stamps and covers. Dealer table rental: $10 for members\, $15 for non-members. Guests welcome!
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:bourse,dealers,trading,buying,selling,guests-welcome
+STATUS:CONFIRMED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260522T183000
+DTEND:20260522T183100
+DTSTAMP:20260401T000000Z
+UID:sapa-2026-05-22@sastamps.org
+SUMMARY:NO MEETING - Memorial Day Weekend
+DESCRIPTION:No meeting scheduled due to Memorial Day Weekend holiday. Next meeting: May 29\, 2026.
+LOCATION:Meeting Cancelled
+CATEGORIES:cancelled,holiday,memorial-day
+STATUS:CANCELLED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260529T183000
+DTEND:20260529T210000
+DTSTAMP:20260401T000000Z
+UID:sapa-2026-05-29@sastamps.org
+SUMMARY:Stamp Program: Spanish Participation in the American Revolution
+DESCRIPTION:Joe Perez presents 'Spanish Participation in the American Revolution'\, exploring Spain's role and contributions during the American Revolution. Guests welcome!
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:stamp-program,presentation,american-revolution,spain,guests-welcome
+STATUS:CONFIRMED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260605T183000
+DTEND:20260605T210000
+DTSTAMP:20260401T000000Z
+UID:sapa-2026-06-05@sastamps.org
+SUMMARY:Board of Governors Meeting & Show and Tell
+DESCRIPTION:Monthly Board of Governors meeting followed by member show and tell presentations. Guests welcome!
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:business,show-and-tell,board-meeting,guests-welcome
+STATUS:CONFIRMED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260612T183000
+DTEND:20260612T210000
+DTSTAMP:20260401T000000Z
+UID:sapa-2026-06-12@sastamps.org
+SUMMARY:Club Auction
+DESCRIPTION:Monthly club auction featuring member consignments and donated materials. Cash or check accepted for purchases. Guests welcome!
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:auction,buying,selling,consignment,guests-welcome
+STATUS:CONFIRMED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260619T180000
+DTEND:20260619T203000
+DTSTAMP:20260401T000000Z
+UID:sapa-2026-06-19@sastamps.org
+SUMMARY:SAPA Annual Club Picnic
+DESCRIPTION:Annual SAPA club picnic. The club provides meats and sauces. Please bring a side dish or dessert to share. Starts at 6:00 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:picnic,social,family,annual
+STATUS:CONFIRMED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20260626T183000
+DTEND:20260626T210000
+DTSTAMP:20260401T000000Z
+UID:sapa-2026-06-26@sastamps.org
+SUMMARY:Stamp Bourse
+DESCRIPTION:Monthly bourse featuring dealer tables and opportunities for buying\, selling\, and trading stamps and covers. Dealer table rental: $10 for members\, $15 for non-members. Guests welcome!
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:bourse,dealers,trading,buying,selling,guests-welcome
+STATUS:CONFIRMED
+END:VEVENT
+
+END:VCALENDAR

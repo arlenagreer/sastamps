@@ -181,38 +181,57 @@ async function loadMeetingsList(container) {
     const now = new Date();
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth() + 1; // JavaScript months are 0-based
-    
-    // Determine current quarter
-    let quarterStart, quarterEnd, _quarterLabel;
-    if (currentMonth >= 10) {
-      // Q4: October-December
-      quarterStart = new Date(currentYear, 9, 1); // October 1
-      quarterEnd = new Date(currentYear, 11, 31); // December 31
-      _quarterLabel = 'Q4';
-    } else if (currentMonth >= 7) {
-      // Q3: July-September
-      quarterStart = new Date(currentYear, 6, 1); // July 1
-      quarterEnd = new Date(currentYear, 8, 30); // September 30
-      _quarterLabel = 'Q3';
-    } else if (currentMonth >= 4) {
-      // Q2: April-June
-      quarterStart = new Date(currentYear, 3, 1); // April 1
-      quarterEnd = new Date(currentYear, 5, 30); // June 30
-      _quarterLabel = 'Q2';
-    } else {
-      // Q1: January-March
-      quarterStart = new Date(currentYear, 0, 1); // January 1
-      quarterEnd = new Date(currentYear, 2, 31); // March 31
-      _quarterLabel = 'Q1';
+
+    // Helper: get quarter bounds for a given year and quarter number (1-4)
+    function getQuarterBounds(year, quarter) {
+      const bounds = {
+        1: { start: new Date(year, 0, 1), end: new Date(year, 2, 31) },
+        2: { start: new Date(year, 3, 1), end: new Date(year, 5, 30) },
+        3: { start: new Date(year, 6, 1), end: new Date(year, 8, 30) },
+        4: { start: new Date(year, 9, 1), end: new Date(year, 11, 31) }
+      };
+      return bounds[quarter] || bounds[1];
     }
-    
-    // Filter meetings for current quarter
+
+    // Determine which quarter we are currently in
+    let currentQuarter;
+    if (currentMonth >= 10) {
+      currentQuarter = 4;
+    } else if (currentMonth >= 7) {
+      currentQuarter = 3;
+    } else if (currentMonth >= 4) {
+      currentQuarter = 2;
+    } else {
+      currentQuarter = 1;
+    }
+
+    // If we're within 14 days of the end of the current quarter, show the next quarter instead
+    // so users can see upcoming meetings that are being planned/scheduled
+    const ADVANCE_DAYS = 14;
+    const currentQuarterBounds = getQuarterBounds(currentYear, currentQuarter);
+    const msUntilQuarterEnd = currentQuarterBounds.end - now;
+    const daysUntilQuarterEnd = msUntilQuarterEnd / (1000 * 60 * 60 * 24);
+
+    let quarterStart, quarterEnd;
+    if (daysUntilQuarterEnd <= ADVANCE_DAYS) {
+      // Show next quarter
+      const nextQuarter = currentQuarter === 4 ? 1 : currentQuarter + 1;
+      const nextYear = currentQuarter === 4 ? currentYear + 1 : currentYear;
+      const nextBounds = getQuarterBounds(nextYear, nextQuarter);
+      quarterStart = nextBounds.start;
+      quarterEnd = nextBounds.end;
+    } else {
+      quarterStart = currentQuarterBounds.start;
+      quarterEnd = currentQuarterBounds.end;
+    }
+
+    // Filter meetings for the displayed quarter
     const meetings = meetingsData.meetings
       .filter(meeting => {
-        const meetingDate = new Date(`${meeting.date  }T00:00:00`);
+        const meetingDate = new Date(`${meeting.date}T00:00:00`);
         return meetingDate >= quarterStart && meetingDate <= quarterEnd;
       })
-      .sort((a, b) => new Date(`${a.date  }T00:00:00`) - new Date(`${b.date  }T00:00:00`)); // Sort ascending for chronological order
+      .sort((a, b) => new Date(`${a.date}T00:00:00`) - new Date(`${b.date}T00:00:00`)); // Sort ascending for chronological order
 
     const html = meetings.map(meeting => `
             <article class="meeting-item" data-date="${escapeHTML(meeting.date)}" data-type="${escapeHTML(meeting.type || 'regular')}">

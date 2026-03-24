@@ -1,11 +1,19 @@
 {
-  "buildDate": "2026-03-09T18:43:48.145Z",
-  "totalSize": 422642,
+  "buildDate": "2026-03-24T02:22:02.435Z",
+  "totalSize": 451126,
   "bundles": [
     {
-      "name": "archive.min.js",
-      "size": 10702,
-      "sizeFormatted": "10.45 KB",
+      "name": "contact.min.js",
+      "size": 16837,
+      "sizeFormatted": "16.44 KB",
+      "imports": 10,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "about.min.js",
+      "size": 8864,
+      "sizeFormatted": "8.66 KB",
       "imports": 8,
       "exports": 0,
       "compressionRatio": "0.77"
@@ -19,66 +27,58 @@
       "compressionRatio": "0.77"
     },
     {
-      "name": "about.min.js",
-      "size": 8864,
-      "sizeFormatted": "8.66 KB",
-      "imports": 8,
-      "exports": 0,
-      "compressionRatio": "0.77"
-    },
-    {
       "name": "newsletter.min.js",
-      "size": 19935,
-      "sizeFormatted": "19.47 KB",
+      "size": 21260,
+      "sizeFormatted": "20.76 KB",
       "imports": 9,
       "exports": 0,
       "compressionRatio": "0.77"
     },
     {
-      "name": "search.min.js",
-      "size": 41345,
-      "sizeFormatted": "40.38 KB",
+      "name": "resources.min.js",
+      "size": 36484,
+      "sizeFormatted": "35.63 KB",
+      "imports": 9,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "archive.min.js",
+      "size": 10702,
+      "sizeFormatted": "10.45 KB",
       "imports": 8,
       "exports": 0,
       "compressionRatio": "0.77"
     },
     {
       "name": "glossary.min.js",
-      "size": 20578,
-      "sizeFormatted": "20.10 KB",
+      "size": 20780,
+      "sizeFormatted": "20.29 KB",
       "imports": 6,
       "exports": 0,
       "compressionRatio": "0.77"
     },
     {
-      "name": "contact.min.js",
-      "size": 16767,
-      "sizeFormatted": "16.37 KB",
-      "imports": 10,
-      "exports": 0,
-      "compressionRatio": "0.77"
-    },
-    {
-      "name": "resources.min.js",
-      "size": 36373,
-      "sizeFormatted": "35.52 KB",
-      "imports": 9,
-      "exports": 0,
-      "compressionRatio": "0.77"
-    },
-    {
-      "name": "home.min.js",
-      "size": 115829,
-      "sizeFormatted": "113.11 KB",
-      "imports": 11,
+      "name": "search.min.js",
+      "size": 41383,
+      "sizeFormatted": "40.41 KB",
+      "imports": 8,
       "exports": 0,
       "compressionRatio": "0.77"
     },
     {
       "name": "meetings.min.js",
-      "size": 143355,
-      "sizeFormatted": "140.00 KB",
+      "size": 156302,
+      "sizeFormatted": "152.64 KB",
       "imports": 13,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "home.min.js",
+      "size": 129620,
+      "sizeFormatted": "126.58 KB",
+      "imports": 11,
       "exports": 0,
       "compressionRatio": "0.77"
     }
