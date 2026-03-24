@@ -1,5 +1,23 @@
 # Milestones
 
+## v1.3 Philatex Update Agent (Shipped: 2026-03-24)
+
+**Phases:** 3 | **Plans:** 4 | **Commits:** 13 | **Artifacts:** 3
+**Git range:** `4a6d8cc`..`d6d2468`
+
+**Key accomplishments:**
+1. Created `/philatex-update` skill (273-line SKILL.md) as reusable entry point for quarterly newsletter updates
+2. Created philatex-newsletter-agent (393-line agent definition) with 9-step PDF extraction and site update workflow
+3. Extended newsletter schema with Calendar and Humor categories for `featuredArticles.category` enum
+4. Implemented deny-by-default permitted-file scope boundary (10 file patterns)
+5. Added duplicate edition check against newsletters.json before processing
+6. Designed 10-item key-facts human checkpoint with red-flags-first ordering and approve/reject/fix-and-retry flow
+7. Implemented [UNVERIFIED] marking strategy for ambiguous extractions with schema validation gates
+
+**Archive:** `milestones/v1.3-MILESTONE-AUDIT.md`
+
+---
+
 ## v1.2 Philatex Q2 2026 Content Update (Shipped: 2026-03-23)
 
 **Phases:** 3 | **Plans:** N/A (single commit) | **Commits:** 1 | **Files changed:** 31
