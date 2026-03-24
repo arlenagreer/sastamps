@@ -60,7 +60,7 @@
           },
           "category": {
             "type": "string",
-            "enum": ["Feature", "History", "Collection Tips", "Meeting Report", "Show Report", "Member Spotlight", "News", "Education"],
+            "enum": ["Calendar", "Collection Tips", "Education", "Feature", "History", "Humor", "Meeting Report", "Member Spotlight", "News", "Show Report"],
             "description": "Article category"
           }
         },
