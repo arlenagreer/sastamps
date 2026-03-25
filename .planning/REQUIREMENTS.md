@@ -1,53 +1,87 @@
-# Requirements: SAPA Website — v1.3 Philatex Update Agent
+# Requirements: SAPA Website — v1.4 Philatelic Design Refresh
 
-**Defined:** 2026-03-24
+**Defined:** 2026-03-25
 **Core Value:** The website serves as the primary digital presence for SAPA, providing members and prospective members with meeting schedules, newsletters, membership information, and educational resources about philately.
 
-## v1.3 Requirements
+## v1.4 Requirements
 
-Requirements for the Philatex Update Agent skill and agent. Each maps to roadmap phases.
+Requirements for the Philatelic Design Refresh milestone. Each maps to roadmap phases.
 
-### Skill Infrastructure
+### Theme Foundation
 
-- [x] **SKILL-01**: User can invoke `/philatex-update <pdf-path>` to start the update workflow
-- [x] **SKILL-02**: Skill includes a reference checklist with JSON field names, HTML section IDs, and ICS file conventions
-- [x] **SKILL-03**: Skill checks whether the newsletter edition already exists in the catalogue before processing
+- [ ] **THEME-01**: Site uses custom "Philatelic" DaisyUI theme with OKLCH color palette (parchment base, postal blue primary, stamp red secondary, antique gold accent)
+- [ ] **THEME-02**: DaisyUI theme applies `--noise: 1` paper texture and `--depth: 1` tactile shadow effects
+- [ ] **THEME-03**: Body text renders in Lora (replacing Open Sans) with fallback to Palatino Linotype
+- [ ] **THEME-04**: Hero/display text renders in Playfair Display for special feature titles
+- [ ] **THEME-05**: Postmark-style elements render in Courier Prime monospace
+- [ ] **THEME-06**: Font loading uses preconnect and display=swap for performance (no FOIT)
+- [ ] **THEME-07**: Tailwind CSS build pipeline produces optimized output via `npm run build:tw`
 
-### Content Processing
+### Tier 1 Component Swaps
 
-- [x] **CONT-01**: Agent reads the newsletter PDF and extracts structured content (meetings, announcements, officers, TSDA shows)
-- [x] **CONT-02**: Agent reviews/proofreads the newsletter and generates a feedback report (typos, layout, content issues)
-- [x] **CONT-03**: Agent validates all extracted data against existing JSON schemas before writing
-- [x] **CONT-04**: Agent marks ambiguous or low-confidence extractions as [UNVERIFIED] for human review
+- [ ] **COMP-01**: All buttons across the site use DaisyUI `btn` variants matching existing visual hierarchy (primary, secondary, outline, sm, lg)
+- [ ] **COMP-02**: All card components use DaisyUI `card` with stamp-themed hover effects (peel/lift)
+- [ ] **COMP-03**: Site navigation/header uses DaisyUI `navbar` with responsive mobile menu
+- [ ] **COMP-04**: Modal dialogs (meetings, resources) use DaisyUI `modal` with accessible focus management
+- [ ] **COMP-05**: Contact form uses DaisyUI form components (input, textarea, select) with existing validation logic preserved
 
-### Workflow & Safety
+### Tier 2 Component Swaps
 
-- [x] **WORK-01**: Agent pauses for human review before committing any changes
-- [x] **WORK-02**: Agent runs `npm run build:js` after updating data files to rebuild ESBuild bundles
-- [x] **WORK-03**: Agent updates all affected files — meetings.json, newsletters.json, ICS calendar files, homepage, newsletter page, meetings page, and archive metadata
+- [ ] **COMP-06**: Resource categories use DaisyUI `collapse`/`accordion` components
+- [ ] **COMP-07**: Newsletter archive timeline uses DaisyUI `timeline` component with stamp-themed styling
+- [ ] **COMP-08**: List pagination uses DaisyUI `pagination` component
+- [ ] **COMP-09**: Breadcrumb navigation uses DaisyUI `breadcrumbs` component across all pages
+- [ ] **COMP-10**: Search interface filter controls use DaisyUI `select` and `input` components
 
-## Future Requirements
+### Animations
 
-### Enhanced Automation
+- [ ] **ANIM-01**: Cards display stamp perforation border effect using CSS radial gradients
+- [ ] **ANIM-02**: Cards lift with 3D stamp-peel effect on hover (perspective transform with shadow)
+- [ ] **ANIM-03**: Postmark stamping animation plays on page load or scroll-trigger for decorative elements
+- [ ] **ANIM-04**: Envelope opening animation reveals content on hover/click for featured sections
+- [ ] **ANIM-05**: Spinning globe element visible on homepage for "explore the world" motif
+- [ ] **ANIM-06**: Stamp cards flip to reveal details on hover (3D preserve-3d transform)
+- [ ] **ANIM-07**: Floating/falling stamp shapes drift as subtle page background decoration
+- [ ] **ANIM-08**: All animations respect `prefers-reduced-motion: reduce` media query
 
-- **AUTO-01**: Agent automatically detects newsletter format changes and adapts extraction strategy
-- **AUTO-02**: Agent generates a diff summary comparing old and new content for each updated file
-- **AUTO-03**: Skimmable checkpoint format — key facts summary + red flags first, full diff secondary
+### Stock Images & Hero
 
-### Safety Enhancements
+- [ ] **IMG-01**: Public domain stamp images sourced and integrated (from PICRYL, National Postal Museum, or Library of Congress)
+- [ ] **IMG-02**: Stock images optimized for web (WebP format, responsive sizes via existing Sharp pipeline)
+- [ ] **IMG-03**: Homepage hero section redesigned with stamp-themed layout and animation
+- [ ] **IMG-04**: Key pages (about, meetings, membership) feature relevant philatelic imagery
 
-- **SAFE-01**: Explicit permitted-file scope boundary (deny-by-default list of modifiable files)
-- **SAFE-02**: Rollback capability if human rejects changes at checkpoint
+### Quality & Compatibility
+
+- [ ] **QA-01**: Existing page functionality preserved (search, calendar, forms, archive downloads)
+- [ ] **QA-02**: Old custom CSS removed incrementally as DaisyUI components replace them
+- [ ] **QA-03**: Bundle sizes validated via `npm run analyze:bundle` — no regression beyond 20%
+- [ ] **QA-04**: All pages render correctly at mobile, tablet, and desktop breakpoints
+
+## v2 Requirements
+
+Deferred to future release. Tracked but not in current roadmap.
+
+### Dark Mode
+
+- **DARK-01**: Philatelic dark theme (leather-bound album aesthetic) with automatic toggle
+- **DARK-02**: Dark mode respects `prefers-color-scheme` media query
+
+### Advanced Interactions
+
+- **ADV-01**: Magnifying glass hover effect tracks mouse position on stamp images
+- **ADV-02**: Page transition animations between routes
 
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| Automated newsletter creation/editing | Agent reads and extracts from existing PDFs, does not create them |
-| Email distribution of newsletters | Outside website scope — handled by club separately |
-| Multi-format newsletter support | Only PDF newsletters are published |
-| Global skill installation | Project-local only — only relevant to this repo |
-| Automated deployment/push | Human controls git push after commit |
+| React/Vue/Svelte adoption | Must remain vanilla JS static site |
+| DaisyUI Blueprint MCP (paid) | License cost unnecessary; Context7 docs sufficient |
+| Dark mode | Simplifies scope; light-only appropriate for community club site |
+| Shoelace/Web Awesome components | DaisyUI covers all needed components without Shadow DOM complexity |
+| Full CSS rewrite (remove all old CSS at once) | Gradual migration safer; removes old CSS as components are swapped |
+| Vanilla Calendar Pro replacement | Calendar library works well; only restyle the wrapper |
 
 ## Traceability
 
@@ -55,22 +89,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SKILL-01 | Phase 10 | Complete |
-| SKILL-02 | Phase 10 | Complete |
-| SKILL-03 | Phase 10 | Complete |
-| CONT-01 | Phase 11 | Complete |
-| CONT-02 | Phase 11 | Complete |
-| CONT-03 | Phase 11 | Complete |
-| CONT-04 | Phase 11 | Complete |
-| WORK-02 | Phase 11 | Complete |
-| WORK-03 | Phase 11 | Complete |
-| WORK-01 | Phase 12 | Complete |
+| (populated by roadmapper) | | |
 
 **Coverage:**
-- v1.3 requirements: 10 total
-- Mapped to phases: 10
-- Unmapped: 0 ✓
+- v1.4 requirements: 26 total
+- Mapped to phases: 0
+- Unmapped: 26
 
 ---
-*Requirements defined: 2026-03-24*
-*Last updated: 2026-03-24 after roadmap creation*
+*Requirements defined: 2026-03-25*
+*Last updated: 2026-03-25 after initial definition*
