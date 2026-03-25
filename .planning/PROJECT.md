@@ -45,16 +45,21 @@ The website serves as the primary digital presence for SAPA, providing members a
 - ✓ TSDA stamp show schedule added to meetings page — v1.2
 - ✓ Announcements: new members, picnic, program highlights — v1.2
 - ✓ Mailing address verified on contact page — v1.2
+- ✓ `/philatex-update` skill as reusable entry point for quarterly newsletter updates — v1.3
+- ✓ Custom agent definition (9-step workflow) for non-linear newsletter processing — v1.3
+- ✓ Human checkpoint with 10-item key-facts review before committing changes — v1.3
 
 ### Active
 
-<!-- Current scope: v1.3 Philatex Update Agent -->
+<!-- Current scope: v1.4 Philatelic Design Refresh -->
 
-- [ ] `/philatex-update` skill as entry point (accepts PDF path)
-- [ ] Custom agent definition for non-linear newsletter processing
-- [ ] PDF reading with newsletter review/proofreading and layout feedback
-- [ ] Automated content extraction and site updates (data files, HTML pages, metadata)
-- [ ] Human checkpoint before committing changes
+- [ ] Custom "Philatelic" DaisyUI theme with nostalgic color palette (parchment, postal blue, stamp red, antique gold)
+- [ ] Typography update: Open Sans → Lora body, add Playfair Display hero + Courier Prime postmark elements
+- [ ] Stamp-themed CSS animation library (perforation, peel, postmark, envelope, globe, card flip, floating stamps, magnifying glass)
+- [ ] Tier 1 component swaps: buttons, cards, navigation/header, modal dialogs, form system
+- [ ] Tier 2 component swaps: accordion, timeline, pagination, breadcrumbs, search UI
+- [ ] Public domain stock image integration (PICRYL, National Postal Museum, Library of Congress)
+- [ ] Hero section redesign with stamp-themed animations
 
 ### Out of Scope
 
@@ -65,17 +70,31 @@ The website serves as the primary digital presence for SAPA, providing members a
 - Automated newsletter ingestion pipeline — manual update process sufficient for quarterly cadence
 - Member directory or member count display — privacy considerations
 
+## Current Milestone: v1.4 Philatelic Design Refresh
+
+**Goal:** Modernize the website's frontend with Tailwind CSS + DaisyUI, a custom nostalgic "Philatelic" theme, stamp-themed animations, updated typography, and public domain stock images — evoking childhood wonder about stamp collecting.
+
+**Target features:**
+- Custom "Philatelic" DaisyUI v5 theme (warm parchment backgrounds, deep postal blue, rich stamp red, antique gold accents)
+- Swap 15 UI components (buttons, cards, nav, modals, forms, accordion, timeline, pagination, breadcrumbs, search) with DaisyUI equivalents
+- 8 stamp-themed CSS animations (perforation borders, stamp peel, postmark stamping, envelope opening, globe spinning, card flip, floating stamps, magnifying glass)
+- Typography: keep Merriweather headings, replace Open Sans with Lora, add Playfair Display + Courier Prime
+- Public domain stock images from PICRYL, National Postal Museum, Library of Congress
+- Hero section redesign with animations
+- Light mode only, gradual CSS migration
+
 ## Context
 
-Shipped v1.2 on 2026-03-23. Q2 2026 content update complete with newsletter, meetings, and announcements.
-- v1.3 goal: codify the v1.2 update workflow into a reusable agent + skill for future editions
+Shipped v1.3 on 2026-03-24. Philatex Update Agent complete with skill + agent definition.
+- v1.4 goal: visual design refresh using DaisyUI component library with nostalgic stamp-collecting theme
+- Foundation already installed: Tailwind CSS v4 + DaisyUI v5.5.19, build pipeline working (`npm run build:tw`)
+- Design document at `docs/design/philatelic-theme-design.md` with complete theme CSS, animations, stock image sources
 - 11 HTML pages with consistent design, assets, and footer
-- Build system: ESBuild with tree-shaking, 7 page-specific bundles (~191KB total)
-- Tech stack: Vanilla JS ES6+, HTML5, CSS3/PostCSS, Lunr.js search, vanilla-calendar-pro
+- Build system: ESBuild with tree-shaking, 7 page-specific bundles (~191KB total) + Tailwind CSS pipeline
+- Tech stack: Vanilla JS ES6+, HTML5, CSS3/PostCSS, Tailwind CSS v4, DaisyUI v5, Lunr.js search, vanilla-calendar-pro
 - Deployed on GitHub Pages
-- Newsletter archive: 99 PDFs in `public/newsletter_archive/` + Q2 2026, JSON catalogue with 100 entries
+- Newsletter archive: 100 PDFs, JSON catalogue with 100 entries
 - Known tech debt: 3 orphaned JS modules (data-loader, template-engine, pagination) built but unused
-- Quarter look-ahead logic added for homepage (shows next quarter within 14 days)
 
 ## Constraints
 
@@ -99,6 +118,11 @@ Shipped v1.2 on 2026-03-23. Q2 2026 content update complete with newsletter, mee
 | Lean JSON schema for catalogue | Only programmatically-derivable fields, not manual metadata | ✓ Good — 99 entries auto-generated |
 | Single-commit content update for v1.2 | All Q2 2026 changes interdependent, phased execution unnecessary | ✓ Good — clean delivery, all 17 requirements met |
 | Quarter look-ahead logic for homepage | Show next quarter meetings within 14 days of quarter start | ✓ Good — smoother transition between quarters |
+| Tailwind CSS v4 + DaisyUI v5 for design refresh | Modern component library compatible with vanilla JS via CSS classes | — Pending |
+| Gradual CSS migration (coexistence) | Old CSS + Tailwind side-by-side during component swap, remove old as replaced | — Pending |
+| Light mode only for v1.4 | Simplifies scope; dark mode not needed for community club site | — Pending |
+| Lora as body font replacement | Calligraphic warmth of transitional serif reads like stamp catalog; better than neutral Open Sans | — Pending |
+| DaisyUI over other libraries | Pure CSS (no JS dependency), Tailwind plugin, semantic classes, 50+ components, works with vanilla JS | — Pending |
 
 ---
 ## Evolution
@@ -119,4 +143,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-24 after v1.3 milestone start*
+*Last updated: 2026-03-25 after v1.4 milestone start*
