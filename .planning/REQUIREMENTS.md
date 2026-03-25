@@ -89,13 +89,45 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated by roadmapper) | | |
+| THEME-01 | Phase 13 | Pending |
+| THEME-02 | Phase 13 | Pending |
+| THEME-03 | Phase 13 | Pending |
+| THEME-04 | Phase 13 | Pending |
+| THEME-05 | Phase 13 | Pending |
+| THEME-06 | Phase 13 | Pending |
+| THEME-07 | Phase 13 | Pending |
+| COMP-01 | Phase 14 | Pending |
+| COMP-02 | Phase 14 | Pending |
+| COMP-03 | Phase 14 | Pending |
+| COMP-04 | Phase 14 | Pending |
+| COMP-05 | Phase 14 | Pending |
+| ANIM-01 | Phase 14 | Pending |
+| ANIM-02 | Phase 14 | Pending |
+| COMP-06 | Phase 15 | Pending |
+| COMP-07 | Phase 15 | Pending |
+| COMP-08 | Phase 15 | Pending |
+| COMP-09 | Phase 15 | Pending |
+| COMP-10 | Phase 15 | Pending |
+| IMG-01 | Phase 16 | Pending |
+| IMG-02 | Phase 16 | Pending |
+| IMG-03 | Phase 16 | Pending |
+| IMG-04 | Phase 16 | Pending |
+| ANIM-03 | Phase 16 | Pending |
+| ANIM-04 | Phase 16 | Pending |
+| ANIM-05 | Phase 16 | Pending |
+| ANIM-06 | Phase 17 | Pending |
+| ANIM-07 | Phase 17 | Pending |
+| ANIM-08 | Phase 17 | Pending |
+| QA-01 | Phase 17 | Pending |
+| QA-02 | Phase 17 | Pending |
+| QA-03 | Phase 17 | Pending |
+| QA-04 | Phase 17 | Pending |
 
 **Coverage:**
-- v1.4 requirements: 26 total
-- Mapped to phases: 0
-- Unmapped: 26
+- v1.4 requirements: 33 total
+- Mapped to phases: 33
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-25*
-*Last updated: 2026-03-25 after initial definition*
+*Last updated: 2026-03-25 — traceability populated by roadmapper*

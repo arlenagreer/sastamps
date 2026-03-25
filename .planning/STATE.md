@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Philatelic Design Refresh
-status: defining_requirements
-stopped_at: null
+status: in_progress
+stopped_at: Phase 13 pending
 last_updated: "2026-03-25T00:00:00Z"
-last_activity: 2026-03-25 — Milestone v1.4 started
+last_activity: 2026-03-25 — Roadmap created for v1.4 (Phases 13-17)
 progress:
-  total_phases: 0
+  total_phases: 5
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-25)
 
 **Core value:** Primary digital presence for SAPA — meeting schedules, newsletters, membership info, educational resources
-**Current focus:** v1.4 Philatelic Design Refresh — defining requirements
+**Current focus:** v1.4 Philatelic Design Refresh — Phase 13 pending
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 13 — Theme Foundation (pending)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-03-25 — Milestone v1.4 started
+Status: Roadmap created, ready to plan Phase 13
+Last activity: 2026-03-25 — Roadmap created for v1.4 (Phases 13-17)
 
-Progress: [░░░░░░░░░░] 0% (v1.4)
+Progress: [░░░░░░░░░░] 0% (v1.4, 0/5 phases)
 
 ## Performance Metrics
 
@@ -71,6 +71,8 @@ v1.4 decisions so far:
 - Typography: keep Merriweather headings, swap Open Sans → Lora body, add Playfair Display + Courier Prime
 - Foundation installed: Tailwind v4 + DaisyUI v5.5.19, `npm run build:tw` working
 - Design document complete at `docs/design/philatelic-theme-design.md`
+- Phase 16 (Stock Images + Hero) depends on Phase 13 (not 14/15) — can execute in parallel with Tier 2 swaps
+- Phase 17 (Animation Polish + QA) depends on all prior phases; runs last as integration check
 
 ### Pending Todos
 
@@ -94,5 +96,5 @@ None currently.
 ## Session Continuity
 
 Last session: 2026-03-25T00:00:00Z
-Stopped at: Milestone v1.4 started — defining requirements
+Stopped at: Roadmap created — Phase 13 (Theme Foundation) pending plan
 Resume file: None
