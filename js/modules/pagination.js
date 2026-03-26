@@ -190,87 +190,51 @@ class Pagination {
   }
 
   /**
-     * Generate pagination HTML
+     * Generate pagination HTML using DaisyUI join + btn pattern
      * @returns {string} HTML string
      */
   generatePaginationHTML() {
     const pages = this.getVisiblePages();
-    let html = '<div class="pagination-wrapper">';
+    let html = '<div class="flex flex-wrap items-center justify-between gap-4 p-4 bg-base-100 border border-base-300 rounded-box">';
 
     // Info section
-    html += `
-            <div class="pagination-info">
-                <span>Showing ${this.getStartItem()}-${this.getEndItem()} of ${this.totalItems} items</span>
-            </div>
-        `;
+    html += `<span class="text-sm text-base-content/60">Showing ${this.getStartItem()}-${this.getEndItem()} of ${this.totalItems} items</span>`;
 
-    // Controls section
-    html += '<div class="pagination-nav">';
+    // Navigation with DaisyUI join
+    html += '<div class="join">';
 
     // First and Previous buttons
-    html += `
-            <button class="pagination-btn pagination-first" 
-                    ${this.currentPage === 1 ? 'disabled' : ''} 
-                    data-page="1" 
-                    title="First page">
-                <i class="fas fa-angle-double-left"></i>
-            </button>
-            <button class="pagination-btn pagination-prev" 
-                    ${this.currentPage === 1 ? 'disabled' : ''} 
-                    data-page="${this.currentPage - 1}" 
-                    title="Previous page">
-                <i class="fas fa-angle-left"></i>
-            </button>
-        `;
+    html += `<button class="join-item btn btn-sm" data-page="1" title="First page" ${this.currentPage === 1 ? 'disabled' : ''}><i class="fas fa-angle-double-left"></i></button>`;
+    html += `<button class="join-item btn btn-sm" data-page="${this.currentPage - 1}" title="Previous page" ${this.currentPage === 1 ? 'disabled' : ''}><i class="fas fa-angle-left"></i></button>`;
 
     // Page numbers
     for (const page of pages) {
       if (page === '...') {
-        html += '<span class="pagination-ellipsis">...</span>';
+        html += '<span class="join-item btn btn-sm btn-disabled">...</span>';
       } else {
         const isActive = page === this.currentPage;
-        html += `
-                    <button class="pagination-btn pagination-page ${isActive ? 'active' : ''}" 
-                            data-page="${page}"
-                            ${isActive ? 'aria-current="page"' : ''}>
-                        ${page}
-                    </button>
-                `;
+        html += `<button class="join-item btn btn-sm ${isActive ? 'btn-active' : ''}" data-page="${page}" ${isActive ? 'aria-current="page"' : ''}>${page}</button>`;
       }
     }
 
     // Next and Last buttons
-    html += `
-            <button class="pagination-btn pagination-next" 
-                    ${this.currentPage === this.totalPages ? 'disabled' : ''} 
-                    data-page="${this.currentPage + 1}" 
-                    title="Next page">
-                <i class="fas fa-angle-right"></i>
-            </button>
-            <button class="pagination-btn pagination-last" 
-                    ${this.currentPage === this.totalPages ? 'disabled' : ''} 
-                    data-page="${this.totalPages}" 
-                    title="Last page">
-                <i class="fas fa-angle-double-right"></i>
-            </button>
-        `;
+    html += `<button class="join-item btn btn-sm" data-page="${this.currentPage + 1}" title="Next page" ${this.currentPage === this.totalPages ? 'disabled' : ''}><i class="fas fa-angle-right"></i></button>`;
+    html += `<button class="join-item btn btn-sm" data-page="${this.totalPages}" title="Last page" ${this.currentPage === this.totalPages ? 'disabled' : ''}><i class="fas fa-angle-double-right"></i></button>`;
 
-    html += '</div>'; // pagination-nav
+    html += '</div>'; // join
 
-    // Items per page selector
-    html += `
-            <div class="pagination-settings">
-                <label for="items-per-page">Items per page:</label>
-                <select id="items-per-page" class="items-per-page-select">
-                    <option value="5" ${this.itemsPerPage === 5 ? 'selected' : ''}>5</option>
-                    <option value="10" ${this.itemsPerPage === 10 ? 'selected' : ''}>10</option>
-                    <option value="20" ${this.itemsPerPage === 20 ? 'selected' : ''}>20</option>
-                    <option value="50" ${this.itemsPerPage === 50 ? 'selected' : ''}>50</option>
-                </select>
-            </div>
-        `;
+    // Items per page selector with DaisyUI select
+    html += '<div class="flex items-center gap-2">';
+    html += '<label class="text-sm text-base-content/60" for="items-per-page">Per page:</label>';
+    html += `<select id="items-per-page" class="select select-bordered select-sm">`;
+    html += `<option value="5" ${this.itemsPerPage === 5 ? 'selected' : ''}>5</option>`;
+    html += `<option value="10" ${this.itemsPerPage === 10 ? 'selected' : ''}>10</option>`;
+    html += `<option value="20" ${this.itemsPerPage === 20 ? 'selected' : ''}>20</option>`;
+    html += `<option value="50" ${this.itemsPerPage === 50 ? 'selected' : ''}>50</option>`;
+    html += '</select>';
+    html += '</div>';
 
-    html += '</div>'; // pagination-wrapper
+    html += '</div>'; // outer wrapper
 
     return html;
   }
@@ -320,8 +284,8 @@ class Pagination {
   attachEventListeners() {
     if (!this.paginationElement) {return;}
 
-    // Page buttons
-    this.paginationElement.querySelectorAll('.pagination-btn[data-page]').forEach(btn => {
+    // Page buttons (using data-page attribute selector)
+    this.paginationElement.querySelectorAll('[data-page]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         const page = parseInt(btn.dataset.page);
@@ -331,8 +295,8 @@ class Pagination {
       });
     });
 
-    // Items per page selector
-    const itemsSelect = this.paginationElement.querySelector('.items-per-page-select');
+    // Items per page selector (DaisyUI select by ID)
+    const itemsSelect = this.paginationElement.querySelector('#items-per-page');
     if (itemsSelect) {
       itemsSelect.addEventListener('change', (e) => {
         const newItemsPerPage = parseInt(e.target.value);
@@ -383,155 +347,7 @@ class Pagination {
     };
   }
 
-  /**
-     * Add pagination styles to the page
-     */
-  static addStyles() {
-    if (document.getElementById('pagination-styles')) {return;}
-
-    const styles = `
-            .pagination-controls {
-                margin: 2rem 0;
-                font-family: var(--font-body, Arial, sans-serif);
-            }
-
-            .pagination-wrapper {
-                display: flex;
-                flex-wrap: wrap;
-                align-items: center;
-                justify-content: space-between;
-                gap: 1rem;
-                padding: 1rem;
-                background-color: var(--white, #fff);
-                border: 1px solid var(--light, #ecf0f1);
-                border-radius: var(--radius-md, 5px);
-            }
-
-            .pagination-info {
-                color: var(--medium, #7f8c8d);
-                font-size: 0.9rem;
-            }
-
-            .pagination-nav {
-                display: flex;
-                align-items: center;
-                gap: 0.25rem;
-            }
-
-            .pagination-btn {
-                padding: 0.5rem 0.75rem;
-                border: 1px solid var(--light, #ecf0f1);
-                background-color: var(--white, #fff);
-                color: var(--dark, #2c3e50);
-                cursor: pointer;
-                border-radius: var(--radius-sm, 3px);
-                font-size: 0.9rem;
-                transition: all var(--transition-fast, 0.15s ease);
-                min-width: 2.5rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .pagination-btn:hover:not(:disabled) {
-                background-color: var(--primary-light, #2980b9);
-                color: var(--white, #fff);
-                border-color: var(--primary-light, #2980b9);
-            }
-
-            .pagination-btn.active {
-                background-color: var(--primary, #1a5276);
-                color: var(--white, #fff);
-                border-color: var(--primary, #1a5276);
-            }
-
-            .pagination-btn:disabled {
-                opacity: 0.5;
-                cursor: not-allowed;
-                color: var(--medium, #7f8c8d);
-            }
-
-            .pagination-ellipsis {
-                padding: 0.5rem 0.25rem;
-                color: var(--medium, #7f8c8d);
-            }
-
-            .pagination-settings {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                font-size: 0.9rem;
-            }
-
-            .pagination-settings label {
-                color: var(--medium, #7f8c8d);
-            }
-
-            .items-per-page-select {
-                padding: 0.25rem 0.5rem;
-                border: 1px solid var(--light, #ecf0f1);
-                border-radius: var(--radius-sm, 3px);
-                background-color: var(--white, #fff);
-                color: var(--dark, #2c3e50);
-                font-size: 0.9rem;
-            }
-
-            /* Mobile responsive */
-            @media (max-width: 768px) {
-                .pagination-wrapper {
-                    flex-direction: column;
-                    text-align: center;
-                }
-
-                .pagination-nav {
-                    order: 1;
-                }
-
-                .pagination-info {
-                    order: 2;
-                    margin-top: 0.5rem;
-                }
-
-                .pagination-settings {
-                    order: 3;
-                    margin-top: 0.5rem;
-                }
-
-                .pagination-btn {
-                    padding: 0.4rem 0.6rem;
-                    font-size: 0.8rem;
-                    min-width: 2rem;
-                }
-            }
-
-            @media (max-width: 480px) {
-                .pagination-nav {
-                    gap: 0.1rem;
-                }
-
-                .pagination-btn {
-                    padding: 0.3rem 0.5rem;
-                    font-size: 0.7rem;
-                    min-width: 1.8rem;
-                }
-            }
-        `;
-
-    const styleSheet = document.createElement('style');
-    styleSheet.id = 'pagination-styles';
-    styleSheet.textContent = styles;
-    document.head.appendChild(styleSheet);
-  }
-}
-
-// Add default styles when module loads
-if (typeof document !== 'undefined') {
-  // Add styles when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => Pagination.addStyles());
-  } else {
-    Pagination.addStyles();
-  }
+  // DaisyUI handles all pagination styling -- no injected CSS needed
 }
 
 // Export for module usage
