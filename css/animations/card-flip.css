@@ -1,0 +1,53 @@
+/* ============================================
+   ANIM-06: Stamp Card Flip Animation
+   3D card flip showing stamp front and details
+   on back, using CSS preserve-3d transform.
+   ============================================ */
+
+@layer components {
+  .stamp-card-flip {
+    perspective: 1000px;
+    cursor: pointer;
+  }
+
+  .stamp-card-flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+
+  .stamp-card-flip:hover .stamp-card-flip-inner,
+  .stamp-card-flip.flipped .stamp-card-flip-inner {
+    transform: rotateY(180deg);
+  }
+
+  .stamp-card-flip-front,
+  .stamp-card-flip-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .stamp-card-flip-front {
+    background: oklch(96% 0.02 80);
+    border: 1px solid oklch(86% 0.05 75);
+  }
+
+  .stamp-card-flip-back {
+    background: oklch(92% 0.035 78);
+    border: 1px solid oklch(86% 0.05 75);
+    transform: rotateY(180deg);
+    padding: 1.5rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+}

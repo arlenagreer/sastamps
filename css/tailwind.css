@@ -163,48 +163,82 @@
 
 /* ============================================
    Animation Imports
-   Postmark, envelope, and globe animations
+   Postmark, envelope, globe, card flip, and
+   floating stamps animations
    ============================================ */
 
 @import "./animations/postmark.css";
 @import "./animations/envelope.css";
 @import "./animations/globe.css";
+@import "./animations/card-flip.css";
+@import "./animations/floating-stamps.css";
 
 /* ============================================
-   Reduced Motion Override
-   Suppresses all philatelic animations for
+   Reduced Motion Override (ANIM-08)
+   Suppresses ALL philatelic animations for
    users who prefer reduced motion.
+   Covers: ANIM-01 through ANIM-07.
    ============================================ */
 
 @media (prefers-reduced-motion: reduce) {
+  /* ANIM-01: Stamp perforation — static only (no animation to suppress, but prevent any future additions) */
+  .stamp-border {
+    transition: none;
+  }
+
+  /* ANIM-02: Stamp peel hover — no transform, no transition */
+  .stamp-peel {
+    transition: none;
+  }
+  .stamp-peel:hover {
+    transform: none;
+    box-shadow: 8px 12px 20px oklch(28% 0.04 55 / 0.2);
+  }
+
+  /* ANIM-03: Postmark stamp — show final state, no animation */
   .postmark-animate {
     animation: none;
     opacity: 0.6;
     transform: scale(1) rotate(-12deg);
   }
-
   .postmark-circle {
     animation: none;
   }
 
+  /* ANIM-04: Envelope — no flap rotation, no letter slide */
   .envelope-flap {
     transition: none;
   }
-
+  .envelope:hover .envelope-flap,
+  .envelope.envelope-open .envelope-flap {
+    transform: none;
+  }
   .envelope-letter {
     transition: none;
   }
+  .envelope:hover .envelope-letter,
+  .envelope.envelope-open .envelope-letter {
+    transform: none;
+  }
 
+  /* ANIM-05: Globe — no spin, static position */
   .globe {
     animation: none;
     background-position: 0 0;
   }
 
-  .stamp-peel {
+  /* ANIM-06: Card flip — no rotation, show front only */
+  .stamp-card-flip-inner {
     transition: none;
   }
-
-  .stamp-peel:hover {
+  .stamp-card-flip:hover .stamp-card-flip-inner,
+  .stamp-card-flip.flipped .stamp-card-flip-inner {
     transform: none;
+  }
+
+  /* ANIM-07: Floating stamps — no drift, static decorative opacity */
+  .floating-stamps span {
+    animation: none;
+    opacity: 0.08;
   }
 }
