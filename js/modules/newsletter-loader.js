@@ -229,20 +229,20 @@ class NewsletterLoader {
                         <label for="year-filter">Year:</label>
                         <select id="year-filter" class="select select-bordered select-sm">
                             <option value="">All Years</option>
-                            ${years.map(year => `<option value="${year}">${year}</option>`).join('')}
+                            ${years.map(year => `<option value="${escapeHTML(String(year))}">${escapeHTML(String(year))}</option>`).join('')}
                         </select>
                     </div>
                     <div class="filter-group">
                         <label for="quarter-filter">Quarter:</label>
                         <select id="quarter-filter" class="select select-bordered select-sm">
                             <option value="">All Quarters</option>
-                            ${quarters.map(quarter => `<option value="${quarter}">${quarter}</option>`).join('')}
+                            ${quarters.map(quarter => `<option value="${escapeHTML(quarter)}">${escapeHTML(quarter)}</option>`).join('')}
                         </select>
                     </div>
                     <div class="filter-group">
                         <label for="tags-filter">Tags:</label>
                         <select id="tags-filter" class="select select-bordered select-sm" multiple>
-                            ${tags.map(tag => `<option value="${tag}">${this.formatLabel(tag)}</option>`).join('')}
+                            ${tags.map(tag => `<option value="${escapeHTML(tag)}">${escapeHTML(this.formatLabel(tag))}</option>`).join('')}
                         </select>
                     </div>
                 </div>
@@ -402,12 +402,15 @@ class NewsletterLoader {
     if (filtered.length === 0) {
       const archiveContent = container.querySelector('.archive-year-section, .archive-grid');
       if (archiveContent) {
-        archiveContent.outerHTML = `
-                    <div class="no-results">
-                        <h3>No newsletters found</h3>
-                        <p>No newsletters match the selected criteria. Try adjusting your filters.</p>
-                    </div>
-                `;
+        const noResults = document.createElement('div');
+        noResults.className = 'no-results archive-year-section';
+        const heading = document.createElement('h3');
+        heading.textContent = 'No newsletters found';
+        const para = document.createElement('p');
+        para.textContent = 'No newsletters match the selected criteria. Try adjusting your filters.';
+        noResults.appendChild(heading);
+        noResults.appendChild(para);
+        archiveContent.replaceWith(noResults);
       }
       return;
     }
@@ -436,10 +439,11 @@ class NewsletterLoader {
     const filtersElement = container.querySelector('.archive-filters');
     const afterFilters = filtersElement ? filtersElement.nextElementSibling : container.firstElementChild;
 
+    const frag = document.createRange().createContextualFragment(html);
     if (afterFilters) {
-      afterFilters.outerHTML = html;
+      afterFilters.replaceWith(frag);
     } else {
-      container.innerHTML += html;
+      container.appendChild(frag);
     }
   }
 

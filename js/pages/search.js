@@ -106,8 +106,8 @@ async function initializeSearchInterface(container) {
 
       if (suggestions.length > 0) {
         const html = suggestions.map(suggestion => `
-                    <button class="search-suggestion" data-query="${escapeHTML(suggestion)}">
-                        ${highlightMatch(suggestion, query)}
+                    <button class="search-suggestion" data-query="${escapeHTML(suggestion.text)}">
+                        ${highlightMatch(suggestion.text, query)}
                     </button>
                 `).join('');
 
@@ -415,6 +415,16 @@ function handleURLSearchParams() {
         .catch(error => {
           logger.error('URL parameter search failed:', error);
         });
+    } else if (!window.siteSearchEngine) {
+      const resultsContainer = safeQuerySelector('#results-container');
+      if (resultsContainer) {
+        const warning = document.createElement('div');
+        warning.className = 'alert alert-warning';
+        const msg = document.createElement('p');
+        msg.textContent = 'Search is temporarily unavailable. Please try again later.';
+        warning.appendChild(msg);
+        resultsContainer.appendChild(warning);
+      }
     }
   }
 }

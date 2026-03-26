@@ -12,3 +12,4 @@ export { addEventListenerWithCleanup, cleanupEventListeners } from './utils/even
 
 import './utils/global-error-handler.js';
 import './utils/analytics.js';
+import './utils/dropdown-a11y.js';

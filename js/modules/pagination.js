@@ -195,22 +195,22 @@ class Pagination {
      */
   generatePaginationHTML() {
     const pages = this.getVisiblePages();
-    let html = '<div class="flex flex-wrap items-center justify-between gap-4 p-4 bg-base-100 border border-base-300 rounded-box">';
+    let html = '<nav aria-label="Pagination" class="flex flex-wrap items-center justify-between gap-4 p-4 bg-base-100 border border-base-300 rounded-box">';
 
     // Info section
-    html += `<span class="text-sm text-base-content/60">Showing ${this.getStartItem()}-${this.getEndItem()} of ${this.totalItems} items</span>`;
+    html += `<span class="text-sm text-base-content/80">Showing ${this.getStartItem()}-${this.getEndItem()} of ${this.totalItems} items</span>`;
 
     // Navigation with DaisyUI join
     html += '<div class="join">';
 
     // First and Previous buttons
-    html += `<button class="join-item btn btn-sm" data-page="1" title="First page" ${this.currentPage === 1 ? 'disabled' : ''}><i class="fas fa-angle-double-left"></i></button>`;
-    html += `<button class="join-item btn btn-sm" data-page="${this.currentPage - 1}" title="Previous page" ${this.currentPage === 1 ? 'disabled' : ''}><i class="fas fa-angle-left"></i></button>`;
+    html += `<button class="join-item btn btn-sm" data-page="1" title="First page" aria-label="First page" ${this.currentPage === 1 ? 'disabled' : ''}><i class="fas fa-angle-double-left"></i></button>`;
+    html += `<button class="join-item btn btn-sm" data-page="${this.currentPage - 1}" title="Previous page" aria-label="Previous page" ${this.currentPage === 1 ? 'disabled' : ''}><i class="fas fa-angle-left"></i></button>`;
 
     // Page numbers
     for (const page of pages) {
       if (page === '...') {
-        html += '<span class="join-item btn btn-sm btn-disabled">...</span>';
+        html += '<span class="join-item btn btn-sm btn-disabled" aria-hidden="true">...</span>';
       } else {
         const isActive = page === this.currentPage;
         html += `<button class="join-item btn btn-sm ${isActive ? 'btn-active' : ''}" data-page="${page}" ${isActive ? 'aria-current="page"' : ''}>${page}</button>`;
@@ -218,14 +218,14 @@ class Pagination {
     }
 
     // Next and Last buttons
-    html += `<button class="join-item btn btn-sm" data-page="${this.currentPage + 1}" title="Next page" ${this.currentPage === this.totalPages ? 'disabled' : ''}><i class="fas fa-angle-right"></i></button>`;
-    html += `<button class="join-item btn btn-sm" data-page="${this.totalPages}" title="Last page" ${this.currentPage === this.totalPages ? 'disabled' : ''}><i class="fas fa-angle-double-right"></i></button>`;
+    html += `<button class="join-item btn btn-sm" data-page="${this.currentPage + 1}" title="Next page" aria-label="Next page" ${this.currentPage === this.totalPages ? 'disabled' : ''}><i class="fas fa-angle-right"></i></button>`;
+    html += `<button class="join-item btn btn-sm" data-page="${this.totalPages}" title="Last page" aria-label="Last page" ${this.currentPage === this.totalPages ? 'disabled' : ''}><i class="fas fa-angle-double-right"></i></button>`;
 
     html += '</div>'; // join
 
     // Items per page selector with DaisyUI select
     html += '<div class="flex items-center gap-2">';
-    html += '<label class="text-sm text-base-content/60" for="items-per-page">Per page:</label>';
+    html += '<label class="text-sm text-base-content/80" for="items-per-page">Per page:</label>';
     html += '<select id="items-per-page" class="select select-bordered select-sm">';
     html += `<option value="5" ${this.itemsPerPage === 5 ? 'selected' : ''}>5</option>`;
     html += `<option value="10" ${this.itemsPerPage === 10 ? 'selected' : ''}>10</option>`;
@@ -234,7 +234,7 @@ class Pagination {
     html += '</select>';
     html += '</div>';
 
-    html += '</div>'; // outer wrapper
+    html += '</nav>'; // outer wrapper
 
     return html;
   }

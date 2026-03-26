@@ -28,7 +28,7 @@
   --color-secondary-content: oklch(96% 0.01 25);
 
   /* --- Accent: Antique Gold / Brass (album hinges) --- */
-  --color-accent: oklch(72% 0.15 85);
+  --color-accent: oklch(55% 0.15 85);
   --color-accent-content: oklch(28% 0.06 60);
 
   /* --- Neutral: Warm Charcoal (postmark ink) --- */

@@ -78,7 +78,7 @@ class BreadcrumbNavigation {
      * @param {Array} items - Array of breadcrumb items
      */
   render(items) {
-    const wrapper = document.createElement('div');
+    const wrapper = document.createElement('nav');
     wrapper.className = 'breadcrumbs text-sm py-2 px-4 bg-base-200/50';
     wrapper.setAttribute('aria-label', 'Breadcrumb');
 
@@ -88,7 +88,7 @@ class BreadcrumbNavigation {
       const li = document.createElement('li');
 
       if (item.current) {
-        li.className = 'text-base-content/60';
+        li.className = 'text-base-content/80';
         li.setAttribute('aria-current', 'page');
         li.textContent = item.text;
       } else {

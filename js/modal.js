@@ -71,12 +71,8 @@ export class Modal {
     // Native <dialog> handles close via form method="dialog" buttons
     // and backdrop click via the modal-backdrop form.
 
-    // Escape key -- native <dialog> handles this, but keep for safety
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && this.isOpen) {
-        this.close();
-      }
-    });
+    // Escape key -- native <dialog> handles this via form method="dialog"
+    // and the 'close' event listener syncs state via _handleClose().
 
     // Listen for the native dialog close event to sync state
     this.modal.addEventListener('close', () => {
@@ -100,12 +96,21 @@ export class Modal {
      */
   open(meetingData) {
     if (this.isOpen) return;
+    if (!this.modal) {
+      console.error('Modal element not found. Cannot open modal.');
+      return;
+    }
 
     this.previousFocus = document.activeElement;
     this.populateContent(meetingData);
 
     // Use native <dialog> showModal() for proper focus management
-    this.modal.showModal();
+    try {
+      this.modal.showModal();
+    } catch (error) {
+      console.error('Failed to open modal dialog:', error);
+      return;
+    }
     this.isOpen = true;
 
     // Focus first focusable element

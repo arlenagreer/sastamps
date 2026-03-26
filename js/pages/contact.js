@@ -132,6 +132,8 @@ function validateField(event) {
 function clearFieldValidation(field) {
   field.classList.remove('error', 'success', 'input-error', 'input-success',
     'select-error', 'select-success', 'textarea-error', 'textarea-success');
+  field.removeAttribute('aria-invalid');
+  field.removeAttribute('aria-describedby');
   const errorElement = field.parentNode.querySelector('.field-error');
   if (errorElement) {
     errorElement.remove();
@@ -141,6 +143,7 @@ function clearFieldValidation(field) {
 function showFieldError(field, message) {
   field.classList.add('error');
   field.classList.remove('success');
+  field.setAttribute('aria-invalid', 'true');
 
   // DaisyUI error state classes
   if (field.tagName === 'SELECT') {
@@ -151,11 +154,14 @@ function showFieldError(field, message) {
     field.classList.add('input-error');
   }
 
+  const errorId = field.id ? `${field.id}-error` : `field-error-${Date.now()}`;
   const errorElement = document.createElement('div');
+  errorElement.id = errorId;
   errorElement.className = 'field-error label-text-alt text-error';
   errorElement.textContent = message;
   errorElement.setAttribute('role', 'alert');
 
+  field.setAttribute('aria-describedby', errorId);
   field.parentNode.appendChild(errorElement);
 }
 
@@ -333,7 +339,7 @@ function initializeLocationMap(container) {
                        target="_blank" class="btn-secondary">
                         📍 Open in Google Maps
                     </a>
-                    <button class="btn-secondary" onclick="copyAddress()">
+                    <button class="btn-secondary copy-address-btn">
                         📋 Copy Address
                     </button>
                 </div>
@@ -341,24 +347,27 @@ function initializeLocationMap(container) {
         </div>
     `;
 
-  // Add copy address functionality
-  window.copyAddress = function() {
-    const address = 'San Antonio Public Library, Central Branch - Conference Room B, 600 Soledad Street, San Antonio, TX 78205';
+  // Add copy address functionality via event listener (no inline onclick)
+  const copyBtn = container.querySelector('.copy-address-btn');
+  if (copyBtn) {
+    addEventListenerWithCleanup(copyBtn, 'click', () => {
+      const address = 'San Antonio Public Library, Central Branch - Conference Room B, 600 Soledad Street, San Antonio, TX 78205';
 
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(address).then(() => {
-        showCopyConfirmation();
-      }).catch(err => {
-        logger.error('Failed to copy address:', err);
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(address).then(() => {
+          showCopyConfirmation();
+        }).catch(err => {
+          logger.error('Failed to copy address:', err);
+          fallbackCopyAddress(address);
+        });
+      } else {
         fallbackCopyAddress(address);
-      });
-    } else {
-      fallbackCopyAddress(address);
-    }
-  };
+      }
+    });
+  }
 
   function showCopyConfirmation() {
-    const button = container.querySelector('button[onclick="copyAddress()"]');
+    const button = container.querySelector('.copy-address-btn');
     const originalText = button.textContent;
     button.textContent = '✅ Copied!';
     setTimeout(() => {

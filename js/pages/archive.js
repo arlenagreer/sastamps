@@ -141,11 +141,11 @@ async function renderArchivedNewsletters() {
     logger.info(`Rendered archived newsletters for ${sortedYears.length} years`);
   } catch (error) {
     logger.error('Failed to load archived newsletters:', error);
-    const container = document.getElementById('archived-newsletters');
-    if (container) {
+    if (timeline) {
       const msg = document.createElement('p');
+      msg.className = 'text-error p-4';
       msg.textContent = 'Unable to load the newsletter archive. Please try again later.';
-      container.appendChild(msg);
+      timeline.appendChild(msg);
     }
   }
 }
