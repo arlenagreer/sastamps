@@ -122,40 +122,102 @@ function displayCategorizedResources(resources, categories) {
   const container = safeQuerySelector('#categories-container');
   if (!container) {return;}
 
-  const html = categories.map(category => {
+  const categoryIcons = {
+    'getting-started': 'fas fa-book',
+    'grading-condition': 'fas fa-star',
+    'storage-preservation': 'fas fa-box',
+    'valuation': 'fas fa-dollar-sign',
+    'reference': 'fas fa-bookmark'
+  };
+
+  // Build accordion using DOM methods for safety
+  container.innerHTML = '';
+
+  categories.forEach((category, index) => {
     const categoryResources = resources.filter(resource => resource.category === category.id);
+    const iconClass = categoryIcons[category.id] || 'fas fa-folder';
+    const isFirst = index === 0;
 
-    return `
-            <div class="category-card" data-category="${escapeHTML(category.id)}">
-                <div class="category-header">
-                    <h3>${escapeHTML(category.name)}</h3>
-                    <p class="category-description">${escapeHTML(category.description)}</p>
-                    <span class="resource-count">${categoryResources.length} resource${categoryResources.length !== 1 ? 's' : ''}</span>
-                </div>
+    const wrapper = document.createElement('div');
+    wrapper.className = 'collapse collapse-arrow join-item border-base-300 border bg-base-100';
+    wrapper.dataset.category = category.id;
 
-                <div class="category-resources">
-                    ${categoryResources.slice(0, 3).map(resource => `
-                        <div class="resource-preview">
-                            <h4><a href="#" class="resource-link" data-resource-id="${escapeHTML(resource.id)}">${escapeHTML(resource.title)}</a></h4>
-                            <p class="resource-preview-summary">${escapeHTML(resource.summary.substring(0, 100))}...</p>
-                            <div class="resource-preview-meta">
-                                <span class="difficulty-badge difficulty-${escapeHTML(resource.difficulty)}">${escapeHTML(resource.difficulty)}</span>
-                                ${resource.estimatedReadTime ? `<span class="read-time">${escapeHTML(String(resource.estimatedReadTime))} min</span>` : ''}
-                            </div>
-                        </div>
-                    `).join('')}
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.name = 'resource-accordion';
+    if (isFirst) checkbox.checked = true;
+    wrapper.appendChild(checkbox);
 
-                    ${categoryResources.length > 3 ? `
-                        <button class="btn-outline btn-view-all-category" data-category="${escapeHTML(category.id)}">
-                            View All ${categoryResources.length} Resources
-                        </button>
-                    ` : ''}
-                </div>
-            </div>
-        `;
-  }).join('');
+    const title = document.createElement('div');
+    title.className = 'collapse-title font-semibold';
+    const icon = document.createElement('i');
+    icon.className = iconClass + ' mr-2';
+    title.appendChild(icon);
+    title.appendChild(document.createTextNode(' ' + category.name + ' '));
+    const badge = document.createElement('span');
+    badge.className = 'badge badge-sm badge-primary ml-2';
+    badge.textContent = categoryResources.length + ' resource' + (categoryResources.length !== 1 ? 's' : '');
+    title.appendChild(badge);
+    wrapper.appendChild(title);
 
-  container.innerHTML = html;
+    const content = document.createElement('div');
+    content.className = 'collapse-content';
+
+    const desc = document.createElement('p');
+    desc.className = 'text-sm text-base-content/60 mb-3';
+    desc.textContent = category.description;
+    content.appendChild(desc);
+
+    categoryResources.forEach(resource => {
+      const card = document.createElement('div');
+      card.className = 'resource-card p-3 mb-2 bg-base-200 rounded-box';
+      card.dataset.id = resource.id;
+      card.dataset.category = resource.category;
+      card.dataset.difficulty = resource.difficulty;
+
+      const h4 = document.createElement('h4');
+      h4.className = 'font-semibold';
+      const link = document.createElement('a');
+      link.href = '#';
+      link.className = 'resource-link link link-primary';
+      link.dataset.resourceId = resource.id;
+      link.textContent = resource.title;
+      h4.appendChild(link);
+      card.appendChild(h4);
+
+      const summary = document.createElement('p');
+      summary.className = 'text-sm text-base-content/70 mt-1';
+      summary.textContent = resource.summary.substring(0, 120) + '...';
+      card.appendChild(summary);
+
+      const meta = document.createElement('div');
+      meta.className = 'flex items-center gap-2 mt-2';
+      const diffBadge = document.createElement('span');
+      diffBadge.className = 'badge badge-sm badge-outline';
+      diffBadge.textContent = resource.difficulty;
+      meta.appendChild(diffBadge);
+      if (resource.estimatedReadTime) {
+        const time = document.createElement('span');
+        time.className = 'text-xs text-base-content/50';
+        time.textContent = resource.estimatedReadTime + ' min';
+        meta.appendChild(time);
+      }
+      card.appendChild(meta);
+      content.appendChild(card);
+    });
+
+    if (categoryResources.length > 3) {
+      const viewAllBtn = document.createElement('button');
+      viewAllBtn.className = 'btn btn-outline btn-sm mt-2 btn-view-all-category';
+      viewAllBtn.dataset.category = category.id;
+      viewAllBtn.textContent = 'View All ' + categoryResources.length + ' Resources';
+      content.appendChild(viewAllBtn);
+    }
+
+    wrapper.appendChild(content);
+    container.appendChild(wrapper);
+  });
+
   bindCategoryActions(container);
 }
 
@@ -294,19 +356,29 @@ function filterResourcesDisplay(filteredResources) {
     item.style.display = isMatch ? 'block' : 'none';
   });
 
-  // Update category cards
-  const categoryCards = document.querySelectorAll('.category-card');
-  categoryCards.forEach(card => {
-    const categoryId = card.dataset.category;
+  // Update DaisyUI collapse wrappers (accordion categories)
+  const collapseWrappers = document.querySelectorAll('.collapse[data-category]');
+  collapseWrappers.forEach(wrapper => {
+    const categoryId = wrapper.dataset.category;
     const categoryResources = filteredResources.filter(r => r.category === categoryId);
-    card.style.display = categoryResources.length > 0 ? 'block' : 'none';
+    if (categoryResources.length > 0) {
+      wrapper.classList.remove('hidden');
+    } else {
+      wrapper.classList.add('hidden');
+    }
   });
 }
 
 function showAllResources() {
-  const allItems = document.querySelectorAll('.resource-item, .resource-card, .category-card');
+  const allItems = document.querySelectorAll('.resource-item, .resource-card');
   allItems.forEach(item => {
     item.style.display = 'block';
+  });
+
+  // Show all collapse wrappers
+  const collapseWrappers = document.querySelectorAll('.collapse[data-category]');
+  collapseWrappers.forEach(wrapper => {
+    wrapper.classList.remove('hidden');
   });
 }
 
