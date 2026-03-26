@@ -1,0 +1,50 @@
+/* ============================================
+   ANIM-05: Globe Spinning Animation
+   Continuously rotating globe for the
+   "explore the world through stamps" motif.
+   ============================================ */
+
+@keyframes globe-spin {
+  from { background-position: 0 0; }
+  to { background-position: -200% 0; }
+}
+
+@layer components {
+  .globe {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 35% 35%, oklch(75% 0.12 235 / 0.3), transparent 50%),
+      linear-gradient(90deg,
+        oklch(55% 0.14 155) 0%,
+        oklch(62% 0.15 235) 25%,
+        oklch(55% 0.14 155) 50%,
+        oklch(62% 0.15 235) 75%,
+        oklch(55% 0.14 155) 100%
+      );
+    background-size: 100% 100%, 200% 100%;
+    animation: globe-spin 8s linear infinite;
+    box-shadow:
+      inset -8px -4px 20px oklch(28% 0.04 55 / 0.3),
+      2px 4px 12px oklch(28% 0.04 55 / 0.2);
+    flex-shrink: 0;
+  }
+
+  /* Pause on hover for interactivity */
+  .globe:hover {
+    animation-play-state: paused;
+    cursor: pointer;
+  }
+
+  /* Size variants */
+  .globe-sm {
+    width: 60px;
+    height: 60px;
+  }
+
+  .globe-lg {
+    width: 180px;
+    height: 180px;
+  }
+}

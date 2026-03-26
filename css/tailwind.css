@@ -140,3 +140,51 @@
     @apply bg-primary text-primary-content;
   }
 }
+
+/* ============================================
+   Animation Imports
+   Postmark, envelope, and globe animations
+   ============================================ */
+
+@import "./animations/postmark.css";
+@import "./animations/envelope.css";
+@import "./animations/globe.css";
+
+/* ============================================
+   Reduced Motion Override
+   Suppresses all philatelic animations for
+   users who prefer reduced motion.
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .postmark-animate {
+    animation: none;
+    opacity: 0.6;
+    transform: scale(1) rotate(-12deg);
+  }
+
+  .postmark-circle {
+    animation: none;
+  }
+
+  .envelope-flap {
+    transition: none;
+  }
+
+  .envelope-letter {
+    transition: none;
+  }
+
+  .globe {
+    animation: none;
+    background-position: 0 0;
+  }
+
+  .stamp-peel {
+    transition: none;
+  }
+
+  .stamp-peel:hover {
+    transform: none;
+  }
+}

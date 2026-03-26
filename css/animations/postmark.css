@@ -1,0 +1,74 @@
+/* ============================================
+   ANIM-03: Postmark Stamping Animation
+   Rubber stamp effect that "stamps" down onto
+   content with rotation and opacity.
+   ============================================ */
+
+@keyframes postmark-stamp {
+  0% {
+    transform: scale(2.5) rotate(-25deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(0.95) rotate(-12deg);
+    opacity: 0.85;
+  }
+  75% {
+    transform: scale(1.05) rotate(-12deg);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1) rotate(-12deg);
+    opacity: 0.6;
+  }
+}
+
+@layer components {
+  /* Basic postmark text badge */
+  .postmark {
+    color: oklch(45% 0.02 25);
+    border: 3px solid currentColor;
+    border-radius: 50%;
+    padding: 0.5rem 1rem;
+    font-family: "Courier Prime", "Courier New", monospace;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: inline-block;
+  }
+
+  /* Animated variant — plays on load or when .postmark-animate is added */
+  .postmark-animate {
+    animation: postmark-stamp 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+  }
+
+  /* Circular postmark with date lines */
+  .postmark-circle {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border: 3px solid oklch(45% 0.02 25);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Courier Prime", "Courier New", monospace;
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: oklch(45% 0.02 25);
+  }
+
+  .postmark-circle::before,
+  .postmark-circle::after {
+    content: "";
+    position: absolute;
+    width: 140%;
+    height: 2px;
+    background: currentColor;
+    left: -20%;
+  }
+
+  .postmark-circle::before { top: 35%; }
+  .postmark-circle::after { bottom: 35%; }
+}

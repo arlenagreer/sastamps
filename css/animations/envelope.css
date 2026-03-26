@@ -1,0 +1,96 @@
+/* ============================================
+   ANIM-04: Envelope Opening Animation
+   3D envelope that opens its flap to reveal
+   content on hover (desktop) or click (mobile).
+   ============================================ */
+
+@layer components {
+  .envelope {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    perspective: 800px;
+    cursor: pointer;
+  }
+
+  .envelope-body {
+    width: 100%;
+    height: 100%;
+    background: oklch(96% 0.02 80);
+    border: 1px solid oklch(86% 0.05 75);
+    border-radius: 0 0 4px 4px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Triangular flap with 3D rotation */
+  .envelope-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(
+      180deg,
+      oklch(92% 0.035 78),
+      oklch(86% 0.05 75)
+    );
+    transform-origin: top center;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    clip-path: polygon(0 0, 50% 100%, 100% 0);
+    z-index: 2;
+  }
+
+  /* Desktop hover opens the flap */
+  .envelope:hover .envelope-flap,
+  .envelope.envelope-open .envelope-flap {
+    transform: rotateX(180deg);
+  }
+
+  /* Letter slides up when envelope opens */
+  .envelope-letter {
+    position: absolute;
+    bottom: 10%;
+    left: 10%;
+    width: 80%;
+    height: 70%;
+    background: oklch(98% 0.01 80);
+    border: 1px solid oklch(90% 0.03 80);
+    transition: transform 0.6s ease 0.3s;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    font-family: "Courier Prime", "Courier New", monospace;
+    font-size: 0.85rem;
+    color: oklch(35% 0.03 60);
+    text-align: center;
+  }
+
+  .envelope:hover .envelope-letter,
+  .envelope.envelope-open .envelope-letter {
+    transform: translateY(-60%);
+  }
+
+  /* Airmail stripe decoration on envelope body */
+  .envelope-body::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: repeating-linear-gradient(
+      90deg,
+      oklch(42% 0.14 255) 0px,
+      oklch(42% 0.14 255) 12px,
+      oklch(96% 0.02 80) 12px,
+      oklch(96% 0.02 80) 16px,
+      oklch(50% 0.18 25) 16px,
+      oklch(50% 0.18 25) 28px,
+      oklch(96% 0.02 80) 28px,
+      oklch(96% 0.02 80) 32px
+    );
+  }
+}
