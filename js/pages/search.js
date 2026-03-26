@@ -38,12 +38,13 @@ async function initializeSearchInterface(container) {
   container.innerHTML = `
         <div class="search-main">
             <div class="search-input-container">
-                <input type="search" 
-                       id="main-search-input" 
-                       placeholder="Search meetings, newsletters, and more..." 
+                <input type="search"
+                       id="main-search-input"
+                       class="input input-bordered w-full"
+                       placeholder="Search meetings, newsletters, and more..."
                        aria-label="Search site content"
                        autocomplete="off">
-                <button id="search-button" class="btn-primary" aria-label="Search">
+                <button id="search-button" class="btn btn-primary" aria-label="Search">
                     🔍 Search
                 </button>
             </div>

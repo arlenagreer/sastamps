@@ -373,19 +373,19 @@ class SearchEngine {
                         <div class="filter-row">
                             <div class="filter-group">
                                 <label>Type:</label>
-                                <select class="filter-select" data-filter="type">
+                                <select class="select select-bordered select-sm" data-filter="type">
                                     <option value="">All Types</option>
                                 </select>
                             </div>
                             <div class="filter-group">
                                 <label>Year:</label>
-                                <select class="filter-select" data-filter="year">
+                                <select class="select select-bordered select-sm" data-filter="year">
                                     <option value="">All Years</option>
                                 </select>
                             </div>
                             <div class="filter-group">
                                 <label>Quarter:</label>
-                                <select class="filter-select" data-filter="quarter">
+                                <select class="select select-bordered select-sm" data-filter="quarter">
                                     <option value="">All Quarters</option>
                                 </select>
                             </div>
@@ -393,15 +393,15 @@ class SearchEngine {
                         <div class="filter-row">
                             <div class="filter-group">
                                 <label>Date From:</label>
-                                <input type="date" class="filter-input" data-filter="date-from">
+                                <input type="date" class="input input-bordered input-sm" data-filter="date-from">
                             </div>
                             <div class="filter-group">
                                 <label>Date To:</label>
-                                <input type="date" class="filter-input" data-filter="date-to">
+                                <input type="date" class="input input-bordered input-sm" data-filter="date-to">
                             </div>
                             <div class="filter-group">
                                 <label>Tags:</label>
-                                <select class="filter-select" data-filter="tags" multiple>
+                                <select class="select select-bordered select-sm" data-filter="tags" multiple>
                                 </select>
                             </div>
                         </div>
@@ -439,8 +439,8 @@ class SearchEngine {
     const suggestionsContainer = container.querySelector('.search-suggestions');
     const _resultsContainer = container.querySelector('.search-results-list');
     const _statusContainer = container.querySelector('.search-status');
-    const filterSelects = container.querySelectorAll('.filter-select');
-    const filterInputs = container.querySelectorAll('.filter-input');
+    const filterSelects = container.querySelectorAll('select[data-filter]');
+    const filterInputs = container.querySelectorAll('input[data-filter]');
     const clearFiltersButton = container.querySelector('.clear-filters-button');
     const toggleFiltersButton = container.querySelector('.toggle-filters-button');
 
@@ -628,8 +628,8 @@ class SearchEngine {
   async performUISearch(query, container) {
     const resultsContainer = container.querySelector('.search-results-list');
     const statusContainer = container.querySelector('.search-status');
-    const filterSelects = container.querySelectorAll('.filter-select');
-    const _filterInputs = container.querySelectorAll('.filter-input');
+    const filterSelects = container.querySelectorAll('select[data-filter]');
+    const _filterInputs = container.querySelectorAll('input[data-filter]');
 
     // Show loading state
     statusContainer.innerHTML = '<div class="search-loading">Searching...</div>';
@@ -931,23 +931,11 @@ class SearchEngine {
                 white-space: nowrap;
             }
 
-            .filter-select,
-            .filter-input {
-                padding: 0.5rem;
-                border: 1px solid var(--medium, #7f8c8d);
-                border-radius: var(--radius-sm, 3px);
-                background-color: var(--white, #fff);
-                font-size: 0.9rem;
-                min-width: 120px;
-            }
+            /* DaisyUI select/input handle filter styling */
 
-            .filter-select[multiple] {
+            select[data-filter][multiple] {
                 min-height: 100px;
                 min-width: 160px;
-            }
-
-            .filter-input[type="date"] {
-                min-width: 140px;
             }
 
             .clear-filters-button,
@@ -1131,11 +1119,7 @@ class SearchEngine {
                     gap: 0.5rem;
                 }
 
-                .filter-select,
-                .filter-input {
-                    min-width: auto;
-                    width: 100%;
-                }
+                /* DaisyUI select/input responsive handled by Tailwind */
 
                 .search-result-meta {
                     flex-direction: column;

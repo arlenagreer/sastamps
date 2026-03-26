@@ -227,21 +227,21 @@ class NewsletterLoader {
                 <div class="filter-row">
                     <div class="filter-group">
                         <label for="year-filter">Year:</label>
-                        <select id="year-filter" class="filter-select">
+                        <select id="year-filter" class="select select-bordered select-sm">
                             <option value="">All Years</option>
                             ${years.map(year => `<option value="${year}">${year}</option>`).join('')}
                         </select>
                     </div>
                     <div class="filter-group">
                         <label for="quarter-filter">Quarter:</label>
-                        <select id="quarter-filter" class="filter-select">
+                        <select id="quarter-filter" class="select select-bordered select-sm">
                             <option value="">All Quarters</option>
                             ${quarters.map(quarter => `<option value="${quarter}">${quarter}</option>`).join('')}
                         </select>
                     </div>
                     <div class="filter-group">
                         <label for="tags-filter">Tags:</label>
-                        <select id="tags-filter" class="filter-select" multiple>
+                        <select id="tags-filter" class="select select-bordered select-sm" multiple>
                             ${tags.map(tag => `<option value="${tag}">${this.formatLabel(tag)}</option>`).join('')}
                         </select>
                     </div>
@@ -492,16 +492,8 @@ class NewsletterLoader {
                 color: var(--dark, #2c3e50);
             }
 
-            .filter-select {
-                padding: 0.5rem;
-                border: 1px solid var(--medium, #7f8c8d);
-                border-radius: var(--radius-sm, 3px);
-                background-color: var(--white, #fff);
-                font-size: 0.9rem;
-                min-width: 120px;
-            }
-
-            .filter-select[multiple] {
+            /* DaisyUI select handles filter styling */
+            select[multiple] {
                 min-height: 100px;
                 min-width: 160px;
             }
@@ -598,10 +590,7 @@ class NewsletterLoader {
                     width: 100%;
                 }
 
-                .filter-select {
-                    width: 100%;
-                    min-width: auto;
-                }
+                /* DaisyUI select responsive handled by Tailwind */
 
                 .filter-actions {
                     flex-direction: column;
