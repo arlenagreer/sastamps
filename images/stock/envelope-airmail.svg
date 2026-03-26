@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" width="320" height="220" role="img" aria-label="Vintage airmail envelope">
+  <title>Airmail Envelope</title>
+  <defs>
+    <pattern id="airmail-border" x="0" y="0" width="24" height="8" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="8" height="8" fill="#2b4c7e"/>
+      <rect x="8" y="0" width="8" height="8" fill="#f5f0e8"/>
+      <rect x="16" y="0" width="8" height="8" fill="#c0392b"/>
+    </pattern>
+  </defs>
+  <!-- Envelope body -->
+  <rect x="4" y="4" width="312" height="212" rx="4" fill="#f5f0e8" stroke="#d4c9b0" stroke-width="1"/>
+  <!-- Airmail border top -->
+  <rect x="4" y="4" width="312" height="8" rx="2" fill="url(#airmail-border)"/>
+  <!-- Airmail border bottom -->
+  <rect x="4" y="208" width="312" height="8" rx="2" fill="url(#airmail-border)"/>
+  <!-- "PAR AVION" label -->
+  <rect x="20" y="24" width="100" height="28" rx="2" fill="none" stroke="#2b4c7e" stroke-width="1.5"/>
+  <text x="70" y="38" text-anchor="middle" fill="#2b4c7e" font-family="'Courier New', monospace" font-size="7" font-weight="bold" letter-spacing="2">PAR AVION</text>
+  <text x="70" y="47" text-anchor="middle" fill="#c0392b" font-family="'Courier New', monospace" font-size="6" letter-spacing="1">AIR MAIL</text>
+  <!-- Stamp area (top right) -->
+  <rect x="248" y="20" width="56" height="68" rx="1" fill="#f0eade" stroke="#b8a88a" stroke-width="1" stroke-dasharray="3 2"/>
+  <!-- Mini stamp design inside -->
+  <rect x="252" y="24" width="48" height="58" rx="1" fill="#2b4c7e" opacity="0.15"/>
+  <circle cx="276" cy="48" r="12" fill="none" stroke="#2b4c7e" stroke-width="0.8" opacity="0.4"/>
+  <text x="276" y="72" text-anchor="middle" fill="#2b4c7e" font-family="Georgia, serif" font-size="8" opacity="0.5">37c</text>
+  <!-- Address lines -->
+  <line x1="120" y1="100" x2="260" y2="100" stroke="#b8a88a" stroke-width="0.8"/>
+  <line x1="100" y1="120" x2="260" y2="120" stroke="#b8a88a" stroke-width="0.8"/>
+  <line x1="80" y1="140" x2="260" y2="140" stroke="#b8a88a" stroke-width="0.8"/>
+  <line x1="100" y1="160" x2="220" y2="160" stroke="#b8a88a" stroke-width="0.8"/>
+  <!-- Postmark hint (over stamp area) -->
+  <circle cx="268" cy="50" r="28" fill="none" stroke="#5a4a3a" stroke-width="1.5" opacity="0.2" transform="rotate(-15 268 50)"/>
+  <line x1="238" y1="42" x2="298" y2="42" stroke="#5a4a3a" stroke-width="1" opacity="0.15"/>
+  <line x1="238" y1="58" x2="298" y2="58" stroke="#5a4a3a" stroke-width="1" opacity="0.15"/>
+</svg>

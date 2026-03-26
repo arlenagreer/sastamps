@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="Vintage postmark cancellation mark">
+  <title>Postmark Cancellation</title>
+  <!-- Outer circle -->
+  <circle cx="100" cy="100" r="80" fill="none" stroke="#5a4a3a" stroke-width="3" opacity="0.7"/>
+  <!-- Inner circle -->
+  <circle cx="100" cy="100" r="65" fill="none" stroke="#5a4a3a" stroke-width="1.5" opacity="0.5"/>
+  <!-- Horizontal cancellation lines -->
+  <line x1="0" y1="70" x2="200" y2="70" stroke="#5a4a3a" stroke-width="2" opacity="0.5"/>
+  <line x1="0" y1="82" x2="200" y2="82" stroke="#5a4a3a" stroke-width="2" opacity="0.5"/>
+  <line x1="0" y1="118" x2="200" y2="118" stroke="#5a4a3a" stroke-width="2" opacity="0.5"/>
+  <line x1="0" y1="130" x2="200" y2="130" stroke="#5a4a3a" stroke-width="2" opacity="0.5"/>
+  <!-- City name -->
+  <text x="100" y="96" text-anchor="middle" fill="#5a4a3a" font-family="'Courier New', monospace" font-size="11" font-weight="bold" letter-spacing="1" opacity="0.8">SAN ANTONIO</text>
+  <!-- Date -->
+  <text x="100" y="112" text-anchor="middle" fill="#5a4a3a" font-family="'Courier New', monospace" font-size="10" opacity="0.7">MAR 25 2026</text>
+  <!-- State -->
+  <text x="100" y="155" text-anchor="middle" fill="#5a4a3a" font-family="'Courier New', monospace" font-size="9" opacity="0.6">TEXAS</text>
+</svg>

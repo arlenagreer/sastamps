@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="Postal globe representing worldwide stamp collecting">
+  <title>Postal Globe</title>
+  <defs>
+    <radialGradient id="globe-gradient" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#5b8abf" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#2b4c7e"/>
+      <stop offset="100%" stop-color="#1a3050"/>
+    </radialGradient>
+    <radialGradient id="globe-shine" cx="35%" cy="30%" r="40%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Globe body -->
+  <circle cx="100" cy="100" r="85" fill="url(#globe-gradient)"/>
+  <!-- Simplified continent shapes (stylized) -->
+  <!-- North America -->
+  <path d="M55 50 Q60 45 70 42 Q80 40 85 48 Q82 55 78 62 Q72 70 65 75 Q58 72 52 65 Q50 58 55 50Z" fill="#4a8c5c" opacity="0.6"/>
+  <!-- South America -->
+  <path d="M72 90 Q78 85 82 88 Q85 95 83 108 Q80 118 75 125 Q70 122 68 115 Q65 105 68 95Z" fill="#4a8c5c" opacity="0.6"/>
+  <!-- Europe/Africa -->
+  <path d="M105 45 Q112 42 118 48 Q120 55 118 62 Q115 58 110 55 Q108 50 105 45Z" fill="#4a8c5c" opacity="0.5"/>
+  <path d="M108 68 Q115 65 120 72 Q122 82 120 95 Q118 105 112 112 Q108 108 106 98 Q105 85 108 68Z" fill="#4a8c5c" opacity="0.5"/>
+  <!-- Asia hint -->
+  <path d="M130 48 Q140 45 148 50 Q152 58 148 65 Q142 62 135 58 Q132 52 130 48Z" fill="#4a8c5c" opacity="0.4"/>
+  <!-- Latitude/longitude lines -->
+  <ellipse cx="100" cy="100" rx="85" ry="40" fill="none" stroke="#ffffff" stroke-width="0.5" opacity="0.2"/>
+  <ellipse cx="100" cy="100" rx="85" ry="70" fill="none" stroke="#ffffff" stroke-width="0.5" opacity="0.2"/>
+  <ellipse cx="100" cy="100" rx="40" ry="85" fill="none" stroke="#ffffff" stroke-width="0.5" opacity="0.2" transform="rotate(0 100 100)"/>
+  <ellipse cx="100" cy="100" rx="70" ry="85" fill="none" stroke="#ffffff" stroke-width="0.5" opacity="0.2" transform="rotate(0 100 100)"/>
+  <line x1="15" y1="100" x2="185" y2="100" stroke="#ffffff" stroke-width="0.5" opacity="0.2"/>
+  <line x1="100" y1="15" x2="100" y2="185" stroke="#ffffff" stroke-width="0.5" opacity="0.2"/>
+  <!-- Shine overlay -->
+  <circle cx="100" cy="100" r="85" fill="url(#globe-shine)"/>
+  <!-- Airmail envelope orbiting (decorative) -->
+  <g transform="translate(155, 38) rotate(15)">
+    <rect x="0" y="0" width="28" height="18" rx="2" fill="#f5f0e8" stroke="#d4c9b0" stroke-width="0.5"/>
+    <path d="M0 0 L14 10 L28 0" fill="none" stroke="#c0392b" stroke-width="0.8"/>
+    <!-- Tiny airmail stripes -->
+    <line x1="0" y1="17" x2="28" y2="17" stroke="#2b4c7e" stroke-width="1.5" opacity="0.5"/>
+  </g>
+</svg>
