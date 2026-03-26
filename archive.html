@@ -153,172 +153,9 @@ h2{font-size:1.75rem}
             font-family: 'Merriweather', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
         }
 
-        /* Archive specific styles */
-        .archive-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
+        /* Archive styles replaced by DaisyUI timeline */
 
-        .archive-item {
-            background-color: var(--white);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-md);
-            overflow: hidden;
-            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
-        }
-
-        .archive-item:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .archive-item-
-
-        .archive-item-header h3 {
-            margin: 0;
-            color: var(--dark);
-            font-size: 1.25rem;
-        }
-
-        .archive-item-header p {
-            margin: 0.5rem 0 0;
-            font-weight: bold;
-            font-size: 1rem;
-            color: var(--dark);
-        }
-
-        .archive-item-content {
-            padding: 1.5rem;
-        }
-
-        .archive-item-content p {
-            margin-bottom: 1rem;
-            color: var(--medium);
-        }
-
-        .archive-year-section {
-            margin-bottom: 3rem;
-        }
-
-        .archive-year-
-
-        .newsletter-tags {
-            margin-bottom: 1rem;
-        }
-
-        .newsletter-tags .tag {
-            display: inline-block;
-            background: var(--accent);
-            color: var(--dark);
-            padding: 0.25rem 0.5rem;
-            margin: 0.125rem;
-            border-radius: var(--radius-sm);
-            font-size: 0.8rem;
-        }
-
-        .newsletter-meta {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            color: var(--medium);
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        /* Compact archive list for 2008-2024 */
-        .archive-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 0.5rem;
-        }
-
-        .archive-list-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.625rem 1rem;
-            background-color: var(--white);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--light);
-            transition: background-color var(--transition-fast);
-        }
-
-        .archive-list-item:hover {
-            background-color: var(--light);
-        }
-
-        .archive-list-item .archive-link {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.925rem;
-        }
-
-        .archive-list-item .archive-link:hover {
-            color: var(--primary-light);
-            text-decoration: underline;
-        }
-
-        .archive-list-item .archive-link .fa-file-pdf {
-            color: var(--secondary);
-            font-size: 1rem;
-        }
-
-        .archive-item-unavailable {
-            opacity: 0.55;
-        }
-
-        .archive-item-unavailable .archive-label {
-            color: var(--medium);
-            font-size: 0.925rem;
-        }
-
-        .archive-item-unavailable .unavailable-badge {
-            font-size: 0.75rem;
-            color: var(--medium);
-            font-style: italic;
-        }
-
-        .archived-section-divider {
-            border: none;
-            border-top: 1px solid var(--light);
-            margin: 2rem 0 2.5rem;
-        }
-
-        #archived-newsletters .archive-year-section {
-            margin-bottom: 2rem;
-        }
-
-        #archived-newsletters .archive-year-
-
-        @media (max-width: 768px) {
-            .archive-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .newsletter-meta {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .archive-list {
-                grid-template-columns: 1fr;
-            }
-        }
+        /* Legacy archive CSS removed -- DaisyUI timeline handles layout */
     </style>
 
     <style>
@@ -431,149 +268,158 @@ h2{font-size:1.75rem}
             </div>
         </section>
 
-        <!-- Newsletter Archive Section -->
+        <!-- Newsletter Archive Timeline (2025-2026) -->
         <section class="section">
             <div class="container">
-                <div class="archive-year-section">
-                    <h2 class="archive-year-header">2026 Newsletter Archive</h2>
-
-                    <div class="archive-grid">
-                        <!-- Second Quarter 2026 -->
-                        <div class="archive-item">
-                            <div class="archive-item-header">
-                                <h3>SAPA PHILATEX</h3>
-                                <p>Second Quarter 2026</p>
-                            </div>
-                            <div class="archive-item-content">
-                                <p><strong>Published:</strong> April 1, 2026</p>
-                                <p>Features the April-June meeting calendar, Stamp Program announcement for Joe Perez's 'Spanish Participation in the American Revolution', annual club picnic details, new member announcements, feature article on Farley's Follies, and website archive updates.</p>
-                                <div class="newsletter-tags">
-                                    <span class="tag">2026</span>
-                                    <span class="tag">Q2</span>
-                                    <span class="tag">Meetings</span>
-                                    <span class="tag">Picnic</span>
-                                    <span class="tag">New Members</span>
-                                </div>
-                                <div class="newsletter-meta">
-                                    <span class="meta-item"><i class="fas fa-file-alt"></i> 3 pages</span>
-                                    <span class="meta-item"><i class="fas fa-download"></i> 577 KB</span>
-                                </div>
-                                <a href="public/SAPA-PHILATEX-Second-Quarter-2026.pdf" class="btn btn-primary" target="_blank">
-                                    <i class="fas fa-file-pdf"></i> Download PDF
-                                </a>
-                            </div>
+                <ul class="timeline timeline-vertical" id="newsletter-timeline">
+                    <!-- 2026 Year Marker + Q2 -->
+                    <li>
+                        <div class="timeline-start font-heading text-xl font-bold text-primary">2026</div>
+                        <div class="timeline-middle stamp-timeline-marker">
+                            <i class="fas fa-stamp"></i>
                         </div>
-
-                        <!-- First Quarter 2026 -->
-                        <div class="archive-item">
-                            <div class="archive-item-header">
-                                <h3>SAPA PHILATEX</h3>
-                                <p>First Quarter 2026</p>
+                        <div class="timeline-end timeline-box bg-base-200 stamp-border">
+                            <h3 class="font-heading text-lg font-bold">SAPA PHILATEX</h3>
+                            <p class="text-sm font-semibold">Second Quarter 2026</p>
+                            <p class="text-sm mt-1">Published: April 1, 2026</p>
+                            <p class="text-sm mt-1">Features the April-June meeting calendar, Stamp Program announcement for Joe Perez's 'Spanish Participation in the American Revolution', annual club picnic details, new member announcements, feature article on Farley's Follies, and website archive updates.</p>
+                            <div class="flex flex-wrap gap-1 mt-2">
+                                <span class="badge badge-sm">2026</span>
+                                <span class="badge badge-sm">Q2</span>
+                                <span class="badge badge-sm">Meetings</span>
+                                <span class="badge badge-sm">Picnic</span>
+                                <span class="badge badge-sm">New Members</span>
                             </div>
-                            <div class="archive-item-content">
-                                <p><strong>Published:</strong> January 1, 2026</p>
-                                <p>Features new editor Jim Durham's introduction, Q1 meeting calendar with updated location at MacArthur Park Lutheran Church, USPS 2026 stamp preview, and updated Board of Governors listing.</p>
-                                <div class="newsletter-tags">
-                                    <span class="tag">2026</span>
-                                    <span class="tag">Q1</span>
-                                    <span class="tag">New Editor</span>
-                                    <span class="tag">USPS</span>
-                                    <span class="tag">Meetings</span>
-                                </div>
-                                <div class="newsletter-meta">
-                                    <span class="meta-item"><i class="fas fa-file-alt"></i> 3 pages</span>
-                                    <span class="meta-item"><i class="fas fa-download"></i> 268 KB</span>
-                                </div>
-                                <a href="public/SAPA-PHILATEX-First-Quarter-2026.pdf" class="btn btn-primary" target="_blank">
-                                    <i class="fas fa-file-pdf"></i> Download PDF
-                                </a>
+                            <div class="flex items-center gap-3 mt-2 text-xs text-base-content/60">
+                                <span><i class="fas fa-file-alt mr-1"></i>3 pages</span>
+                                <span><i class="fas fa-download mr-1"></i>577 KB</span>
                             </div>
+                            <a href="public/SAPA-PHILATEX-Second-Quarter-2026.pdf" class="btn btn-primary btn-sm mt-3" target="_blank">
+                                <i class="fas fa-file-pdf mr-1"></i> Download PDF
+                            </a>
                         </div>
-                    </div>
-                </div>
+                        <hr class="stamp-connector">
+                    </li>
 
-                <div class="archive-year-section">
-                    <h2 class="archive-year-header">2025 Newsletter Archive</h2>
-
-                    <div class="archive-grid">
-                        <!-- Fourth Quarter 2025 -->
-                        <div class="archive-item">
-                            <div class="archive-item-header">
-                                <h3>SAPA PHILATEX</h3>
-                                <p>Fourth Quarter 2025</p>
+                    <!-- 2026 Q1 -->
+                    <li>
+                        <hr class="stamp-connector">
+                        <div class="timeline-start timeline-box bg-base-200 stamp-border md:text-end">
+                            <h3 class="font-heading text-lg font-bold">SAPA PHILATEX</h3>
+                            <p class="text-sm font-semibold">First Quarter 2026</p>
+                            <p class="text-sm mt-1">Published: January 1, 2026</p>
+                            <p class="text-sm mt-1">Features new editor Jim Durham's introduction, Q1 meeting calendar with updated location at MacArthur Park Lutheran Church, USPS 2026 stamp preview, and updated Board of Governors listing.</p>
+                            <div class="flex flex-wrap gap-1 mt-2 md:justify-end">
+                                <span class="badge badge-sm">2026</span>
+                                <span class="badge badge-sm">Q1</span>
+                                <span class="badge badge-sm">New Editor</span>
+                                <span class="badge badge-sm">USPS</span>
+                                <span class="badge badge-sm">Meetings</span>
                             </div>
-                            <div class="archive-item-content">
-                                <p><strong>Published:</strong> October 1, 2025</p>
-                                <p>Features the October-December meeting calendar, year-end activities, holiday schedule adjustments, 2026 membership renewal information, upcoming stamp shows, and special programs on postal history and rare stamp collections.</p>
-                                <div class="newsletter-tags">
-                                    <span class="tag">2025</span>
-                                    <span class="tag">Q4</span>
-                                    <span class="tag">Holidays</span>
-                                    <span class="tag">Year-End</span>
-                                    <span class="tag">Membership</span>
-                                </div>
-                                <div class="newsletter-meta">
-                                    <span class="meta-item"><i class="fas fa-file-alt"></i> 12 pages</span>
-                                    <span class="meta-item"><i class="fas fa-download"></i> 2.5 MB</span>
-                                </div>
-                                <a href="public/SAPA-PHILATEX-Fourth-Quarter-2025.pdf" class="btn btn-primary" target="_blank">
-                                    <i class="fas fa-file-pdf"></i> Download PDF
-                                </a>
+                            <div class="flex items-center gap-3 mt-2 text-xs text-base-content/60 md:justify-end">
+                                <span><i class="fas fa-file-alt mr-1"></i>3 pages</span>
+                                <span><i class="fas fa-download mr-1"></i>268 KB</span>
                             </div>
+                            <a href="public/SAPA-PHILATEX-First-Quarter-2026.pdf" class="btn btn-primary btn-sm mt-3" target="_blank">
+                                <i class="fas fa-file-pdf mr-1"></i> Download PDF
+                            </a>
                         </div>
-
-                        <!-- Third Quarter 2025 -->
-                        <div class="archive-item">
-                            <div class="archive-item-header">
-                                <h3>SAPA PHILATEX</h3>
-                                <p>Third Quarter 2025</p>
-                            </div>
-                            <div class="archive-item-content">
-                                <p><strong>Published:</strong> July 1, 2025</p>
-                                <p>Features the July-September meeting calendar, annual "Blue Chip" auction details, Greater Houston Stamp Show information, TSDA show schedule, 2025 membership drive, and programs on US Air Mail History and Classic Mexican Stamps.</p>
-                                <div class="newsletter-tags">
-                                    <span class="tag">2025</span>
-                                    <span class="tag">Auction</span>
-                                    <span class="tag">Meetings</span>
-                                    <span class="tag">Air Mail</span>
-                                    <span class="tag">Mexican Stamps</span>
-                                </div>
-                                <div class="newsletter-meta">
-                                    <span class="meta-item"><i class="fas fa-file-alt"></i> 12 pages</span>
-                                    <span class="meta-item"><i class="fas fa-download"></i> 2.1 MB</span>
-                                </div>
-                                <a href="public/SAPA-PHILATEX-Third-Quarter-2025.pdf" class="btn btn-primary" target="_blank">
-                                    <i class="fas fa-file-pdf"></i> Download PDF
-                                </a>
-                            </div>
+                        <div class="timeline-middle stamp-timeline-marker">
+                            <i class="fas fa-stamp"></i>
                         </div>
+                        <div class="timeline-end"></div>
+                        <hr class="stamp-connector">
+                    </li>
 
-                        <!-- Second Quarter 2025 -->
-                        <div class="archive-item">
-                            <div class="archive-item-header">
-                                <h3>SAPA PHILATEX</h3>
-                                <p>Second Quarter 2025</p>
-                            </div>
-                            <div class="archive-item-content">
-                                <p><strong>Published:</strong> April 1, 2025</p>
-                                <p>Contains the April-June meeting schedule, club updates, member spotlights, and special features on recent philatelic discoveries and collecting tips for the spring season.</p>
-                                <div class="newsletter-tags">
-                                    <span class="tag">2025</span>
-                                    <span class="tag">Spring</span>
-                                    <span class="tag">Collecting Tips</span>
-                                    <span class="tag">Member Spotlight</span>
-                                </div>
-                                <div class="newsletter-meta">
-                                    <span class="meta-item"><i class="fas fa-file-alt"></i> 10 pages</span>
-                                    <span class="meta-item"><i class="fas fa-download"></i> 1.8 MB</span>
-                                </div>
-                                <a href="public/SAPA PHILATEX Second Quarter 2025.pdf" class="btn btn-primary" target="_blank">
-                                    <i class="fas fa-file-pdf"></i> Download PDF
-                                </a>
-                            </div>
+                    <!-- 2025 Year Marker + Q4 -->
+                    <li>
+                        <hr class="stamp-connector">
+                        <div class="timeline-start font-heading text-xl font-bold text-primary">2025</div>
+                        <div class="timeline-middle stamp-timeline-marker">
+                            <i class="fas fa-stamp"></i>
                         </div>
-                    </div>
-                </div>
+                        <div class="timeline-end timeline-box bg-base-200 stamp-border">
+                            <h3 class="font-heading text-lg font-bold">SAPA PHILATEX</h3>
+                            <p class="text-sm font-semibold">Fourth Quarter 2025</p>
+                            <p class="text-sm mt-1">Published: October 1, 2025</p>
+                            <p class="text-sm mt-1">Features the October-December meeting calendar, year-end activities, holiday schedule adjustments, 2026 membership renewal information, upcoming stamp shows, and special programs on postal history and rare stamp collections.</p>
+                            <div class="flex flex-wrap gap-1 mt-2">
+                                <span class="badge badge-sm">2025</span>
+                                <span class="badge badge-sm">Q4</span>
+                                <span class="badge badge-sm">Holidays</span>
+                                <span class="badge badge-sm">Year-End</span>
+                                <span class="badge badge-sm">Membership</span>
+                            </div>
+                            <div class="flex items-center gap-3 mt-2 text-xs text-base-content/60">
+                                <span><i class="fas fa-file-alt mr-1"></i>12 pages</span>
+                                <span><i class="fas fa-download mr-1"></i>2.5 MB</span>
+                            </div>
+                            <a href="public/SAPA-PHILATEX-Fourth-Quarter-2025.pdf" class="btn btn-primary btn-sm mt-3" target="_blank">
+                                <i class="fas fa-file-pdf mr-1"></i> Download PDF
+                            </a>
+                        </div>
+                        <hr class="stamp-connector">
+                    </li>
+
+                    <!-- 2025 Q3 -->
+                    <li>
+                        <hr class="stamp-connector">
+                        <div class="timeline-start timeline-box bg-base-200 stamp-border md:text-end">
+                            <h3 class="font-heading text-lg font-bold">SAPA PHILATEX</h3>
+                            <p class="text-sm font-semibold">Third Quarter 2025</p>
+                            <p class="text-sm mt-1">Published: July 1, 2025</p>
+                            <p class="text-sm mt-1">Features the July-September meeting calendar, annual "Blue Chip" auction details, Greater Houston Stamp Show information, TSDA show schedule, 2025 membership drive, and programs on US Air Mail History and Classic Mexican Stamps.</p>
+                            <div class="flex flex-wrap gap-1 mt-2 md:justify-end">
+                                <span class="badge badge-sm">2025</span>
+                                <span class="badge badge-sm">Auction</span>
+                                <span class="badge badge-sm">Meetings</span>
+                                <span class="badge badge-sm">Air Mail</span>
+                                <span class="badge badge-sm">Mexican Stamps</span>
+                            </div>
+                            <div class="flex items-center gap-3 mt-2 text-xs text-base-content/60 md:justify-end">
+                                <span><i class="fas fa-file-alt mr-1"></i>12 pages</span>
+                                <span><i class="fas fa-download mr-1"></i>2.1 MB</span>
+                            </div>
+                            <a href="public/SAPA-PHILATEX-Third-Quarter-2025.pdf" class="btn btn-primary btn-sm mt-3" target="_blank">
+                                <i class="fas fa-file-pdf mr-1"></i> Download PDF
+                            </a>
+                        </div>
+                        <div class="timeline-middle stamp-timeline-marker">
+                            <i class="fas fa-stamp"></i>
+                        </div>
+                        <div class="timeline-end"></div>
+                        <hr class="stamp-connector">
+                    </li>
+
+                    <!-- 2025 Q2 -->
+                    <li>
+                        <hr class="stamp-connector">
+                        <div class="timeline-start"></div>
+                        <div class="timeline-middle stamp-timeline-marker">
+                            <i class="fas fa-stamp"></i>
+                        </div>
+                        <div class="timeline-end timeline-box bg-base-200 stamp-border">
+                            <h3 class="font-heading text-lg font-bold">SAPA PHILATEX</h3>
+                            <p class="text-sm font-semibold">Second Quarter 2025</p>
+                            <p class="text-sm mt-1">Published: April 1, 2025</p>
+                            <p class="text-sm mt-1">Contains the April-June meeting schedule, club updates, member spotlights, and special features on recent philatelic discoveries and collecting tips for the spring season.</p>
+                            <div class="flex flex-wrap gap-1 mt-2">
+                                <span class="badge badge-sm">2025</span>
+                                <span class="badge badge-sm">Spring</span>
+                                <span class="badge badge-sm">Collecting Tips</span>
+                                <span class="badge badge-sm">Member Spotlight</span>
+                            </div>
+                            <div class="flex items-center gap-3 mt-2 text-xs text-base-content/60">
+                                <span><i class="fas fa-file-alt mr-1"></i>10 pages</span>
+                                <span><i class="fas fa-download mr-1"></i>1.8 MB</span>
+                            </div>
+                            <a href="public/SAPA PHILATEX Second Quarter 2025.pdf" class="btn btn-primary btn-sm mt-3" target="_blank">
+                                <i class="fas fa-file-pdf mr-1"></i> Download PDF
+                            </a>
+                        </div>
+                        <hr class="stamp-connector">
+                    </li>
+                </ul>
             </div>
         </section>
 
