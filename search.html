@@ -309,18 +309,18 @@
                                class="search-input"
                                placeholder="Search newsletters, meetings, resources, glossary..."
                                autocomplete="off">
-                        <button onclick="performSearch()" class="search-button" aria-label="Search">
+                        <button onclick="performSearch()" class="btn btn-primary" aria-label="Search">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
 
                     <div class="quick-searches">
                         <p>Popular searches:</p>
-                        <button onclick="quickSearch('stamp collecting')">Stamp Collecting</button>
-                        <button onclick="quickSearch('meeting')">Meetings</button>
-                        <button onclick="quickSearch('newsletter')">Newsletters</button>
-                        <button onclick="quickSearch('beginner')">Beginners</button>
-                        <button onclick="quickSearch('2025')">2025 Events</button>
+                        <button onclick="quickSearch('stamp collecting')" class="btn btn-sm btn-outline">Stamp Collecting</button>
+                        <button onclick="quickSearch('meeting')" class="btn btn-sm btn-outline">Meetings</button>
+                        <button onclick="quickSearch('newsletter')" class="btn btn-sm btn-outline">Newsletters</button>
+                        <button onclick="quickSearch('beginner')" class="btn btn-sm btn-outline">Beginners</button>
+                        <button onclick="quickSearch('2025')" class="btn btn-sm btn-outline">2025 Events</button>
                     </div>
 
                     <div id="searchStatus"></div>
