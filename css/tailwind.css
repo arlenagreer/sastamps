@@ -139,6 +139,26 @@
   .menu li > .active {
     @apply bg-primary text-primary-content;
   }
+
+  /* COMP-07: Stamp-styled timeline connector */
+  .stamp-timeline-marker {
+    @apply text-accent text-lg;
+    filter: drop-shadow(0 1px 2px oklch(28% 0.04 55 / 0.25));
+  }
+
+  /* COMP-07: Timeline connector line in primary color */
+  .timeline hr.stamp-connector {
+    @apply bg-primary;
+  }
+
+  /* COMP-06: Accordion header with philatelic styling */
+  .stamp-accordion .collapse-title {
+    @apply font-heading text-primary;
+  }
+
+  .stamp-accordion .collapse-arrow .collapse-title::after {
+    @apply text-accent;
+  }
 }
 
 /* ============================================
