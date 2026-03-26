@@ -114,78 +114,9 @@ button, input, select, textarea {
 }
 
 
-/* Header */
-header {
-    background-color: var(--white);
-    box-shadow: var(--shadow-sm);
-    padding: 1rem 0;
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    transition: background-color var(--transition-normal);
-}
-
-.header-container {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-}
-
-
-/* Navigation */
-nav ul {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-nav li {
-    margin-left: 1.5rem;
-}
-
-nav a {
-    color: var(--dark);
-    font-weight: 600;
-    padding: 0.5rem 0;
-    position: relative;
-    text-decoration: none;
-    transition: color var(--transition-fast);
-}
-
-nav a:hover {
-    color: var(--primary);
-}
-
-nav a::after {
-    background-color: var(--primary);
-    bottom: 0;
-    content: "";
-    height: 2px;
-    left: 0;
-    position: absolute;
-    transition: width var(--transition-normal);
-    width: 0;
-}
-
-nav a:hover::after {
-    width: 100%;
-}
-
-
-/* Navigation Icons */
-.nav-icon {
-    color: var(--primary);
-    font-size: 1.2rem;
-    height: auto;
-    margin-right: 8px;
-    width: auto;
-}
-
-.nav-menu li a:hover .nav-icon,
-.nav-menu li.active .nav-icon {
-    color: var(--accent);
-}
+/* Header & Navigation */
+/* Removed: header, .header-container, nav ul/li/a, nav a::after,
+   .nav-icon, .nav-menu — now DaisyUI navbar component (Phase 14 swap) */
 
 
 /* Hero Section */
@@ -213,34 +144,8 @@ nav a:hover::after {
 
 
 /* Cards */
-.card {
-    background-color: var(--white);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-md);
-    margin-bottom: 1.5rem;
-    overflow: hidden;
-    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
-}
-
-.card:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-5px);
-}
-
-.card-content {
-    padding: 1.5rem;
-}
-
-.card-title {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-}
-
-.card-image {
-    height: 200px;
-    object-fit: cover;
-    width: 100%;
-}
+/* Removed: .card, .card:hover, .card-content, .card-title, .card-image —
+   now DaisyUI card component (Phase 14 swap) */
 
 
 /* Utility Classes */
@@ -250,28 +155,8 @@ nav a:hover::after {
 
 
 /* Accordions */
-.accordion-header {
-    align-items: center;
-    background-color: var(--white);
-    border: none;
-    cursor: pointer;
-    display: flex;
-    font-weight: 600;
-    justify-content: space-between;
-    padding: 1.25rem;
-    text-align: left;
-    transition: background-color var(--transition-fast);
-    width: 100%;
-}
-
-.accordion-header:hover {
-    background-color: var(--light);
-}
-
-.accordion-header.active {
-    background-color: var(--primary);
-    color: var(--white);
-}
+/* Removed: .accordion-header, .accordion-header:hover, .accordion-header.active —
+   now DaisyUI collapse component (Phase 14/15 swap) */
 
 
 /* Timeline */
