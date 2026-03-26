@@ -74,46 +74,45 @@ class BreadcrumbNavigation {
   }
 
   /**
-     * Render breadcrumb navigation
+     * Render breadcrumb navigation using DaisyUI breadcrumbs component
      * @param {Array} items - Array of breadcrumb items
      */
   render(items) {
-    const nav = document.createElement('nav');
-    nav.setAttribute('aria-label', 'Breadcrumb');
-    nav.className = 'breadcrumb-navigation';
+    const wrapper = document.createElement('div');
+    wrapper.className = 'breadcrumbs text-sm py-2 px-4 bg-base-200/50';
+    wrapper.setAttribute('aria-label', 'Breadcrumb');
 
-    const ol = document.createElement('ol');
-    ol.className = 'breadcrumb-list';
+    const ul = document.createElement('ul');
 
     items.forEach((item, index) => {
       const li = document.createElement('li');
-      li.className = 'breadcrumb-item';
 
       if (item.current) {
+        li.className = 'text-base-content/60';
         li.setAttribute('aria-current', 'page');
         li.textContent = item.text;
       } else {
         const link = document.createElement('a');
         link.href = item.href;
-        link.textContent = item.text;
+        // Add home icon on first item
+        if (index === 0) {
+          const icon = document.createElement('i');
+          icon.className = 'fas fa-home mr-1';
+          link.appendChild(icon);
+        }
+        link.appendChild(document.createTextNode(item.text));
         li.appendChild(link);
       }
 
-      ol.appendChild(li);
-
-      // Add separator except for last item
-      if (index < items.length - 1) {
-        const separator = document.createElement('span');
-        separator.className = 'breadcrumb-separator';
-        separator.setAttribute('aria-hidden', 'true');
-        separator.textContent = ` ${this.separator} `;
-        ol.appendChild(separator);
-      }
+      ul.appendChild(li);
     });
 
-    nav.appendChild(ol);
-    this.container.innerHTML = '';
-    this.container.appendChild(nav);
+    wrapper.appendChild(ul);
+    // Clear container and append new breadcrumb
+    while (this.container.firstChild) {
+      this.container.removeChild(this.container.firstChild);
+    }
+    this.container.appendChild(wrapper);
   }
 
   /**
