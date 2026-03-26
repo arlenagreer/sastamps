@@ -2948,12 +2948,19 @@ thead {
     <!-- Main Content -->
     <main id="main-content">
         <!-- Hero Section -->
-        <section class="hero hero-overlay hero-meetings">
-            <div class="container">
+        <section class="hero hero-overlay hero-meetings" style="position: relative; overflow: hidden;">
+            <div class="container" style="position: relative; z-index: 1;">
                 <h1>SAPA Meetings</h1>
                 <p>Join us for weekly meetings featuring educational programs, auctions, and trading sessions</p>
             </div>
+            <!-- Decorative stamp frame -->
+            <img src="images/stock/stamp-frame.svg" alt="" aria-hidden="true" loading="lazy" width="240" height="300" style="position: absolute; right: 2rem; top: 50%; transform: translateY(-50%) rotate(8deg); opacity: 0.1; pointer-events: none;">
         </section>
+
+        <!-- Philatelic Decorative Accent -->
+        <div style="text-align: center; margin: -1.5rem auto 0; position: relative; z-index: 2;">
+            <img src="images/stock/postmark-decoration.svg" alt="San Antonio postmark" loading="lazy" width="90" height="90" class="postmark postmark-animate" style="display: inline-block;">
+        </div>
 
         <!-- Meeting Location Section -->
         <section class="section">

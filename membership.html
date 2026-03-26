@@ -1527,12 +1527,19 @@ thead {
     <!-- Main Content -->
     <main id="main-content">
         <!-- Hero Section -->
-        <section class="hero hero-overlay hero-membership">
-            <div class="container">
+        <section class="hero hero-overlay hero-membership" style="position: relative; overflow: hidden;">
+            <div class="container" style="position: relative; z-index: 1;">
                 <h1>Join Our Community</h1>
                 <p>Become a member of the San Antonio Philatelic Association and connect with fellow stamp collectors in a friendly, welcoming environment.</p>
             </div>
+            <!-- Decorative airmail envelope -->
+            <img src="images/stock/envelope-airmail.svg" alt="" aria-hidden="true" loading="lazy" width="320" height="220" style="position: absolute; left: -20px; bottom: -30px; opacity: 0.1; pointer-events: none; max-width: 45%; transform: rotate(-5deg);">
         </section>
+
+        <!-- Philatelic Decorative Accent -->
+        <div style="text-align: center; margin: -1.5rem auto 0; position: relative; z-index: 2;">
+            <img src="images/stock/stamp-frame.svg" alt="Vintage stamp" loading="lazy" width="60" height="75" style="display: inline-block; opacity: 0.7;">
+        </div>
 
         <!-- Why Join Section -->
         <section class="section">

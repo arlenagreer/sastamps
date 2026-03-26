@@ -2307,12 +2307,19 @@ thead {
     <!-- Main Content -->
     <main id="main-content">
         <!-- Hero Section -->
-        <section class="hero hero-overlay hero-about">
-            <div class="container">
+        <section class="hero hero-overlay hero-about" style="position: relative; overflow: hidden;">
+            <div class="container" style="position: relative; z-index: 1;">
                 <h1>About SAPA</h1>
                 <p>Celebrating over 125 years of philatelic tradition in South Texas</p>
             </div>
+            <!-- Decorative stamp collection image -->
+            <img src="images/stock/stamp-collection.svg" alt="" aria-hidden="true" loading="lazy" width="400" height="280" style="position: absolute; right: -40px; bottom: -30px; opacity: 0.12; pointer-events: none; max-width: 50%;">
         </section>
+
+        <!-- Philatelic Decorative Accent -->
+        <div style="text-align: center; margin: -1.5rem auto 0; position: relative; z-index: 2;">
+            <img src="images/stock/postmark-decoration.svg" alt="San Antonio postmark" loading="lazy" width="100" height="100" class="postmark postmark-animate" style="display: inline-block;">
+        </div>
 
         <!-- Mission Section -->
         <section class="section">
