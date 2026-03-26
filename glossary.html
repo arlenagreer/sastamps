@@ -85,82 +85,53 @@
 </head>
 <body>
     <!-- Header -->
-    <header>
-        <div class="container">
-            <div class="header-container">
-                <div class="site-branding">
-                    <h1 class="site-title">
-                        <a href="index.html">San Antonio Philatelic Association</a>
-                    </h1>
-                </div>
-
-                <nav class="main-nav" aria-label="Main navigation">
-                    <ul class="nav-list">
-                        <li class="nav-item">
-                            <a href="index.html" class="nav-link">
-                                <i class="nav-icon fas fa-home" aria-hidden="true"></i>
-                                Home
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="about.html" class="nav-link">
-                                <i class="nav-icon fas fa-info-circle" aria-hidden="true"></i>
-                                About
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="meetings.html" class="nav-link">
-                                <i class="nav-icon fas fa-calendar" aria-hidden="true"></i>
-                                Meetings
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="newsletter.html" class="nav-link">
-                                <i class="nav-icon fas fa-newspaper" aria-hidden="true"></i>
-                                Newsletter
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="archive.html" class="nav-link">
-                                <i class="nav-icon fas fa-archive" aria-hidden="true"></i>
-                                Archive
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="membership.html" class="nav-link">
-                                <i class="nav-icon fas fa-users" aria-hidden="true"></i>
-                                Membership
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="resources.html" class="nav-link">
-                                <i class="nav-icon fas fa-book" aria-hidden="true"></i>
-                                Resources
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="glossary.html" class="nav-link active" aria-current="page">
-                                <i class="nav-icon fas fa-spell-check" aria-hidden="true"></i>
-                                Glossary
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="contact.html" class="nav-link">
-                                <i class="nav-icon fas fa-envelope" aria-hidden="true"></i>
-                                Contact
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="search.html" class="nav-link">
-                                <i class="nav-icon fas fa-search" aria-hidden="true"></i>
-                                Search
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+    <div class="navbar bg-base-200 shadow-sm sticky top-0 z-50">
+      <!-- Mobile dropdown (visible < lg) -->
+      <div class="navbar-start">
+        <div class="dropdown">
+          <div tabindex="0" role="button" class="btn btn-ghost lg:hidden"
+               aria-label="Open menu">
+            <i class="fas fa-bars text-lg"></i>
+          </div>
+          <ul tabindex="0"
+              class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10
+                     mt-3 w-60 p-2 shadow">
+        <li><a href="index.html"><i class="fas fa-home mr-2"></i>Home</a></li>
+        <li><a href="about.html"><i class="fas fa-info-circle mr-2"></i>About</a></li>
+        <li><a href="meetings.html"><i class="fas fa-calendar mr-2"></i>Meetings</a></li>
+        <li><a href="newsletter.html"><i class="fas fa-newspaper mr-2"></i>Newsletter</a></li>
+        <li><a href="archive.html"><i class="fas fa-archive mr-2"></i>Archive</a></li>
+        <li><a href="membership.html"><i class="fas fa-users mr-2"></i>Membership</a></li>
+        <li><a href="resources.html"><i class="fas fa-book mr-2"></i>Resources</a></li>
+        <li><a href="glossary.html" class="active" aria-current="page"><i class="fas fa-spell-check mr-2"></i>Glossary</a></li>
+        <li><a href="contact.html"><i class="fas fa-envelope mr-2"></i>Contact</a></li>
+          </ul>
         </div>
-    </header>
+        <a href="index.html" class="btn btn-ghost text-xl font-heading">SAPA</a>
+      </div>
+
+      <!-- Desktop links (hidden < lg) -->
+      <div class="navbar-center hidden lg:flex">
+        <ul class="menu menu-horizontal px-1 gap-1">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="meetings.html">Meetings</a></li>
+        <li><a href="newsletter.html">Newsletter</a></li>
+        <li><a href="archive.html">Archive</a></li>
+        <li><a href="membership.html">Membership</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="glossary.html" class="active" aria-current="page">Glossary</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Search shortcut -->
+      <div class="navbar-end">
+        <a href="search.html" class="btn btn-ghost btn-circle" aria-label="Search">
+          <i class="fas fa-search"></i>
+        </a>
+      </div>
+    </div>
 
     <!-- Main Content -->
     <main>
