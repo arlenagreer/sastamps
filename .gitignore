@@ -43,3 +43,4 @@ tasks/
 
 # Tool configs
 .serena/
+.gstack/

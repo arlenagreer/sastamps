@@ -1,0 +1,98 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+/* ============================================
+   SAPA "Philatelic" Custom Theme
+   San Antonio Philatelic Association
+   DaisyUI v5 + Tailwind CSS v4
+   ============================================ */
+
+@plugin "daisyui/theme" {
+  name: "philatelic";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  /* --- Base: Aged Parchment / Album Paper --- */
+  --color-base-100: oklch(96% 0.02 80);
+  --color-base-200: oklch(92% 0.035 78);
+  --color-base-300: oklch(86% 0.05 75);
+  --color-base-content: oklch(28% 0.04 55);
+
+  /* --- Primary: Deep Postal Blue (classic US stamp ink) --- */
+  --color-primary: oklch(42% 0.14 255);
+  --color-primary-content: oklch(96% 0.01 80);
+
+  /* --- Secondary: Rich Stamp Red (cinnabar / vermilion) --- */
+  --color-secondary: oklch(50% 0.18 25);
+  --color-secondary-content: oklch(96% 0.01 25);
+
+  /* --- Accent: Antique Gold / Brass (album hinges) --- */
+  --color-accent: oklch(72% 0.15 85);
+  --color-accent-content: oklch(28% 0.06 60);
+
+  /* --- Neutral: Warm Charcoal (postmark ink) --- */
+  --color-neutral: oklch(35% 0.03 60);
+  --color-neutral-content: oklch(93% 0.015 80);
+
+  /* --- Info: Airmail Blue --- */
+  --color-info: oklch(62% 0.15 235);
+  --color-info-content: oklch(96% 0.01 235);
+
+  /* --- Success: Forest Green (green stamp ink) --- */
+  --color-success: oklch(58% 0.14 155);
+  --color-success-content: oklch(96% 0.01 155);
+
+  /* --- Warning: Amber / Gold Alert --- */
+  --color-warning: oklch(78% 0.16 75);
+  --color-warning-content: oklch(28% 0.06 60);
+
+  /* --- Error: Deep Red (cancelled stamp) --- */
+  --color-error: oklch(55% 0.2 25);
+  --color-error-content: oklch(96% 0.01 25);
+
+  /* --- Shape: Slightly rounded, stamp-like precision --- */
+  --radius-selector: 0.375rem;
+  --radius-field: 0.375rem;
+  --radius-box: 0.5rem;
+
+  /* --- Sizing --- */
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+
+  /* --- Border: Clean 1px (stamp precision) --- */
+  --border: 1px;
+
+  /* --- Effects: Tactile paper feel --- */
+  --depth: 1;
+  --noise: 1;
+}
+
+/* ============================================
+   Typography Design Tokens
+   Registered as Tailwind utility classes:
+   font-body, font-heading, font-display, font-mono
+   ============================================ */
+
+@theme {
+  --font-body: "Lora", "Palatino Linotype", "Book Antiqua", serif;
+  --font-heading: "Merriweather", Georgia, serif;
+  --font-display: "Playfair Display", "Merriweather", Georgia, serif;
+  --font-mono: "Courier Prime", "Courier New", monospace;
+}
+
+/* ============================================
+   Base Typography Layer
+   Applies default fonts without explicit classes.
+   Low specificity -- existing inline styles win
+   during gradual migration.
+   ============================================ */
+
+@layer base {
+  body {
+    font-family: var(--font-body);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+}
