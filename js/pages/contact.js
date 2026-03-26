@@ -130,7 +130,8 @@ function validateField(event) {
 }
 
 function clearFieldValidation(field) {
-  field.classList.remove('error', 'success');
+  field.classList.remove('error', 'success', 'input-error', 'input-success',
+    'select-error', 'select-success', 'textarea-error', 'textarea-success');
   const errorElement = field.parentNode.querySelector('.field-error');
   if (errorElement) {
     errorElement.remove();
@@ -141,8 +142,13 @@ function showFieldError(field, message) {
   field.classList.add('error');
   field.classList.remove('success');
 
+  // DaisyUI error state classes
+  if (field.tagName === 'SELECT') field.classList.add('select-error');
+  else if (field.tagName === 'TEXTAREA') field.classList.add('textarea-error');
+  else field.classList.add('input-error');
+
   const errorElement = document.createElement('div');
-  errorElement.className = 'field-error';
+  errorElement.className = 'field-error label-text-alt text-error';
   errorElement.textContent = message;
   errorElement.setAttribute('role', 'alert');
 
@@ -152,6 +158,18 @@ function showFieldError(field, message) {
 function showFieldSuccess(field) {
   field.classList.add('success');
   field.classList.remove('error');
+
+  // DaisyUI success state classes
+  if (field.tagName === 'SELECT') {
+    field.classList.add('select-success');
+    field.classList.remove('select-error');
+  } else if (field.tagName === 'TEXTAREA') {
+    field.classList.add('textarea-success');
+    field.classList.remove('textarea-error');
+  } else {
+    field.classList.add('input-success');
+    field.classList.remove('input-error');
+  }
 }
 
 function initializeCharacterCounter(textarea) {

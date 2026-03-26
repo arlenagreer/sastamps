@@ -3503,29 +3503,43 @@ thead {
                             <input type="hidden" id="csrf-token" name="csrf_token" value="">
 
                             <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
-                                <div class="form-group">
-                                    <label for="name" class="form-label">Full Name <span style="color: var(--danger);">*</span></label>
-                                    <input type="text" id="name" name="name" class="form-control" required>
-                                    <div class="error-message" id="name-error"></div>
+                                <div class="form-control w-full">
+                                    <label class="label" for="name">
+                                        <span class="label-text">Full Name <span class="text-error">*</span></span>
+                                    </label>
+                                    <input type="text" id="name" name="name" class="input input-bordered w-full" required>
+                                    <label class="label">
+                                        <span class="label-text-alt text-error" id="name-error"></span>
+                                    </label>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="email" class="form-label">Email Address <span style="color: var(--danger);">*</span></label>
-                                    <input type="email" id="email" name="email" class="form-control" required>
-                                    <div class="error-message" id="email-error"></div>
+                                <div class="form-control w-full">
+                                    <label class="label" for="email">
+                                        <span class="label-text">Email Address <span class="text-error">*</span></span>
+                                    </label>
+                                    <input type="email" id="email" name="email" class="input input-bordered w-full" required>
+                                    <label class="label">
+                                        <span class="label-text-alt text-error" id="email-error"></span>
+                                    </label>
                                 </div>
                             </div>
 
-                            <div class="form-group" style="margin-bottom: 1rem;">
-                                <label for="phone" class="form-label">Phone Number (Optional)</label>
-                                <input type="tel" id="phone" name="phone" class="form-control" placeholder="(210) 555-0123">
-                                <div class="error-message" id="phone-error"></div>
+                            <div class="form-control w-full mb-4">
+                                <label class="label" for="phone">
+                                    <span class="label-text">Phone Number (Optional)</span>
+                                </label>
+                                <input type="tel" id="phone" name="phone" class="input input-bordered w-full" placeholder="(210) 555-0123">
+                                <label class="label">
+                                    <span class="label-text-alt text-error" id="phone-error"></span>
+                                </label>
                             </div>
 
-                            <div class="form-group" style="margin-bottom: 1rem;">
-                                <label for="subject" class="form-label">Subject <span style="color: var(--danger);">*</span></label>
-                                <select id="subject" name="subject" class="form-control" required>
-                                    <option value="">Select a topic...</option>
+                            <div class="form-control w-full mb-4">
+                                <label class="label" for="subject">
+                                    <span class="label-text">Subject <span class="text-error">*</span></span>
+                                </label>
+                                <select id="subject" name="subject" class="select select-bordered w-full" required>
+                                    <option value="" disabled selected>Select a topic...</option>
                                     <option value="General Inquiry">General Inquiry</option>
                                     <option value="Membership Information">Membership Information</option>
                                     <option value="Meeting Questions">Meeting Questions</option>
@@ -3534,16 +3548,22 @@ thead {
                                     <option value="Website Feedback">Website Feedback</option>
                                     <option value="Other">Other</option>
                                 </select>
-                                <div class="error-message" id="subject-error"></div>
+                                <label class="label">
+                                    <span class="label-text-alt text-error" id="subject-error"></span>
+                                </label>
                             </div>
 
-                            <div class="form-group" style="margin-bottom: 1.5rem;">
-                                <label for="message" class="form-label">Message <span style="color: var(--danger);">*</span></label>
-                                <textarea id="message" name="message" class="form-control" rows="6" placeholder="Please share your questions, comments, or how we can help you..." required></textarea>
-                                <div class="error-message" id="message-error"></div>
+                            <div class="form-control w-full mb-6">
+                                <label class="label" for="message">
+                                    <span class="label-text">Message <span class="text-error">*</span></span>
+                                </label>
+                                <textarea id="message" name="message" class="textarea textarea-bordered w-full" rows="6" placeholder="Please share your questions, comments, or how we can help you..." required></textarea>
+                                <label class="label">
+                                    <span class="label-text-alt text-error" id="message-error"></span>
+                                </label>
                             </div>
 
-                            <div class="form-group text-center">
+                            <div class="form-control mt-4">
                                 <button type="submit" class="btn btn-primary" id="submit-btn">
                                     <i class="fas fa-paper-plane"></i> Send Message
                                 </button>
