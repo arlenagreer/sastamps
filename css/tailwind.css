@@ -159,6 +159,15 @@
   .stamp-accordion .collapse-arrow .collapse-title::after {
     @apply text-accent;
   }
+
+}
+
+/* Legacy custom timeline override — prevents DaisyUI .timeline (flex)
+   from colliding with the about.html custom block-layout timeline.
+   Uses !important to override DaisyUI's nested @layer display:flex. */
+.timeline:has(.timeline-item) {
+  display: block !important;
+  flex-direction: unset !important;
 }
 
 /* ============================================

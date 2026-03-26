@@ -650,6 +650,8 @@ footer {
     color: var(--white);
     padding: 1.5rem;
     border-radius: var(--radius-md);
+    box-sizing: border-box;
+    max-width: 100%;
 }
 
 /* Fallback/error state utilities */
@@ -816,6 +818,7 @@ tr:hover {
 
 /* Timeline */
 .timeline {
+    display: block; /* Override DaisyUI .timeline flex layout — legacy custom timeline */
     position: relative;
     max-width: 1200px;
     margin: 0 auto;
