@@ -58,23 +58,14 @@ h3{font-size:1.75rem}
 img{display:block;height:auto;max-width:100%}
 button,input,select,textarea{font-family:var(--font-body);font-size:1rem}
 .container{margin:0 auto;max-width:var(--container-xl);padding:0 1.5rem;width:100%}
-header{background-color:var(--white);box-shadow:var(--shadow-sm);padding:1rem 0;position:sticky;top:0;z-index:50}
-.header-container{align-items:center;display:flex;justify-content:space-between}
-nav ul{display:flex;list-style:none;margin:0;padding:0}
-nav li{margin-left:1.5rem}
-nav a{color:var(--dark);font-weight:600;padding:.5rem 0;position:relative;text-decoration:none;transition:color var(--transition-fast)}
-nav a:hover{color:var(--primary)}
+
 nav a:after{background-color:var(--primary);bottom:0;content:"";height:2px;left:0;position:absolute;transition:width var(--transition-normal);width:0}
 nav a:hover:after{width:100%}
 .hero{background-color:var(--primary);padding:var(--space-xxl) 0;text-align:center}
 .hero,.hero h1{color:var(--white)}
 .hero h1{font-size:2.75rem;margin-bottom:1rem}
 .hero p{font-size:1.25rem;margin:0 auto;max-width:800px}
-.card{background-color:var(--white);border-radius:var(--radius-md);box-shadow:var(--shadow-md);margin-bottom:1.5rem;overflow:hidden;transition:transform var(--transition-normal),box-shadow var(--transition-normal)}
-.card:hover{box-shadow:var(--shadow-lg);transform:translateY(-5px)}
-.card-content{padding:1.5rem}
-.card-title{font-size:1.5rem;margin-bottom:1rem}
-.card-image{height:200px;object-fit:cover;width:100%}
+
 .text-center{text-align:center}
 .breadcrumb-navigation{background-color:var(--light);padding:var(--space-sm) 0;margin-bottom:var(--space-lg);border-bottom:1px solid rgba(0,0,0,0.1)}
 .breadcrumb-list{list-style:none;padding:0;margin:0;display:flex;align-items:center;flex-wrap:wrap;font-size:0.9rem}
@@ -84,10 +75,7 @@ nav a:hover:after{width:100%}
 .breadcrumb-item[aria-current="page"]{color:var(--medium);font-weight:600}
 .breadcrumb-separator{color:var(--medium);margin:0 var(--space-xs);font-size:1.1em;user-select:none}
 @media (max-width:768px){.grid-cols-2,.grid-cols-3{grid-template-columns:1fr}
-.menu-toggle{display:block}
-.nav-menu{background-color:var(--white);box-shadow:var(--shadow-lg);flex-direction:column;height:100vh;justify-content:flex-start;max-width:300px;padding:2rem;position:fixed;right:-100%;top:0;transition:right var(--transition-normal);width:80%;z-index:60}
-.nav-menu.active{right:0}
-nav li{margin:0 0 1.5rem}
+
 nav a:after{display:none}
 .breadcrumb-navigation{padding:var(--space-xs) 0;margin-bottom:var(--space-md)}
 .breadcrumb-list{font-size:0.85rem}
@@ -103,39 +91,12 @@ h2{font-size:1.75rem}
 
     <style>
     /* ===== HEADER &amp; NAVIGATION ===== */
-    header {
-        background-color: var(--white);
-        box-shadow: var(--shadow-sm);
-        padding: 1rem 0;
-        position: sticky;
-        top: 0;
-        z-index: 50;
-    }
-    .header-container {
-        align-items: center;
-        display: flex;
-        justify-content: space-between;
-    }
-    nav ul {
-        display: flex;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-    nav li {
-        margin-left: 1.5rem;
-    }
-    nav a {
-        color: var(--dark);
-        font-weight: 600;
-        padding: 0.5rem 0;
-        position: relative;
-        text-decoration: none;
-        transition: color var(--transition-fast);
-    }
-    nav a:hover {
-        color: var(--primary);
-    }
+    
+    
+    
+    
+    
+    
     nav a:after {
         background-color: var(--primary);
         bottom: 0;
@@ -197,10 +158,8 @@ h2{font-size:1.75rem}
     <style id="critical-css">
         /* San Antonio Philatelic Association - Main Stylesheet */
 
-
 /* ===== IMPORTS ===== */
 /* vanilla-calendar import removed - CSS is not needed */
-
 
 /* ===== VARIABLES ===== */
 :root {
@@ -219,11 +178,9 @@ h2{font-size:1.75rem}
     --warning: #f39c12;        /* Orange */
     --danger: #c0392b;         /* Red */
 
-
     /* Typography */
     --font-heading: 'Merriweather', Georgia, serif;
     --font-body: 'Open Sans', Arial, sans-serif;
-
 
     /* Spacing */
     --space-xxs: 0.25rem;
@@ -234,13 +191,11 @@ h2{font-size:1.75rem}
     --space-xl: 2rem;
     --space-xxl: 3rem;
 
-
     /* Container widths */
     --container-sm: 640px;
     --container-md: 768px;
     --container-lg: 1024px;
     --container-xl: 1280px;
-
 
     /* Border radius */
     --radius-sm: 3px;
@@ -248,12 +203,10 @@ h2{font-size:1.75rem}
     --radius-lg: 8px;
     --radius-xl: 12px;
 
-
     /* Shadows */
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
     --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-
 
     /* Transitions */
     --transition-fast: 0.15s ease;
@@ -294,143 +247,27 @@ button, input, select, textarea {
     .grid-cols-2, .grid-cols-3 {
         grid-template-columns: 1fr;}
 /* ===== HEADER STYLES ===== */
-header {
-    background-color: var(--white);
-    box-shadow: var(--shadow-sm);
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    padding: 1rem 0;}
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;}
-nav ul {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;}
-nav li {
-    margin-left: 1.5rem;}
-nav a {
-    font-weight: 600;
-    color: var(--dark);
-    text-decoration: none;
-    padding: 0.5rem 0;
-    transition: color var(--transition-fast);
-    position: relative;}
-nav a:hover {
-    color: var(--primary);}
-nav a::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: var(--primary);
-    transition: width var(--transition-normal);}
-nav a:hover::after {
-    width: 100%;}
+
 /* Smooth theme transition */
 body,
-header,
-.nav-menu,
-.card,
-.hero,
-.section,
-footer,
-.accordion-header,
-.btn {
-    transition: background-color var(--transition-normal), color var(--transition-normal);}
+
 @media (max-width: 768px) {
-    .menu-toggle {
-        display: block;
-        touch-action: manipulation;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        user-select: none;}
-.nav-menu {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 80%;
-        max-width: 300px;
-        height: 100vh; /* Fallback for older browsers */
-        height: 100dvh; /* Use dynamic viewport height for better mobile support */
-        height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback for iOS */
-        background-color: var(--white);
-        flex-direction: column;
-        justify-content: flex-start;
-        padding: 2rem;
-        box-shadow: var(--shadow-lg);
-        transition: right var(--transition-normal);
-        z-index: 60;
+    
 
-        /* iOS specific fixes */
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior: contain;}
 /* CSS-only menu toggle using checkbox */
-    .menu-toggle-checkbox:checked ~ .nav-menu {
-        right: 0;}
-nav li {
-        margin: 0 0 1.5rem 0;}
-nav a::after {
-        display: none;}
+    .menu-toggle-checkbox:checked ~ 
+
 /* Ensure mobile nav links are clickable */
-    .nav-menu a {
-        display: block;
-        padding: 0.75rem 1rem;
-        position: relative;
-        z-index: 65;
-        -webkit-tap-highlight-color: rgba(26, 82, 118, 0.2);
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        user-select: none;
-        touch-action: manipulation;
-        cursor: pointer;
+    
 
-        /* Ensure proper touch target size */
-        min-height: 44px;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        box-sizing: border-box;
-
-        /* Improved mobile link styling */
-        color: var(--primary);
-        font-weight: 600;
-        border-radius: var(--radius-md);
-        margin-bottom: 0.25rem;
-        transition: all var(--transition-fast);}
-.nav-menu li {
-        display: block;
-        width: 100%;}
 /* Mobile menu icon styling */
-    .nav-menu .nav-icon {
-        color: var(--primary);
-        margin-right: 0.75rem;
-        font-size: 1.1rem;
-        width: 1.5rem;
-        text-align: center;}
+    
 /* iOS specific fixes and hover states */
-    .nav-menu a:active {
-        background-color: rgba(26, 82, 118, 0.15);
-        transform: scale(0.98);
-        transition: all 0.1s ease;
-        color: var(--primary-dark);}
-.nav-menu a:hover {
-        background-color: rgba(26, 82, 118, 0.08);
-        color: var(--primary-dark);
-        transform: translateX(4px);}
+    
+
 /* Active/current page styling for mobile */
-    .nav-menu a.active,
-    .nav-menu a[aria-current="page"] {
-        background-color: var(--primary);
-        color: var(--white);}
-.nav-menu a.active .nav-icon,
-    .nav-menu a[aria-current="page"] .nav-icon {
-        color: var(--white);}
+    
+
 .footer-section h3 {
     color: var(--white);
     margin-bottom: 1rem;
@@ -450,25 +287,7 @@ nav a::after {
     max-width: 800px;
     margin: 0 auto;}
 /* ===== CARDS ===== */
-.card {
-    background-color: var(--white);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-    margin-bottom: 1.5rem;
-    transition: transform var(--transition-normal), box-shadow var(--transition-normal);}
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);}
-.card-content {
-    padding: 1.5rem;}
-.card-title {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;}
-.card-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;}
+
 /* ===== UTILITIES ===== */
 .text-center {
     text-align: center;}
@@ -495,18 +314,7 @@ nav a::after {
     align-items: center;
     background-color: var(--light);
     color: var(--medium);}
-.accordion-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 1.25rem;
-    background-color: var(--white);
-    border: none;
-    text-align: left;
-    cursor: pointer;
-    transition: background-color var(--transition-fast);
-    font-weight: 600;}
+.accordion-
 .accordion-header:hover {
     background-color: var(--light);}
 .accordion-header.active {
@@ -562,7 +370,6 @@ body {
         padding: 0;
         margin: 0;}
 /* Hide non-essential elements */
-    header,
     footer,
     nav,
     #back-to-top,
@@ -609,15 +416,9 @@ thead {
         page-break-inside: avoid;
         margin-bottom: 12pt;
         padding: 12pt;}
-.card:hover {
-        transform: none !important;
-        box-shadow: none !important;}
-.newsletter-header {
-        border-bottom: 2pt solid black;
-        margin-bottom: 12pt;
-        padding-bottom: 12pt;}
-/* Add these new styles for the banner and navigation icons */
 
+.newsletter-
+/* Add these new styles for the banner and navigation icons */
 
 /* Banner Image */
 .banner-container {
@@ -626,19 +427,9 @@ thead {
     text-align: center;
     background-color: var(--primary);}
 /* Navigation Icons */
-.nav-icon {
-    width: auto;
-    height: auto;
-    margin-right: 8px;
-    color: var(--primary);
-    font-size: 1.2rem;}
-.nav-menu li.active .nav-icon,
-.nav-menu li a:hover .nav-icon {
-    color: var(--accent);}
+
 @media (max-width: 768px) {
-    .nav-icon {
-        margin-right: 5px;
-        font-size: 1rem;}
+    
 /* Mobile Calendar Styles */
 @media (max-width: 768px) {
     .meeting-entry {
@@ -658,9 +449,7 @@ thead {
 .location-card h3 {
         font-size: 1.1rem;}
 /* Fix notch interference */
-    .header-container {
-        padding-left: env(safe-area-inset-left);
-        padding-right: env(safe-area-inset-right);}
+    
 /* Adjust container padding */
     .container {
         padding-left: max(1rem, env(safe-area-inset-left));
@@ -690,11 +479,7 @@ thead {
     width: 100%;
     max-width: 100%;}
 /* Calendar header styling */
-.vanilla-calendar .vc-header {
-    background: var(--primary);
-    color: var(--white);
-    padding: var(--space-md);
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;}
+.vanilla-calendar .vc-
 .vanilla-calendar .vc-header button {
     color: var(--white);
     background: transparent;
@@ -714,10 +499,7 @@ thead {
     .calendar-container {
         margin: var(--space-md) 0;
         border-radius: var(--radius-md);}
-.vanilla-calendar .vc-header {
-        padding: var(--space-sm);
-        flex-direction: column;
-        gap: var(--space-sm);}
+.vanilla-calendar .vc-
 @media (max-width: 480px) {
     .vanilla-calendar .vc-date {
         min-height: 35px;
@@ -739,21 +521,10 @@ thead {
     .calendar-container {
         box-shadow: none;
         border: 1px solid #ccc;}
-.vanilla-calendar .vc-header {
-        background: white !important;
-        color: black !important;
-        border-bottom: 2px solid #ccc;}
+.vanilla-calendar .vc-
 /* Modal Header */
-.modal-header {
-    background: var(--primary);
-    color: var(--white);
-    padding: var(--space-lg);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;}
-.modal-body {
-    padding: var(--space-lg);}
+.modal-
+
 .detail-section h3 {
     color: var(--primary);
     font-size: 1.2rem;
@@ -767,36 +538,18 @@ thead {
     color: var(--primary);}
 /* Modal Responsive Design */
 @media (max-width: 768px) {
-    .modal-container {
-        width: 95vw;
-        max-height: 95vh;
-        margin: var(--space-sm);}
-.modal-header {
-        padding: var(--space-md);}
-.modal-body {
-        padding: var(--space-md);}
+    
+.modal-
+
 @media (max-width: 480px) {
-    .modal-container {
-        width: 100vw;
-        height: 100vh;
-        max-width: 100vw;
-        max-height: 100vh;
-        border-radius: 0;
-        margin: 0;}
-.modal-header {
-        border-radius: 0;}
+    
+.modal-
 .detail-section h3 {
         font-size: 1.1rem;}
 /* Dark theme support for modal */
 @media (prefers-color-scheme: dark) {
-    .modal-container {
-        background: var(--dark);
-        border: 1px solid var(--medium);}
-.reminder-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: var(--space-sm);}
+    
+.reminder-
 .reminder-header strong {
     color: var(--primary);
     font-family: var(--font-heading);
@@ -838,26 +591,15 @@ thead {
     margin: 0 0 0.5rem 0;
     color: var(--primary);
     font-family: var(--font-heading);}
-.resource-item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 0.5rem;}
+.resource-item-
 .resource-item-header h3 {
     margin: 0;
     flex: 1;}
-.resource-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1rem;}
+.resource-
 .resource-header h3 {
     margin: 0;
     flex: 1;}
-.resource-modal-header {
-    border-bottom: 1px solid #eee;
-    padding-bottom: 1rem;
-    margin-bottom: 1.5rem;}
+.resource-modal-
 .resource-modal-header h2 {
     margin: 0 0 0.5rem 0;
     color: var(--primary);
@@ -870,9 +612,7 @@ thead {
 @media (max-width: 768px) {
     .resources-hero h1 {
         font-size: 2rem;}
-.resource-item-header {
-        flex-direction: column;
-        gap: 0.5rem;}
+.resource-item-
 .search-header h3 {
     color: var(--primary);
     margin-bottom: 0.5rem;
@@ -881,12 +621,7 @@ thead {
     color: var(--medium);
     margin-bottom: 1.5rem;}
 /* Search Results */
-.search-results-header {
-    text-align: center;
-    margin: 1.5rem 0 1rem;
-    padding: 1rem;
-    background: var(--light);
-    border-radius: var(--radius-md);}
+.search-results-
 /* Alphabet Navigation */
 .alphabet-nav {
     display: flex;
@@ -896,26 +631,11 @@ thead {
     padding: 1rem;
     background: var(--light);
     border-radius: var(--radius-md);}
-.glossary-letter-header {
-    font-size: 2rem;
-    color: var(--primary);
-    border-bottom: 3px solid var(--primary);
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
-    font-family: var(--font-heading);}
-.term-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    cursor: pointer;
-    background: var(--white);
-    transition: background-color var(--transition-fast);}
+.glossary-letter-
+.term-
 .term-header:hover {
     background: var(--light);}
-.glossary-term.expanded .term-header {
-    background: var(--primary);
-    color: var(--white);}
+.glossary-term.expanded .term-
 .glossary-term.expanded .term-header .term-title {
     color: var(--white);}
 .glossary-term.expanded .term-header .alternate-names {
@@ -926,20 +646,15 @@ thead {
         grid-template-columns: 1fr;}
 .alphabet-nav {
         justify-content: center;}
-.term-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;}
+.term-
 @media (max-width: 480px) {
-    .glossary-letter-header {
-        font-size: 1.5rem;}
+    .glossary-letter-
 /* Dark theme support */
 @media (prefers-color-scheme: dark) {
     .glossary-term {
         background: var(--dark);
         border-color: var(--medium);}
-.term-header {
-        background: var(--dark);}
+.term-
 .term-header:hover {
         background: rgba(255, 255, 255, 0.1);}
 /* Mobile optimizations */
@@ -977,59 +692,23 @@ button, input, select, textarea {
     .grid-cols-2, .grid-cols-3 {
         grid-template-columns: 1fr;}
 /* ===== HEADER STYLES ===== */
-/* NOTE: Core header, nav, .header-container styles are in critical.css */
+/* NOTE: Core nav, .header-container styles are in critical.css */
 /* Extended header styles below */
 
-.site-title {
-    font-size: 1.5rem;
-    margin-bottom: 0;}
 /* Smooth theme transition */
 body,
-header,
-.nav-menu,
-.card,
-.hero,
-.section,
-footer,
-.accordion-header,
-.btn {
-    transition: background-color var(--transition-normal), color var(--transition-normal);}
-/* Mobile styles (base menu-toggle, nav-menu, nav li, nav a::after, .nav-menu a,
-   .nav-menu li, .nav-menu a:active, .nav-menu a:hover, body.menu-open, .nav-icon)
-   defined in critical.css - mobile navigation core styles */
 
-@media (width <= 768px) {
-    /* CSS-only menu toggle using checkbox - extension */
-    .menu-toggle-checkbox:checked ~ .nav-menu {
-        right: 0;}
+/* Mobile styles (base menu-toggle, nav-menu, nav li, nav a::after, 
 /* Extended mobile link styling - enhancements over critical.css base */
-    .nav-menu a {
-        color: var(--primary);
-        font-weight: 600;
-        border-radius: var(--radius-md);
-        margin-bottom: 0.25rem;
-        transition: all var(--transition-fast);}
+    
 /* Mobile menu icon styling - enhanced positioning */
-    .nav-menu .nav-icon {
-        color: var(--primary);
-        margin-right: 0.75rem;
-        font-size: 1.1rem;
-        width: 1.5rem;
-        text-align: center;}
+    
 /* Extended hover states with color and transform */
-    .nav-menu a:active {
-        color: var(--primary-dark);}
-.nav-menu a:hover {
-        color: var(--primary-dark);
-        transform: translateX(4px);}
+    
+
 /* Active/current page styling for mobile */
-    .nav-menu a.active,
-    .nav-menu a[aria-current="page"] {
-        background-color: var(--primary);
-        color: var(--white);}
-.nav-menu a.active .nav-icon,
-    .nav-menu a[aria-current="page"] .nav-icon {
-        color: var(--white);}
+    
+
 .footer-section h3 {
     color: var(--white);
     margin-bottom: 1rem;
@@ -1077,7 +756,7 @@ footer,
     align-items: center;
     background-color: var(--light);
     color: var(--medium);}
-/* .accordion-header, .accordion-header:hover, .accordion-header.active
+/* .accordion-.accordion-header:hover, .accordion-header.active
    defined in critical.css - base accordion header styling */
 
 .accordion-content {
@@ -1134,7 +813,6 @@ body {
         padding: 0;
         margin: 0;}
 /* Hide non-essential elements */
-    header,
     footer,
     nav,
     #back-to-top,
@@ -1181,15 +859,9 @@ thead {
         break-inside: avoid;
         margin-bottom: 12pt;
         padding: 12pt;}
-.card:hover {
-        transform: none !important;
-        box-shadow: none !important;}
-.newsletter-header {
-        border-bottom: 2pt solid black;
-        margin-bottom: 12pt;
-        padding-bottom: 12pt;}
-/* Add these new styles for the banner and navigation icons */
 
+.newsletter-
+/* Add these new styles for the banner and navigation icons */
 
 /* Banner Image */
 .banner-container {
@@ -1198,19 +870,9 @@ thead {
     text-align: center;
     background-color: var(--primary);}
 /* Navigation Icons */
-.nav-icon {
-    width: auto;
-    height: auto;
-    margin-right: 8px;
-    color: var(--primary);
-    font-size: 1.2rem;}
-.nav-menu li.active .nav-icon,
-.nav-menu li a:hover .nav-icon {
-    color: var(--accent);}
+
 @media (width <= 768px) {
-    .nav-icon {
-        margin-right: 5px;
-        font-size: 1rem;}
+    
 /* Mobile Calendar Styles */
 @media (width <= 768px) {
     .meeting-entry {
@@ -1229,9 +891,7 @@ thead {
 .location-card h3 {
         font-size: 1.1rem;}
 /* Fix notch interference */
-    .header-container {
-        padding-left: env(safe-area-inset-left);
-        padding-right: env(safe-area-inset-right);}
+    
 /* Adjust container padding */
     .container {
         padding-left: max(1rem, env(safe-area-inset-left));
@@ -1262,11 +922,7 @@ thead {
     width: 100%;
     max-width: 100%;}
 /* Calendar header styling */
-.vanilla-calendar .vc-header {
-    background: var(--primary);
-    color: var(--white);
-    padding: var(--space-md);
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;}
+.vanilla-calendar .vc-
 .vanilla-calendar .vc-header button {
     color: var(--white);
     background: transparent;
@@ -1286,10 +942,7 @@ thead {
     .calendar-container {
         margin: var(--space-md) 0;
         border-radius: var(--radius-md);}
-.vanilla-calendar .vc-header {
-        padding: var(--space-sm);
-        flex-direction: column;
-        gap: var(--space-sm);}
+.vanilla-calendar .vc-
 @media (width <= 480px) {
     .vanilla-calendar .vc-date {
         min-height: 35px;
@@ -1311,21 +964,10 @@ thead {
     .calendar-container {
         box-shadow: none;
         border: 1px solid #ccc;}
-.vanilla-calendar .vc-header {
-        background: white !important;
-        color: black !important;
-        border-bottom: 2px solid #ccc;}
+.vanilla-calendar .vc-
 /* Modal Header */
-.modal-header {
-    background: var(--primary);
-    color: var(--white);
-    padding: var(--space-lg);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;}
-.modal-body {
-    padding: var(--space-lg);}
+.modal-
+
 .detail-section h3 {
     color: var(--primary);
     font-size: 1.2rem;
@@ -1339,36 +981,18 @@ thead {
     color: var(--primary);}
 /* Modal Responsive Design */
 @media (width <= 768px) {
-    .modal-container {
-        width: 95vw;
-        max-height: 95vh;
-        margin: var(--space-sm);}
-.modal-header {
-        padding: var(--space-md);}
-.modal-body {
-        padding: var(--space-md);}
+    
+.modal-
+
 @media (width <= 480px) {
-    .modal-container {
-        width: 100vw;
-        height: 100vh;
-        max-width: 100vw;
-        max-height: 100vh;
-        border-radius: 0;
-        margin: 0;}
-.modal-header {
-        border-radius: 0;}
+    
+.modal-
 .detail-section h3 {
         font-size: 1.1rem;}
 /* Dark theme support for modal */
 @media (prefers-color-scheme: dark) {
-    .modal-container {
-        background: var(--dark);
-        border: 1px solid var(--medium);}
-.reminder-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: var(--space-sm);}
+    
+.reminder-
 .reminder-header strong {
     color: var(--primary);
     font-family: var(--font-heading);
@@ -1410,26 +1034,15 @@ thead {
     margin: 0 0 0.5rem;
     color: var(--primary);
     font-family: var(--font-heading);}
-.resource-item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 0.5rem;}
+.resource-item-
 .resource-item-header h3 {
     margin: 0;
     flex: 1;}
-.resource-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1rem;}
+.resource-
 .resource-header h3 {
     margin: 0;
     flex: 1;}
-.resource-modal-header {
-    border-bottom: 1px solid #eee;
-    padding-bottom: 1rem;
-    margin-bottom: 1.5rem;}
+.resource-modal-
 .resource-modal-header h2 {
     margin: 0 0 0.5rem;
     color: var(--primary);
@@ -1442,9 +1055,7 @@ thead {
 @media (width <= 768px) {
     .resources-hero h1 {
         font-size: 2rem;}
-.resource-item-header {
-        flex-direction: column;
-        gap: 0.5rem;}
+.resource-item-
 .search-header h3 {
     color: var(--primary);
     margin-bottom: 0.5rem;
@@ -1453,12 +1064,7 @@ thead {
     color: var(--medium);
     margin-bottom: 1.5rem;}
 /* Search Results */
-.search-results-header {
-    text-align: center;
-    margin: 1.5rem 0 1rem;
-    padding: 1rem;
-    background: var(--light);
-    border-radius: var(--radius-md);}
+.search-results-
 /* Alphabet Navigation */
 .alphabet-nav {
     display: flex;
@@ -1468,26 +1074,11 @@ thead {
     padding: 1rem;
     background: var(--light);
     border-radius: var(--radius-md);}
-.glossary-letter-header {
-    font-size: 2rem;
-    color: var(--primary);
-    border-bottom: 3px solid var(--primary);
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
-    font-family: var(--font-heading);}
-.term-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    cursor: pointer;
-    background: var(--white);
-    transition: background-color var(--transition-fast);}
+.glossary-letter-
+.term-
 .term-header:hover {
     background: var(--light);}
-.glossary-term.expanded .term-header {
-    background: var(--primary);
-    color: var(--white);}
+.glossary-term.expanded .term-
 .glossary-term.expanded .term-header .term-title {
     color: var(--white);}
 .glossary-term.expanded .term-header .alternate-names {
@@ -1498,20 +1089,15 @@ thead {
         grid-template-columns: 1fr;}
 .alphabet-nav {
         justify-content: center;}
-.term-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;}
+.term-
 @media (width <= 480px) {
-    .glossary-letter-header {
-        font-size: 1.5rem;}
+    .glossary-letter-
 /* Dark theme support */
 @media (prefers-color-scheme: dark) {
     .glossary-term {
         background: var(--dark);
         border-color: var(--medium);}
-.term-header {
-        background: var(--dark);}
+.term-
 .term-header:hover {
         background: rgb(255, 255, 255, 0.1);}
 /* Mobile optimizations */
@@ -1907,15 +1493,12 @@ thead {
                                     <li>Website Archive Now Available Back to March 2008</li>
                                 </ul>
 
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-
-
 
         <!-- Newsletter History Section -->
         <section class="section">
@@ -1968,7 +1551,6 @@ thead {
                 </div>
             </div>
         </section>
-
 
     </main>
 
@@ -2071,8 +1653,6 @@ thead {
             }
         })();
     </script>
-
-
 
 <script type="module">
     import {onCLS, onFID, onLCP, onFCP, onTTFB} from 'https://unpkg.com/web-vitals@3.5.2/dist/web-vitals.attribution.js';
@@ -2276,14 +1856,6 @@ thead {
         }, 1000);
     }
 </script>
-
-
-
-
-
-
-
-
 
     <script>
         // Font Face Observer script

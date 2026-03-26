@@ -143,9 +143,13 @@ function showFieldError(field, message) {
   field.classList.remove('success');
 
   // DaisyUI error state classes
-  if (field.tagName === 'SELECT') field.classList.add('select-error');
-  else if (field.tagName === 'TEXTAREA') field.classList.add('textarea-error');
-  else field.classList.add('input-error');
+  if (field.tagName === 'SELECT') {
+    field.classList.add('select-error');
+  } else if (field.tagName === 'TEXTAREA') {
+    field.classList.add('textarea-error');
+  } else {
+    field.classList.add('input-error');
+  }
 
   const errorElement = document.createElement('div');
   errorElement.className = 'field-error label-text-alt text-error';
