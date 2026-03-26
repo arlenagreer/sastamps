@@ -2615,12 +2615,45 @@ thead {
 
     <!-- Main Content -->
     <main id="main-content">
-        <!-- Hero Section -->
-        <section class="hero hero-overlay hero-home">
-            <div class="container">
-                <h1>Welcome to the San Antonio Philatelic Association</h1>
-                <p>A vibrant community of stamp collectors <br />celebrating over 125 years of philately in San Antonio, Texas</p>
+        <!-- Hero Section — Stamp-Themed Layout (Phase 16) -->
+        <section class="hero hero-overlay hero-home" style="position: relative; overflow: hidden; padding: 4rem 0;">
+            <div class="container" style="position: relative; z-index: 1;">
+                <div style="display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: center; max-width: 1100px; margin: 0 auto;">
+                    <!-- Left: Main headline in a stamp-frame layout -->
+                    <div class="stamp-border" style="background: oklch(96% 0.02 80 / 0.92); padding: 2rem 2.5rem; text-align: left;">
+                        <h1 style="color: oklch(42% 0.14 255); font-size: 2.25rem; margin-bottom: 0.75rem; line-height: 1.2;">Welcome to the San Antonio Philatelic Association</h1>
+                        <p style="color: oklch(28% 0.04 55); font-size: 1.15rem; margin-bottom: 1.5rem; max-width: 600px;">A vibrant community of stamp collectors celebrating over 125 years of philately in San Antonio, Texas</p>
+
+                        <!-- Envelope CTA — opens to reveal link on hover/click -->
+                        <div class="envelope hero-envelope" id="hero-envelope" style="width: 220px; height: 140px; display: inline-block;">
+                            <div class="envelope-body">
+                                <div class="envelope-flap"></div>
+                                <div class="envelope-letter">
+                                    <a href="membership.html" style="color: oklch(42% 0.14 255); text-decoration: none; font-weight: bold; font-size: 0.9rem;">Join SAPA Today &rarr;</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Globe + Postmark decorative column -->
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 1.5rem;">
+                        <!-- Spinning globe -->
+                        <div class="globe globe-lg" id="hero-globe" title="Explore the world through stamps" aria-hidden="true"></div>
+
+                        <!-- Postmark decoration — animates on scroll -->
+                        <div class="postmark postmark-circle" id="hero-postmark" aria-hidden="true" style="opacity: 0;">
+                            <span style="font-size: 0.65rem; line-height: 1.2; text-align: center;">SAN ANTONIO<br>TX 78205</span>
+                        </div>
+
+                        <!-- Decorative stamp image -->
+                        <img src="images/stock/stamp-frame.svg" alt="" aria-hidden="true" width="80" height="100" style="opacity: 0.7; filter: drop-shadow(1px 2px 4px oklch(28% 0.04 55 / 0.2));">
+                    </div>
+                </div>
             </div>
+
+            <!-- Background decorative elements -->
+            <img src="images/stock/stamp-collection.svg" alt="" aria-hidden="true" loading="lazy" width="400" height="280" style="position: absolute; left: -60px; bottom: -40px; opacity: 0.06; pointer-events: none; max-width: 50%;">
+            <img src="images/stock/envelope-airmail.svg" alt="" aria-hidden="true" loading="lazy" width="320" height="220" style="position: absolute; right: -40px; top: -30px; opacity: 0.05; pointer-events: none; max-width: 40%; transform: rotate(12deg);">
         </section>
 
         <!-- Newsletter Banner -->

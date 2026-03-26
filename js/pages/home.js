@@ -71,6 +71,37 @@ function initializeHomeFunctionality() {
   if (newsletterPreview) {
     loadRecentNewsletters(newsletterPreview);
   }
+
+  // Hero animations (Phase 16)
+  initializeHeroAnimations();
+}
+
+// Phase 16: Postmark scroll trigger + Envelope click handler
+function initializeHeroAnimations() {
+  // Postmark IntersectionObserver — animate when scrolled into view
+  const postmark = safeQuerySelector('#hero-postmark');
+  if (postmark && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          postmark.classList.add('postmark-animate');
+          observer.unobserve(postmark);
+        }
+      });
+    }, { threshold: 0.5 });
+    observer.observe(postmark);
+  } else if (postmark) {
+    // Fallback: animate immediately if no IntersectionObserver
+    postmark.classList.add('postmark-animate');
+  }
+
+  // Envelope click handler for mobile (desktop uses CSS :hover)
+  const envelope = safeQuerySelector('#hero-envelope');
+  if (envelope) {
+    envelope.addEventListener('click', () => {
+      envelope.classList.toggle('envelope-open');
+    });
+  }
 }
 
 // Countdown timer implementation
