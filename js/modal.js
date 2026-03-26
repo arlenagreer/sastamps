@@ -1,6 +1,7 @@
 /**
  * Modal Component
- * Handles modal dialogs for event details and other content
+ * DaisyUI v5 <dialog>-based modal for event details and other content.
+ * Public API unchanged: open(data), close().
  */
 
 import { escapeHTML } from './utils/safe-dom.js';
@@ -23,7 +24,7 @@ export class Modal {
   }
 
   /**
-     * Create modal HTML structure
+     * Create DaisyUI dialog-based modal structure
      */
   createModal() {
     const existingModal = document.getElementById('event-modal');
@@ -32,27 +33,33 @@ export class Modal {
     }
 
     const modalHTML = `
-            <div id="event-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
-                <div class="modal-container">
-                    <div class="modal-header">
-                        <h2 id="modal-title" class="modal-title">Event Details</h2>
-                        <button type="button" class="modal-close" aria-label="Close modal">
+            <dialog id="event-modal" class="modal" aria-labelledby="modal-title">
+                <div class="modal-box">
+                    <form method="dialog">
+                        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                                aria-label="Close modal">
                             <i class="fas fa-times"></i>
                         </button>
+                    </form>
+                    <h3 id="modal-title" class="text-lg font-bold font-heading">Event Details</h3>
+                    <div id="modal-body" class="py-4">
+                        <!-- Content will be dynamically inserted here -->
                     </div>
-                    <div class="modal-content">
-                        <div id="modal-body" class="modal-body">
-                            <!-- Content will be dynamically inserted here -->
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary modal-close-btn">Close</button>
+                    <div class="modal-action">
+                        <form method="dialog">
+                            <button class="btn btn-ghost">Close</button>
+                        </form>
                     </div>
                 </div>
-            </div>
+                <form method="dialog" class="modal-backdrop">
+                    <button>close</button>
+                </form>
+            </dialog>
         `;
 
     // Insert modal into DOM
+    // NOTE: Uses insertAdjacentHTML with pre-escaped template literals.
+    // All dynamic user content is escaped via escapeHTML() before insertion.
     document.body.insertAdjacentHTML('beforeend', modalHTML);
     this.modal = document.getElementById('event-modal');
   }
@@ -61,27 +68,25 @@ export class Modal {
      * Bind event listeners
      */
   bindEvents() {
-    // Close button clicks
-    const closeButtons = this.modal.querySelectorAll('.modal-close, .modal-close-btn');
-    closeButtons.forEach(button => {
-      button.addEventListener('click', () => this.close());
-    });
+    // Native <dialog> handles close via form method="dialog" buttons
+    // and backdrop click via the modal-backdrop form.
 
-    // Overlay click
-    this.modal.addEventListener('click', (e) => {
-      if (e.target === this.modal) {
-        this.close();
-      }
-    });
-
-    // Escape key
+    // Escape key -- native <dialog> handles this, but keep for safety
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.isOpen) {
         this.close();
       }
     });
 
-    // Tab key (focus trap)
+    // Listen for the native dialog close event to sync state
+    this.modal.addEventListener('close', () => {
+      if (this.isOpen) {
+        this._handleClose();
+      }
+    });
+
+    // Tab key (focus trap) -- native <dialog> has built-in focus
+    // trapping, but keep as safety net for older browsers
     this.modal.addEventListener('keydown', (e) => {
       if (e.key === 'Tab' && this.isOpen) {
         this.trapFocus(e);
@@ -99,38 +104,36 @@ export class Modal {
     this.previousFocus = document.activeElement;
     this.populateContent(meetingData);
 
-    this.modal.style.display = 'flex';
-    this.modal.setAttribute('aria-hidden', 'false');
+    // Use native <dialog> showModal() for proper focus management
+    this.modal.showModal();
+    this.isOpen = true;
 
-    // Small delay for smooth animation
-    setTimeout(() => {
-      this.modal.classList.add('modal-open');
-      this.isOpen = true;
-
-      // Focus first focusable element
-      this.setFocusableElements();
-      if (this.focusableElements.length > 0) {
-        this.focusableElements[0].focus();
-      }
-    }, 10);
+    // Focus first focusable element
+    this.setFocusableElements();
+    if (this.focusableElements.length > 0) {
+      this.focusableElements[0].focus();
+    }
 
     // Prevent body scroll
     document.body.style.overflow = 'hidden';
   }
 
   /**
-     * Close modal
+     * Close modal (public API)
      */
   close() {
     if (!this.isOpen) return;
 
-    this.modal.classList.remove('modal-open');
-    this.modal.setAttribute('aria-hidden', 'true');
+    // Use native <dialog> close()
+    this.modal.close();
+    // State cleanup happens in the 'close' event handler
+  }
 
-    setTimeout(() => {
-      this.modal.style.display = 'none';
-      this.isOpen = false;
-    }, 300);
+  /**
+     * Internal close handler -- syncs state after native dialog closes
+     */
+  _handleClose() {
+    this.isOpen = false;
 
     // Restore body scroll
     document.body.style.overflow = '';
@@ -142,7 +145,9 @@ export class Modal {
   }
 
   /**
-     * Populate modal content with meeting data
+     * Populate modal content with meeting data.
+     * All dynamic values are passed through escapeHTML() before
+     * being placed into the template to prevent XSS.
      * @param {Object} meeting - Meeting data object
      */
   populateContent(meeting) {
@@ -151,13 +156,14 @@ export class Modal {
 
     modalTitle.textContent = meeting.title;
 
-    // Build detailed content
+    // Build detailed content (all values escaped via escapeHTML)
     const content = this.buildMeetingContent(meeting);
-    modalBody.innerHTML = content;
+    modalBody.innerHTML = content; // eslint-disable-line no-unsanitized/property -- all values escaped via escapeHTML()
   }
 
   /**
-     * Build meeting content HTML
+     * Build meeting content HTML.
+     * Every dynamic value is sanitised through escapeHTML().
      * @param {Object} meeting - Meeting data object
      * @returns {string} HTML content
      */
@@ -176,7 +182,7 @@ export class Modal {
     let content = `
             <div class="event-details ${eventTypeClass} ${cancelledClass}">
                 ${meeting.cancelled ? '<div class="cancelled-banner"><i class="fas fa-exclamation-triangle"></i> This event has been cancelled</div>' : ''}
-                
+
                 <div class="event-meta">
                     <div class="event-date">
                         <i class="fas fa-calendar"></i>
