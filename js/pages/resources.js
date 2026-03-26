@@ -145,18 +145,18 @@ function displayCategorizedResources(resources, categories) {
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.name = 'resource-accordion';
-    if (isFirst) checkbox.checked = true;
+    if (isFirst) { checkbox.checked = true; }
     wrapper.appendChild(checkbox);
 
     const title = document.createElement('div');
     title.className = 'collapse-title font-semibold';
     const icon = document.createElement('i');
-    icon.className = iconClass + ' mr-2';
+    icon.className = `${iconClass} mr-2`;
     title.appendChild(icon);
-    title.appendChild(document.createTextNode(' ' + category.name + ' '));
+    title.appendChild(document.createTextNode(` ${category.name} `));
     const badge = document.createElement('span');
     badge.className = 'badge badge-sm badge-primary ml-2';
-    badge.textContent = categoryResources.length + ' resource' + (categoryResources.length !== 1 ? 's' : '');
+    badge.textContent = `${categoryResources.length} resource${categoryResources.length !== 1 ? 's' : ''}`;
     title.appendChild(badge);
     wrapper.appendChild(title);
 
@@ -187,7 +187,7 @@ function displayCategorizedResources(resources, categories) {
 
       const summary = document.createElement('p');
       summary.className = 'text-sm text-base-content/70 mt-1';
-      summary.textContent = resource.summary.substring(0, 120) + '...';
+      summary.textContent = `${resource.summary.substring(0, 120)}...`;
       card.appendChild(summary);
 
       const meta = document.createElement('div');
@@ -199,7 +199,7 @@ function displayCategorizedResources(resources, categories) {
       if (resource.estimatedReadTime) {
         const time = document.createElement('span');
         time.className = 'text-xs text-base-content/50';
-        time.textContent = resource.estimatedReadTime + ' min';
+        time.textContent = `${resource.estimatedReadTime} min`;
         meta.appendChild(time);
       }
       card.appendChild(meta);
@@ -210,7 +210,7 @@ function displayCategorizedResources(resources, categories) {
       const viewAllBtn = document.createElement('button');
       viewAllBtn.className = 'btn btn-outline btn-sm mt-2 btn-view-all-category';
       viewAllBtn.dataset.category = category.id;
-      viewAllBtn.textContent = 'View All ' + categoryResources.length + ' Resources';
+      viewAllBtn.textContent = `View All ${categoryResources.length} Resources`;
       content.appendChild(viewAllBtn);
     }
 

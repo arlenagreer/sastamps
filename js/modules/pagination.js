@@ -226,7 +226,7 @@ class Pagination {
     // Items per page selector with DaisyUI select
     html += '<div class="flex items-center gap-2">';
     html += '<label class="text-sm text-base-content/60" for="items-per-page">Per page:</label>';
-    html += `<select id="items-per-page" class="select select-bordered select-sm">`;
+    html += '<select id="items-per-page" class="select select-bordered select-sm">';
     html += `<option value="5" ${this.itemsPerPage === 5 ? 'selected' : ''}>5</option>`;
     html += `<option value="10" ${this.itemsPerPage === 10 ? 'selected' : ''}>10</option>`;
     html += `<option value="20" ${this.itemsPerPage === 20 ? 'selected' : ''}>20</option>`;
