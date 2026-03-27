@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Stamp Scrapbook Gallery - SAPA Design Showcase</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #1a1a1a;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .top-header {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #999;
+            margin-top: 1.5rem;
+        }
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 1rem 0;
+        }
+        .image-container { margin: 0.5rem 0; }
+        .image-container img { display: block; }
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+        }
+        .nav a { color: #5b9bd5; text-decoration: none; }
+        .nav a:hover { text-decoration: underline; }
+        .nav .disabled { color: #555; cursor: default; pointer-events: none; }
+        .page-info { color: #ccc; }
+    </style>
+</head>
+<body>
+    <h1>Interactive Stamp Scrapbook Gallery</h1>
+    <nav class="nav">
+        <a href="3.html">&larr; Previous</a>
+        <span class="page-info">4 of 5</span>
+        <a href="5.html">Next &rarr;</a>
+    </nav>
+    <div class="image-container">
+        <img src="interactive_stamp_scrapbook_gallery.png" alt="Interactive Stamp Scrapbook Gallery">
+    </div>
+    <nav class="nav">
+        <a href="3.html">&larr; Previous</a>
+        <span class="page-info">4 of 5</span>
+        <a href="5.html">Next &rarr;</a>
+    </nav>
+</body>
+</html>
