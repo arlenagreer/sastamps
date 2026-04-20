@@ -478,7 +478,7 @@ async function performSearch(query, resultsContainer) {
     resultsContainer.querySelectorAll('.search-result-link').forEach(link => {
       addEventListenerWithCleanup(link, 'click', (e) => {
         e.preventDefault();
-        const termId = e.currentTarget.dataset.termId;
+        const { termId } = e.currentTarget.dataset;
         if (termId) {
           scrollToTerm(termId);
         }
