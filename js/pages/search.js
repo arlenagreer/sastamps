@@ -378,15 +378,25 @@ function applySearchFilters() {
 
 function clearSearchFilters() {
   const contentType = safeQuerySelector('#content-type-filter');
-  if (contentType) contentType.value = '';
+  if (contentType) {
+    contentType.value = '';
+  }
   const dateRange = safeQuerySelector('#date-range-filter');
-  if (dateRange) dateRange.value = '';
+  if (dateRange) {
+    dateRange.value = '';
+  }
   const dateFrom = safeQuerySelector('#date-from');
-  if (dateFrom) dateFrom.value = '';
+  if (dateFrom) {
+    dateFrom.value = '';
+  }
   const dateTo = safeQuerySelector('#date-to');
-  if (dateTo) dateTo.value = '';
+  if (dateTo) {
+    dateTo.value = '';
+  }
   const sortFilter = safeQuerySelector('#sort-filter');
-  if (sortFilter) sortFilter.value = 'relevance';
+  if (sortFilter) {
+    sortFilter.value = 'relevance';
+  }
 
   // Hide custom date range
   const customRange = safeQuerySelector('.date-range-custom');
