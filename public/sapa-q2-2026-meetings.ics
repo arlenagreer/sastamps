@@ -45,13 +45,13 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260424T183000
 DTEND:20260424T210000
-DTSTAMP:20260401T000000Z
+DTSTAMP:20260421T000000Z
 UID:sapa-2026-04-24@sastamps.org
-SUMMARY:Stamp Bourse
-DESCRIPTION:Monthly bourse featuring dealer tables and opportunities for buying\, selling\, and trading stamps and covers. Dealer table rental: $10 for members\, $15 for non-members. Guests welcome!
+SUMMARY:CANCELLED: Stamp Bourse
+DESCRIPTION:MEETING CANCELLED - All officers with church keys are unavailable this week. Next meeting: May 1 (BOG & Show and Tell).
 LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
 CATEGORIES:bourse,dealers,trading,buying,selling,guests-welcome
-STATUS:CONFIRMED
+STATUS:CANCELLED
 END:VEVENT
 
 BEGIN:VEVENT
