@@ -843,6 +843,7 @@
         }
       ],
       "specialNotes": [
+        "MEETING CANCELLED: All officers with church keys are unavailable this week. Next meeting: May 1 (BOG & Show and Tell).",
         "Dealer table rental: $10 for members, $15 for non-members",
         "Contact secretary to reserve tables",
         "Guests welcome!"
@@ -855,7 +856,11 @@
         "name": "SAPA Secretary",
         "email": "loz33@hotmail.com"
       },
-      "cancelled": false,
+      "cancelled": true,
+      "rescheduled": {
+        "originalDate": "2026-04-24",
+        "reason": "All officers with church keys unavailable"
+      },
       "tags": ["bourse", "dealers", "trading", "buying", "selling", "guests-welcome"]
     },
     {
