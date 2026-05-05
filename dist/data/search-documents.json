@@ -1,6 +1,24 @@
 {
   "documents": [
     {
+      "id": "newsletter-2026-Q2",
+      "type": "newsletter",
+      "title": "SAPA PHILATEX Second Quarter 2026",
+      "summary": "Second Quarter 2026 newsletter featuring the April-June meeting calendar, Stamp Program announcement for Joe Perez's 'Spanish Participation in the American Revolution', annual club picnic details, new member announcements, feature article on Farley's Follies, and website archive updates.",
+      "url": "/newsletter.html#2026-Q2",
+      "date": "2026-04-01",
+      "tags": [
+        "2026",
+        "Q2",
+        "meetings",
+        "picnic",
+        "new-members",
+        "farleys-follies",
+        "stamp-program"
+      ],
+      "category": "newsletter"
+    },
+    {
       "id": "newsletter-2026-Q1",
       "type": "newsletter",
       "title": "SAPA PHILATEX First Quarter 2026",
@@ -264,6 +282,209 @@
         "presentation",
         "covers",
         "postcards",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-04-03",
+      "type": "meeting",
+      "title": "No Meeting - Good Friday",
+      "summary": "No meeting scheduled due to Good Friday holiday.",
+      "url": "/meetings.html#2026-04-03",
+      "date": "2026-04-03",
+      "tags": [
+        "holiday",
+        "good-friday"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-04-10",
+      "type": "meeting",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "summary": "Monthly Board of Governors meeting followed by member show and tell presentations. Guests welcome!",
+      "url": "/meetings.html#2026-04-10",
+      "date": "2026-04-10",
+      "tags": [
+        "bog",
+        "business",
+        "show-and-tell",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-04-17",
+      "type": "meeting",
+      "title": "Club Auction",
+      "summary": "Monthly club auction featuring member consignments and donated materials. Guests welcome!",
+      "url": "/meetings.html#2026-04-17",
+      "date": "2026-04-17",
+      "tags": [
+        "auction",
+        "buying",
+        "selling",
+        "consignment",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-04-24",
+      "type": "meeting",
+      "title": "Stamp Bourse",
+      "summary": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers. Guests welcome!",
+      "url": "/meetings.html#2026-04-24",
+      "date": "2026-04-24",
+      "tags": [
+        "bourse",
+        "dealers",
+        "trading",
+        "buying",
+        "selling",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-05-01",
+      "type": "meeting",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "summary": "Monthly Board of Governors meeting followed by member show and tell presentations. Guests welcome!",
+      "url": "/meetings.html#2026-05-01",
+      "date": "2026-05-01",
+      "tags": [
+        "bog",
+        "business",
+        "show-and-tell",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-05-08",
+      "type": "meeting",
+      "title": "Stamp Bourse",
+      "summary": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers. Guests welcome! Note: This replaces the originally scheduled club auction, which has been moved to Friday, May 15, so members can attend the San Antonio TSDA Stamp Show on May 8–9.",
+      "url": "/meetings.html#2026-05-08",
+      "date": "2026-05-08",
+      "tags": [
+        "bourse",
+        "dealers",
+        "trading",
+        "buying",
+        "selling",
+        "guests-welcome",
+        "schedule-change"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-05-15",
+      "type": "meeting",
+      "title": "Club Auction",
+      "summary": "Monthly club auction featuring member consignments and donated materials. Guests welcome! Note: This replaces the originally scheduled bourse and was moved from May 8 so members could attend the San Antonio TSDA Stamp Show.",
+      "url": "/meetings.html#2026-05-15",
+      "date": "2026-05-15",
+      "tags": [
+        "auction",
+        "buying",
+        "selling",
+        "consignment",
+        "guests-welcome",
+        "schedule-change"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-05-22",
+      "type": "meeting",
+      "title": "No Meeting - Memorial Day Weekend",
+      "summary": "No meeting scheduled due to Memorial Day Weekend holiday.",
+      "url": "/meetings.html#2026-05-22",
+      "date": "2026-05-22",
+      "tags": [
+        "holiday",
+        "memorial-day"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-05-29",
+      "type": "meeting",
+      "title": "Stamp Program: Spanish Participation in the American Revolution",
+      "summary": "Joe Perez presents 'Spanish Participation in the American Revolution', exploring Spain's role and contributions during the American Revolution. Guests welcome!",
+      "url": "/meetings.html#2026-05-29",
+      "date": "2026-05-29",
+      "tags": [
+        "stamp-program",
+        "presentation",
+        "american-revolution",
+        "spain",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-06-05",
+      "type": "meeting",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "summary": "Monthly Board of Governors meeting followed by member show and tell presentations. Guests welcome!",
+      "url": "/meetings.html#2026-06-05",
+      "date": "2026-06-05",
+      "tags": [
+        "bog",
+        "business",
+        "show-and-tell",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-06-12",
+      "type": "meeting",
+      "title": "Club Auction",
+      "summary": "Monthly club auction featuring member consignments and donated materials. Guests welcome!",
+      "url": "/meetings.html#2026-06-12",
+      "date": "2026-06-12",
+      "tags": [
+        "auction",
+        "buying",
+        "selling",
+        "consignment",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-06-19",
+      "type": "meeting",
+      "title": "SAPA Annual Club Picnic",
+      "summary": "Join us for the annual SAPA club picnic! The club will provide meats and sauces. Please bring a side dish or a dessert to share.",
+      "url": "/meetings.html#2026-06-19",
+      "date": "2026-06-19",
+      "tags": [
+        "picnic",
+        "social",
+        "family",
+        "annual"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-06-26",
+      "type": "meeting",
+      "title": "Stamp Bourse",
+      "summary": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers. Guests welcome!",
+      "url": "/meetings.html#2026-06-26",
+      "date": "2026-06-26",
+      "tags": [
+        "bourse",
+        "dealers",
+        "trading",
+        "buying",
+        "selling",
         "guests-welcome"
       ],
       "category": "meeting"
@@ -810,13 +1031,13 @@
     }
   ],
   "metadata": {
-    "totalDocuments": 52,
+    "totalDocuments": 66,
     "types": {
-      "newsletter": 4,
-      "meeting": 40,
+      "newsletter": 5,
+      "meeting": 53,
       "resource": 3,
       "glossary": 5
     },
-    "buildDate": "2026-02-11T19:47:52.895Z"
+    "buildDate": "2026-05-05T16:52:54.777Z"
   }
 }

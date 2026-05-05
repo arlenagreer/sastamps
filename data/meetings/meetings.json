@@ -938,31 +938,33 @@
           "zipCode": "78217"
         }
       },
-      "type": "auction",
-      "title": "Club Auction",
-      "topic": "Monthly stamp auction",
-      "description": "Monthly club auction featuring member consignments and donated materials. Guests welcome!",
+      "type": "social",
+      "title": "Stamp Bourse",
+      "topic": "Dealer tables and stamp trading",
+      "description": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers. Guests welcome! Note: This replaces the originally scheduled club auction, which has been moved to Friday, May 15, so members can attend the San Antonio TSDA Stamp Show on May 8–9.",
       "agenda": [
         {
           "time": "6:30 PM",
-          "item": "Doors open, lot viewing"
+          "item": "Doors open, dealer setup"
         },
         {
           "time": "7:00 PM",
-          "item": "Auction preview and announcements"
+          "item": "Bourse officially opens"
         },
         {
-          "time": "7:15 PM",
-          "item": "Auction begins"
+          "time": "8:30 PM",
+          "item": "Final sales and trading"
         },
         {
-          "time": "8:45 PM",
-          "item": "Auction conclusion and checkout"
+          "time": "9:00 PM",
+          "item": "Cleanup and departure"
         }
       ],
       "specialNotes": [
-        "Cash or check accepted for purchases",
-        "Bring lots for consignment (10% commission)",
+        "SCHEDULE CHANGE: Bourse replaces originally scheduled club auction (auction moved to May 15)",
+        "San Antonio TSDA Stamp Show is May 8–9 at the Norris Conference Center — members are encouraged to attend",
+        "Dealer table rental: $10 for members, $15 for non-members",
+        "Contact secretary to reserve tables",
         "Guests welcome!"
       ],
       "requirements": {
@@ -974,7 +976,7 @@
         "email": "loz33@hotmail.com"
       },
       "cancelled": false,
-      "tags": ["auction", "buying", "selling", "consignment", "guests-welcome"]
+      "tags": ["bourse", "dealers", "trading", "buying", "selling", "guests-welcome", "schedule-change"]
     },
     {
       "id": "2026-05-15",
@@ -995,31 +997,32 @@
           "zipCode": "78217"
         }
       },
-      "type": "social",
-      "title": "Stamp Bourse",
-      "topic": "Dealer tables and stamp trading",
-      "description": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers. Guests welcome!",
+      "type": "auction",
+      "title": "Club Auction",
+      "topic": "Monthly stamp auction",
+      "description": "Monthly club auction featuring member consignments and donated materials. Guests welcome! Note: This replaces the originally scheduled bourse and was moved from May 8 so members could attend the San Antonio TSDA Stamp Show.",
       "agenda": [
         {
           "time": "6:30 PM",
-          "item": "Doors open, dealer setup"
+          "item": "Doors open, lot viewing"
         },
         {
           "time": "7:00 PM",
-          "item": "Bourse officially opens"
+          "item": "Auction preview and announcements"
         },
         {
-          "time": "8:30 PM",
-          "item": "Final sales and trading"
+          "time": "7:15 PM",
+          "item": "Auction begins"
         },
         {
-          "time": "9:00 PM",
-          "item": "Cleanup and departure"
+          "time": "8:45 PM",
+          "item": "Auction conclusion and checkout"
         }
       ],
       "specialNotes": [
-        "Dealer table rental: $10 for members, $15 for non-members",
-        "Contact secretary to reserve tables",
+        "SCHEDULE CHANGE: Club auction rescheduled from May 8 (originally scheduled bourse this date)",
+        "Cash or check accepted for purchases",
+        "Bring lots for consignment (10% commission)",
         "Guests welcome!"
       ],
       "requirements": {
@@ -1031,7 +1034,7 @@
         "email": "loz33@hotmail.com"
       },
       "cancelled": false,
-      "tags": ["bourse", "dealers", "trading", "buying", "selling", "guests-welcome"]
+      "tags": ["auction", "buying", "selling", "consignment", "guests-welcome", "schedule-change"]
     },
     {
       "id": "2026-05-22",
