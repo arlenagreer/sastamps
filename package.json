@@ -59,7 +59,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.5.0",
-    "cssnano": "^7.1.8",
+    "cssnano": "^8.0.1",
     "esbuild": "^0.28.0",
     "eslint": "^10.3.0",
     "globals": "^17.6.0",
