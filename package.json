@@ -61,7 +61,7 @@
     "autoprefixer": "^10.5.0",
     "cssnano": "^8.0.1",
     "esbuild": "^0.28.0",
-    "eslint": "^10.3.0",
+    "eslint": "^10.4.0",
     "globals": "^17.6.0",
     "html-validate": "^10.16.0",
     "http-server": "^14.1.1",
@@ -73,7 +73,7 @@
     "postcss": "^8.5.14",
     "postcss-cli": "^11.0.0",
     "sharp-cli": "^5.2.0",
-    "stylelint": "^17.11.0",
+    "stylelint": "^17.11.1",
     "stylelint-config-standard": "^40.0.0"
   },
   "browserslist": [
