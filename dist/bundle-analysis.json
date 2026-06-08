@@ -1,27 +1,11 @@
 {
-  "buildDate": "2026-05-18T18:34:32.353Z",
+  "buildDate": "2026-06-08T14:05:43.091Z",
   "totalSize": 451551,
   "bundles": [
     {
       "name": "about.min.js",
       "size": 8864,
       "sizeFormatted": "8.66 KB",
-      "imports": 8,
-      "exports": 0,
-      "compressionRatio": "0.77"
-    },
-    {
-      "name": "glossary.min.js",
-      "size": 20781,
-      "sizeFormatted": "20.29 KB",
-      "imports": 6,
-      "exports": 0,
-      "compressionRatio": "0.77"
-    },
-    {
-      "name": "archive.min.js",
-      "size": 10702,
-      "sizeFormatted": "10.45 KB",
       "imports": 8,
       "exports": 0,
       "compressionRatio": "0.77"
@@ -35,18 +19,10 @@
       "compressionRatio": "0.77"
     },
     {
-      "name": "membership.min.js",
-      "size": 8894,
-      "sizeFormatted": "8.69 KB",
+      "name": "archive.min.js",
+      "size": 10702,
+      "sizeFormatted": "10.45 KB",
       "imports": 8,
-      "exports": 0,
-      "compressionRatio": "0.77"
-    },
-    {
-      "name": "resources.min.js",
-      "size": 36484,
-      "sizeFormatted": "35.63 KB",
-      "imports": 9,
       "exports": 0,
       "compressionRatio": "0.77"
     },
@@ -63,6 +39,30 @@
       "size": 21260,
       "sizeFormatted": "20.76 KB",
       "imports": 9,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "resources.min.js",
+      "size": 36484,
+      "sizeFormatted": "35.63 KB",
+      "imports": 9,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "glossary.min.js",
+      "size": 20781,
+      "sizeFormatted": "20.29 KB",
+      "imports": 6,
+      "exports": 0,
+      "compressionRatio": "0.77"
+    },
+    {
+      "name": "membership.min.js",
+      "size": 8894,
+      "sizeFormatted": "8.69 KB",
+      "imports": 8,
       "exports": 0,
       "compressionRatio": "0.77"
     },
