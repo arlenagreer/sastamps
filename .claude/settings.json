@@ -16,8 +16,7 @@
       "WebFetch",
       "NotebookRead",
       "NotebookEdit",
-      "ExitPlanMode",
-      "mcp__*"
+      "ExitPlanMode"
     ],
     "deny": []
   }
