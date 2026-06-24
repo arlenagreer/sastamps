@@ -210,7 +210,7 @@ The `data/newsletters/newsletters.json` file:
    - Export first page as image
    - Resize to 400x600px
    - Save as JPG in `images/newsletter-covers/`
-   - Optimize with: `npm run optimize:images`
+   - Optimized automatically during `npm run build`
 
 ### Newsletter Best Practices
 
