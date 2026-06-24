@@ -28,6 +28,14 @@ const embeddedDataScript = `
     </script>
 `;
 
+// Idempotency: strip any previously-embedded data block(s) first, so a re-run
+// REPLACES rather than appends. Previously every build added another duplicate
+// window.SEARCH_INDEX_DATA block, bloating search.html unbounded each quarter.
+searchHtml = searchHtml.replace(
+    /\s*<!-- Embedded search data for offline functionality -->\s*<script>\s*window\.SEARCH_INDEX_DATA = [\s\S]*?<\/script>\s*/g,
+    '\n',
+);
+
 // Find where to insert the embedded data (before the search functionality script)
 const searchScriptMarker = '<!-- Search functionality -->';
 if (searchHtml.includes(searchScriptMarker)) {

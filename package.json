@@ -37,6 +37,7 @@
     "audit:lighthouse": "lighthouse http://localhost:3000 --output html --output-path ./reports/lighthouse.html --view",
     "audit:security": "npm audit",
     "test:quick": "npm run test:html && npm run test:js && npm run test:css",
+    "validate:data": "node scripts/validate-data.js",
     "pretest": "mkdir -p reports"
   },
   "repository": {
@@ -58,6 +59,7 @@
     "vanilla-calendar-pro": "^3.1.0"
   },
   "devDependencies": {
+    "ajv": "^6.15.0",
     "autoprefixer": "^10.5.0",
     "cssnano": "^8.0.1",
     "esbuild": "^0.28.0",
