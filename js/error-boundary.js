@@ -5,6 +5,8 @@
  * Provides React-like error boundary functionality for vanilla JavaScript components
  */
 
+import { escapeHTML } from './utils/safe-dom.js';
+
 class ErrorBoundary {
   constructor(options = {}) {
     this.componentName = options.componentName || 'Unknown Component';
@@ -141,7 +143,7 @@ class ErrorBoundary {
                     Something went wrong
                 </h4>
                 <p style="margin-bottom: 0.5rem;">
-                    The ${componentName} component encountered an error and couldn't load properly.
+                    The ${escapeHTML(componentName)} component encountered an error and couldn't load properly.
                 </p>
                 <details style="margin-top: 0.5rem; font-size: 0.875rem;">
                     <summary style="cursor: pointer; color: #495057;">
@@ -155,7 +157,7 @@ class ErrorBoundary {
                         overflow-x: auto;
                         font-size: 0.75rem;
                         text-align: left;
-                    ">${error.message}\n${error.stack || ''}</pre>
+                    ">${escapeHTML(error.message)}\n${escapeHTML(error.stack || '')}</pre>
                 </details>
             </div>
         `;
