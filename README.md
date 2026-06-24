@@ -87,7 +87,7 @@ npm run test:a11y       # Accessibility testing
 npm run audit           # Performance and security audit
 
 # Optimization
-npm run optimize:images # Optimize images to WebP
+npm run build           # Optimizes images to WebP as part of the build
 npm run analyze:bundle  # Analyze bundle sizes
 ```
 

@@ -23,7 +23,6 @@ npm run watch                 # Watch mode for CSS/JS changes
 
 # Analysis and optimization
 npm run analyze:bundle        # View detailed bundle analysis
-npm run optimize:images       # WebP image optimization with responsive sizing
 npm run build:search          # Build search index for site search
 
 # Testing and validation
@@ -43,9 +42,6 @@ npm run build:js
 
 # 3. Analyze bundle sizes
 npm run analyze:bundle
-
-# 4. Optimize images if needed
-npm run optimize:images
 ```
 
 ## Architecture Overview
