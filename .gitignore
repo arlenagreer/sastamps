@@ -43,3 +43,6 @@ tasks/
 
 # Tool configs
 .serena/
+
+# graphify knowledge-graph output (regenerable via /graphify)
+graphify-out/
