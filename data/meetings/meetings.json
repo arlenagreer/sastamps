@@ -617,9 +617,9 @@
           "zipCode": "78217"
         }
       },
-      "type": "educational",
+      "type": "regular",
       "title": "Stamp Program: The Art of Stamps on Covers and Cards",
-      "presenter": "H. Wallace",
+      "presenter": { "name": "H. Wallace" },
       "topic": "The Art of Stamps on Covers and Cards",
       "description": "H. Wallace presents 'The Art of Stamps on Covers and Cards', exploring the artistic elements and design of stamps displayed on covers and postcards. Guests welcome!",
       "agenda": [
@@ -1081,9 +1081,9 @@
           "zipCode": "78217"
         }
       },
-      "type": "educational",
+      "type": "regular",
       "title": "Stamp Program: Spanish Participation in the American Revolution",
-      "presenter": "Joe Perez",
+      "presenter": { "name": "Joe Perez" },
       "topic": "Spanish Participation in the American Revolution",
       "description": "Joe Perez presents 'Spanish Participation in the American Revolution', exploring Spain's role and contributions during the American Revolution. Guests welcome!",
       "agenda": [
@@ -2441,7 +2441,7 @@
           "zipCode": "78217"
         }
       },
-      "type": "bourse",
+      "type": "social",
       "title": "November Stamp Bourse",
       "topic": "Monthly stamp and cover trading event",
       "description": "Monthly bourse featuring multiple dealers with stamps, covers, supplies, and philatelic literature. Great opportunity for buying, selling, and trading.",
