@@ -3,6 +3,8 @@
  * Provides functions for showing loading states and skeleton screens
  */
 
+import { escapeHTML } from './safe-dom.js';
+
 /**
  * Show loading spinner in an element
  * @param {HTMLElement} element - Element to show spinner in
@@ -15,7 +17,7 @@ export function showLoadingSpinner(element, size = 'medium', text = '') {
   element.innerHTML = `
         <div class="loading-container">
             <div class="loading-spinner ${sizeClass}"></div>
-            ${text ? `<p class="loading-text">${text}</p>` : ''}
+            ${text ? `<p class="loading-text">${escapeHTML(text)}</p>` : ''}
         </div>
     `;
 }
@@ -185,11 +187,16 @@ export function removeFormLoading(form) {
 }
 
 /**
- * Show loading state with custom content
+ * Show loading state with custom content.
+ * SECURITY: `content` is injected as raw HTML and is intentionally NOT escaped.
+ * Callers MUST pass only trusted, statically-authored, or pre-escaped markup.
+ * Never pass user input, URL params, or unescaped data-file fields here — run it
+ * through escapeHTML() from ./safe-dom.js first.
  * @param {HTMLElement} element - Element to show loading in
- * @param {string} content - Custom loading content HTML
+ * @param {string} content - Trusted/pre-escaped loading content HTML (caller-sanitized)
  */
 export function showCustomLoading(element, content) {
+  // content is a trusted-HTML parameter by contract (see SECURITY note above)
   element.innerHTML = `
         <div class="loading-container">
             ${content}
