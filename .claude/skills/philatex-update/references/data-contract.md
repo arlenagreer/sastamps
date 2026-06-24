@@ -23,6 +23,8 @@ Quick-reference card for the extraction agent and reviewers. For full field defi
 |------|-----------|---------|
 | `index.html` | `#main-content` | Upcoming meeting info, latest newsletter link |
 | `index.html` | `#meeting-schedule` | Schedule highlights |
+| `index.html` | "Club News & Announcements" cards | New members, officer changes, announcements/events (replace stale; no Q2-only carryover like the picnic) |
+| `index.html` | "Upcoming TSDA Stamp Shows" table | `<caption>` (hard-codes the quarter) + every row = this quarter's shows |
 | `newsletter.html` | `#main-content` | Current issue section, archive year section |
 | `meetings.html` | `#main-content` | Meeting list overview |
 | `meetings.html` | `#meeting-schedule-container` | Meeting schedule list |

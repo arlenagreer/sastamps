@@ -89,3 +89,9 @@ Append-only memory for `/philatex-update`. The research and planning phases read
 ### 2026-Q3 rehearsal — PROCESS: a review-panel dimension returned a placeholder
 - **Observed:** The content-fidelity reviewer (technical-writer agentType) returned a "test payload" instead of real analysis; the orchestrator had to verify that dimension (the officer change) manually.
 - **Source:** orchestration self-observation — **Status:** logged → consider a cheap output-sanity check on each review dimension (reject results whose findings look like placeholders) and re-run that dimension before trusting the panel as complete.
+
+### 2026-Q3 (post-publish) — extractor left two dated home-page sections on stale Q2 content
+- **Observed:** After publishing, the user found index.html's "Club News & Announcements" cards (old new members, June 19 picnic, May 29 program, April auction) and the "Upcoming TSDA Stamp Shows" table (caption "for Q2 2026", April–June rows) were never updated. Step 7 only updated the meeting table + newsletter banner. meetings.html's TSDA section WAS correct, so the miss was index.html-specific.
+- **Source:** human-correction (post-publish) — directly downstream of the content-fidelity reviewer no-op (it would have caught this).
+- **Generalizable rule:** A page can have several dated sections; update ALL of them and grep each page for prior-quarter markers before declaring done.
+- **Status:** promoted → agent Step 7 (index.html now lists both sections + a "check every dated section" caution), data-contract.md §B, new contract assertion [H1]. Reinforces: the content-fidelity review dimension must actually run — a no-op there let a real gap ship.
