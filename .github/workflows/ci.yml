@@ -91,6 +91,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    # Serialize GitHub Pages deployments so rapid successive pushes to main
+    # don't collide ("deployment request failed ... due to in progress
+    # deployment"). Queue (don't cancel) so an in-flight deploy finishes.
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
     
     permissions:
       contents: read
