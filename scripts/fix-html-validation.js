@@ -36,7 +36,7 @@ function fixHTMLFile(filePath) {
   // 3. Fix raw ampersands in HTML content only (skip <style> and <script> blocks)
   let ampersandFixCount = 0;
   content = content.replace(
-    /(<style[\s>][\s\S]*?<\/style>|<script[\s>][\s\S]*?<\/script>)|(&(?![a-zA-Z][a-zA-Z0-9]*;|#\d+;|#x[0-9a-fA-F]+;))/gi,
+    /(<style\b[^>]*>[\s\S]*?<\/style\b[^>]*>|<script\b[^>]*>[\s\S]*?<\/script\b[^>]*>)|(&(?![a-zA-Z][a-zA-Z0-9]*;|#\d+;|#x[0-9a-fA-F]+;))/gi,
     (match, block, _rawAmp) => {
       if (block) {
         return block; // Preserve <style>/<script> content unchanged

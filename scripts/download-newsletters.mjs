@@ -55,8 +55,15 @@ function parseSourceHTML(html) {
 
     let [, url, label] = linkMatch;
 
-    // Strip HTML tags from label (e.g. <i><b>Special Covid-19 Edition</b></i>)
-    label = label.replace(/<[^>]+>/g, '').trim();
+    // Strip HTML tags from label (e.g. <i><b>Special Covid-19 Edition</b></i>).
+    // Loop until stable so nested/crafted angle brackets can't survive one pass
+    // (CodeQL js/incomplete-multi-character-sanitization).
+    let prevLabel;
+    do {
+      prevLabel = label;
+      label = label.replace(/<[^>]*>/g, '');
+    } while (label !== prevLabel);
+    label = label.trim();
 
     // Skip entries with href="#" (e.g. 2012 Jul/Aug "not available")
     if (url === '#') {
@@ -119,21 +126,34 @@ function buildFilename(year, label) {
  * Convert Dropbox or Google Drive sharing URLs to direct download URLs.
  */
 function convertToDirectUrl(url) {
+  // Resolve the real host so look-alike domains (e.g. "dropbox.com.evil.test")
+  // can't satisfy a bare substring check
+  // (CodeQL js/incomplete-url-substring-sanitization).
+  let host = '';
+  try {
+    host = new URL(url).hostname.toLowerCase();
+  } catch {
+    return url; // not an absolute URL — leave unchanged
+  }
+  const isHost = (name) => host === name || host.endsWith(`.${name}`);
+
   // Dropbox: replace ?dl=0 with ?dl=1
-  if (url.includes('dropbox.com')) {
+  if (isHost('dropbox.com')) {
     return url.replace(/\?dl=0$/, '?dl=1');
   }
 
-  // Google Drive: /file/d/{FILE_ID}/view
-  const gdriveFileMatch = url.match(/drive\.google\.com\/file\/d\/([^/]+)\//);
-  if (gdriveFileMatch) {
-    return `https://drive.google.com/uc?export=download&id=${gdriveFileMatch[1]}`;
-  }
-
-  // Google Drive: /open?id={FILE_ID}
-  const gdriveOpenMatch = url.match(/drive\.google\.com\/open\?id=([^&\s]+)/);
-  if (gdriveOpenMatch) {
-    return `https://drive.google.com/uc?export=download&id=${gdriveOpenMatch[1]}`;
+  // Google Drive
+  if (isHost('drive.google.com')) {
+    // /file/d/{FILE_ID}/view
+    const gdriveFileMatch = url.match(/\/file\/d\/([^/]+)\//);
+    if (gdriveFileMatch) {
+      return `https://drive.google.com/uc?export=download&id=${gdriveFileMatch[1]}`;
+    }
+    // /open?id={FILE_ID}
+    const gdriveOpenMatch = url.match(/\/open\?id=([^&\s]+)/);
+    if (gdriveOpenMatch) {
+      return `https://drive.google.com/uc?export=download&id=${gdriveOpenMatch[1]}`;
+    }
   }
 
   return url;
