@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//San Antonio Philatelic Association//SAPA Meetings//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:20260828T193000Z-sapa@sastamps.org
+DTSTAMP:20260701T000000Z
+DTSTART:20260829T003000Z
+DTEND:20260829T020000Z
+SUMMARY:SAPA Stamp Program: TBD or Bourse
+DESCRIPTION:Stamp program with topic to be determined\, or bourse format. Guests welcome! Doors open at 6:30 PM\, meeting begins at 7:30 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting
+END:VEVENT
+END:VCALENDAR

@@ -1,6 +1,55 @@
 {
   "newsletters": [
     {
+      "id": "2026-Q3",
+      "title": "SAPA PHILATEX Third Quarter 2026",
+      "quarter": "Third",
+      "year": 2026,
+      "publishDate": "2026-07-01",
+      "filePath": "public/SAPA-PHILATEX-Third-Quarter-2026.pdf",
+      "description": "Third Quarter 2026 newsletter featuring the July-September meeting calendar, feature article on the First US Flag Stamp (Scott 1094), Talking Stamps humor, SAPA Auction Guidelines, announcement of new Treasurer Mark Brill, new members Radek Lhotsky and David Keown, Stamp Unveiling Event at Fort Sam Houston on July 4, and upcoming TSDA show schedule.",
+      "featuredArticles": [
+        {
+          "title": "Q3 2026 Meeting Calendar",
+          "category": "Calendar",
+          "page": 1
+        },
+        {
+          "title": "Feature Article: First US Flag Stamp",
+          "category": "Feature",
+          "page": 3
+        },
+        {
+          "title": "Talking Stamps",
+          "category": "Humor",
+          "page": 3
+        },
+        {
+          "title": "SAPA Auction Guidelines",
+          "category": "Education",
+          "page": 5
+        },
+        {
+          "title": "New Members and Officer Changes",
+          "category": "News",
+          "page": 2
+        }
+      ],
+      "highlights": [
+        "Complete July-September 2026 meeting schedule",
+        "New SAPA Treasurer: Mark Brill replaces Steve Mabie",
+        "New members: Radek Lhotsky (early Czechoslovakia) and David Keown (US stamps)",
+        "Feature article on the First US Flag Stamp issued July 4, 1957 (Scott 1094)",
+        "Stamp Unveiling Event at Fort Sam Houston, July 4 - Figures of the American Revolution pane",
+        "TSDA shows: Houston (Jul 17-18), Dallas (Aug 21-22), Greater Houston Stamp Show (Sep 18-20)",
+        "San Antonio TSDA show October 9-10 at Norris Conference Center"
+      ],
+      "tags": ["2026", "Q3", "meetings", "flag-stamp", "new-members", "auction-guidelines", "tsda-shows", "officer-change"],
+      "pageCount": 7,
+      "fileSize": "916 KB",
+      "status": "published"
+    },
+    {
       "id": "2026-Q2",
       "title": "SAPA PHILATEX Second Quarter 2026",
       "quarter": "Second",
@@ -96,7 +145,7 @@
       "featuredArticles": [
         {
           "title": "Year in Review",
-          "category": "Annual Report",
+          "category": "News",
           "page": 3
         },
         {
@@ -162,7 +211,7 @@
     {
       "id": "2025-Q2",
       "title": "SAPA PHILATEX Second Quarter 2025",
-      "quarter": "Second", 
+      "quarter": "Second",
       "year": 2025,
       "publishDate": "2025-04-01",
       "filePath": "public/SAPA PHILATEX Second Quarter 2025.pdf",
@@ -198,9 +247,9 @@
     }
   ],
   "metadata": {
-    "lastUpdated": "2026-04-01T00:00:00.000Z",
-    "totalIssues": 5,
-    "latestIssue": "2026-Q2",
+    "lastUpdated": "2026-07-01T00:00:00.000Z",
+    "totalIssues": 6,
+    "latestIssue": "2026-Q3",
     "version": "1.0"
   }
 }
