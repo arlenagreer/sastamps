@@ -61,6 +61,7 @@ Derived from the page-1 calendar (July/August/September 2026), schemas, and lear
 - **[S1]** newsletter entry id "2026-Q3", quarter "Third", year 2026, publishDate "2026-07-01", validates — status: RED
 - **[S2]** all 13 meeting entries validate (type enum, required fields) — status: RED
 - **[S4]** the PDF exists at public/SAPA-PHILATEX-Third-Quarter-2026.pdf (filePath resolves; links don't 404) — status: RED
+- **[H1]** index.html "Club News & Announcements" cards + "Upcoming TSDA Stamp Shows" table (caption + rows) reflect this edition; no stale prior-quarter content remains on any page — status: RED
 - **[K1]** all new dates > last existing meetings.json date; chronological; no dupes — status: RED
 - **[I1]** 13 individual .ics (UTC, DTSTART=meetingStart) + 1 public/sapa-q3-2026-meetings.ics (local, DTSTART=doorsOpen); UID fixed T193000Z; cancelled = 1-min; LF endings — status: RED
 - **[P1]** every <high-confidence field carries [UNVERIFIED] (expect ≥2: M5, M9) — status: RED

@@ -319,6 +319,8 @@ The two ICS formats anchor on DIFFERENT times. Getting this wrong was a real bug
 
 Read each HTML page, identify the relevant section by looking at adjacent existing entries, and write targeted updates following the same markup pattern. Do NOT rewrite entire HTML files -- use the Edit tool for surgical changes.
 
+**A page may have MULTIPLE dated sections -- update ALL of them, not just the meeting schedule.** A section left on the prior quarter's content is a defect. (The 2026-Q3 run shipped a stale home-page "Club News & Announcements" + "Upcoming TSDA Stamp Shows" section because this step only updated the meeting table.) After editing each page, grep it for the prior quarter's markers (old months, last quarter's caption like "for Q2 2026", removed events) and confirm none remain.
+
 ### newsletter.html
 - Update the "Current Issue" section to feature the new edition (title, description, PDF link, cover details)
 - Add the new edition to the appropriate year's archive section
@@ -331,6 +333,8 @@ Read each HTML page, identify the relevant section by looking at adjacent existi
 - Update the "Upcoming Meeting" section with the first active (non-cancelled) meeting of the new quarter
 - Update the "Read Latest Issue" / newsletter link to point to the new PDF
 - Update highlights section if applicable
+- **Update the "Club News &amp; Announcements" section** (the cards): replace stale items with this edition's new members, officer changes, and key announcements/events from the newsletter. Q2-only items (e.g. the picnic) must NOT carry over.
+- **Update the "Upcoming TSDA Stamp Shows" table** with this quarter's shows. Update the `<caption>` too -- it hard-codes the quarter (e.g. "...for Q2 2026"). Replace every row.
 
 ### about.html
 - Compare extracted officer roster against current about.html content
