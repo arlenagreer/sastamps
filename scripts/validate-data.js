@@ -29,9 +29,14 @@
 const fs = require('fs');
 const path = require('path');
 const Ajv = require('ajv');
+const addFormats = require('ajv-formats');
 
 const root = path.resolve(__dirname, '..');
 const ajv = new Ajv({ allErrors: true });
+// ajv 8 dropped the built-in format validators (date/email/date-time/uri/...); register
+// them so the schemas' `format` keywords validate instead of throwing "unknown format"
+// at ajv.compile() under strict mode.
+addFormats(ajv);
 const load = (p) => JSON.parse(fs.readFileSync(path.join(root, p), 'utf8'));
 
 const NEW_IDS = (process.env.VALIDATE_NEW_IDS || '')
@@ -65,6 +70,11 @@ for (const ds of datasets) {
   for (const item of arr) {
     if (validate(item)) continue;
     for (const err of validate.errors) {
+      // ajv 8 renamed err.dataPath -> err.instancePath and switched from dot-notation
+      // (".time") to JSON Pointer ("/time"). Normalize back to the dot-path the
+      // KNOWN_EXCEPTIONS predicates and the message below were written against. This is a
+      // harmless no-op on ajv 6's dataPath (which has no slashes to replace).
+      err.dataPath = (err.instancePath ?? err.dataPath ?? '').replace(/\//g, '.');
       const extra = err.params && err.params.additionalProperty
         ? ` (+${err.params.additionalProperty})` : '';
       const msg = `${ds.name}[${item.id || '?'}]${err.dataPath} ${err.message}${extra}`;
