@@ -12,7 +12,7 @@
     "title": {
       "type": "string",
       "description": "Full title of the newsletter",
-      "example": "SAPA PHILATEX Third Quarter 2025"
+      "examples": ["SAPA PHILATEX Third Quarter 2025"]
     },
     "quarter": {
       "type": "string",

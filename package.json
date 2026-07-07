@@ -55,7 +55,8 @@
     "yargs": "^17.7.3"
   },
   "devDependencies": {
-    "ajv": "^6.15.0",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
     "autoprefixer": "^10.5.1",
     "cssnano": "^8.0.2",
     "esbuild": "^0.28.1",
