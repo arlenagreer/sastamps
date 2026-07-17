@@ -7,12 +7,17 @@
       "year": 2026,
       "publishDate": "2026-07-01",
       "filePath": "public/SAPA-PHILATEX-Third-Quarter-2026.pdf",
-      "description": "Third Quarter 2026 newsletter featuring the July-September meeting calendar, feature article on the First US Flag Stamp (Scott 1094), Talking Stamps humor, SAPA Auction Guidelines, announcement of new Treasurer Mark Brill, new members Radek Lhotsky and David Keown, Stamp Unveiling Event at Fort Sam Houston on July 4, and upcoming TSDA show schedule.",
+      "description": "Third Quarter 2026 newsletter featuring the July-September meeting calendar (including a special July 31 stamp program by Sam Rodgers, 'Cataloging U.S. Stamps'), feature article on the First US Flag Stamp (Scott 1094), Talking Stamps humor, SAPA Auction Guidelines, announcement of new Treasurer Mark Brill, new members Radek Lhotsky and David Keown, Stamp Unveiling Event at Fort Sam Houston on July 4, and upcoming TSDA show schedule.",
       "featuredArticles": [
         {
           "title": "Q3 2026 Meeting Calendar",
           "category": "Calendar",
           "page": 1
+        },
+        {
+          "title": "July 31 Stamp Program: Cataloging U.S. Stamps (Sam Rodgers)",
+          "category": "Education",
+          "page": 2
         },
         {
           "title": "Feature Article: First US Flag Stamp",
@@ -38,6 +43,7 @@
       "highlights": [
         "Tribute: Thank You, Steve Mabie — honoring our outgoing treasurer and newsletter editor for his years of dedicated service to SAPA (page 2)",
         "Complete July-September 2026 meeting schedule",
+        "Special July 31 program: Sam Rodgers presents 'Cataloging U.S. Stamps'",
         "New SAPA Treasurer: Mark Brill replaces Steve Mabie",
         "New members: Radek Lhotsky (early Czechoslovakia) and David Keown (US stamps)",
         "Feature article on the First US Flag Stamp issued July 4, 1957 (Scott 1094)",
@@ -47,7 +53,7 @@
       ],
       "tags": ["2026", "Q3", "meetings", "flag-stamp", "new-members", "auction-guidelines", "tsda-shows", "officer-change"],
       "pageCount": 7,
-      "fileSize": "916 KB",
+      "fileSize": "850 KB",
       "status": "published"
     },
     {
