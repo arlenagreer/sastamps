@@ -4,7 +4,7 @@
       "id": "newsletter-2026-Q3",
       "type": "newsletter",
       "title": "SAPA PHILATEX Third Quarter 2026",
-      "summary": "Third Quarter 2026 newsletter featuring the July-September meeting calendar, feature article on the First US Flag Stamp (Scott 1094), Talking Stamps humor, SAPA Auction Guidelines, announcement of new Treasurer Mark Brill, new members Radek Lhotsky and David Keown, Stamp Unveiling Event at Fort Sam Houston on July 4, and upcoming TSDA show schedule.",
+      "summary": "Third Quarter 2026 newsletter featuring the July-September meeting calendar (including a special July 31 stamp program by Sam Rodgers, 'Cataloging U.S. Stamps'), feature article on the First US Flag Stamp (Scott 1094), Talking Stamps humor, SAPA Auction Guidelines, announcement of new Treasurer Mark Brill, new members Radek Lhotsky and David Keown, Stamp Unveiling Event at Fort Sam Houston on July 4, and upcoming TSDA show schedule.",
       "url": "/newsletter.html#2026-Q3",
       "date": "2026-07-01",
       "tags": [
@@ -970,8 +970,8 @@
     {
       "id": "meeting-2026-07-31",
       "type": "meeting",
-      "title": "Stamp Program: TBD or Bourse",
-      "summary": "[UNVERIFIED] Stamp Program with topic to be determined, or bourse format. Calendar lists 'Stamp Program: TBD or Bourse'. Guests welcome!",
+      "title": "Stamp Program: Cataloging U.S. Stamps",
+      "summary": "Sam Rodgers presents 'Cataloging U.S. Stamps', explaining that the United States has issued far more stamps than are recognized in the Scott, Minkus, or other catalogs, and what the Bureau of Engraving and Printing considers to be a new issue. A fascinating and informative look at all U.S. stamp issues. Guests welcome!",
       "url": "/meetings.html#2026-07-31",
       "date": "2026-07-31",
       "tags": [
@@ -1251,6 +1251,6 @@
       "resource": 3,
       "glossary": 5
     },
-    "buildDate": "2026-06-24T22:06:12.502Z"
+    "buildDate": "2026-07-17T07:48:59.267Z"
   }
 }
