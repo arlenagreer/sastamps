@@ -17,6 +17,12 @@
 #   scripts/retag-analytics.sh G-NEWID12345              # perform the rewrite
 #   scripts/retag-analytics.sh --verify-live G-NEWID12345 # check the DEPLOYED site
 #
+# CAUTION
+#   PASTE the new measurement ID from the GA console. Never retype it. GA4 IDs carry
+#   no checksum, so a typo that still matches ^G-[A-Z0-9]{6,12}$ passes validation,
+#   rewrites every file, and passes --verify-live -- while collecting zero data.
+#   The only real verification is seeing hits in GA4 Realtime.
+#
 set -euo pipefail
 
 OLD_ID="G-XW5LFQ52YR"
@@ -76,11 +82,19 @@ fi
 # ------------------------------------------------------------------- discover
 # Deliberately excludes dist/ (built bundles carry only the unrelated
 # G-XXXXXXXXXX placeholder), node_modules, and .git.
-# Excludes dist/, node_modules, .git — and THIS SCRIPT, which necessarily contains
-# the old ID in its own OLD_ID constant and must survive the rewrite intact.
+# EXCLUSIONS, and why each one matters:
+#   node_modules/, dist/  - vendored and built output; dist carries only the
+#                           unrelated G-XXXXXXXXXX placeholder.
+#   .git/                 - obvious.
+#   .planning/, *.md      - the audit trail and docs. These DESCRIBE the old ID as
+#                           historical fact. Rewriting them silently falsifies the
+#                           record of what was changed and when.
+#   this script           - contains the old ID in its own OLD_ID constant and must
+#                           survive the rewrite intact to stay re-runnable.
 SELF_REL="scripts/retag-analytics.sh"
+EXCLUDE_RE='(^\./)?(node_modules|dist|\.planning)/|/\.git/|\.md$'
 mapfile -t FILES < <(grep -rl "$OLD_ID" . 2>/dev/null \
-  | grep -vE '(^\./)?(node_modules|dist)/|/\.git/' | sed 's|^\./||' \
+  | grep -vE "$EXCLUDE_RE" | sed 's|^\./||' \
   | grep -vxF "$SELF_REL" | sort)
 
 [ "${#FILES[@]}" -gt 0 ] || die "found no files containing $OLD_ID — already re-tagged, or run from the wrong repo"
@@ -112,7 +126,7 @@ done
 
 # --------------------------------------------------------------------- assert
 remaining=$(grep -rl "$OLD_ID" . 2>/dev/null \
-  | grep -vE '(^\./)?(node_modules|dist)/|/\.git/' | sed 's|^\./||' \
+  | grep -vE "$EXCLUDE_RE" | sed 's|^\./||' \
   | grep -vxF "$SELF_REL" | wc -l | tr -d ' ')
 [ "$remaining" -eq 0 ] \
   || die "rewrite incomplete — $remaining file(s) still contain $OLD_ID. Working tree is DIRTY; inspect with: git diff"
@@ -127,9 +141,29 @@ done
 
 echo "Rewrote $total occurrence(s) across ${#FILES[@]} file(s). Old ID: 0 remaining."
 echo
+
+# add-analytics.js is a spent one-shot. Its mechanism is
+#   content.replace('<head>', '<head>' + analyticsScript)
+# which APPENDS a tag rather than replacing one, and it targets only 6 of the 10
+# tagged pages. Re-running it after this rewrite injects a SECOND gtag loader and a
+# SECOND config call -> every pageview counted twice.
+if printf '%s\n' "${FILES[@]}" | grep -qxF 'scripts/add-analytics.js'; then
+  echo "WARNING: scripts/add-analytics.js was re-tagged, but it is a spent one-shot."
+  echo "         Re-running it appends a duplicate gtag block (double-counted pageviews)"
+  echo "         and it only covers 6 of the 10 tagged pages. Strongly consider deleting"
+  echo "         it -- git history preserves it. Left in place deliberately: that is"
+  echo "         your call, not this script's."
+  echo
+fi
 echo "Next:"
-echo "  1. git -C \"\$(pwd)\" diff                       # review"
-echo "  2. commit and push (GitHub Pages deploys from the repo)"
-echo "  3. scripts/retag-analytics.sh --verify-live $NEW_ID"
-echo "  4. confirm hits in GA4 Realtime for $NEW_ID"
-echo "  5. only THEN retire the old property ($OLD_ID)"
+echo "  1. git diff                                  # review"
+echo "  2. commit + push to main"
+echo "  3. WAIT for the Actions 'deploy' job to succeed. GitHub Pages does NOT serve"
+echo "     straight from the repo: .github/workflows/ci.yml has deploy(needs: test),"
+echo "     so a test failure SKIPS the deploy and the old tag stays live."
+echo "  4. scripts/retag-analytics.sh --verify-live $NEW_ID"
+echo "  5. confirm hits in GA4 Realtime for $NEW_ID  <- THIS is the real verification."
+echo "     --verify-live only proves the string is in the served HTML. A well-formed"
+echo "     but WRONG id passes it while collecting nothing."
+echo "  6. run both properties in parallel for one full reporting cycle"
+echo "  7. only THEN retire the old property ($OLD_ID) - 35-day trash, then gone"
