@@ -125,9 +125,15 @@ for f in "${FILES[@]}"; do
 done
 
 # --------------------------------------------------------------------- assert
+# NOTE the trailing `|| true`. Under `set -o pipefail` this pipeline returns
+# non-zero on SUCCESS: once every file is rewritten, `grep -vxF "$SELF_REL"`
+# filters out its last input line, emits nothing, and exits 1. `wc -l` still
+# prints 0, but the pipeline's status is 1, which `set -e` turns into a silent
+# abort of the whole script *after* the files were already modified. Without
+# this guard the tool leaves a fully-correct rewrite on disk and reports failure.
 remaining=$(grep -rl "$OLD_ID" . 2>/dev/null \
   | grep -vE "$EXCLUDE_RE" | sed 's|^\./||' \
-  | grep -vxF "$SELF_REL" | wc -l | tr -d ' ')
+  | grep -vxF "$SELF_REL" | wc -l | tr -d ' ' || true)
 [ "$remaining" -eq 0 ] \
   || die "rewrite incomplete — $remaining file(s) still contain $OLD_ID. Working tree is DIRTY; inspect with: git diff"
 
