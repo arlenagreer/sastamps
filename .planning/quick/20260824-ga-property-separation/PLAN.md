@@ -2,7 +2,7 @@
 task: Separate the sastamps GA4 property from American Laboratory Trading's GA account
 slug: ga-property-separation
 created: 2026-08-24
-status: investigation-complete-pending-console-access
+status: superseded-in-part-by-DECISION.md — see corrections there
 ---
 
 # GA property separation — sastamps vs American Laboratory Trading
@@ -34,20 +34,22 @@ pages appear at all.
 **not commingled**. They are separate GA4 properties with independent Google
 Tags and no forwarding between them. Arlen's reassurance to Susan was accurate.
 
-**Conclusion on containment:** the sastamps *property* almost certainly sits
-inside ALT's GA *account*. Because GA4 account-level access inherits down to
+**Conclusion on containment:** the sastamps *property* is *hypothesised* to sit
+inside ALT's GA *account*. ⚠ See DECISION.md — adversarial review split this into
+three separable claims, two of which have NO direct evidence. Because GA4 account-level access inherits down to
 every property in the account, Susan's legitimate ALT access carries with it
 access to the sastamps property — and its automated performance emails.
 This is an inference, not a direct observation (see finding 8).
 
-## The trap in the obvious fix
+## The trap in the obvious fix — CONDITIONAL, see DECISION.md
 
 "Just remove Susan's access to the sastamps property" does not work if the
 access is **inherited from account level** — GA4 does not allow revoking
 inherited access at the property level. Removing it would mean downgrading her
 role on ALT's own account, which is legitimate access she needs.
 
-Consequence: there is no stopgap Arlen can perform alone. The noise fix and the
+Consequence (only if access is in fact inherited — unverified): there is no
+stopgap Arlen can perform alone. The noise fix and the
 governance fix are the same action — get the property out of ALT's account.
 Susan can silence the emails herself in the interim via the unsubscribe link in
 that email, or via Analytics → user settings → Performance Email Notification
@@ -65,11 +67,22 @@ the only symptom is other people in that account receiving reports.
 `scripts/retag-analytics.sh` — an atomic, self-verifying re-tag tool for the
 recreate branch of the decision tree. Rewrites all 22 occurrences, hard-asserts
 zero surviving occurrences of the old ID, and carries a `--verify-live` mode
-that checks the deployed pages (GitHub Pages serves straight from the repo).
+that checks the deployed pages. ⚠ CORRECTED: GitHub Pages does NOT serve straight
+from the repo — `.github/workflows/ci.yml:89` defines `deploy` with `needs: test`,
+so a test failure silently skips the deploy.
 
 Tested 2026-08-24: rejects malformed IDs, rejects a no-op re-tag, rewrote 11
-files / 22 occurrences with 0 remaining, and `--verify-live` correctly detected
-a mismatch against the live site. No measurement ID has been changed.
+files / 22 occurrences with 0 remaining (this file preserved), and `--verify-live`
+correctly detected a mismatch against the live site. No measurement ID has been
+changed.
+
+Three defects were found and fixed after the first commit — it rewrote its own
+audit trail, it misstated the deploy model, and a `pipefail` interaction aborted
+it with exit 1 *after* a correct rewrite. See commits `bcaaf2a` and `0cfde68`.
+
+⚠ On the preferred remediation branch (a property move) the measurement ID does
+not change, so **this script is not needed at all**. It exists for the re-tag
+branch only.
 
 ## Out of scope (flagged, not fixed)
 
