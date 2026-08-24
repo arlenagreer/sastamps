@@ -164,3 +164,67 @@ window to fix it cheaply is open now, while Arlen holds access on both sides and
 parties are on good terms. Rises to 3 on any of: an ALT Ads link, a BigQuery export into
 an ALT project, the ALT account sitting in a GMP org or shared with an agency, or page
 titles embedding SAPA member names.
+
+---
+
+# CONFIRMED via GA Admin API — 2026-08-24
+
+Obtained a one-hour read-only `analytics.readonly` token (OAuth loopback, no refresh
+token retained) and queried the Admin API directly. Required enabling
+`analyticsadmin.googleapis.com` on project `gws-cli-arlena-2026` — reversible, and
+unrelated to the gws credentials.
+
+## The account tree
+
+```
+accounts/97359010  "AmericanLaboratoryTrading"   (created 2017-04-13)
+    properties/373649367  "AmericanLaboratoryTrading - GA4"  created 2023-05-02
+    properties/484761829  "SAStamps"                         created 2025-04-06T14:48:59Z
+```
+
+**Containment CONFIRMED.** `properties/484761829.parent == accounts/97359010`, the same
+account holding ALT's own property. The creation timestamp matches commit `7feca52`
+(2025-04-06) to the day.
+
+## Every open scenario, now closed
+
+| Question | Answer |
+|---|---|
+| Is SAStamps a standalone property or a stream inside an ALT property? | **Standalone.** 1 web stream, `G-XW5LFQ52YR`, `propertyType: PROPERTY_TYPE_ORDINARY` |
+| Could it be a GA360 hostname-filtered subproperty? | **No.** `serviceLevel: GOOGLE_ANALYTICS_STANDARD`, `propertyType: ORDINARY` on both |
+| Data commingling? | **None.** Two ordinary properties, one stream each, disjoint measurement IDs |
+| SAStamps → ALT Google Ads links? | **0** (ALT's own property has 2 — expected, its own) |
+| SAStamps → BigQuery export? | **0** (v1alpha `bigQueryLinks`, HTTP 200, empty) |
+| Other misfiled properties in ALT's account? | **None.** Exactly 2 properties, both accounted for |
+| Event-level history at stake | **2 months** — `eventDataRetention: TWO_MONTHS`, the default, never changed |
+
+The three severity-raising conditions (Ads link, BigQuery export, 360 subproperty) are all
+**absent**. Severity stays at **2/5**.
+
+## Verdict: Branch A
+
+`properties/484761829` is a standalone ORDINARY property inside ALT's account. **The
+property move is available.** The measurement ID does not change, so:
+
+- **no file in this repo needs to change**
+- **no deploy, no collection gap**
+- **`scripts/retag-analytics.sh` is NOT needed — close this branch unmerged**
+
+## Incidental config errors found (unrelated to the crosslink)
+
+1. **Stream `defaultUri` is `https://www.sastamps.com`** — the site is `www.sastamps.org`
+   (see `CNAME`). Wrong metadata; does not affect collection, which keys off the
+   measurement ID.
+2. **`timeZone: America/Los_Angeles`** on a San Antonio, Texas club property. Reporting
+   days are bucketed in Pacific time. Should be `America/Chicago`. Changing it is not
+   retroactive — it affects future data only.
+
+## Still requires the console
+
+- **Property access management** — whether Susan's grant is direct or inherited. Needs
+  `analytics.manage.users.readonly`, a more sensitive scope that was deliberately not
+  requested. A direct grant **travels with the property on a move**.
+- **Whether a GMP organization exists** — the v1beta `Account` resource exposes no
+  organization field.
+- **The move itself.** `Property.parent` is annotated Immutable; there is no move RPC in
+  v1beta or v1alpha. Google's docs state the Property-Moving UI is the only mechanism.
