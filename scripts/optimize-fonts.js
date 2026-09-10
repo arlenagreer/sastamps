@@ -126,13 +126,22 @@ async function updateHTMLWithFontOptimizations(filename) {
     const fontObserver = await generateFontFaceObserver();
 
     // Add font preload tags
-    content = content.replace('</head>', `    ${preloadTags}\n</head>`);
+    // NOTE: no literal leading "    " prefix here -- fontStyles/fontObserver
+    // below are template literals that already open with their own leading
+    // newline + indentation (see generateFontStyles():85, generateFontFaceObserver():31).
+    // A bare four-space prefix in front of that leading newline produced a
+    // blank line containing ONLY four trailing spaces, which is exactly the
+    // no-trailing-whitespace defect `npm run test:html` caught (18 errors,
+    // 3 per file, across these six root-level HTML files). These six files
+    // are this script's generated output -- test:html is what keeps them
+    // clean on every re-run of this script, not a one-time hand edit.
+    content = content.replace('</head>', `${preloadTags}\n</head>`);
 
     // Add font styles
-    content = content.replace('</head>', `    ${fontStyles}\n</head>`);
+    content = content.replace('</head>', `${fontStyles}\n</head>`);
 
     // Add font observer script
-    content = content.replace('</body>', `    ${fontObserver}\n</body>`);
+    content = content.replace('</body>', `${fontObserver}\n</body>`);
 
     // Update Google Fonts link to include display=swap
     content = content.replace(

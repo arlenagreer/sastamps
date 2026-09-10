@@ -24,7 +24,7 @@
     "test:links:server": "echo 'Starting server for link checking...' && npm run serve",
     "test:js": "eslint js/**/*.js",
     "test:css": "stylelint 'css/**/*.css' --config .stylelintrc.json",
-    "test:md": "markdownlint '**/*.md' --ignore node_modules --ignore browser-tools-test --ignore 'dist/**' --ignore '*.bak' --config .markdownlintrc.json",
+    "test:md": "markdownlint '**/*.md' --ignore node_modules --ignore browser-tools-test --ignore 'dist/**' --ignore '*.bak' --ignore 'graphify-out/**' --config .markdownlintrc.json",
     "test:a11y": "pa11y-ci --config .pa11yrc.json",
     "audit": "npm run audit:lighthouse && npm run audit:security",
     "audit:lighthouse": "lighthouse http://localhost:3000 --output html --output-path ./reports/lighthouse.html --view",
