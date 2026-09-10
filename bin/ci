@@ -67,6 +67,47 @@ else
   exit 3
 fi
 
+# ── Section 1b: dependencies are PRESENT -- also an exit-3 arm, not a failure ──
+#
+# Measured 2026-09-09, in a clean worktree at origin/main immediately after the
+# runner merged: with no node_modules every section below failed with
+# MODULE_NOT_FOUND and this runner reported "6 tests, 6 assertions, 6 failures"
+# -- i.e. "your code is broken" -- when the truth was "nothing could run".
+#
+# That is the same conflation the lockfile preflight above exists to prevent, and
+# the same shape as a verifier that returns 1 for both "its containers are down"
+# and "it found something". A false red is less dangerous than a false green, but
+# it is still a wrong answer, and it trains the reader to discount this runner.
+#
+# `npm ci --dry-run` above is a read-only SIMULATION -- it deliberately does not
+# install, so it passes happily with no node_modules present. This section is what
+# notices.
+#
+# It asserts rather than installing, matching the python3/pytest arm in
+# ulta_scraping's runner and D-10's "never a silent install": a gate that fetches
+# packages is no longer only verifying, and a 3-minute surprise install inside a
+# pre-push hook is its own failure mode.
+if [ ! -d node_modules ]; then
+  echo "bin/ci: node_modules is absent -- every section below would fail with" >&2
+  echo "bin/ci: MODULE_NOT_FOUND for reasons that have nothing to do with the code." >&2
+  echo "bin/ci: NOT VERIFIED. Run 'npm ci' and re-run; this runner will not install" >&2
+  echo "bin/ci: dependencies for you." >&2
+  exit 3
+fi
+
+# A node_modules directory that exists but is missing what the scripts require is
+# the same condition wearing a disguise -- a partial or interrupted install. ajv is
+# required by scripts/validate-data.js, the first section below.
+if ! node -e 'require.resolve("ajv")' >/dev/null 2>&1; then
+  echo "bin/ci: node_modules exists but 'ajv' does not resolve -- the install is" >&2
+  echo "bin/ci: incomplete, so the sections below would fail for the wrong reason." >&2
+  echo "bin/ci: NOT VERIFIED. Run 'npm ci' and re-run." >&2
+  exit 3
+fi
+
+echo "  ok -- node_modules present and resolvable"
+echo
+
 # ── Sections 2-7: the blocking set, zero exemptions ──────────────────────────
 #
 # Every section below is a real, content-based check with no tolerance for
