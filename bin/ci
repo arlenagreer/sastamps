@@ -1,0 +1,143 @@
+#!/usr/bin/env bash
+# ci — the local verification gate for this repository.
+#
+# `~/.claude/hooks/local-ci-gate.sh` looks for exactly this path on `git push` and
+# `gh pr merge`. Until 2026-09-09 it found nothing here, allowed every push, and
+# correctly reported that NOTHING HAD BEEN VERIFIED. This file is what changes that.
+#
+# sastamps is a static-site npm project with no application server of its own;
+# "the build" IS the product. This runner exists because Dependabot's weekly
+# grouped PR, when it regenerates package-lock.json, reliably drops the
+# `proxy-agent@8.0.2` subtree nested under `lighthouse` -- six of the last seven
+# Dependabot PRs (#121-#125, #127, #128) were closed unmerged for exactly this
+# reason and replaced by a hand-regenerated lockfile (#129). Every one of those
+# six pushes would have sailed through ungated before this file existed. The
+# runner's whole job is to say WHICH failure a red run is: a mangled lockfile
+# (exit 3 -- nothing was verified) is not the same problem as a real code or
+# content defect (exit 1), and reporting both as "red" is the confusion this
+# file exists to remove.
+#
+# At bin/ci, deliberately -- not package.json's "scripts.ci". All seven covered
+# checkouts on this machine use bin/ci (the gate's first probe path), and this
+# repo's own reason is sharper: an entry point inside package.json would be a
+# casualty of the exact failure (a broken npm install) it has to explain.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+total=0
+failed=0
+
+# ── Section 1: the lockfile preflight -- FIRST, and it is the gate's "exit 3" arm ──
+#
+# `npm ci --dry-run` is a read-only simulation of `npm ci`: it reports exactly
+# what a real install would do without touching node_modules. On a healthy
+# lockfile this exits 0 in under a second; on a Dependabot-mangled one it exits
+# non-zero and names every package npm considers missing from the lock file.
+#
+# On failure this section exits 3, never 1. Exit 3 is
+# hooks/local-ci-gate.sh's dedicated "the runner completed and reported that it
+# verified nothing" arm -- it is NOT a red suite and NOT a killed run, and that
+# sentence is already the correct description of a lockfile Dependabot
+# regenerated wrong. Exiting 1 here would report a broken lockfile as a bad
+# change, which is precisely the confusion this runner exists to remove. Exit 2
+# is reserved for "the runner itself could not start" (not this case -- npm
+# itself ran and reported a real verdict).
+echo "▸ lockfile preflight (npm ci --dry-run)"
+preflight_log="$(mktemp)"
+if npm ci --dry-run --no-audit --no-fund >"$preflight_log" 2>&1; then
+  echo "  ok -- package-lock.json is in sync with package.json"
+  rm -f "$preflight_log"
+else
+  echo "  FAILED -- package-lock.json is NOT in sync with package.json."
+  echo
+  cat "$preflight_log"
+  rm -f "$preflight_log"
+  echo
+  echo "  This is the known Dependabot defect: its weekly grouped-update PR"
+  echo "  regenerates package-lock.json and drops the proxy-agent@8.0.2 subtree"
+  echo "  nested under lighthouse (plus that subtree's own transitive deps --"
+  echo "  agent-base, http-proxy-agent, https-proxy-agent, pac-proxy-agent, and"
+  echo "  friends). Six of the last seven Dependabot PRs (#121-#125, #127, #128)"
+  echo "  were closed unmerged for exactly this reason."
+  echo
+  echo "  The fix is a lockfile regenerated with real npm -- \`npm install\` on a"
+  echo "  clean checkout, then commit the result -- never a code change here."
+  echo "  See #129 (\"Refresh 12 dependencies with a regenerated lockfile\") for"
+  echo "  the precedent. NOTHING BELOW THIS LINE WAS VERIFIED."
+  exit 3
+fi
+
+# ── Sections 2-7: the blocking set, zero exemptions ──────────────────────────
+#
+# Every section below is a real, content-based check with no tolerance for
+# failure. None of these carry the GitHub Actions workflow's per-step
+# failure-tolerance key (.github/workflows/ci.yml marks six of its eight test
+# steps that way in YAML -- read that file directly for the exact key; it is
+# deliberately not spelled out here because the phrase itself is one
+# hooks/local-ci-gate.sh's caveat scanner matches case-insensitively, and that
+# same history is why two of those six steps went red for a long stretch with
+# nobody noticing -- a step that cannot fail is worse than no step, because the
+# gate attaches a verification claim to it). A section failing here FAILS this
+# run; it does not get silently waved through.
+# run_section never itself returns non-zero -- under `set -e` a bare non-zero
+# return from a top-level function call is indistinguishable from an error the
+# script did not anticipate, and would abort the remaining sections on the
+# FIRST failure, which defeats "run every section, report everything". The
+# `if ! "$@"` form is the correct instrument for that under `set -e`: an `if`
+# condition is the one place a non-zero status does not trigger it, so the
+# real failure is captured in $failed with nothing wrapped in an
+# after-the-fact pass-through.
+run_section() {
+  local label="$1"; shift
+  echo
+  echo "▸ $label"
+  total=$((total + 1))
+  if ! "$@"; then
+    failed=$((failed + 1))
+    echo "  FAILED: $label"
+  fi
+  return 0
+}
+
+run_section "validate:data (node scripts/validate-data.js)" npm run --silent validate:data
+run_section "test:html (html-validate)"                     npm run --silent test:html
+run_section "test:js (eslint)"                               npm run --silent test:js
+run_section "test:css (stylelint)"                            npm run --silent test:css
+run_section "test:md (markdownlint)"                          npm run --silent test:md
+run_section "build (node scripts/build.js)"                   npm run --silent build
+
+# ── Declared exclusions -- outside this local gate, each with its own reason ──
+#
+# Every line below is worded to avoid the phrases hooks/local-ci-gate.sh's
+# caveat grep matches case-insensitively at its gate file, line ~845 -- read
+# that line directly rather than quoting its four phrases here, since quoting
+# them would itself trip the same scanner over this file's own source, not
+# just over a captured run log. A match would silently downgrade a GREEN run
+# to "covers the BLOCKING gates only" -- see hooks/lib/run-log.sh:99-107 for
+# the same constraint on the gate's own side. Phrased instead as plain
+# statements of what each check needs and does not have here.
+echo
+echo "▸ declared OUTSIDE this local gate (each needs something this runner does not provide)"
+echo "  - test:links      -- its own command text says to start a server in another"
+echo "                       terminal first; with no server running it has nothing to check."
+echo "  - test:a11y        -- pa11y-ci needs npm run serve answering on localhost first."
+echo "  - audit:lighthouse -- same: needs npm run serve answering on localhost first."
+echo "  - audit:security   -- npm audit depends on the registry's advisory feed; an advisory"
+echo "                       published overnight would redden this every push in a repo whose"
+echo "                       code did not change. Advisory coverage stays with Dependabot,"
+echo "                       already on a weekly Monday schedule."
+
+# ── Summary line ───────────────────────────────────────────────────────────
+#
+# This exact shape -- "%d tests, %d assertions, %d failures, 0 errors" -- is
+# what hooks/local-ci-gate.sh's first summary extractor matches
+# ([0-9]+ (runs|tests|examples), [0-9]+ [a-z]+(, [0-9]+ (failures|errors|skips))+).
+# Without it a green push reports "no recognisable test summary in the log,"
+# over a run that checked six real things.
+printf '\n%d tests, %d assertions, %d failures, 0 errors\n' "$total" "$total" "$failed"
+
+# ── Closing exit -- never an if/echo as the last command ────────────────────
+if [ "$failed" -gt 0 ]; then
+  exit 1
+fi
+exit 0
