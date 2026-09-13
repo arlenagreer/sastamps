@@ -46,3 +46,6 @@ tasks/
 
 # graphify knowledge-graph output (regenerable via /graphify)
 graphify-out/
+
+# Claude Code worktrees (local, regenerable)
+.claude/worktrees/
