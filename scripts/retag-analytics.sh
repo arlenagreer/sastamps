@@ -48,7 +48,13 @@ die() { echo "ERROR: $*" >&2; exit 1; }
 [ -n "$NEW_ID" ] || die "no new measurement ID given. Usage: $0 [--dry-run] G-XXXXXXXXXX"
 
 # A GA4 measurement ID is 'G-' followed by an alphanumeric token.
-echo "$NEW_ID" | grep -qE '^G-[A-Z0-9]{6,12}$' \
+# Match the WHOLE value with bash's own [[ =~ ]], not `grep`: grep tests line by
+# line, so a NEW_ID containing an embedded newline (e.g. a fat-fingered paste of a
+# sed program) passes as long as ONE line looks like an ID -- and that value is then
+# interpolated straight into the `sed 's/.../${NEW_ID}/g'` rewrite below, where the
+# extra lines run as sed commands. `[[ =~ ]]` anchors against the entire string, and
+# [A-Z0-9] cannot match a newline, so a multi-line value is rejected here.
+[[ "$NEW_ID" =~ ^G-[A-Z0-9]{6,12}$ ]] \
   || die "'$NEW_ID' is not a valid GA4 measurement ID (expected G- followed by 6-12 uppercase alphanumerics)"
 
 [ "$NEW_ID" != "$OLD_ID" ] || die "new ID is identical to the old one ($OLD_ID) — nothing to do"
