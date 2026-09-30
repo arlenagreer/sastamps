@@ -73,7 +73,8 @@ for (const rel of htmlFiles()) {
   const html = fs.readFileSync(path.join(root, rel), 'utf8');
   // The HTML parser ends a script element at the first </script, so this
   // non-greedy match extracts exactly what a browser would execute.
-  const re = /<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi;
+  // End tag may carry whitespace/attributes (`</script\t\n bar>`), which browsers accept.
+  const re = /<script\b([^>]*)>([\s\S]*?)<\/script\b[^>]*>/gi;
   let m;
   while ((m = re.exec(html))) {
     const attrs = m[1];
