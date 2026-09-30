@@ -146,6 +146,12 @@ run_section "test:js (eslint)"                               npm run --silent te
 run_section "test:css (stylelint)"                            npm run --silent test:css
 run_section "test:md (markdownlint)"                          npm run --silent test:md
 run_section "build (node scripts/build.js)"                   npm run --silent build
+# Runs AFTER the build on purpose: the build rewrites the HTML (critical CSS,
+# fix-html-validation, embedded search data), and the post-build HTML is what
+# the Pages deploy copies. html-validate and eslint (js/**) never parse the
+# JavaScript inside HTML pages, which is how an entity-escaped `&amp;&amp;` in
+# search.html's inline script broke site search in production unnoticed.
+run_section "test:inline-js (inline <script> blocks parse, post-build)" npm run --silent test:inline-js
 
 # ── Declared exclusions -- outside this local gate, each with its own reason ──
 #
@@ -174,7 +180,7 @@ echo "                       already on a weekly Monday schedule."
 # what hooks/local-ci-gate.sh's first summary extractor matches
 # ([0-9]+ (runs|tests|examples), [0-9]+ [a-z]+(, [0-9]+ (failures|errors|skips))+).
 # Without it a green push reports "no recognisable test summary in the log,"
-# over a run that checked six real things.
+# over a run that checked seven real things.
 printf '\n%d tests, %d assertions, %d failures, 0 errors\n' "$total" "$total" "$failed"
 
 # ── Closing exit -- never an if/echo as the last command ────────────────────
