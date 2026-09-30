@@ -47,10 +47,10 @@ DTSTART:20260123T183000
 DTEND:20260123T210000
 DTSTAMP:20260101T000000Z
 UID:sapa-2026-01-23@sastamps.org
-SUMMARY:Club Auction
-DESCRIPTION:Monthly club auction featuring member consignments and donated materials. Cash or check accepted for purchases. Guests welcome!
+SUMMARY:Stamp Bourse
+DESCRIPTION:Monthly bourse featuring dealer tables and opportunities for buying\, selling\, and trading stamps and covers. Dealer table rental: $10 for members\, $15 for non-members. Guests welcome!
 LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
-CATEGORIES:auction,buying,selling,consignment,guests-welcome
+CATEGORIES:bourse,dealers,trading,buying,selling,guests-welcome
 STATUS:CONFIRMED
 END:VEVENT
 
@@ -59,10 +59,10 @@ DTSTART:20260130T183000
 DTEND:20260130T210000
 DTSTAMP:20260101T000000Z
 UID:sapa-2026-01-30@sastamps.org
-SUMMARY:Stamp Bourse
-DESCRIPTION:Monthly bourse featuring dealer tables and opportunities for buying\, selling\, and trading stamps and covers. Dealer table rental: $10 for members\, $15 for non-members. Guests welcome!
+SUMMARY:Club Auction
+DESCRIPTION:Monthly club auction featuring member consignments and donated materials. Cash or check accepted for purchases. Guests welcome!
 LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
-CATEGORIES:bourse,dealers,trading,buying,selling,guests-welcome
+CATEGORIES:auction,buying,selling,consignment,guests-welcome
 STATUS:CONFIRMED
 END:VEVENT
 
