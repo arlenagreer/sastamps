@@ -150,3 +150,17 @@ Append-only memory for `/philatex-update`. The research and planning phases read
   - **Still open, separate fixes pending:** site search never renders results in production, because the inline script in `search.html` is HTML-escaped (`&amp;&amp;`); the meetings loader only knows two quarters, and `ci.yml` never deploys `js/`, so production shows the pages' hard-coded fallback blocks.
 - **Source:** review-panel / browser UAT
 - **Status:** logged
+
+### 2026-Q4 — Phase 14 live verification: PASS (2026-09-30, after #147 and #146 deployed)
+- **Observed:** On sastamps.org, in a fresh headless-browser context with cache-busted URLs:
+  - the homepage shows "SAPA PHILATEX – Fourth Quarter 2026", published October 1, 2026;
+  - the Q4 PDF returns 200 at 653,527 bytes, equal to `origin/main`;
+  - the Meetings page lists all 13 Q4 dates and the calendar widget renders;
+  - the quarterly `.ics` and all 13 individual `.ics` files return 200;
+  - the TSDA caption reads "for Q4 2026", all four Q4 announcement cards are present, and no Q3 text or "Honoring Steve Mabie" banner remains;
+  - there are 0 console errors on the homepage, newsletter and meetings pages.
+
+  Before #147 deployed, the live Meetings schedule was blank, because the bundle had switched to Q4 on about Sep 16 and no Q4 data existed.
+- **Source:** live verification
+- **Generalizable rule:** The Meetings bundle rolls to the next quarter 14 days before the quarter ends, so an edition should deploy by roughly the 15th of the quarter's last month or the live schedule goes empty. PR #149 makes an empty quarter fall back to the current one.
+- **Status:** logged
