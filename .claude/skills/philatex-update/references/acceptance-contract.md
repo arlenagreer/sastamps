@@ -6,7 +6,7 @@ The acceptance contract is the **RED** artifact of the skill's TDD methodology (
 
 ## Where it lives
 
-`.planning/reviews/{EDITION_ID}-acceptance-contract.md` (next to the proofreading report). It is a run artifact, not website source, and is not in the permitted-file scope — it is bookkeeping, like the review report.
+`$REVIEWS/{EDITION_ID}-acceptance-contract.md`: the **main checkout's** `.planning/reviews/`, next to the proofreading report and outside the run's worktree. It is a run artifact, not website source, and is not in the permitted-file scope. Only the orchestrator writes it (the scope-guard hook blocks the agent).
 
 ## Assertion shape
 
@@ -14,7 +14,9 @@ The acceptance contract is the **RED** artifact of the skill's TDD methodology (
 - **[A-id]** {statement} — source: {calendar-table | schema | plan | learnings | continuity} — check: {how to verify} — status: RED
 ```
 
-`status` flips to GREEN only when the check passes. A contract with any RED assertion at Phase 10 is a `block`.
+Every assertion is authored `status: RED`, and **the file is never edited to flip it**. Per-review GREEN/RED lives in the QC ledger's scoreboard. An assertion is GREEN only when the check passes. A RED assertion is a **blocker** in the QC loop (`qc-loop.md`), and Approve is never offered while one is open.
+
+**After freezing**, an assertion changes only by an operator ruling (on a contract dispute) or an operator correction. The rewritten line carries `source: operator-ruling` or `source: operator-correction`, keeps the original struck through beside it, and resets to `status: RED`. The fixer and the orchestrator never edit the contract on their own.
 
 ## Assertion categories (derive every applicable one)
 
@@ -24,8 +26,8 @@ The acceptance contract is the **RED** artifact of the skill's TDD methodology (
 4. **Continuity** — new meeting dates strictly after the last existing date in `meetings.json`; no duplicates; chronological.
 5. **ICS** — one individual `.ics` per meeting + one quarterly aggregate; UTC math correct for the quarter's DST regime; cancelled = 1-minute duration; UID/PRODID conventions per `data-contract.md` §C.
 6. **Provenance** — every below-high-confidence field carries `[UNVERIFIED]`.
-7. **Negative assertions** — what must NOT appear (e.g., "no picnic this quarter"; "no file modified outside permitted scope"). Negative assertions are where over-fit hides; derive them from the calendar, not from habit.
-8. **Automated green bar** — `build:js` exits 0; `build:search` + `build:search:embed` refresh the search index; `validate:data` (scoped to the new ids via `VALIDATE_NEW_IDS`) passes with 0 hard errors; `test:quick` passes.
+7. **Negative assertions** — what must NOT appear (e.g., "no picnic this quarter"; "no file modified outside permitted scope"). Negative assertions are where over-fit hides; derive them from the calendar, **including footnotes under the calendar table**, not from habit. Mark each one `negative: true`, so the review panel puts it through the ≥3-skeptic challenge.
+8. **Automated green bar** — `build:js` exits 0; `build:search` + `build:search:embed` refresh the search index; `validate:data` (scoped to the new ids via `VALIDATE_NEW_IDS`) passes with 0 hard errors; `test:quick` passes; `scripts/check-ics.mjs --edition {ID}` exits 0.
 
 ## Worked example — `2026-Q3`
 
@@ -67,14 +69,15 @@ Derived from the page-1 calendar (July/August/September 2026), schemas, and lear
 - **[P1]** every <high-confidence field carries [UNVERIFIED] (expect ≥2: M5, M9) — status: RED
 
 ## Negative
-- **[N1]** NO picnic this quarter (Q3 has none; the picnic is Q2) — source: calendar-table + learnings — status: RED
-- **[N2]** NO file modified outside permitted-file scope — status: RED
+- **[N1]** NO picnic this quarter (Q3 has none; the picnic is Q2) — source: calendar-table + learnings — negative: true — status: RED
+- **[N2]** NO file modified outside permitted-file scope (declared build outputs `search.html` and `dist/**` excepted) — negative: true — status: RED
 
 ## Green bar
 - **[G1]** npm run build:js exits 0 — status: RED
-- **[G2]** npm run test:quick passes — status: RED
+- **[G2]** npm run build:search && npm run build:search:embed succeed (search index refreshed + re-embedded) — status: RED
 - **[G3]** VALIDATE_NEW_IDS=<2026-Q3 + the 13 meeting ids> npm run validate:data exits 0 (0 hard errors) — status: RED
-- **[G4]** npm run build:search && npm run build:search:embed succeed (search index refreshed + re-embedded) — status: RED
+- **[G4]** npm run test:quick passes — status: RED
+- **[G5]** node .claude/skills/philatex-update/scripts/check-ics.mjs --edition 2026-Q3 --root "$WORKTREE" exits 0 (every .ics time recomputed from America/Chicago rules) — status: RED
 ```
 
 The extractor (Phase 8) must satisfy every assertion; the panel (Phase 9) flips each to GREEN only after independently checking it, and tries to refute the per-meeting and negative assertions against the source PDF. Promoted learnings (`self-improvement.md`) often become standing assertions reused every quarter (e.g. N1, M2/M6/M11's `bogStart`).

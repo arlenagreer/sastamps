@@ -2,14 +2,14 @@
 
 How the skill learns from each run so the next run is better. This runs as the final phase (SKILL.md Phase 13), after the human approves or rejects.
 
-**Core idea:** every run produces evidence (what the adversarial panel caught, what the human corrected in the fix-loop, what drifted in the PDF format). That evidence is *always* logged. It is *promoted* into the skill's own instructions only when it is recurring or human-confirmed — never on the strength of a single edition, and never without passing an over-fit critic. This mirrors the writing-skills Iron Law: no skill edit without a demonstrated, repeated failure.
+**Core idea:** every run produces evidence (what the QC loop caught and fixed, what the operator corrected or ruled at the checkpoint, what drifted in the PDF format). That evidence is *always* logged. It is *promoted* into the skill's own instructions only when it is recurring or human-confirmed — never on the strength of a single edition, and never without passing an over-fit critic. This mirrors the writing-skills Iron Law: no skill edit without a demonstrated, repeated failure.
 
 ## What counts as a learning
 
 Capture a learning when any of these occurred during the run:
 
 - The adversarial review panel confirmed a real finding (a `blocker`/`major` the extractor produced).
-- The human corrected something in the fix-and-retry loop (their correction is ground truth).
+- The operator corrected or ruled on something at the Phase 11 checkpoint (their correction is ground truth).
 - A high-risk fact was **contested** (majority-refuted) by the skeptic panel.
 - The PDF structure survey found a **format drift** from prior editions (new section, moved calendar, changed masthead).
 - A schema gap or enum-miss surfaced (a value the data needs but the schema rejects, or vice versa).
@@ -17,7 +17,7 @@ Capture a learning when any of these occurred during the run:
 
 ## The log: `references/learnings.md`
 
-Append-only. The research and planning phases (SKILL.md Phases 6–7) **read this file every run** and pass it to the research workflow and the extraction agent as context — that is what makes the skill self-improving rather than merely self-logging.
+Append-only. SKILL.md Phase 5 **loads this file every run**, and passes it to the research workflow (Phase 6) and the extraction agent (Phase 8) as context — that is what makes the skill self-improving rather than merely self-logging.
 
 Each entry uses this shape:
 
@@ -47,13 +47,13 @@ Only a `promote` verdict authorizes an edit.
 | One-off quirk, this edition only | Append to `learnings.md`, status `logged`. No skill edit. |
 | Recurring (≥2 editions), survives critic | Edit the target file. Update the entry's status to `promoted → {file:section}`. Surface the edit in the Phase 13 report. |
 | Human explicitly confirmed a new rule this run | Propose the concrete edit at the checkpoint; apply on human approval; status `promoted`. |
-| Recurring but critic says over-fit, or it touches a guardrail (permitted-file scope, duplicate check, human checkpoint, atomic commit/revert) | Do **not** auto-edit. Status `proposed`; surface for explicit human decision. |
+| Recurring but critic says over-fit, or it touches a guardrail (permitted-file scope, duplicate check, human checkpoint, atomic commit/revert, QC cap/stop conditions, no-publish-with-blockers, frozen contract, worktree rule, verify-before-announce) | Do **not** auto-edit. Status `proposed`; surface for explicit human decision. |
 
-**Guardrails are never self-edited.** The duplicate-check gate, permitted-file scope, mandatory human checkpoint, and atomic commit/revert rules in SKILL.md change only by direct human instruction, regardless of evidence.
+**Guardrails are never self-edited.** The duplicate-check gate, permitted-file scope, mandatory human checkpoint, atomic commit/revert, the QC loop's fix-round cap and stop conditions, the no-publish-with-blockers rule, the frozen-contract rule (1a), the worktree rule and the verify-before-announce rule in SKILL.md change only by direct human instruction, regardless of evidence.
 
 ## What the orchestrator does in Phase 13
 
-1. Gather evidence: the synthesized review report, the human's fix-loop corrections, contested facts, and the PDF structure-survey drift notes.
+1. Gather evidence: the QC ledger (`.planning/reviews/{EDITION_ID}-qc-ledger.md`: items fixed, disputed, oscillating or regressed), the final review report, the human's corrections and contract rulings, contested facts, and the PDF structure-survey drift notes.
 2. Use `mcp__sequential-thinking__sequentialthinking` to separate durable rules from one-off quirks.
 3. Append every item to `references/learnings.md` (always).
 4. For items meeting the promotion bar, run the over-fit critic; apply `promote` verdicts to the target file. **Prefer encoding a promoted rule as a standing acceptance-contract assertion** (in `acceptance-contract.md`, reused every quarter) whenever it is checkable — a learning expressed as a recurring RED→GREEN test is enforced automatically next run, not just documented. Non-checkable lessons go to the prose targets (data-contract, agent, roster).
