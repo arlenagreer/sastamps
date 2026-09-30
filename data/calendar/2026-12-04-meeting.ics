@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//San Antonio Philatelic Association//SAPA Meetings//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:20261204T193000Z-sapa@sastamps.org
+DTSTAMP:20261001T000000Z
+DTSTART:20261205T013000Z
+DTEND:20261205T030000Z
+SUMMARY:SAPA Meeting - BOG and Show & Tell + Blue-Chip Auction Lot Viewing
+DESCRIPTION:San Antonio Philatelic Association meeting featuring Board of Governors meeting (7:15 PM) and Show & Tell session (7:30 PM)\, plus Blue-Chip Auction Lot Viewing ahead of the December 11 SAPA Blue-Chip Auction. Doors open at 6:30 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting
+END:VEVENT
+END:VCALENDAR

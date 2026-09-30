@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//San Antonio Philatelic Association//SAPA Meetings//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:20261009T193000Z-sapa@sastamps.org
+DTSTAMP:20261001T000000Z
+DTSTART:20261010T003000Z
+DTEND:20261010T020000Z
+SUMMARY:SAPA Stamp Program: Expertising Philatelics (Jimmy Tomchesson)
+DESCRIPTION:Jimmy Tomchesson of Philatelic Stamp Authentication and Grading (PSAG) presents 'Expertising Philatelics': how stamps are expertised\, which stamps should be expertised\, and why. Held after the first day of the San Antonio TSDA Stamp Show (October 9-10). Visitors welcome! Doors open at 6:30 PM\, meeting begins at 7:30 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting
+END:VEVENT
+END:VCALENDAR

@@ -3409,12 +3409,618 @@
       },
       "cancelled": false,
       "tags": ["bourse", "dealers", "trading", "buying", "selling", "guests-welcome"]
+    },
+    {
+      "id": "2026-10-02",
+      "date": "2026-10-02",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "bogStart": "7:15 PM",
+        "meetingStart": "7:30 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "business",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "topic": "Show and Tell",
+      "description": "Monthly Board of Governors meeting followed by member show and tell presentations. Guests welcome!",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, social time"
+        },
+        {
+          "time": "7:15 PM",
+          "item": "Board of Governors meeting",
+          "presenter": "Board Members"
+        },
+        {
+          "time": "7:30 PM",
+          "item": "Show and Tell presentations",
+          "presenter": "Members"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Meeting adjournment"
+        }
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false,
+        "bringItems": ["Items for show and tell"]
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bog", "business", "show-and-tell", "guests-welcome"]
+    },
+    {
+      "id": "2026-10-09",
+      "date": "2026-10-09",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:30 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "regular",
+      "title": "Stamp Program: Expertising Philatelics",
+      "presenter": {
+        "name": "Jimmy Tomchesson",
+        "title": "Philatelic Stamp Authentication and Grading (PSAG)"
+      },
+      "topic": "Expertising Philatelics",
+      "description": "Jimmy Tomchesson of Philatelic Stamp Authentication and Grading (PSAG), a firm specializing in expertising and grading stamps, presents 'Expertising Philatelics': how stamps are expertised, which stamps should be expertised, and why. Held the evening of October 9, after the first day of the San Antonio TSDA Stamp Show (October 9-10). Visitors welcome!",
+      "specialNotes": [
+        "The San Antonio TSDA Stamp Show runs October 9-10 at the Norris Conference Center, 618 Northwest Freeway Loop 410 (Friday 10-5, Saturday 9-4)",
+        "Visitors welcome!"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["stamp-program", "expertising", "guests-welcome"]
+    },
+    {
+      "id": "2026-10-16",
+      "date": "2026-10-16",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:30 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "auction",
+      "title": "Club Auction",
+      "topic": "Monthly stamp auction",
+      "description": "Monthly club auction featuring member consignments and donated materials. Visitors welcome!",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, lot viewing"
+        },
+        {
+          "time": "7:30 PM",
+          "item": "Auction begins"
+        },
+        {
+          "time": "8:45 PM",
+          "item": "Auction conclusion and checkout"
+        }
+      ],
+      "specialNotes": [
+        "Cash or check accepted for purchases",
+        "Bring lots for consignment (10% commission)",
+        "Visitors welcome!"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["auction", "buying", "selling", "consignment", "guests-welcome"]
+    },
+    {
+      "id": "2026-10-23",
+      "date": "2026-10-23",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:30 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "social",
+      "title": "Stamp Bourse",
+      "topic": "Dealer tables and stamp trading",
+      "description": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers. Visitors welcome!",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, dealer setup"
+        },
+        {
+          "time": "7:30 PM",
+          "item": "Bourse officially opens"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Cleanup and departure"
+        }
+      ],
+      "specialNotes": [
+        "Dealer table rental: $10 for members, $15 for non-members",
+        "Contact secretary to reserve tables",
+        "Visitors welcome!"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bourse", "dealers", "trading", "buying", "selling", "guests-welcome"]
+    },
+    {
+      "id": "2026-10-30",
+      "date": "2026-10-30",
+      "time": {
+        "doorsOpen": "N/A",
+        "meetingStart": "N/A",
+        "meetingEnd": "N/A"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "holiday",
+      "title": "No Meeting - Halloween",
+      "description": "No meeting scheduled due to Halloween holiday.",
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": true,
+      "tags": ["holiday", "halloween"]
+    },
+    {
+      "id": "2026-11-06",
+      "date": "2026-11-06",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "bogStart": "7:15 PM",
+        "meetingStart": "7:30 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "business",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "topic": "Show and Tell",
+      "description": "Monthly Board of Governors meeting followed by member show and tell presentations. Guests welcome!",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, social time"
+        },
+        {
+          "time": "7:15 PM",
+          "item": "Board of Governors meeting",
+          "presenter": "Board Members"
+        },
+        {
+          "time": "7:30 PM",
+          "item": "Show and Tell presentations",
+          "presenter": "Members"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Meeting adjournment"
+        }
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false,
+        "bringItems": ["Items for show and tell"]
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bog", "business", "show-and-tell", "guests-welcome"]
+    },
+    {
+      "id": "2026-11-13",
+      "date": "2026-11-13",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:30 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "auction",
+      "title": "Club Auction",
+      "topic": "Monthly stamp auction",
+      "description": "Monthly club auction featuring member consignments and donated materials. Visitors welcome!",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, lot viewing"
+        },
+        {
+          "time": "7:30 PM",
+          "item": "Auction begins"
+        },
+        {
+          "time": "8:45 PM",
+          "item": "Auction conclusion and checkout"
+        }
+      ],
+      "specialNotes": [
+        "Cash or check accepted for purchases",
+        "Bring lots for consignment (10% commission)",
+        "Visitors welcome!"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["auction", "buying", "selling", "consignment", "guests-welcome"]
+    },
+    {
+      "id": "2026-11-20",
+      "date": "2026-11-20",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:30 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "social",
+      "title": "Stamp Bourse & Blue-Chip Auction Lot Viewing/Verification",
+      "topic": "Dealer tables and stamp trading; Blue-Chip Auction lot viewing and verification",
+      "description": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers, plus Blue-Chip Auction Lot Viewing and Blue-Chip Auction Lot Verification ahead of the December 11 SAPA Blue-Chip Auction. All lots submitted before November 20 will be reviewed by a panel of experts who will verify the lot description and the catalog value. Visitors welcome!",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, dealer setup"
+        },
+        {
+          "time": "7:30 PM",
+          "item": "Bourse officially opens; Blue-Chip Auction lots on display"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Cleanup and departure"
+        }
+      ],
+      "specialNotes": [
+        "Blue-Chip Auction Lot Viewing",
+        "Blue-Chip Auction Lot Verification: lots submitted before November 20 are verified by a panel of SAPA experts; lots submitted after November 20 will not be verified",
+        "Dealer table rental: $10 for members, $15 for non-members",
+        "Contact secretary to reserve tables",
+        "Visitors welcome!"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bourse", "dealers", "trading", "buying", "selling", "blue-chip-auction", "guests-welcome"]
+    },
+    {
+      "id": "2026-11-27",
+      "date": "2026-11-27",
+      "time": {
+        "doorsOpen": "N/A",
+        "meetingStart": "N/A",
+        "meetingEnd": "N/A"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "holiday",
+      "title": "No Meeting - Thanksgiving",
+      "description": "No meeting scheduled due to Thanksgiving holiday.",
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": true,
+      "tags": ["holiday", "thanksgiving"]
+    },
+    {
+      "id": "2026-12-04",
+      "date": "2026-12-04",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "bogStart": "7:15 PM",
+        "meetingStart": "7:30 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "business",
+      "title": "Board of Governors Meeting & Show and Tell + Blue-Chip Auction Lot Viewing",
+      "topic": "Show and Tell",
+      "description": "Monthly Board of Governors meeting followed by member show and tell presentations, plus Blue-Chip Auction Lot Viewing ahead of the December 11 SAPA Blue-Chip Auction. Guests welcome!",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open, social time, Blue-Chip Auction lot viewing"
+        },
+        {
+          "time": "7:15 PM",
+          "item": "Board of Governors meeting",
+          "presenter": "Board Members"
+        },
+        {
+          "time": "7:30 PM",
+          "item": "Show and Tell presentations",
+          "presenter": "Members"
+        },
+        {
+          "time": "9:00 PM",
+          "item": "Meeting adjournment"
+        }
+      ],
+      "specialNotes": [
+        "Blue-Chip Auction Lot Viewing: lots for the December 11 SAPA Blue-Chip Auction will be on display"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false,
+        "bringItems": ["Items for show and tell"]
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["bog", "business", "show-and-tell", "blue-chip-auction", "guests-welcome"]
+    },
+    {
+      "id": "2026-12-11",
+      "date": "2026-12-11",
+      "time": {
+        "doorsOpen": "6:30 PM",
+        "meetingStart": "7:30 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "auction",
+      "title": "SAPA Blue-Chip Auction",
+      "topic": "Annual Blue-Chip Auction",
+      "description": "SAPA's annual Blue-Chip Auction. Blue-Chip lots must have a catalog value of at least $20, although the opening bid on a lot may be lower than $20. Each lot containing stamps must include the Scott (or other recognized) catalog number, the catalog value, and the year of the catalog used to determine the value, and the condition of the stamp(s) must be described. Lots submitted before November 20 are reviewed by a panel of experts who verify the lot description and catalog value; lots submitted after November 20, including on the day of the auction, are not verified by SAPA experts.",
+      "agenda": [
+        {
+          "time": "6:30 PM",
+          "item": "Doors open"
+        },
+        {
+          "time": "7:30 PM",
+          "item": "Blue-Chip Auction begins"
+        }
+      ],
+      "specialNotes": [
+        "Minimum catalog value of $20 per lot (the opening bid may be lower than $20)",
+        "Each lot containing stamps must list the Scott (or other recognized) catalog number, the catalog value, and the catalog year used",
+        "Condition must be described (hinged, used, never hinged, regummed, etc.)",
+        "A list of the lots will be sent to all SAPA members and several dealers before the auction night",
+        "Lots on display at the November 20 and December 4 meetings",
+        "Lots submitted after November 20, including on auction night, will not be verified by SAPA experts"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["auction", "blue-chip-auction", "annual", "buying", "selling"]
+    },
+    {
+      "id": "2026-12-18",
+      "date": "2026-12-18",
+      "time": {
+        "doorsOpen": "6:00 PM",
+        "meetingStart": "6:00 PM",
+        "meetingEnd": "9:00 PM"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "special",
+      "title": "Club Holiday Party",
+      "topic": "Annual SAPA Holiday Party",
+      "description": "The annual SAPA Holiday Party, starting at 6:00 PM in the meeting room. SAPA will provide barbecue (brisket and turkey). Please bring a side dish or a dessert to share if you are able.",
+      "specialNotes": [
+        "Starts at 6:00 PM, earlier than regular meetings",
+        "SAPA provides barbecue (brisket and turkey)",
+        "Please bring a side dish or a dessert to share if you are able"
+      ],
+      "requirements": {
+        "rsvpRequired": false,
+        "membershipRequired": false,
+        "bringItems": ["Side dish or dessert to share (if you are able)"]
+      },
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": false,
+      "tags": ["party", "social", "annual", "barbecue"]
+    },
+    {
+      "id": "2026-12-25",
+      "date": "2026-12-25",
+      "time": {
+        "doorsOpen": "N/A",
+        "meetingStart": "N/A",
+        "meetingEnd": "N/A"
+      },
+      "location": {
+        "name": "MacArthur Park Lutheran Church",
+        "building": "Building 1",
+        "room": "Fellowship Hall",
+        "address": {
+          "street": "2903 Nacogdoches Road",
+          "city": "San Antonio",
+          "state": "TX",
+          "zipCode": "78217"
+        }
+      },
+      "type": "holiday",
+      "title": "No Meeting - Christmas",
+      "description": "No meeting scheduled due to Christmas holiday.",
+      "contact": {
+        "name": "SAPA Secretary",
+        "email": "loz33@hotmail.com"
+      },
+      "cancelled": true,
+      "tags": ["holiday", "christmas"]
     }
   ],
   "metadata": {
-    "lastUpdated": "2026-07-01T00:00:00.000Z",
-    "totalMeetings": 66,
-    "upcomingMeetings": 12,
+    "lastUpdated": "2026-10-01T00:00:00.000Z",
+    "totalMeetings": 79,
+    "upcomingMeetings": 10,
     "version": "1.0",
     "defaultLocation": {
       "name": "MacArthur Park Lutheran Church",

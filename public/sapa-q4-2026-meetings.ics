@@ -1,0 +1,165 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//San Antonio Philatelic Association//SAPA Meeting Calendar//EN
+CALSCALE:GREGORIAN
+X-WR-CALNAME:SAPA Q4 2026 Meetings
+X-WR-TIMEZONE:America/Chicago
+X-WR-CALDESC:San Antonio Philatelic Association Fourth Quarter 2026 Meeting Schedule
+
+BEGIN:VEVENT
+DTSTART:20261002T183000
+DTEND:20261002T210000
+DTSTAMP:20261001T000000Z
+UID:sapa-2026-10-02@sastamps.org
+SUMMARY:Board of Governors Meeting & Show and Tell
+DESCRIPTION:Monthly Board of Governors meeting followed by member show and tell presentations. Guests welcome!
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:business,show-and-tell,board-meeting,guests-welcome
+STATUS:CONFIRMED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20261009T183000
+DTEND:20261009T210000
+DTSTAMP:20261001T000000Z
+UID:sapa-2026-10-09@sastamps.org
+SUMMARY:Stamp Program: Expertising Philatelics (Jimmy Tomchesson)
+DESCRIPTION:Jimmy Tomchesson of Philatelic Stamp Authentication and Grading (PSAG) presents 'Expertising Philatelics': how stamps are expertised\, which stamps should be expertised\, and why. Held after the first day of the San Antonio TSDA Stamp Show (October 9-10). Visitors welcome!
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:stamp-program,presentation,expertising,guests-welcome
+STATUS:CONFIRMED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20261016T183000
+DTEND:20261016T210000
+DTSTAMP:20261001T000000Z
+UID:sapa-2026-10-16@sastamps.org
+SUMMARY:Club Auction
+DESCRIPTION:Monthly club auction featuring member consignments and donated materials. Cash or check accepted for purchases. Visitors welcome!
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:auction,buying,selling,consignment,guests-welcome
+STATUS:CONFIRMED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20261023T183000
+DTEND:20261023T210000
+DTSTAMP:20261001T000000Z
+UID:sapa-2026-10-23@sastamps.org
+SUMMARY:Stamp Bourse
+DESCRIPTION:Monthly bourse featuring dealer tables and opportunities for buying\, selling\, and trading stamps and covers. Visitors welcome!
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:bourse,dealers,trading,buying,selling,guests-welcome
+STATUS:CONFIRMED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20261030T183000
+DTEND:20261030T183100
+DTSTAMP:20261001T000000Z
+UID:sapa-2026-10-30@sastamps.org
+SUMMARY:NO MEETING - Halloween
+DESCRIPTION:No meeting scheduled due to Halloween holiday. Next meeting: November 6\, 2026.
+LOCATION:Meeting Cancelled
+CATEGORIES:cancelled,holiday,halloween
+STATUS:CANCELLED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20261106T183000
+DTEND:20261106T210000
+DTSTAMP:20261001T000000Z
+UID:sapa-2026-11-06@sastamps.org
+SUMMARY:Board of Governors Meeting & Show and Tell
+DESCRIPTION:Monthly Board of Governors meeting followed by member show and tell presentations. Guests welcome!
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:business,show-and-tell,board-meeting,guests-welcome
+STATUS:CONFIRMED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20261113T183000
+DTEND:20261113T210000
+DTSTAMP:20261001T000000Z
+UID:sapa-2026-11-13@sastamps.org
+SUMMARY:Club Auction
+DESCRIPTION:Monthly club auction featuring member consignments and donated materials. Cash or check accepted for purchases. Visitors welcome!
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:auction,buying,selling,consignment,guests-welcome
+STATUS:CONFIRMED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20261120T183000
+DTEND:20261120T210000
+DTSTAMP:20261001T000000Z
+UID:sapa-2026-11-20@sastamps.org
+SUMMARY:Stamp Bourse & Blue-Chip Auction Lot Viewing/Verification
+DESCRIPTION:Monthly bourse featuring dealer tables and opportunities for buying\, selling\, and trading stamps and covers\, plus Blue-Chip Auction Lot Viewing and Lot Verification ahead of the December 11 SAPA Blue-Chip Auction. Lots submitted before November 20 are verified by a panel of SAPA experts. Visitors welcome!
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:bourse,dealers,trading,buying,selling,blue-chip-auction,guests-welcome
+STATUS:CONFIRMED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20261127T183000
+DTEND:20261127T183100
+DTSTAMP:20261001T000000Z
+UID:sapa-2026-11-27@sastamps.org
+SUMMARY:NO MEETING - Thanksgiving
+DESCRIPTION:No meeting scheduled due to Thanksgiving holiday. Next meeting: December 4\, 2026.
+LOCATION:Meeting Cancelled
+CATEGORIES:cancelled,holiday,thanksgiving
+STATUS:CANCELLED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20261204T183000
+DTEND:20261204T210000
+DTSTAMP:20261001T000000Z
+UID:sapa-2026-12-04@sastamps.org
+SUMMARY:Board of Governors Meeting & Show and Tell + Blue-Chip Auction Lot Viewing
+DESCRIPTION:Monthly Board of Governors meeting followed by member show and tell presentations\, plus Blue-Chip Auction Lot Viewing ahead of the December 11 SAPA Blue-Chip Auction. Guests welcome!
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:business,show-and-tell,board-meeting,blue-chip-auction,guests-welcome
+STATUS:CONFIRMED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20261211T183000
+DTEND:20261211T210000
+DTSTAMP:20261001T000000Z
+UID:sapa-2026-12-11@sastamps.org
+SUMMARY:SAPA Blue-Chip Auction
+DESCRIPTION:SAPA's annual Blue-Chip Auction. Lots must have a catalog value of at least $20 (the opening bid may be lower). Each lot containing stamps must include the Scott (or other recognized) catalog number\, catalog value\, and catalog year\, and the condition must be described. Lots submitted before November 20 are verified by a panel of experts\; later lots\, including those submitted on auction night\, are not verified.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:auction,blue-chip-auction,annual,buying,selling
+STATUS:CONFIRMED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20261218T180000
+DTEND:20261218T210000
+DTSTAMP:20261001T000000Z
+UID:sapa-2026-12-18@sastamps.org
+SUMMARY:Club Holiday Party
+DESCRIPTION:The annual SAPA Holiday Party in the meeting room\, starting at 6:00 PM. SAPA will provide barbecue (brisket and turkey). Please bring a side dish or a dessert to share if you are able.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:party,social,annual
+STATUS:CONFIRMED
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20261225T183000
+DTEND:20261225T183100
+DTSTAMP:20261001T000000Z
+UID:sapa-2026-12-25@sastamps.org
+SUMMARY:NO MEETING - Christmas
+DESCRIPTION:No meeting scheduled due to Christmas holiday.
+LOCATION:Meeting Cancelled
+CATEGORIES:cancelled,holiday,christmas
+STATUS:CANCELLED
+END:VEVENT
+
+END:VCALENDAR
