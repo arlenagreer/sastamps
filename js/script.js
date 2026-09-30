@@ -7,6 +7,7 @@ import { ErrorBoundary } from './error-boundary.js';
 import { calendarLazyLoader } from './lazy-loader.js';
 import { safeLocalStorageGet, safeLocalStorageSet, safeQuerySelector, escapeHTML } from './utils/safe-dom.js';
 import { createLogger } from './utils/logger.js';
+import { retireServiceWorkers } from './utils/service-worker.js';
 
 // Create logger for this module
 const logger = createLogger('Script');
@@ -628,29 +629,8 @@ function setActiveNavLink() {
 // Call this function to highlight the current page in navigation
 setActiveNavLink();
 
-// Service Worker Registration
-if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
-  window.addEventListener('load', () => {
-    try {
-      navigator.serviceWorker.register('/sw.js')
-        .then(() => {
-          // ServiceWorker registration successful
-        })
-        .catch(err => {
-          logger.warn('ServiceWorker registration failed:', err);
-          // Service worker failure shouldn't break the app
-        });
-    } catch (error) {
-      logger.warn('ServiceWorker registration error:', error);
-    }
-  });
-} else {
-  if ('serviceWorker' in navigator) {
-    logger.info('ServiceWorker not supported on file:// protocol');
-  } else {
-    logger.info('ServiceWorker not supported in this browser');
-  }
-}
+// The site registers no service worker; remove any stale one (see utils/service-worker.js)
+retireServiceWorkers();
 
 /**
  * Theme Toggle Functionality

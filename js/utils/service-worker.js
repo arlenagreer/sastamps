@@ -1,46 +1,41 @@
 /**
- * Service Worker Registration Utilities
- * Tree-shakable service worker management
+ * Service Worker Utilities
+ * The site registers no service worker; see retireServiceWorkers().
  */
 
-import { TIMING, CSS_CLASSES as _CSS_CLASSES } from '../constants/index.js';
 import { createLogger } from './logger.js';
 
 const logger = createLogger('ServiceWorker');
 
 /**
- * Register service worker if supported
- * @returns {Promise<ServiceWorkerRegistration|null>} Registration or null
+ * Retire any service worker previously registered for this origin.
+ *
+ * The site deliberately does NOT register a service worker. The sw.js kept in
+ * the repo is cache-first with a fixed cache name ('sapa-cache-v1') and
+ * precaches every main page, so a visitor who ever installed it would keep
+ * seeing stale pages after each quarterly content update. sw.js is not
+ * deployed; this one-time cleanup unregisters any worker a browser may still
+ * hold and deletes its 'sapa-' caches. Harmless (a no-op) when none exist.
+ * @returns {Promise<number>} Number of registrations removed
  */
-export async function registerServiceWorker() {
-  if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
-    try {
-
-      const registration = await navigator.serviceWorker.register('/sw.js', {
-        scope: '/'
-      });
-
-
-      registration.addEventListener('updatefound', () => {
-        const newWorker = registration.installing;
-        if (newWorker) {
-          newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              showUpdateNotification();
-            }
-          });
-        }
-      });
-
-      return registration;
-
-    } catch (error) {
-      logger.warn('Service worker registration failed:', error);
-      return null;
+export async function retireServiceWorkers() {
+  let removed = 0;
+  try {
+    if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator &&
+        typeof navigator.serviceWorker.getRegistrations === 'function') {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      for (const registration of registrations) {
+        if (await registration.unregister()) {removed++;}
+      }
     }
-  } else {
-    return null;
+    if (typeof caches !== 'undefined') {
+      const keys = await caches.keys();
+      await Promise.all(keys.filter(k => k.startsWith('sapa-')).map(k => caches.delete(k)));
+    }
+  } catch (error) {
+    logger.warn('Service worker cleanup failed:', error);
   }
+  return removed;
 }
 
 /**
@@ -69,35 +64,4 @@ export async function unregisterServiceWorker() {
 export function isServiceWorkerActive() {
   return 'serviceWorker' in navigator &&
            navigator.serviceWorker.controller !== null;
-}
-
-/**
- * Show update notification when new version available
- */
-function showUpdateNotification() {
-  const notification = document.createElement('div');
-  notification.className = 'update-notification';
-  notification.innerHTML = `
-        <div class="update-content">
-            <p>A new version of the site is available!</p>
-            <button class="btn-update">Update Now</button>
-            <button class="btn-dismiss">Dismiss</button>
-        </div>
-    `;
-
-  document.body.appendChild(notification);
-
-  notification.querySelector('.btn-update').addEventListener('click', () => {
-    window.location.reload();
-  });
-
-  notification.querySelector('.btn-dismiss').addEventListener('click', () => {
-    notification.remove();
-  });
-
-  setTimeout(() => {
-    if (notification.parentNode) {
-      notification.remove();
-    }
-  }, TIMING.SERVICE_WORKER_UPDATE_DISMISS);
 }
