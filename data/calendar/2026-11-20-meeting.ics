@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//San Antonio Philatelic Association//SAPA Meetings//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:20261120T193000Z-sapa@sastamps.org
+DTSTAMP:20261001T000000Z
+DTSTART:20261121T013000Z
+DTEND:20261121T030000Z
+SUMMARY:SAPA Stamp Bourse & Blue-Chip Auction Lot Viewing/Verification
+DESCRIPTION:Monthly bourse featuring dealer tables and opportunities for buying\, selling\, and trading stamps and covers\, plus Blue-Chip Auction Lot Viewing and Lot Verification ahead of the December 11 SAPA Blue-Chip Auction. Lots submitted before November 20 are verified by a panel of SAPA experts. Visitors welcome! Doors open at 6:30 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting
+END:VEVENT
+END:VCALENDAR
