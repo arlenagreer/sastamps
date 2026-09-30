@@ -42,11 +42,13 @@ Quick-reference card for the extraction agent and reviewers. For full field defi
 - **Event time anchoring — the two formats differ (this was a real bug):**
   - **Individual files = UTC (`Z`):** `DTSTART` = `meetingStart`, `DTEND` = `meetingEnd`, +5h CDT→UTC (roll to next UTC day past midnight). Standard 7:30→9:00 PM = `…T003000Z`/`…T020000Z` next day. Picnic 6:00→8:30 PM = same-day `T230000Z` / next-day `T013000Z`. **NOT doorsOpen.**
   - **Quarterly file = local/floating (no `Z`):** `DTSTART` = `doorsOpen` (6:30 PM standard → `T183000`), `DTEND` = `meetingEnd` (`T210000`). Picnic anchors meetingStart `T180000`→`T203000`.
-- **Cancelled/holiday:** `STATUS:CANCELLED`, `LOCATION:Meeting Cancelled`; fixed 1-minute placeholder — individual `…T183000Z`→`…T183100Z`, quarterly `…T183000`→`…T183100`.
+- **Cancelled — two shapes (G5 checks both):**
+  - **`type: holiday`** (cancelled when the newsletter was published): `STATUS:CANCELLED`, `LOCATION:Meeting Cancelled`, a fixed 1-minute placeholder. Individual `…T183000Z`→`…T183100Z`; quarterly `…T183000`→`…T183100`. `DTSTAMP` is the quarter's first day.
+  - **Any other type with `cancelled: true`** (cancelled after publication, e.g. 2026-04-24 or an operator correction): keep the type and the real times, and set `STATUS:CANCELLED`. `DTSTAMP` may be the date of the change.
 - **Line endings:** existing `.ics` files use **LF**, not CRLF — match them.
 - **Escaping:** commas as `\,` in LOCATION/DESCRIPTION (also `\;` `\\` `\n` if present).
-- **DST:** CDT (UTC-5) runs 2nd Sunday of March → 1st Sunday of November. All Q2/Q3 dates are CDT; Q1/Q4 can straddle — resolve per-meeting against an existing CST reference file.
-- **Safest practice:** model each new file on the newest same-type template `.ics`.
+- **DST:** CDT (UTC-5) runs 2nd Sunday of March → 1st Sunday of November. All Q2/Q3 dates are CDT; Q1/Q4 can straddle. Compute each meeting's UTC offset from its **own date** (America/Chicago). **Never copy a template's offset:** the newest templates are CDT-era, and **the 2026 Q1 files dated before Mar 8 are themselves wrong** (built with the CDT offset, one hour early), so they are not a CST reference. Gate G5 (`scripts/check-ics.mjs`) recomputes every time and is the authority.
+- **Safest practice:** model each new file's *structure* on the newest same-type template `.ics`, and take its *times* from the time-zone computation.
 
 ## D. PDF Naming Convention
 
@@ -61,4 +63,7 @@ Run all of these after changing `meetings.json` / `newsletters.json`; they are t
 - **`build:js`** — rebuild JS bundles. NOTE: contrary to older docs, meeting/newsletter JSON is **fetched at runtime** (`js/calendar-adapter.js`, `js/modules/meeting-loader.js`), NOT embedded by esbuild. So `build:js` does not actually refresh the data — run it for parity, but the real freshness path is the deployed JSON + the search index below.
 - **`build:search` + `build:search:embed`** — rebuild the lunr index (indexes `newsletters[]` and `meetings[]`) and re-embed it into `search.html`. Skipping this leaves site search stale for the new content. lunr build/load versions must match (2.3.9).
 - **`validate:data`** (with `VALIDATE_NEW_IDS=<new ids>`) — ajv-validates the new entries against `data/schemas/*.schema.json`. Known-convention warnings (`time.bogStart`, `"N/A"` times on cancelled meetings) are tolerated; any other violation on a new entry fails.
+- **`scripts/check-ics.mjs --edition {ID}`** (G5): recomputes every individual (UTC) and quarterly (local) `.ics` time from `meetings.json` and the America/Chicago rules, and checks UID, DTSTAMP, STATUS, the cancelled placeholder and LF endings. Exit 0 required.
 - `dist/bundle-analysis.json` carries a `buildDate` that changes every build; expect it modified but only re-commit when bundle contents/list actually change.
+- **Build outputs vs. scope.** `build:search:embed` rewrites `search.html`, and the builds rewrite `dist/**`. They are declared build outputs: not out of scope, snapshotted with the permitted files, and committed with the update.
+- **`bin/ci` rewrites the edited HTML.** The local CI gate runs the full `npm run build`, which rewrites `index.html`, `meetings.html` and the other pages. Run it only between a snapshot and a restore (SKILL.md Phase 10), or it silently changes the content being committed.

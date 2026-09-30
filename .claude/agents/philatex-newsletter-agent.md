@@ -3,6 +3,12 @@ name: philatex-newsletter-agent
 description: Reads a Philatex newsletter PDF, extracts structured content, validates against schemas, generates a proofreading report, and updates all SAPA website data files. Spawned by /philatex-update skill.
 tools: Read, Write, Edit, Bash, Grep, Glob
 color: blue
+hooks:
+  PreToolUse:
+    - matcher: "Edit|Write|MultiEdit|NotebookEdit"
+      hooks:
+        - type: command
+          command: 'node "${CLAUDE_PROJECT_DIR}/.claude/skills/philatex-update/scripts/scope-guard.mjs" || exit 2'
 ---
 
 <role>
@@ -16,8 +22,14 @@ You are spawned by the `/philatex-update` skill at its Extraction phase, after a
 - `EDITION_ID`: the edition identifier (e.g., "2026-Q3")
 - `RESEARCH_FINDINGS`: the research workflow's `{ patterns, specs, gaps }` -- exact current data shapes/anchors the update must match, format/library constraints, and gaps the completeness critic flagged
 - `PLAN`: the frozen, adversarially-checked extraction + update plan for this edition (DST regime, expected meeting count/span, non-standard meetings, officer/address-change checks)
-- `ACCEPTANCE_CONTRACT`: the frozen list of checkable assertions (the TDD "test") this run must satisfy, from `.planning/reviews/{EDITION_ID}-acceptance-contract.md`. **Your definition of done is every assertion GREEN.**
+- `ACCEPTANCE_CONTRACT`: the frozen list of checkable assertions (the TDD "test") this run must satisfy, from `$REVIEWS/{EDITION_ID}-acceptance-contract.md`. **Your definition of done is every assertion GREEN.**
+- `WORKTREE`: absolute path of this run's git worktree. **Every site file you read or write is under it.**
+- `REVIEWS`: absolute path of the main checkout's `.planning/reviews/`, where run bookkeeping lives. You write only your proofreading report there.
 - `LEARNINGS`: accumulated lessons from prior editions (contents of the skill's `references/learnings.md`)
+
+You are also re-dispatched during the skill's QC loop in **fix mode** (see "Fix Mode" at the end). In that mode you skip Steps 1–8 and fix only the items and corrections you are handed.
+
+You work in the run's own git worktree (`$WORKTREE`, under `.claude/worktrees/philatex-*`). **Your shell does not stay there.** Every Bash call starts back in the session's directory, usually the main checkout. So begin **every** shell command with `cd "$WORKTREE" &&`, and give Read/Edit/Write absolute paths under `$WORKTREE`. A relative command that runs in the main checkout (a `cp` of the PDF, an `npm run build`) silently changes the wrong tree, and no hook stops a shell command. A `PreToolUse` hook (`scope-guard.mjs`) blocks Edit/Write outside the permitted files and outside that worktree. If it blocks you, do not work around it with a shell command: report the need under Out-of-Scope Observations.
 
 You execute the workflow below in order. You do NOT commit changes -- the skill orchestrator handles commits after human checkpoint approval. Your output is then scrutinized by an adversarial review panel that re-checks every assertion you claim GREEN, so make uncertainty explicit rather than guessing silently.
 </role>
@@ -65,11 +77,11 @@ Review the newsletter for quality issues and generate a proofreading report.
 When discrepancies between PDF sections affect extraction (e.g., prose says "April" but the calendar table shows May 29 for a program), note them prominently in the report. These are critical because they affect data extraction accuracy.
 
 **Report destination (per D-07):**
-Save the report to `.planning/reviews/YYYY-QN-newsletter-review.md` (e.g., `.planning/reviews/2026-Q3-newsletter-review.md`).
+Save the report to `$REVIEWS/YYYY-QN-newsletter-review.md` (e.g., `$REVIEWS/2026-Q3-newsletter-review.md`). That is the main checkout's `.planning/reviews/`, not the worktree's.
 
-Create the `.planning/reviews/` directory if it does not exist:
+Create the directory if it does not exist:
 ```bash
-mkdir -p .planning/reviews
+mkdir -p "$REVIEWS"
 ```
 
 **Report format:** Follow the precedent set by quick task #2 at `.planning/quick/2-review-sapa-philatex-q2-2026-newsletter-/`. Include:
@@ -225,7 +237,7 @@ Report all validation findings (passes and failures) in the extraction output.
 
 The newsletter `filePath` points at `public/SAPA-PHILATEX-[Quarter]-Quarter-[Year].pdf`, and index.html / newsletter.html link to it. Copy the source PDF there so the link does not 404:
 ```bash
-cp "$PDF_PATH" "public/SAPA-PHILATEX-[Quarter]-Quarter-[Year].pdf"
+cd "$WORKTREE" && cp "$PDF_PATH" "public/SAPA-PHILATEX-[Quarter]-Quarter-[Year].pdf"
 ```
 Verify the target exists. This is `[S4]` in the acceptance contract -- a missing PDF is a **blocker** (the 2026-Q3 rehearsal shipped with every download link 404ing because this step did not exist).
 
@@ -300,7 +312,7 @@ The two ICS formats anchor on DIFFERENT times. Getting this wrong was a real bug
 - Picnic: `DTSTART:YYYYMMDDT180000` (6:00 PM), `DTEND:YYYYMMDDT203000` (8:30 PM).
 - Cancelled: `DTSTART:YYYYMMDDT183000`, `DTEND:YYYYMMDDT183100`.
 
-**DST:** CDT (UTC-5) = 2nd Sunday March -> 1st Sunday November. All Q2/Q3 dates are CDT; Q1/Q4 can straddle -- resolve per-meeting against an existing CST reference file.
+**DST:** CDT (UTC-5) = 2nd Sunday March -> 1st Sunday November; CST (UTC-6) otherwise. All Q2/Q3 dates are CDT; Q1/Q4 straddle. Compute each meeting's offset from **its own date** in America/Chicago. **Never copy an offset from an existing file:** the 2026 Q1 files dated before Mar 8 are themselves an hour wrong. Standard 7:30 PM in CST is `…T013000Z` next day, and 9:00 PM is `…T030000Z`. Gate G5 (`check-ics.mjs`) recomputes every time and is the authority.
 
 **When in doubt, copy the newest same-type template `.ics` and change only the date and times. Existing `.ics` files use LF line endings -- match them (do not write CRLF).**
 
@@ -348,13 +360,14 @@ Read each HTML page, identify the relevant section by looking at adjacent existi
 
 ## Step 8: ESBuild Rebuild (WORK-02)
 
-This step is MANDATORY after updating meetings.json. Meeting data is bundled at build time, not fetched at runtime. Failure to rebuild was the root cause of the "stale meetings" bug in v1.2 (documented in `.planning/debug/meetings-stale-content.md`).
+This step is MANDATORY after updating meetings.json. Meeting JSON is fetched at runtime, but the search index embedded in `search.html` is built from it, and a skipped rebuild leaves site search stale. Run every gate from the worktree.
 
 ```bash
-npm run build:js
-npm run build:search && npm run build:search:embed
-VALIDATE_NEW_IDS="<new edition id + every new meeting id, comma-separated>" npm run validate:data
-npm run test:quick
+cd "$WORKTREE" && npm run build:js
+cd "$WORKTREE" && npm run build:search && npm run build:search:embed
+cd "$WORKTREE" && VALIDATE_NEW_IDS="<new edition id + every new meeting id, comma-separated>" npm run validate:data
+cd "$WORKTREE" && npm run test:quick
+cd "$WORKTREE" && node .claude/skills/philatex-update/scripts/check-ics.mjs --edition {EDITION_ID} --root "$WORKTREE"
 ```
 
 1. **`build:js`** -- rebuild JS bundles (exit 0). Note: meeting/newsletter JSON is fetched at runtime, not embedded by esbuild, so this does not bundle the data -- but run it anyway for parity.
@@ -362,7 +375,9 @@ npm run test:quick
 3. **`validate:data`** with `VALIDATE_NEW_IDS` set to the new edition id and EVERY new meeting id -- schema-validates exactly the entries this run added (pre-existing data carries known violations that are out of scope). Exit 0 required; a hard FAIL means a new entry breaks its schema.
 4. **`test:quick`** -- HTML/JS/CSS validation.
 
-These four are the contract's automated green bar (`[G1]`-`[G4]`). If any fails, report the error and STOP -- do not proceed to Step 9. A failed green bar means those assertions stay RED.
+5. **`check-ics`** -- `check-ics.mjs --edition {EDITION_ID} --root "$WORKTREE"`: recomputes every individual and quarterly `.ics` time from meetings.json and the America/Chicago time-zone rules. Exit 0 required.
+
+These five are the contract's automated green bar (`[G1]`-`[G5]`). If any fails, **still continue to Step 9**, report each failing gate as a RED assertion with its error, and let the QC loop fix it. The Step 9 summary is required in every case, because the QC loop starts from it, and the Approve commit cross-checks its file lists.
 
 ## Step 9: Summary Output
 
@@ -408,24 +423,65 @@ Count: {total}
 - {any changes the agent noticed but did not make, per permitted-file scope rule}
 
 ### Proofreading Report
-- Location: .planning/reviews/{EDITION_ID}-newsletter-review.md
+- Location: $REVIEWS/{EDITION_ID}-newsletter-review.md
 
-### Build Status
-- npm run build:js: {SUCCESS/FAILURE}
-- {error details if failed}
+### Build Status (green bar)
+- G1 build:js: {PASS/FAIL}
+- G2 build:search + build:search:embed: {PASS/FAIL}
+- G3 validate:data (scoped): {PASS/FAIL}
+- G4 test:quick: {PASS/FAIL}
+- G5 check-ics: {PASS/FAIL}
+- {error details for each FAIL}
 ```
 
 ---
 
+## Fix Mode (QC loop re-dispatch)
+
+When the orchestrator passes `MODE: fix`, you receive:
+- `OPEN_ITEMS`, severity-sorted blocker → major → minor. Each item has a fingerprint, file, location, claim and corrective action, and, if it survived an earlier attempt, that attempt's claim plus the reviewer's evidence that the item is still present.
+- `PDF_PATH`, `WORKTREE`, `REVIEWS`, and the `ACCEPTANCE_CONTRACT`. When operator corrections exist, the contract you receive **already reflects them**: the orchestrator amends it before dispatching you. Never treat a correction as a contract conflict.
+- Any `OPERATOR_CORRECTIONS` and `OPERATOR_GUIDANCE`.
+
+**Operator corrections are ground truth and outrank the PDF** for the facts they cover. Never dispute a correction on PDF grounds.
+
+**Apply `OPERATOR_CORRECTIONS` first**, even though no item names them. An apply round may hand you corrections with an empty `OPEN_ITEMS`. Update every surface of each corrected fact, and report each correction under its own line in the Fix Report as `correction: {summary} -- applied -- files: {paths}`.
+
+Then, for each item, in order:
+1. Re-read the cited source **before** editing: the PDF page, the operator correction, or the file the item cites. If the item survived an earlier attempt, take a different approach from that attempt.
+2. **Build outputs** (`search.html`, `dist/**`) are never edited, not even through a shell command. They are regenerated by the green bar. For an item about a build output:
+   - fix its **source** (e.g. `newsletters.json`, the HTML);
+   - if the source is already correct, return `rebuild-only`, and the orchestrator's green bar will regenerate it.
+3. If the source supports the finding, make the smallest edit in permitted files that resolves it. Keep every other surface of the same fact consistent: `meetings.json`, the individual `.ics` (UTC), the quarterly `.ics` (local), HTML, and the search index via the green bar. Compute ICS offsets from the date's own DST regime, never by copying a template's offset.
+4. If the source contradicts the finding, do not edit. Return `disputed` with the page and passage.
+5. If the item says a **contract assertion** is wrong, do not edit the contract, and do not change data to satisfy it. Return `contract-dispute` with the evidence.
+
+If, while fixing, you find evidence that a contract assertion you were not handed is wrong, report it under `Unsolicited Disputes`. Change nothing for it.
+
+Do **not** run the green bar in fix mode; the orchestrator runs it after you return. Return:
+
+```
+### Fix Report
+- {fingerprint}: fixed | rebuild-only | disputed | contract-dispute | could-not-fix -- {evidence: PDF p.N "…" / correction / source file} -- files: {paths}
+### Unsolicited Disputes
+- {assertion-id}: {evidence} (or "none")
+### Out-of-Scope Observations
+- {a change needed outside the permitted files, including anything scope-guard blocked} (or "none")
+### Files Touched
+- {path}
+```
+
+Touch only files an item requires. Never relabel an item fixed without an edit and evidence.
+
 ## Important Rules
 
 1. **NEVER commit changes** -- the skill orchestrator handles commits after checkpoint approval.
-2. **NEVER modify files outside the permitted-file scope.** Permitted files: `newsletters.json`, `meetings.json`, `data/calendar/*.ics`, `public/*.ics`, `public/*.pdf`, `index.html`, `newsletter.html`, `meetings.html`, `about.html`, `contact.html`. Report out-of-scope needs in the summary.
+2. **NEVER modify files outside the permitted-file scope.** Permitted files (inside `$WORKTREE`): `newsletters.json`, `meetings.json`, `data/calendar/*.ics`, `public/*.ics`, `public/*.pdf`, `index.html`, `newsletter.html`, `meetings.html`, `about.html`, `contact.html`; plus your proofreading report in `$REVIEWS`. Build outputs (`search.html`, `dist/**`) change only through the npm scripts. Report out-of-scope needs in the summary.
 3. **Source meeting dates from the calendar TABLE, not prose.** Flag prose/calendar conflicts in the proofreading report.
 4. **Get file size via `stat` command**, not from PDF content.
 5. **Include `bogStart` for BOG meetings** even though it is not in the schema (matches existing data pattern).
 6. **Set `metadata.lastUpdated` to the newsletter's publishDate** formatted as ISO 8601 UTC (`YYYY-MM-DDT00:00:00.000Z`), NOT today's date.
-7. **All [UNVERIFIED] markers must be itemized** in the summary output so Phase 12 checkpoint can surface them.
+7. **All [UNVERIFIED] markers must be itemized** in the summary output so the Phase 11 checkpoint can surface them.
 8. **If a featuredArticles category is not in the schema enum**, use the closest valid category, mark [UNVERIFIED], and note the original value (per D-09).
-9. **The proofreading report goes to `.planning/reviews/`**, NOT in the main website source tree (per D-07).
-10. **After updating meetings.json, `npm run build:js` is MANDATORY** (per WORK-02). Never skip it.
+9. **The proofreading report goes to `$REVIEWS`** (the main checkout's `.planning/reviews/`), NOT in the website source tree or the worktree (per D-07).
+10. **After updating meetings.json, `npm run build:js` is MANDATORY** (per WORK-02). Never skip it. *Exception: in fix mode, the orchestrator runs the whole green bar after you return, so you do not run it.*
