@@ -43,16 +43,6 @@
     <!-- Canonical URL -->
     <link rel="canonical" href="https://sastamps.org/archive.html">
 
-    <style id="blur-up-style">
-        .blur-up {
-            filter: blur(5px);
-            transition: filter 400ms;
-        }
-        .blur-up.loaded {
-            filter: blur(0);
-        }
-    </style>
-
 
 
 
@@ -536,17 +526,6 @@
 
     <!-- Scripts -->
     <script src="dist/js/archive.min.js" defer></script>
-
-    <script id="blur-up-script">
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('img[data-src]').forEach(img => {
-                img.onload = function() {
-                    img.classList.add('loaded');
-                };
-                img.src = img.dataset.src;
-            });
-        });
-    </script>
 
 
 

@@ -38,16 +38,6 @@
     <link rel="stylesheet" href="css/critical.min.css">
     <link rel="stylesheet" href="css/styles.min.css">
 
-    <style id="blur-up-style">
-        .blur-up {
-            filter: blur(5px);
-            transition: filter 400ms;
-        }
-        .blur-up.loaded {
-            filter: blur(0);
-        }
-    </style>
-
     <link rel="stylesheet" href="css/font-loading.min.css">
     <script src="dist/js/font-loading.min.js"></script>
 </head>
@@ -229,17 +219,6 @@
 
     <!-- Scripts -->
     <script src="dist/js/newsletter.min.js" defer></script>
-
-    <script id="blur-up-script">
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('img[data-src]').forEach(img => {
-                img.onload = function() {
-                    img.classList.add('loaded');
-                };
-                img.src = img.dataset.src;
-            });
-        });
-    </script>
 
 <script type="module">
     import {onCLS, onFID, onLCP, onFCP, onTTFB} from 'https://unpkg.com/web-vitals@3.5.2/dist/web-vitals.attribution.js';
