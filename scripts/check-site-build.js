@@ -16,6 +16,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync, execFileSync } = require('child_process');
 const { SITE_DIRS, SITE_FILES, isSitePage, sitePages, isPrivate, deployableFiles } = require('./lib/site');
+const { ORIGIN, EXCLUDE, pageUrl } = require('./build-sitemap');
 
 const REPO = path.resolve(__dirname, '..');
 const SITE = path.join(REPO, '_site');
@@ -172,6 +173,38 @@ if (!fs.existsSync(SITE)) {
     }
     check(ok, `_site/dist/data/${name} missing or not valid JSON (search.html fetches it)`);
   }
+}
+
+console.log('▸ robots.txt and sitemap.xml');
+if (fs.existsSync(SITE)) {
+  const robots = existsExact(path.join(SITE, 'robots.txt')) ? fs.readFileSync(path.join(SITE, 'robots.txt'), 'utf8') : '';
+  check(robots.length > 0, '_site/robots.txt missing');
+  check(new RegExp(`^Sitemap: ${ORIGIN}sitemap\\.xml$`, 'm').test(robots), `_site/robots.txt must point at ${ORIGIN}sitemap.xml`);
+  const sitemap = existsExact(path.join(SITE, 'sitemap.xml')) ? fs.readFileSync(path.join(SITE, 'sitemap.xml'), 'utf8') : '';
+  check(sitemap.length > 0, '_site/sitemap.xml missing');
+  // Parse it as a sitemap: one <urlset>, and every <url> exactly one <loc>
+  // and one well-formed <lastmod>.
+  check(/^<\?xml version="1\.0" encoding="UTF-8"\?>\n<urlset xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9">\n[\s\S]*<\/urlset>\n$/.test(sitemap),
+    '_site/sitemap.xml is not a well-formed <urlset>');
+  const entries = [...sitemap.matchAll(/<url>([\s\S]*?)<\/url>/g)].map((m) => m[1]);
+  check(count(sitemap, /<url>/g) === entries.length && count(sitemap, /<\/url>/g) === entries.length, '_site/sitemap.xml has unbalanced <url> tags');
+  const locs = [];
+  for (const e of entries) {
+    const loc = [...e.matchAll(/<loc>([^<]*)<\/loc>/g)].map((m) => m[1]);
+    const lastmod = [...e.matchAll(/<lastmod>([^<]*)<\/lastmod>/g)].map((m) => m[1]);
+    check(loc.length === 1 && lastmod.length === 1, `sitemap entry needs one <loc> and one <lastmod>: ${e.trim().slice(0, 80)}`);
+    check(lastmod.length === 1 && /^\d{4}-\d{2}-\d{2}$/.test(lastmod[0]) && !Number.isNaN(Date.parse(lastmod[0])), `sitemap <lastmod> is not a date: ${lastmod[0]}`);
+    if (loc.length !== 1) continue;
+    locs.push(loc[0]);
+    check(loc[0].startsWith(ORIGIN), `sitemap <loc> is not on ${ORIGIN}: ${loc[0]}`);
+    const rel = loc[0].slice(ORIGIN.length) || 'index.html';
+    check(isSitePage(rel) && fileExact(path.join(SITE, rel)), `sitemap <loc> ${loc[0]} has no page in _site/`);
+  }
+  // And the other way: every deployed page except the excluded ones is listed.
+  for (const p of sitePages(REPO, DEPLOYABLE).filter((x) => !EXCLUDE.has(x))) {
+    check(locs.includes(pageUrl(p)), `sitemap.xml does not list ${p}`);
+  }
+  check(!existsExact(path.join(REPO, 'sitemap.xml')) || !DEPLOYABLE.has('sitemap.xml'), 'a committed sitemap.xml would go stale: the build generates it');
 }
 
 // Pages that use the font-loading CSS, and therefore need the script.
