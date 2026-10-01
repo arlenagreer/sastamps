@@ -16,8 +16,8 @@ Our testing suite includes:
 
 ### Running All Tests
 ```bash
-# Start the local server first (in a separate terminal)
-npm run serve
+# Build, then start the local server (in a separate terminal)
+npm start
 
 # Run all tests
 npm test
@@ -188,7 +188,7 @@ The `reports/` directory is git-ignored to avoid committing test artifacts.
 ## Troubleshooting
 
 ### Server Not Running
-Many tests require the local server. Always start it first:
+Many tests require the local server. It serves the built site in `_site/`, so build first:
 ```bash
 npm run serve
 ```
@@ -196,7 +196,7 @@ npm run serve
 ### Port Conflicts
 If port 3000 is in use, modify the port in `package.json`:
 ```json
-"serve": "http-server . -p 3001"
+"serve": "http-server _site -p 3001"
 ```
 
 ### Test Timeouts

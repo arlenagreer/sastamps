@@ -12,7 +12,7 @@
 //
 // Limits, by design: it sees file-editing tools only. A shell command (`cp`, `sed -i`,
 // an npm build) is not intercepted — the diff-safety review dimension remains the
-// backstop for those. Build outputs (search.html, dist/**) are written by npm
+// backstop for those. Build outputs (dist/**, _site/**) are written by npm
 // scripts through Bash, so they never reach this hook.
 //
 // The repo root is taken from the TARGET file's location, not the session's cwd: the

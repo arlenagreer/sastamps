@@ -18,19 +18,6 @@ async function ensureDir(dir) {
     }
 }
 
-async function generatePlaceholder(inputPath, outputPath) {
-    // Generate a tiny placeholder (20px wide)
-    const placeholder = await sharp(inputPath)
-        .resize(20, null, { withoutEnlargement: true })
-        .blur(10) // Add slight blur for smoother upscaling
-        .webp({ quality: 20 })
-        .toBuffer();
-
-    // Convert to base64
-    const base64Placeholder = placeholder.toString('base64');
-    return `data:image/webp;base64,${base64Placeholder}`;
-}
-
 async function optimizeImage(inputPath, filename) {
     const name = path.parse(filename).name;
     
@@ -40,18 +27,9 @@ async function optimizeImage(inputPath, filename) {
         ...Object.keys(sizes).map(size => ensureDir(path.join(outputDir, size)))
     ]);
 
-    // Generate placeholder and save to JSON
-    const placeholder = await generatePlaceholder(inputPath, path.join(outputDir, `${name}-placeholder.webp`));
-    const placeholdersPath = path.join(outputDir, 'placeholders.json');
-    let placeholders = {};
-    try {
-        const existing = await fs.readFile(placeholdersPath, 'utf8');
-        placeholders = JSON.parse(existing);
-    } catch (err) {
-        // File doesn't exist yet, that's fine
-    }
-    placeholders[name] = placeholder;
-    await fs.writeFile(placeholdersPath, JSON.stringify(placeholders, null, 2));
+    // No blur-up placeholders: their only reader (update-image-tags.js, which
+    // rewrote committed pages) is retired, and writing one shared
+    // placeholders.json from parallel image jobs raced into invalid JSON.
 
     // Create WebP versions in different sizes
     await Promise.all(Object.entries(sizes).map(async ([size, width]) => {

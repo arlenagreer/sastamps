@@ -8,7 +8,7 @@ Every verified finding and every RED contract assertion gets exactly one class.
 
 | Class | What belongs here | Gates the loop? | Publishable while open? |
 |---|---|---|---|
-| **blocker** | Any RED contract assertion. Wrong meeting date/time/type/cancellation. Wrong DST offset in an `.ics`. A failure in schema or `validate:data`. A red green-bar gate (G1–G5). The newsletter PDF missing at its `filePath`. A file modified outside the permitted scope. The declared build outputs, `search.html` and `dist/**`, are not out of scope. A review dimension that returned no real analysis (see step 2). | Yes | **Never** |
+| **blocker** | Any RED contract assertion. Wrong meeting date/time/type/cancellation. Wrong DST offset in an `.ics`. A failure in schema or `validate:data`. A red green-bar gate (G1–G5). The newsletter PDF missing at its `filePath`. A file modified outside the permitted scope. A review dimension that returned no real analysis (see step 2). | Yes | **Never** |
 | **major** | Member-visible text that disagrees with the source (PDF or operator correction), covering names, titles, officers, announcements and TSDA shows. A missing section item. Stale prior-quarter content on any page. A wrong or missing `[UNVERIFIED]` marker. | Yes | Yes, listed in the commit |
 | **minor** | Typos, formatting, inconsistent date/number style, and small wording drift that does not change meaning. | Yes | Yes, listed in the commit |
 | **advisory** | Style suggestions, improvements for future editions, anything the source does not require. | No — logged only | n/a |
@@ -23,7 +23,7 @@ Every verified finding and every RED contract assertion gets exactly one class.
 - **One defect, one item.** A finding that describes the same underlying fact as a RED assertion (same date, or same field) merges into that assertion and is scored once. A finding about the same fact as a held dispute joins the dispute; it does not open a new item.
 - **Score.** The sum of weights over the open set.
 - **Full pass.** The review workflow runs all four dimensions, the contract verifier over **every** assertion, and the ≥3-lens skeptic refutation over every high-risk fact **and every negative assertion**. `extractedFacts` is rebuilt from the **current working tree** before every full pass, never reused from the Step 9 summary. **Before** invoking the workflow, the orchestrator runs two more reviewers in the main loop, one after the other. Their findings are passed in as `args.externalFindings`, so the workflow verifies them with skeptics and synthesizes them into the one report shown at 11a:
-  - **browser-uat.** Uses the `browse` skill. Serve the worktree: `cd "$WORKTREE" && npm start`, which uses port 3000. If that port is taken, don't stop whatever holds it (it is a shared resource). Use `npx http-server "$WORKTREE" -p <free port>` instead. Load `index.html`, `meetings.html` and `newsletter.html`. Verify the thing this edition changed, not just that pages return 200:
+  - **browser-uat.** Uses the `browse` skill. Serve the worktree's built site: `cd "$WORKTREE" && npm start`, which runs `npm run build` and serves `_site/` on port 3000. `_site/` is a copy, so re-run `npm run build` after every fix round before reviewing again. If that port is taken, don't stop whatever holds it (it is a shared resource). Run `npm run build`, then `npx http-server "$WORKTREE/_site" -p <free port>`. Load `index.html`, `meetings.html` and `newsletter.html`. Verify the thing this edition changed, not just that pages return 200:
     - the new newsletter banner and its PDF link open;
     - the calendar shows the new quarter;
     - the homepage's dated sections (announcements, TSDA) are this quarter's;
@@ -78,7 +78,7 @@ Every verified finding and every RED contract assertion gets exactly one class.
    6. **CAP**: k ≥ CAP. Escalate.
 
    When escalating, report **every** check that matched, not just the first. For example: `STALLED + CAP`.
-5. **Snapshot.** Copy **every** permitted file this run created or modified, plus the build outputs (`search.html` and changed `dist/` files), from `$WORKTREE` to `$REVIEWS/{EDITION_ID}-qc/r{revision}-round-{k+1}/`, not just the files the fix is expected to touch. They are small, and a fixer can regenerate files nobody predicted. The revision is 0 until the first operator correction.
+5. **Snapshot.** Copy **every** permitted file this run created or modified from `$WORKTREE` to `$REVIEWS/{EDITION_ID}-qc/r{revision}-round-{k+1}/`, not just the files the fix is expected to touch. They are small, and a fixer can regenerate files nobody predicted. The revision is 0 until the first operator correction.
 6. **Fix.** Dispatch `philatex-newsletter-agent` in **fix mode** (see its "Fix Mode" section). Pass it:
    - the open set, sorted blocker → major → minor;
    - `PDF_PATH`, the frozen contract, and any `OPERATOR_CORRECTIONS` / `OPERATOR_GUIDANCE`.
@@ -86,7 +86,7 @@ Every verified finding and every RED contract assertion gets exactly one class.
    An item returned `rebuild-only` (a build output whose source is already correct) is resolved by the green bar in step 7 and re-verified at the next review.
 
    An item that survived a previous "fixed" claim is re-sent with that claim **and** the reviewer's evidence that it is still present. The fixer must take a different approach, not repeat the same edit.
-7. **Green bar.** The orchestrator runs G1–G5 **in full** after every fix round: `build:js`, `build:search` + `build:search:embed`, scoped `validate:data`, `test:quick`, and `node "$WORKTREE/.claude/skills/philatex-update/scripts/check-ics.mjs" --edition {EDITION_ID} --root "$WORKTREE"`. Every command runs as `cd "$WORKTREE" && …`. The fixer does not run them. A red gate is a blocker that the next review picks up.
+7. **Green bar.** The orchestrator runs G1–G5 **in full** after every fix round: `build:js`, `build:search`, scoped `validate:data`, `test:quick`, and `node "$WORKTREE/.claude/skills/philatex-update/scripts/check-ics.mjs" --edition {EDITION_ID} --root "$WORKTREE"`. Every command runs as `cd "$WORKTREE" && …`. The fixer does not run them. A red gate is a blocker that the next review picks up.
 
 **Phase 10 fails after CLEAN?** Record the failure in the ledger as its own review, scored as a blocker (100), so the next STALLED comparison uses it as the baseline. If a fix round remains, run it. Otherwise, escalate as CAP.
 

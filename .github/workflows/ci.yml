@@ -7,6 +7,13 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+# One run per branch at a time, queued rather than cancelled. The deploy job
+# publishes the artifact its own test job built, so without this a slow run for
+# an older push to main could deploy after, and over, a newer one.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   test:
     name: Run Tests
@@ -47,8 +54,16 @@ jobs:
       run: npm run test:md
       continue-on-error: true
       
-    - name: Build the project
-      run: npm run build
+    # One build: _site/ is both what the checks below test and, on a push to
+    # main, exactly what the deploy job publishes. test:site-build runs
+    # npm run build and fails if it rewrote a tracked file or assembled a
+    # _site/ with a missing page, a broken local reference, or a file that
+    # must never be served (*.php, *.db, scripts/, dotfiles).
+    - name: Build the site and check it
+      run: npm run test:site-build
+
+    - name: Check inline scripts in the built pages
+      run: npm run test:inline-js:site
       
     - name: Start server for link checking
       run: |
@@ -86,6 +101,12 @@ jobs:
       run: npm audit --audit-level=moderate
       continue-on-error: true
 
+    - name: Upload the built site for deployment
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: actions/upload-pages-artifact@v5
+      with:
+        path: '_site'
+
   deploy:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
@@ -108,62 +129,12 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
       
+    # No checkout and no second build: this publishes the _site/ artifact the
+    # test job built and checked, so what deploys is what was tested.
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v7
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v7
-      with:
-        node-version: '22'
-        cache: 'npm'
-        
-    - name: Install dependencies
-      run: npm ci
-      
-    - name: Build for production
-      run: npm run build
-      
     - name: Setup Pages
       uses: actions/configure-pages@v6
-      
-    - name: Prepare deployment directory
-      run: |
-        mkdir -p _site
-        # Copy HTML files from root, minus non-site pages (test-*.html, q4_update.html)
-        for f in *.html; do
-          case "$f" in
-            test-*.html|q4_update.html) echo "skip (not a site page): $f" ;;
-            *) cp "$f" _site/ ;;
-          esac
-        done
-        # Copy built assets
-        cp -r dist _site/
-        # Copy static files
-        cp site.webmanifest _site/ 2>/dev/null || true
-        cp favicon.ico _site/
-        # sw.js is deliberately NOT deployed: it is cache-first with a fixed cache
-        # name and would pin visitors to stale pages. See js/utils/service-worker.js.
-        cp .nojekyll _site/ 2>/dev/null || true
-        cp -r images _site/ 2>/dev/null || true
-        # Copy public directory (PDFs, newsletters, downloads)
-        cp -r public _site/ 2>/dev/null || true
-        # Copy downloads directory
-        cp -r downloads _site/ 2>/dev/null || true
-        # Copy showcase directory
-        cp -r showcase _site/ 2>/dev/null || true
-        # Copy data directory for JSON files
-        cp -r data _site/ 2>/dev/null || true
-        # Copy CSS directory
-        cp -r css _site/ 2>/dev/null || true
-        # Copy PHP files if they exist (for form handling)
-        cp *.php _site/ 2>/dev/null || true
 
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v5
-      with:
-        path: '_site'
-        
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v5

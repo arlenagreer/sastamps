@@ -53,3 +53,8 @@ graphify-out/
 
 # /philatex-update QC snapshots (restore points; regenerable, include full PDF copies)
 .planning/reviews/*-qc/
+
+# Build output: npm run build writes dist/ and css/*.min.css, and assembles the
+# deployable site in _site/ (what GitHub Pages serves). Never committed.
+_site/
+css/*.min.css

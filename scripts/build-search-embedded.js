@@ -15,8 +15,14 @@ if (!fs.existsSync(searchIndexPath) || !fs.existsSync(searchDocsPath)) {
 const searchIndex = fs.readFileSync(searchIndexPath, 'utf8');
 const searchDocs = fs.readFileSync(searchDocsPath, 'utf8');
 
-// Read the search.html file
-const searchHtmlPath = path.join(__dirname, '../search.html');
+// The built copy of search.html in _site/ (or a path given as the first
+// argument). The source search.html is never rewritten: it carries no
+// embedded data and falls back to fetching dist/data/*.json.
+const searchHtmlPath = path.resolve(process.argv[2] || path.join(__dirname, '../_site/search.html'));
+if (!fs.existsSync(searchHtmlPath)) {
+    console.error(`${searchHtmlPath} not found. Run npm run build (it assembles _site/ first).`);
+    process.exit(1);
+}
 let searchHtml = fs.readFileSync(searchHtmlPath, 'utf8');
 
 // Create the embedded data script
@@ -178,5 +184,5 @@ searchHtml = searchHtml.replace(oldInitFunction, newInitFunction);
 // Write the updated search.html
 fs.writeFileSync(searchHtmlPath, searchHtml);
 
-console.log('✓ Search data embedded in search.html successfully');
+console.log(`✓ Search data embedded in ${path.relative(path.join(__dirname, '..'), searchHtmlPath)}`);
 console.log('  The search page now works offline and with file:// protocol');

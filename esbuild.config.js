@@ -5,11 +5,6 @@ const path = require('path');
 // Tree-shaking configuration for page-specific bundles
 const pageConfigs = [
   {
-    entryPoint: 'js/pages/core.js',
-    outfile: 'dist/js/core.min.js',
-    globalName: 'SAPA_CORE'
-  },
-  {
     entryPoint: 'js/pages/home.js',
     outfile: 'dist/js/home.min.js',
     globalName: 'SAPA_HOME'
@@ -91,8 +86,9 @@ async function buildPageBundles() {
     try {
       await fs.access(config.entryPoint);
     } catch (error) {
-      console.log(`⚠️  Skipping ${config.entryPoint} (file not found)`);
-      continue;
+      // A missing entry point is a broken build, not a skip: dist/ is no
+      // longer committed, so nothing else would supply the bundle.
+      throw new Error(`Entry point not found: ${config.entryPoint}`);
     }
 
     const buildOptions = {
@@ -161,8 +157,7 @@ async function buildLegacyBundle() {
     try {
       await fs.access(legacyBundleConfig.entryPoint);
     } catch (error) {
-      console.log(`⚠️  Skipping ${legacyBundleConfig.entryPoint} (file not found)`);
-      return;
+      throw new Error(`Entry point not found: ${legacyBundleConfig.entryPoint}`);
     }
     
     const buildOptions = {
@@ -180,6 +175,7 @@ async function buildLegacyBundle() {
     
   } catch (error) {
     console.error('❌ Legacy bundle failed:', error.message);
+    throw error;
   }
 }
 
@@ -207,6 +203,7 @@ async function buildModulesBundle() {
     console.log('✅ Modules bundle completed');
   } catch (error) {
     console.error('❌ Modules bundle failed:', error.message);
+    throw error;
   }
 }
 
