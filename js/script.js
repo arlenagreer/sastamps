@@ -1189,8 +1189,8 @@ function setupDynamicContentBoundaries() {
                                 <div class="newsletter-item">
                                     <h4>${escapeHTML(newsletter.title)}</h4>
                                     <p>${escapeHTML(newsletter.description)}</p>
-                                    <a href="${escapeHTML(safeUrl(newsletter.url))}" target="_blank" rel="noopener" class="btn btn-primary">
-                                        <i class="fas fa-file-pdf"></i> View PDF
+                                    <a href="${escapeHTML(safeUrl(newsletter.url))}" target="_blank" rel="noopener" class="btn btn-primary" aria-label="View PDF: ${escapeHTML(newsletter.title)} (opens in a new tab)">
+                                        <i class="fas fa-file-pdf" aria-hidden="true"></i> View PDF
                                     </a>
                                 </div>
                             `).join('');

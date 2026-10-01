@@ -72,11 +72,11 @@ async function loadNewslettersList(container) {
                     </div>
 
                     <footer class="newsletter-actions">
-                        <a href="${escapeHTML(safeUrl(newsletter.pdfUrl))}" target="_blank" rel="noopener" class="btn-primary btn-view-pdf" data-newsletter-id="${escapeHTML(newsletter.id)}">
-                            📄 View PDF
+                        <a href="${escapeHTML(safeUrl(newsletter.pdfUrl))}" target="_blank" rel="noopener" class="btn-primary btn-view-pdf" data-newsletter-id="${escapeHTML(newsletter.id)}" aria-label="View PDF: ${escapeHTML(newsletter.title)} (opens in a new tab)">
+                            <span aria-hidden="true">📄</span> View PDF
                         </a>
-                        <button class="btn-secondary btn-download" data-url="${escapeHTML(safeUrl(newsletter.pdfUrl))}" data-title="${escapeHTML(newsletter.title)}">
-                            💾 Download
+                        <button class="btn-secondary btn-download" data-url="${escapeHTML(safeUrl(newsletter.pdfUrl))}" data-title="${escapeHTML(newsletter.title)}" aria-label="Download PDF: ${escapeHTML(newsletter.title)}">
+                            <span aria-hidden="true">💾</span> Download
                         </button>
                         ${newsletter.articleLinks && newsletter.articleLinks.length > 0 ? `
                             <details class="newsletter-articles">
@@ -276,15 +276,14 @@ function bindNewsletterActions(container) {
   const downloadButtons = container.querySelectorAll('.btn-download');
   downloadButtons.forEach(button => {
     addEventListenerWithCleanup(button, 'click', (e) => {
-      const {url} = e.target.dataset;
-      const {title} = e.target.dataset;
+      const {url, title} = e.currentTarget.dataset;
       downloadNewsletter(url, title);
     });
   });
   const viewButtons = container.querySelectorAll('.btn-view-pdf');
   viewButtons.forEach(button => {
     addEventListenerWithCleanup(button, 'click', (e) => {
-      const {newsletterId} = e.target.dataset;
+      const {newsletterId} = e.currentTarget.dataset;
       trackNewsletterView(newsletterId);
     });
   });

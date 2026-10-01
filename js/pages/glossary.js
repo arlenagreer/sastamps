@@ -73,7 +73,7 @@ async function loadGlossarySearch(container) {
                     </div>
                     <div class="search-suggestions" id="search-suggestions" style="display: none;"></div>
                 </div>
-                <div id="search-results" style="display: none;"></div>
+                <div id="search-results" aria-live="polite" style="display: none;"></div>
             </div>
         `;
 

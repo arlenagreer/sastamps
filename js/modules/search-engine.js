@@ -373,9 +373,10 @@ class SearchEngine {
                     <input type="search" 
                            class="search-input" 
                            placeholder="${escapeHTML(placeholder)}"
+                           aria-label="${escapeHTML(placeholder)}"
                            autocomplete="off"
                            spellcheck="false">
-                    <button class="search-button" type="button">
+                    <button class="search-button" type="button" aria-label="Search">
                         <i class="fas fa-search"></i>
                     </button>
                     <div class="search-suggestions" style="display: none;"></div>
@@ -430,7 +431,7 @@ class SearchEngine {
                 ` : ''}
                 
                 <div class="search-results">
-                    <div class="search-status"></div>
+                    <div class="search-status" role="status" aria-live="polite"></div>
                     <div class="search-results-list"></div>
                 </div>
             </div>

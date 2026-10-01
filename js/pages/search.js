@@ -236,7 +236,7 @@ function initializeSearchFilters(container) {
 
 function initializeSearchResults(container) {
   container.innerHTML = `
-        <div id="results-container" class="results-container">
+        <div id="results-container" class="results-container" aria-live="polite">
             <!-- Search results will be displayed here -->
         </div>
         <div id="results-pagination" class="results-pagination">
@@ -297,8 +297,8 @@ function displaySearchResults(results, query) {
             </div>
 
             <footer class="result-actions">
-                <a href="${escapeHTML(safeUrl(result.url))}" class="btn-outline btn-small">View Full Content</a>
-                ${result.downloadUrl ? `<a href="${escapeHTML(safeUrl(result.downloadUrl))}" class="btn-outline btn-small">Download</a>` : ''}
+                <a href="${escapeHTML(safeUrl(result.url))}" class="btn-outline btn-small" aria-label="View full content: ${escapeHTML(result.title)}">View Full Content</a>
+                ${result.downloadUrl ? `<a href="${escapeHTML(safeUrl(result.downloadUrl))}" class="btn-outline btn-small" aria-label="Download: ${escapeHTML(result.title)}">Download</a>` : ''}
             </footer>
         </article>
     `).join('');
