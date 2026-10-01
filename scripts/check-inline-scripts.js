@@ -70,7 +70,15 @@ function parseError(code, isModule) {
 let checked = 0;
 const failures = [];
 
-for (const rel of htmlFiles()) {
+// No pages means nothing was checked (say, _site/ was never built): fail
+// rather than report a pass for an empty run.
+const pages = htmlFiles();
+if (pages.length === 0) {
+  console.error(`Inline script parse check: no pages found under ${root}`);
+  process.exit(1);
+}
+
+for (const rel of pages) {
   const html = fs.readFileSync(path.join(root, rel), 'utf8');
   // The HTML parser ends a script element at the first </script, so this
   // non-greedy match extracts exactly what a browser would execute.

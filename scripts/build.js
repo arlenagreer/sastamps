@@ -14,19 +14,13 @@ const { spawn } = require('child_process');
 const { constants } = require('fs');
 const fs = require('fs').promises;
 const path = require('path');
-const { isSitePage, deployableFiles } = require('./lib/site');
+const { SITE_DIRS, SITE_FILES, isSitePage, isPrivate, deployableFiles } = require('./lib/site');
 
 const VERSION = '1.0.0';
 const ROOT = path.resolve(__dirname, '..');
 const DIST = path.join(ROOT, 'dist');
 const SITE = path.join(ROOT, '_site');
 
-// What the live site serves. Anything not listed here is not deployed:
-// notably *.php (Pages would serve the source text), data/*.db, scripts/,
-// js/ sources, sw.js (retired), docs, and root text files.
-const SITE_DIRS = ['css', 'dist', 'images', 'public', 'downloads', 'showcase', 'data'];
-const SITE_FILES = ['favicon.ico', 'site.webmanifest'];
-const NOT_DEPLOYED = /\.db$/;
 
 async function runCommand(command, args) {
     return new Promise((resolve, reject) => {
@@ -80,8 +74,7 @@ async function assembleSite() {
             mode: CLONE,
             filter: async (src) => {
                 const rel = path.relative(ROOT, src).split(path.sep).join('/');
-                // Dotfiles are never served: the Pages artifact upload drops them.
-                if (NOT_DEPLOYED.test(rel) || path.basename(rel).startsWith('.')) return false;
+                if (isPrivate(rel)) return false;
                 if (isGenerated(rel)) return true;
                 if ((await fs.stat(src)).isDirectory()) return true;
                 return deployable.has(rel);
@@ -98,9 +91,13 @@ async function build() {
     try {
         console.log('\nStarting build process...\n');
 
-        // Start clean, so nothing stale from an earlier build reaches _site/.
+        // Start clean, so nothing stale from an earlier build reaches _site/:
+        // that includes a css/*.min.css whose stylesheet has since been dropped.
         for (const dir of [DIST, SITE]) {
             await fs.rm(dir, { recursive: true, force: true });
+        }
+        for (const f of await fs.readdir(path.join(ROOT, 'css'))) {
+            if (f.endsWith('.min.css')) await fs.rm(path.join(ROOT, 'css', f));
         }
         await fs.mkdir(path.join(DIST, 'js'), { recursive: true });
 
@@ -130,7 +127,7 @@ async function build() {
 
         console.log('\nBuild completed successfully: _site/ is ready to deploy.');
     } catch (err) {
-        console.error('\nBuild failed:', err.message || err);
+        console.error('\nBuild failed:', err.stack || err);
         process.exit(1);
     }
 }

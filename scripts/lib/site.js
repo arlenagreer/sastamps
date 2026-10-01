@@ -5,6 +5,18 @@
  */
 const { execFileSync } = require('child_process');
 
+// What the live site serves: root site pages plus these directories and
+// files. Anything else is not deployed: notably *.php (Pages would serve the
+// source text), data/*.db, scripts/, js/ sources, sw.js (retired) and docs.
+const SITE_DIRS = ['css', 'dist', 'images', 'public', 'downloads', 'showcase', 'data'];
+const SITE_FILES = ['favicon.ico', 'site.webmanifest'];
+
+// Never public, wherever it sits: the build leaves these out and the check
+// fails if one reaches _site/. robots.txt is the one text file a site serves.
+const isPrivate = (rel) => /\.(php|db|env|md)$/i.test(rel)
+    || (/\.txt$/i.test(rel) && rel !== 'robots.txt')
+    || /(^|\/)\./.test(rel); // dotfiles: the Pages artifact upload drops them anyway
+
 // Root *.html files that are not site pages.
 const NOT_PAGES = /^(test-.*|q4_update)\.html$/;
 
@@ -21,4 +33,4 @@ function deployableFiles(root) {
         .split('\0').filter(Boolean));
 }
 
-module.exports = { NOT_PAGES, isSitePage, deployableFiles };
+module.exports = { SITE_DIRS, SITE_FILES, NOT_PAGES, isSitePage, isPrivate, deployableFiles };

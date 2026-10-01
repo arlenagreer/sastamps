@@ -15,7 +15,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync, execFileSync } = require('child_process');
-const { isSitePage, deployableFiles } = require('./lib/site');
+const { SITE_DIRS, isSitePage, isPrivate, deployableFiles } = require('./lib/site');
 
 const REPO = path.resolve(__dirname, '..');
 const SITE = path.join(REPO, '_site');
@@ -100,10 +100,10 @@ if (!fs.existsSync(SITE)) {
   const deployable = deployableFiles(REPO);
   const sourcePages = fs.readdirSync(REPO).filter((f) => isSitePage(f) && deployable.has(f));
   for (const p of sourcePages) check(existsExact(path.join(SITE, p)), `_site/${p} missing`);
-  for (const d of ['css', 'dist', 'images', 'public', 'data']) check(existsExact(path.join(SITE, d)), `_site/${d}/ missing`);
+  for (const d of SITE_DIRS) check(existsExact(path.join(SITE, d)), `_site/${d}/ missing`);
   const all = walk(SITE).map((f) => path.relative(SITE, f));
-  const forbidden = all.filter((f) => /\.(php|db|env|md)$/i.test(f) || (/\.txt$/i.test(f) && f !== 'robots.txt') || /^(scripts|\.planning|js|node_modules|\.claude|\.github)\//.test(f)
-    || (!f.includes('/') && f.endsWith('.html') && !isSitePage(f)) || /(^|\/)sw\.js$/.test(f) || /(^|\/)\./.test(f));
+  const forbidden = all.filter((f) => isPrivate(f) || /^(scripts|js|node_modules)\//.test(f)
+    || (!f.includes('/') && f.endsWith('.html') && !isSitePage(f)) || /(^|\/)sw\.js$/.test(f));
   check(forbidden.length === 0, `_site contains files that must not be public: ${forbidden.slice(0, 8).join(', ')}`);
 
   console.log('▸ every local reference in _site resolves');
@@ -163,7 +163,7 @@ console.log('▸ source pages load plain links and nothing is inlined');
 // Every deployed page links both minified stylesheets, except these, which
 // are self-contained or not deployed.
 const EXEMPT = new Set(['offline.html']); // works with no network: inline styles only
-const sitePages = fs.readdirSync(REPO).filter(isSitePage);
+const sitePages = fs.readdirSync(REPO).filter((f) => isSitePage(f) && deployableFiles(REPO).has(f));
 check(sitePages.length >= 10, `only ${sitePages.length} site pages found`);
 for (const p of sitePages) {
   const html = fs.readFileSync(path.join(REPO, p), 'utf8');
