@@ -48,9 +48,16 @@ async function main() {
   const { server, base } = await serve(SITE);
   try {
     const page = await browser.newPage();
+    const LUNR_URL = /^https:\/\/unpkg\.com\/lunr@[^/]+\/lunr\.min\.js$/;
+    // Other third-party requests (icon font, web fonts) are not under test:
+    // they are blocked, and the console errors that causes are not counted.
+    const notUnderTest = (url) => Boolean(url) && !url.startsWith(base) && !LUNR_URL.test(url);
     const errors = [];
+    const blocked = new Set();
     page.on('console', (msg) => {
-      if (msg.type() === 'error') {
+      const where = msg.location() && msg.location().url;
+      if (msg.type() === 'error' && !notUnderTest(where) && ![...blocked].some((u) => msg.text().includes(u))
+        && !/net::ERR_BLOCKED_BY_CLIENT/.test(msg.text())) {
         errors.push(msg.text());
       }
     });
@@ -62,12 +69,16 @@ async function main() {
     await page.setRequestInterception(true);
     page.on('request', (req) => {
       const url = req.url();
-      if (/^https:\/\/unpkg\.com\/lunr@[^/]+\/lunr\.min\.js$/.test(url)) {
-        req.respond({ status: 200, contentType: 'text/javascript', body: LUNR });
-      } else if (url.startsWith(base)) {
+      if (LUNR_URL.test(url)) {
+        // The page loads lunr with integrity= and crossorigin=, so the
+        // response must be CORS-readable and byte-identical to unpkg's
+        // (node_modules/lunr 2.3.9 is: same sha384).
+        req.respond({ status: 200, contentType: 'text/javascript', headers: { 'Access-Control-Allow-Origin': '*' }, body: LUNR });
+      } else if (url.startsWith(base) || url.startsWith('data:')) {
         req.continue();
       } else {
-        req.respond({ status: 204, body: '' }); // fonts, icons: not under test
+        blocked.add(url);
+        req.abort('blockedbyclient');
       }
     });
 
