@@ -6,8 +6,24 @@
 import { escapeHTML } from './utils/safe-dom.js';
 import { createLogger } from './utils/logger.js';
 import { fetchJSON } from './utils/fetch-json.js';
+import { parseLocalDate } from './utils/dates.js';
 
 const logger = createLogger('CalendarAdapter');
+
+/**
+ * Whether an event dated 'YYYY-MM-DD' is still upcoming at `now`.
+ * Event dates are calendar days, so a meeting stays upcoming for the whole
+ * of its own local day and becomes past only once that day has ended.
+ * (new Date('YYYY-MM-DD') is UTC midnight, which in US time zones made a
+ * meeting count as past from the previous evening.)
+ * @param {string} date - Event date, 'YYYY-MM-DD'
+ * @param {Date} now - Current time
+ * @returns {boolean}
+ */
+export function isUpcomingDate(date, now = new Date()) {
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return parseLocalDate(date) >= startOfToday;
+}
 
 export class CalendarAdapter {
   constructor() {
@@ -84,7 +100,7 @@ export class CalendarAdapter {
      * @returns {Object} Calendar event object
      */
   convertMeetingToEvent(meeting) {
-    const eventDate = new Date(`${meeting.date}T00:00:00`);
+    const eventDate = parseLocalDate(meeting.date);
     const styleConfig = this.eventTypeStyles[meeting.type] || this.eventTypeStyles['regular'];
 
     return {
@@ -184,7 +200,7 @@ export class CalendarAdapter {
                 ${cancelledNote}
                 <h4>${escapeHTML(meeting.title)}</h4>
                 <div class="meeting-details">
-                    <strong>Date:</strong> ${escapeHTML(this.formatDisplayDate(new Date(`${meeting.date}T00:00:00`)))}<br>
+                    <strong>Date:</strong> ${escapeHTML(this.formatDisplayDate(parseLocalDate(meeting.date)))}<br>
                     ${timeInfo}
                     <br><strong>Location:</strong><br>
                     ${location}
@@ -221,7 +237,7 @@ export class CalendarAdapter {
      */
   getEventsForMonth(events, year, month) {
     return events.filter(event => {
-      const eventDate = new Date(event.date);
+      const eventDate = parseLocalDate(event.date);
       return eventDate.getFullYear() === year && eventDate.getMonth() === month;
     });
   }
@@ -235,11 +251,8 @@ export class CalendarAdapter {
   getUpcomingEvents(events, limit = 5) {
     const now = new Date();
     const upcoming = events
-      .filter(event => {
-        const eventDate = new Date(event.date);
-        return eventDate >= now && !event.cancelled;
-      })
-      .sort((a, b) => new Date(a.date) - new Date(b.date))
+      .filter(event => isUpcomingDate(event.date, now) && !event.cancelled)
+      .sort((a, b) => parseLocalDate(a.date) - parseLocalDate(b.date))
       .slice(0, limit);
 
     return upcoming;
@@ -285,7 +298,7 @@ export class CalendarAdapter {
       stats.byType[event.type] = (stats.byType[event.type] || 0) + 1;
 
       // Count upcoming
-      if (new Date(event.date) >= now && !event.cancelled) {
+      if (isUpcomingDate(event.date, now) && !event.cancelled) {
         stats.upcoming++;
       }
 
