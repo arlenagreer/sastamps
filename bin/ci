@@ -108,7 +108,18 @@ if ! node -e 'require.resolve("ajv")' >/dev/null 2>&1; then
   exit 3
 fi
 
-echo "  ok -- node_modules present and resolvable"
+# The browser checks (test:search-page) drive puppeteer's headless Chrome,
+# which npm ci downloads unless PUPPETEER_SKIP_DOWNLOAD is set. Without it
+# they cannot run at all: that is "nothing verified" (exit 3), the same
+# condition as a missing node_modules, not a red result.
+if ! node -e 'Promise.resolve(require("puppeteer").executablePath()).then((p) => process.exit(require("fs").existsSync(p) ? 0 : 1), () => process.exit(1))' >/dev/null 2>&1; then
+  echo "bin/ci: puppeteer's Chrome is not installed, so the browser checks cannot run." >&2
+  echo "bin/ci: NOT VERIFIED. Run 'npx puppeteer browsers install chrome' (or npm ci" >&2
+  echo "bin/ci: without PUPPETEER_SKIP_DOWNLOAD) and re-run." >&2
+  exit 3
+fi
+
+echo "  ok -- node_modules present and resolvable, headless Chrome installed"
 echo
 
 # ── Sections 2-7: the blocking set, zero exemptions ──────────────────────────
@@ -143,6 +154,27 @@ run_section() {
   return 0
 }
 
+# A browser check exits 2 when it could not run at all (no _site/, Chrome
+# would not launch): that is not a red result, it is "not verified". It is
+# kept apart from $failed and turns a run with no failures into exit 3.
+not_verified=0
+run_browser_section() {
+  local label="$1"; shift
+  echo
+  echo "▸ $label"
+  total=$((total + 1))
+  local status=0
+  "$@" || status=$?
+  if [ "$status" -eq 2 ]; then
+    not_verified=$((not_verified + 1))
+    echo "  NOT VERIFIED: $label could not run (see its message above)"
+  elif [ "$status" -ne 0 ]; then
+    failed=$((failed + 1))
+    echo "  FAILED: $label"
+  fi
+  return 0
+}
+
 run_section "validate:data (node scripts/validate-data.js)" npm run --silent validate:data
 run_section "test:html (html-validate)"                     npm run --silent test:html
 run_section "test:js (eslint)"                               npm run --silent test:js
@@ -165,7 +197,7 @@ run_section "test:inline-js (inline <script> blocks parse, in _site/)" npm run -
 # needed after that) loads _site/search.html, which fetches its lunr index
 # from dist/data/, and searches. The index is no longer inlined into the
 # page, so this is the only proof that search works in the built site.
-run_section "test:search-page (search.html loads its index and finds results)" npm run --silent test:search-page
+run_browser_section "test:search-page (search.html loads its index and finds results)" node scripts/test-search-page.js
 
 # ── Declared exclusions -- outside this local gate, each with its own reason ──
 #
@@ -205,5 +237,9 @@ printf '\n%d tests, %d assertions, %d failures, 0 errors\n' "$total" "$total" "$
 # ── Closing exit -- never an if/echo as the last command ────────────────────
 if [ "$failed" -gt 0 ]; then
   exit 1
+fi
+if [ "$not_verified" -gt 0 ]; then
+  echo "bin/ci: $not_verified check(s) could not run: NOT VERIFIED (exit 3)." >&2
+  exit 3
 fi
 exit 0
