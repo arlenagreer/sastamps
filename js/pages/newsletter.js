@@ -35,11 +35,13 @@ async function loadNewslettersList(container) {
       .map(normaliseNewsletter)
       .sort((a, b) => b.dateValue - a.dateValue);
 
-    const html = newsletters.map(newsletter => `
+    const html = newsletters.map(newsletter => {
+      const coverUrl = safeUrl(newsletter.coverImage, '');
+      return `
             <article class="newsletter-item" data-date="${escapeHTML(newsletter.date)}" data-year="${newsletter.dateValue.getFullYear()}">
                 <div class="newsletter-preview">
-                    ${safeUrl(newsletter.coverImage, '') ?
-    `<img src="${escapeHTML(safeUrl(newsletter.coverImage, ''))}" alt="Cover of ${escapeHTML(newsletter.title)}" loading="lazy">` :
+                    ${coverUrl ?
+    `<img src="${escapeHTML(coverUrl)}" alt="Cover of ${escapeHTML(newsletter.title)}" loading="lazy">` :
     '<div class="newsletter-placeholder">📰</div>'
 }
                 </div>
@@ -99,7 +101,8 @@ async function loadNewslettersList(container) {
                     </footer>
                 </div>
             </article>
-        `).join('');
+        `;
+    }).join('');
 
     container.innerHTML = html;
     bindNewsletterActions(container);

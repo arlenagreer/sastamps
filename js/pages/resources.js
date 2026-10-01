@@ -396,14 +396,17 @@ async function openResourceModal(resourceId) {
                         <div class="external-links-section">
                             <h3>Additional Resources</h3>
                             <ul class="external-links-list">
-                                ${resource.externalLinks.map(link => `
+                                ${resource.externalLinks.map(link => {
+    const linkUrl = safeUrl(link.url, '');
+    return `
                                     <li>
-                                        ${safeUrl(link.url, '') ? `<a href="${escapeHTML(safeUrl(link.url, ''))}" target="_blank" rel="noopener">
+                                        ${linkUrl ? `<a href="${escapeHTML(linkUrl)}" target="_blank" rel="noopener">
                                             ${escapeHTML(link.title)}
                                         </a>` : escapeHTML(link.title)}
                                         ${link.description ? `<span class="link-description">${escapeHTML(link.description)}</span>` : ''}
                                     </li>
-                                `).join('')}
+                                `;
+  }).join('')}
                             </ul>
                         </div>
                     ` : ''}

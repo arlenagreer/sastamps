@@ -732,6 +732,7 @@ class SearchEngine {
      */
   renderSearchResult(result, maxScore = 1) {
     const doc = result.document;
+    const docUrl = safeUrl(doc.url, '');
     const typeIcon = this.getTypeIcon(doc.type);
     const formattedDate = doc.date ? parseLocalDate(doc.date).toLocaleDateString() : '';
 
@@ -740,7 +741,7 @@ class SearchEngine {
                 <div class="search-result-header">
                     <h3 class="search-result-title">
                         <i class="${escapeHTML(typeIcon)}"></i>
-                        ${safeUrl(doc.url, '') ? `<a href="${escapeHTML(safeUrl(doc.url, ''))}">${escapeHTML(doc.title)}</a>` : escapeHTML(doc.title)}
+                        ${docUrl ? `<a href="${escapeHTML(docUrl)}">${escapeHTML(doc.title)}</a>` : escapeHTML(doc.title)}
                     </h3>
                     <div class="search-result-meta">
                         <span class="search-result-type">${escapeHTML(this.formatLabel(doc.type))}</span>

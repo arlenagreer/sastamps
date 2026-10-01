@@ -184,7 +184,9 @@ async function loadMeetingsList(container) {
       return;
     }
 
-    const html = meetings.map(meeting => `
+    const html = meetings.map(meeting => {
+      const calendarUrl = safeUrl(meeting.calendarLink, '');
+      return `
             <article class="meeting-item" data-date="${escapeHTML(meeting.date)}" data-type="${escapeHTML(meeting.type || 'regular')}">
                 <header class="meeting-header">
                     <h3>${escapeHTML(meeting.title)}</h3>
@@ -215,10 +217,11 @@ async function loadMeetingsList(container) {
                 <footer class="meeting-actions">
                     <button class="btn-rsvp" data-meeting-id="${escapeHTML(meeting.id)}">RSVP</button>
                     <button class="btn-reminder" data-meeting-id="${escapeHTML(meeting.id)}">Set Reminder</button>
-                    ${safeUrl(meeting.calendarLink, '') ? `<a href="${escapeHTML(safeUrl(meeting.calendarLink, ''))}" class="btn-calendar" aria-label="Add to Calendar: ${escapeHTML(meeting.title)}">Add to Calendar</a>` : ''}
+                    ${calendarUrl ? `<a href="${escapeHTML(calendarUrl)}" class="btn-calendar" aria-label="Add to Calendar: ${escapeHTML(meeting.title)}">Add to Calendar</a>` : ''}
                 </footer>
             </article>
-        `).join('');
+        `;
+    }).join('');
 
     container.innerHTML = html;
 

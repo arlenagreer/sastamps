@@ -391,6 +391,7 @@ class TemplateEngine {
     this.registerComponent('newsletterCard', (args, _context) => {
       const { newsletter } = args;
       if (!newsletter) {return '';}
+      const pdfUrl = safeUrl(newsletter.filePath, '');
 
       return `
                 <div class="newsletter-card">
@@ -408,7 +409,7 @@ class TemplateEngine {
                                 ${newsletter.highlights.map(h => `<li>${escapeHTML(h)}</li>`).join('')}
                             </ul>
                         ` : ''}
-                        ${safeUrl(newsletter.filePath, '') ? `<a href="${escapeHTML(safeUrl(newsletter.filePath, ''))}" class="btn btn-primary" target="_blank" rel="noopener" aria-label="Download PDF: ${escapeHTML(newsletter.title)} (opens in a new tab)">
+                        ${pdfUrl ? `<a href="${escapeHTML(pdfUrl)}" class="btn btn-primary" target="_blank" rel="noopener" aria-label="Download PDF: ${escapeHTML(newsletter.title)} (opens in a new tab)">
                             <i class="fas fa-file-pdf" aria-hidden="true"></i> Download PDF
                         </a>` : ''}
                     </div>

@@ -273,11 +273,14 @@ function displaySearchResults(results, query) {
 
   const maxScore = Math.max(...results.map(r => r.score || 0), 1);
 
-  const html = results.map((result, index) => `
+  const html = results.map((result, index) => {
+    const resultUrl = safeUrl(result.url, '');
+    const downloadUrl = safeUrl(result.downloadUrl, '');
+    return `
         <article class="search-result" data-index="${index}">
             <header class="result-header">
                 <h3 class="result-title">
-                    ${safeUrl(result.url, '') ? `<a href="${escapeHTML(safeUrl(result.url, ''))}" target="_blank" rel="noopener">
+                    ${resultUrl ? `<a href="${escapeHTML(resultUrl)}" target="_blank" rel="noopener">
                         ${highlightMatch(result.title, query)}
                     </a>` : highlightMatch(result.title, query)}
                 </h3>
@@ -298,11 +301,12 @@ function displaySearchResults(results, query) {
             </div>
 
             <footer class="result-actions">
-                ${safeUrl(result.url, '') ? `<a href="${escapeHTML(safeUrl(result.url, ''))}" class="btn-outline btn-small" aria-label="View full content: ${escapeHTML(result.title)}">View Full Content</a>` : ''}
-                ${safeUrl(result.downloadUrl, '') ? `<a href="${escapeHTML(safeUrl(result.downloadUrl, ''))}" class="btn-outline btn-small" aria-label="Download: ${escapeHTML(result.title)}">Download</a>` : ''}
+                ${resultUrl ? `<a href="${escapeHTML(resultUrl)}" class="btn-outline btn-small" aria-label="View full content: ${escapeHTML(result.title)}">View Full Content</a>` : ''}
+                ${downloadUrl ? `<a href="${escapeHTML(downloadUrl)}" class="btn-outline btn-small" aria-label="Download: ${escapeHTML(result.title)}">Download</a>` : ''}
             </footer>
         </article>
-    `).join('');
+    `;
+  }).join('');
 
   container.innerHTML = html;
 
