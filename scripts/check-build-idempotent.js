@@ -105,9 +105,13 @@ try {
   // T1: the committed pages are a fixed point of the build chain, so the deploy
   // ships exactly what is committed. Fails on any step that stacks output.
   console.log('▸ T0 the chain matches the HTML-writing steps of scripts/build.js');
-  const steps = [...fs.readFileSync(path.join(REPO, 'scripts/build.js'), 'utf8')
-    .matchAll(/runCommand\('node', \['(?:scripts\/)?([\w.-]+\.js)'\]\)/g)].map((m) => m[1]);
-  check(steps.length > 0, 'could not read the build steps from scripts/build.js');
+  const buildJs = fs.readFileSync(path.join(REPO, 'scripts/build.js'), 'utf8');
+  const steps = [...buildJs.matchAll(/runCommand\('node', \['(?:scripts\/)?([\w.-]+\.js)'\]\)/g)].map((m) => m[1]);
+  // Every runCommand call must be in the recognised form, so a step written
+  // differently (another binary, extra args, other quotes) cannot hide.
+  const calls = (buildJs.match(/runCommand\(/g) || []).length - 1; // minus the definition
+  check(steps.length > 0 && steps.length === calls,
+    `scripts/build.js has ${calls} runCommand calls but only ${steps.length} in the recognised form`);
   const unknown = steps.filter((st) => !CHAIN.includes(st) && !NOT_HTML_WRITERS.includes(st));
   check(unknown.length === 0, `build.js step(s) not classified here: ${unknown.join(', ')}`);
   check(JSON.stringify(steps.filter((st) => CHAIN.includes(st))) === JSON.stringify(CHAIN),
@@ -127,8 +131,18 @@ try {
   // build:css (postcss with no plugins, --no-map) copies css/styles.css; the
   // build never runs it, so the committed file is what deploys. Stale or
   // map-bearing output fails here.
-  check(fs.readFileSync(path.join(REPO, 'dist/css/styles.min.css'), 'utf8') === fs.readFileSync(path.join(REPO, 'css/styles.css'), 'utf8'),
-    'dist/css/styles.min.css differs from css/styles.css: run npm run build:css');
+  const cssDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sapa-idempotent-'));
+  tempDirs.push(cssDir);
+  // Run the real build:css command from package.json, output redirected.
+  const buildCss = JSON.parse(fs.readFileSync(path.join(REPO, 'package.json'), 'utf8')).scripts['build:css'];
+  check(buildCss && buildCss.includes('dist/css/styles.min.css'), 'package.json build:css does not write dist/css/styles.min.css');
+  const pc = spawnSync('sh', ['-c', buildCss.replace('dist/css/styles.min.css', path.join(cssDir, 'styles.min.css'))], {
+    cwd: REPO, encoding: 'utf8',
+    env: { ...process.env, PATH: `${path.join(REPO, 'node_modules/.bin')}${path.delimiter}${process.env.PATH}` },
+  });
+  check(pc.status === 0, `postcss (build:css) failed: ${(pc.stderr || '').trim().split('\n').pop()}`);
+  check(pc.status === 0 && fs.readFileSync(path.join(cssDir, 'styles.min.css'), 'utf8') === fs.readFileSync(path.join(REPO, 'dist/css/styles.min.css'), 'utf8'),
+    'dist/css/styles.min.css is not what npm run build:css produces: run it and commit the result');
 
   // T3: the critical region is regenerated from css/critical.css, in place.
   console.log('▸ T3 critical CSS regenerates in place, never inlines a source map');

@@ -31,6 +31,9 @@ async function readCriticalCSS() {
     if (open !== close) {
         throw new Error(`css/critical.css: unbalanced braces after stripping comments (${open} open, ${close} close)`);
     }
+    if (/<\/style/i.test(stripped)) {
+        throw new Error('css/critical.css contains "</style", which would end the inline <style> early');
+    }
     return stripped;
 }
 
@@ -38,6 +41,13 @@ async function readCriticalCSS() {
 // uses), and the full stylesheet is a normal render-blocking link: the page's
 // first paint is fully styled, as it was when the stylesheet was inlined.
 function renderPage(filename, content, criticalCSS) {
+    const refs = (content.match(/dist\/css\/styles\.min\.css/g) || []).length;
+    if (!content.includes('<!-- build:critical-css -->') && refs !== 1) {
+        // A page still on an old pattern (preload + noscript, possibly more
+        // copies) has no single safe insertion point; the first match could
+        // even sit inside <noscript>. Fail rather than guess.
+        throw new Error(`${filename}: first build needs exactly one reference to dist/css/styles.min.css, found ${refs}`);
+    }
     const block = `
     <style id="critical-css">
 ${criticalCSS}

@@ -28,10 +28,11 @@ function renderRegion(name, block) {
 function upsertRegion(html, name, block, anchor, filename) {
   const opens = html.split(`<!-- build:${name} -->`).length - 1;
   const closes = html.split(`<!-- /build:${name} -->`).length - 1;
-  if (opens !== closes || opens > 1) {
+  const misordered = opens === 1 && html.indexOf(`<!-- /build:${name} -->`) < html.indexOf(`<!-- build:${name} -->`);
+  if (opens !== closes || opens > 1 || misordered) {
     // A half-deleted or duplicated region would otherwise be nested or
     // stacked silently; make the build fail instead.
-    throw new Error(`${filename}: build:${name} markers are broken (${opens} open, ${closes} close)`);
+    throw new Error(`${filename}: build:${name} markers are broken (${opens} open, ${closes} close${misordered ? ', close before open' : ''})`);
   }
   const region = renderRegion(name, block);
   const existing = regionPattern(name);
