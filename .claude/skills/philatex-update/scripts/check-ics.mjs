@@ -99,12 +99,15 @@ for (const mt of meetings) {
     expectEq(file, 'DTSTART', p.DTSTART, `${ymd}T183000Z`);
     expectEq(file, 'DTEND', p.DTEND, `${ymd}T183100Z`);
   } else {
+    // An event with no confirmed end omits meetingEnd; its .ics must then omit DTEND (RFC 5545).
+    const hasEnd = mt.time?.meetingEnd !== undefined;
     const start = parseClock(mt.time?.meetingStart);
-    const end = parseClock(mt.time?.meetingEnd);
-    if (!start || !end) { fail(file, `unparseable meetingStart/meetingEnd in meetings.json (${mt.time?.meetingStart} / ${mt.time?.meetingEnd})`); continue; }
+    const end = hasEnd ? parseClock(mt.time.meetingEnd) : null;
+    if (!start || (hasEnd && !end)) { fail(file, `unparseable meetingStart/meetingEnd in meetings.json (${mt.time?.meetingStart} / ${mt.time?.meetingEnd})`); continue; }
     expectEq(file, 'STATUS', p.STATUS, lateCancel ? 'CANCELLED' : 'CONFIRMED');
     expectEq(file, 'DTSTART', p.DTSTART, chicagoToUtc(mt.date, start));
-    expectEq(file, 'DTEND', p.DTEND, chicagoToUtc(mt.date, end));
+    if (hasEnd) expectEq(file, 'DTEND', p.DTEND, chicagoToUtc(mt.date, end));
+    else if (p.DTEND !== undefined || p.DURATION !== undefined) fail(file, `has DTEND/DURATION but meetings.json has no meetingEnd (start-only event)`);
   }
   if (failures.length === before) passes.push(file);
 }
@@ -142,11 +145,13 @@ else {
       expectEq(where, 'DTEND', e.DTEND, local(mt.date, [18, 31]));
     } else {
       const anchor = parseClock(mt.type === 'picnic' ? mt.time?.meetingStart : mt.time?.doorsOpen);
-      const end = parseClock(mt.time?.meetingEnd);
-      if (!anchor || !end) { fail(where, 'unparseable times in meetings.json'); continue; }
+      const hasEnd = mt.time?.meetingEnd !== undefined;
+      const end = hasEnd ? parseClock(mt.time.meetingEnd) : null;
+      if (!anchor || (hasEnd && !end)) { fail(where, 'unparseable times in meetings.json'); continue; }
       expectEq(where, 'STATUS', e.STATUS, lateCancel ? 'CANCELLED' : 'CONFIRMED');
       expectEq(where, 'DTSTART', e.DTSTART, local(mt.date, anchor));
-      expectEq(where, 'DTEND', e.DTEND, local(mt.date, end));
+      if (hasEnd) expectEq(where, 'DTEND', e.DTEND, local(mt.date, end));
+      else if (e.DTEND !== undefined || e.DURATION !== undefined) fail(where, 'has DTEND/DURATION but meetings.json has no meetingEnd (start-only event)');
     }
     if (failures.length === before) passes.push(where);
   }
