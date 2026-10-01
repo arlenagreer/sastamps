@@ -48,16 +48,57 @@
     <link rel="canonical" href="https://www.sastamps.org/about.html">
 
     <!-- JSON-LD structured data -->
+    <!-- The Organization node below (@id https://www.sastamps.org/#organization) is
+         duplicated in index.html and about.html. Keep the two copies identical. -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "AboutPage",
-        "@id": "https://www.sastamps.org/about.html",
-        "url": "https://www.sastamps.org/about.html",
-        "name": "About Us - San Antonio Philatelic Association",
-        "about": {
-            "@id": "https://www.sastamps.org/#organization"
-        }
+        "@graph": [
+            {
+                "@type": "AboutPage",
+                "@id": "https://www.sastamps.org/about.html",
+                "url": "https://www.sastamps.org/about.html",
+                "name": "About Us - San Antonio Philatelic Association",
+                "about": {
+                    "@id": "https://www.sastamps.org/#organization"
+                }
+            },
+            {
+                "@type": "Organization",
+                "@id": "https://www.sastamps.org/#organization",
+                "name": "San Antonio Philatelic Association",
+                "alternateName": "SAPA",
+                "url": "https://www.sastamps.org/",
+                "logo": "https://www.sastamps.org/dist/images/favicon.png",
+                "foundingDate": "1896",
+                "description": "A community of stamp collectors in San Antonio, Texas, dedicated to the hobby of philately since 1896.",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "San Antonio",
+                    "addressRegion": "TX",
+                    "addressCountry": "US"
+                },
+                "contactPoint": {
+                    "@type": "ContactPoint",
+                    "contactType": "general inquiries",
+                    "email": "loz33@hotmail.com"
+                },
+                "sameAs": [
+                    "https://www.facebook.com/groups/305765941949570"
+                ],
+                "memberOf": [
+                    {
+                        "@type": "Organization",
+                        "name": "Texas Philatelic Association"
+                    },
+                    {
+                        "@type": "Organization",
+                        "name": "American Philatelic Society",
+                        "url": "https://stamps.org"
+                    }
+                ]
+            }
+        ]
     }
     </script>
 
