@@ -74,7 +74,7 @@ npm run watch           # Watch for CSS/JS changes
 # Building
 npm run build           # Full production build
 npm run build:js        # Build JavaScript with tree-shaking
-npm run build:css       # Build and minify CSS
+npm run build:css       # Regenerate dist/css/styles.min.css from css/styles.css: no PostCSS plugins, so not minified or prefixed, and it appends an inline source map (~110 KB)
 
 # Testing
 npm test                # Run all tests
