@@ -4266,3 +4266,285 @@ tr:hover {
         padding: var(--space-xl);
     }
 }
+
+/* ==========================================================================
+   Resources page (body.page-resources)
+   Folded in from the inline <style class="critical-css"> block that used to sit
+   in resources.html after the stylesheet links. Every selector is prefixed with
+   :where(.page-resources) so it matches only on that page while keeping the
+   specificity the inline rules had, and it sits at the end of this file so it
+   wins the same cascade ties the inline block (loaded after styles.css) won.
+   Rules that only repeated critical.css / styles.css were dropped.
+   ========================================================================== */
+:where(.page-resources) h2 {
+    font-size: 2rem;
+}
+
+:where(.page-resources) .container {
+    margin: 0 auto;
+    max-width: var(--container-xl);
+    padding: 0 1.5rem;
+    width: 100%;
+}
+
+:where(.page-resources) .site-title a {
+    transition: color var(--transition-fast);
+}
+
+:where(.page-resources) .site-title a:hover {
+    color: var(--primary-light);
+}
+
+:where(.page-resources) nav li.active a {
+    color: var(--primary);
+}
+
+@media (width <= 1280px) {
+    :where(.page-resources) nav li {
+        margin-left: 1rem;
+    }
+
+    :where(.page-resources) nav a {
+        padding: 0.25rem;
+        font-size: 0.95rem;
+    }
+
+    :where(.page-resources) .nav-icon {
+        font-size: 1rem;
+        margin-right: 6px;
+    }
+}
+
+@media (width <= 1024px) {
+    :where(.page-resources) nav li {
+        margin-left: 0.75rem;
+    }
+
+    :where(.page-resources) nav a {
+        font-size: 0.9rem;
+    }
+}
+
+:where(.page-resources) .hero {
+    background-color: var(--primary);
+    color: white;
+    padding: 3rem 0;
+    text-align: center;
+    position: relative;
+}
+
+:where(.page-resources) .hero h1 {
+    margin: 0 0 1rem;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+}
+
+:where(.page-resources) .hero p {
+    font-size: 1.25rem;
+    margin: 0;
+    opacity: 0.9;
+}
+
+@media (width <= 768px) {
+    :where(.page-resources) nav ul {
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        right: -100%;
+        background: white;
+        height: 100vh;
+        width: 300px;
+        padding: 2rem;
+        transition: right 0.3s ease;
+        box-shadow: var(--shadow-lg);
+    }
+
+    :where(.page-resources) nav ul.active {
+        right: 0;
+    }
+
+    :where(.page-resources) nav li {
+        margin: 0 0 1rem;
+    }
+}
+
+:where(.page-resources) .category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+:where(.page-resources) .category-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    background: white;
+    box-shadow: 0 2px 4px rgb(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+:where(.page-resources) .category-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgb(0, 0, 0, 0.15);
+}
+
+:where(.page-resources) .resource-item {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 1rem;
+    margin: 1rem 0;
+    background: #fafafa;
+}
+
+:where(.page-resources) .resource-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #666;
+}
+
+:where(.page-resources) .difficulty-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+:where(.page-resources) .difficulty-beginner {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+:where(.page-resources) .difficulty-intermediate {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+:where(.page-resources) .difficulty-advanced {
+    background: #fce4ec;
+    color: #c2185b;
+}
+
+:where(.page-resources) .search-filters {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+:where(.page-resources) .filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* Resource detail modal and bookmark feedback (rendered by js/pages/resources.js) */
+:where(.page-resources) .resource-modal-header {
+    border-bottom: 1px solid var(--light);
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+:where(.page-resources) .resource-modal-meta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+}
+
+:where(.page-resources) .sections-list {
+    margin: 1.5rem 0;
+}
+
+:where(.page-resources) .section-item {
+    padding: 1rem;
+    border: 1px solid var(--light);
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
+}
+
+:where(.page-resources) .section-item h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+}
+
+:where(.page-resources) .resource-modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--light);
+}
+
+:where(.page-resources) .bookmark-feedback {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    animation: fade-in-out 2s ease;
+}
+
+@keyframes fade-in-out {
+    0%,
+    100% {
+        opacity: 0;
+    }
+
+    20%,
+    80% {
+        opacity: 1;
+    }
+}
+
+:where(.page-resources) .btn-bookmark.bookmarked {
+    background-color: var(--accent);
+    color: var(--dark);
+}
+
+:where(.page-resources) .resource-actions {
+    position: relative;
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+:where(.page-resources) .btn-primary,
+:where(.page-resources) .btn-secondary,
+:where(.page-resources) .btn-outline {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+:where(.page-resources) .btn-secondary:hover {
+    background-color: var(--accent);
+    color: var(--dark);
+}
+
+:where(.page-resources) .btn-outline {
+    background-color: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+}
