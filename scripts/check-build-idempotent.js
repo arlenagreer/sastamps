@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 /**
- * check-build-idempotent: the build rewrites the committed root HTML in place
- * (critical CSS, HTML fixes, image tags, font loading), and the Pages deploy
- * builds from those committed files. Any step that appends instead of
- * replacing stacks one more copy per build: on 2026-10-01 the six main pages
- * carried 3-9 stacked stylesheet blocks (2-3 per page held a ~110 KB inline
- * source map; each build added ~130 KB), 7-15 font blocks and 7-13
- * font-observer scripts, 300-490 KB each.
+ * check-build-idempotent: the build still rewrites committed root HTML in
+ * place (fix-html-validation, update-image-tags), and the Pages deploy builds
+ * from those committed files. Any step that appends instead of replacing
+ * stacks one more copy per build: on 2026-10-01 the six main pages had grown
+ * to 300-490 KB that way. The pages now load plain stylesheet links and a
+ * font-loading script, and nothing is inlined.
  *
  * Every run happens in a fresh temp dir, with each script started as its own
  * process (absolute path, cwd = the temp dir), so the real worktree is never
@@ -19,18 +18,19 @@ const crypto = require('crypto');
 const { spawnSync } = require('child_process');
 
 const REPO = path.resolve(__dirname, '..');
-const PAGES = require('./lib/pages');
 // The steps of scripts/build.js that rewrite root HTML, in build order. The
 // drift check below fails when build.js gains, loses or reorders a step until
 // it is classified here or in NOT_HTML_WRITERS.
-const CHAIN = ['extract-critical-css.js', 'fix-html-validation.js', 'update-image-tags.js', 'optimize-fonts.js'];
-// optimize-images only regenerates dist/images (including placeholders.json,
-// which update-image-tags reads only for not-yet-rewritten images/*.png tags);
-// build-search-embedded rewrites search.html's embedded index on every build
-// by design (it carries a build date); the rest write only under dist/.
-const NOT_HTML_WRITERS = ['optimize-images.js', 'build-search-index.js', 'build-search-embedded.js', 'esbuild.config.js', 'analyze-image-savings.js'];
-const INPUTS = ['css/critical.css', 'dist/css/styles.min.css', 'dist/images/placeholders.json'];
-const REGIONS = ['critical-css', 'font-styles', 'font-observer'];
+const CHAIN = ['fix-html-validation.js', 'update-image-tags.js'];
+// build-css writes css/*.min.css and dist/js/font-loading.min.js; optimize-images
+// only regenerates dist/images; build-search-embedded rewrites search.html's
+// embedded index on every build by design (it carries a build date); the rest
+// write only under dist/.
+const NOT_HTML_WRITERS = ['build-css.js', 'optimize-images.js', 'build-search-index.js', 'build-search-embedded.js', 'esbuild.config.js', 'analyze-image-savings.js'];
+const INPUTS = ['dist/images/placeholders.json'];
+const STYLESHEETS = ['styles', 'critical', 'font-loading'];
+// Pages that use the font-loading CSS, and therefore need the script.
+const FONT_PAGES = [...require('./lib/pages'), 'archive.html'];
 
 let checks = 0;
 let failures = 0;
@@ -46,18 +46,16 @@ const count = (s, re) => (s.match(re) || []).length;
 const ROOT_HTML = fs.readdirSync(REPO).filter((n) => n.endsWith('.html'));
 const sha = (file) => crypto.createHash('sha1').update(fs.readFileSync(file)).digest('hex');
 const read = (dir, rel) => fs.readFileSync(path.join(dir, rel), 'utf8');
+const tempDirs = [];
 
-function stage(mutate) {
+function stage() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sapa-idempotent-'));
-  for (const f of ROOT_HTML) {
-    fs.copyFileSync(path.join(REPO, f), path.join(dir, f));
-  }
+  tempDirs.push(dir);
+  for (const f of ROOT_HTML) fs.copyFileSync(path.join(REPO, f), path.join(dir, f));
   for (const rel of INPUTS) {
     fs.mkdirSync(path.dirname(path.join(dir, rel)), { recursive: true });
     fs.copyFileSync(path.join(REPO, rel), path.join(dir, rel));
   }
-  if (mutate) mutate(dir);
-  tempDirs.push(dir);
   return dir;
 }
 
@@ -73,43 +71,12 @@ function runChain(dir) {
   return Object.fromEntries(ROOT_HTML.map((p) => [p, read(dir, p)]));
 }
 
-function invariants(label, html) {
-  check(count(html, /sourceMappingURL/g) === 0, `${label}: inline source map present`);
-  check(count(html, /\/\/ Font Face Observer script/g) === 1, `${label}: font-observer scripts = ${count(html, /\/\/ Font Face Observer script/g)}, want 1`);
-  const fontUrls = html.match(/https:\/\/fonts\.googleapis\.com\/css2\?[^"']+/g) || [];
-  check(fontUrls.length > 0 && fontUrls.every((u) => count(u, /display=swap/g) === 1),
-    `${label}: every Google Fonts URL must carry display=swap exactly once`);
-  check(count(html, /<link rel="stylesheet" href="dist\/css\/styles\.min\.css">/g) === 1, `${label}: stylesheet links != 1`);
-  check(count(html, /dist\/css\/styles\.min\.css/g) === 1, `${label}: stray preload or noscript reference to the stylesheet`);
-  check(count(html, /href="css\/critical\.css"/g) === 0, `${label}: css/critical.css is fetched although it is inlined`);
-  for (const name of REGIONS) {
-    const open = count(html, new RegExp(`<!-- build:${name} -->`, 'g'));
-    const close = count(html, new RegExp(`<!-- /build:${name} -->`, 'g'));
-    check(open === 1 && close === 1, `${label}: region ${name} open/close = ${open}/${close}, want 1/1`);
-  }
-  check(count(html, /<style\b/gi) === count(html, /<\/style>/gi), `${label}: unbalanced <style> tags`);
-  check(count(html, /<script\b/gi) === count(html, /<\/script>/gi), `${label}: unbalanced <script> tags`);
-  // The font fallbacks win today only because they follow the main stylesheet.
-  check(html.indexOf('<!-- build:font-styles -->') > html.indexOf('<link rel="stylesheet" href="dist/css/styles.min.css">'),
-    `${label}: font-styles region is not after the stylesheet link`);
-}
-
-function regionBody(html, name) {
-  const m = html.match(new RegExp(`<!-- build:${name} -->([\\s\\S]*?)<!-- /build:${name} -->`));
-  return m ? m[1] : '';
-}
-
-const tempDirs = [];
 const before = Object.fromEntries([...ROOT_HTML, ...INPUTS].map((f) => [f, sha(path.join(REPO, f))]));
 
 try {
-  // T1: the committed pages are a fixed point of the build chain, so the deploy
-  // ships exactly what is committed. Fails on any step that stacks output.
   console.log('▸ T0 the chain matches the HTML-writing steps of scripts/build.js');
   const buildJs = fs.readFileSync(path.join(REPO, 'scripts/build.js'), 'utf8');
   const steps = [...buildJs.matchAll(/runCommand\('node', \['(?:scripts\/)?([\w.-]+\.js)'\]\)/g)].map((m) => m[1]);
-  // Every runCommand call must be in the recognised form, so a step written
-  // differently (another binary, extra args, other quotes) cannot hide.
   const calls = (buildJs.match(/runCommand\(/g) || []).length - 1; // minus the definition
   check(steps.length > 0 && steps.length === calls,
     `scripts/build.js has ${calls} runCommand calls but only ${steps.length} in the recognised form`);
@@ -118,111 +85,71 @@ try {
   check(JSON.stringify(steps.filter((st) => CHAIN.includes(st))) === JSON.stringify(CHAIN),
     `CHAIN order differs from build.js: ${steps.filter((st) => CHAIN.includes(st)).join(' > ')}`);
 
+  // T1: the committed pages are a fixed point of the build chain, so the deploy
+  // ships exactly what is committed. Fails on any step that stacks output.
   console.log('▸ T1 committed pages are a fixed point of the build chain');
-  const dir1 = stage();
-  const pass1 = runChain(dir1);
-  const pass2 = runChain(dir1);
+  const dir = stage();
+  const pass1 = runChain(dir);
+  const pass2 = runChain(dir);
   for (const p of ROOT_HTML) {
-    check(pass1[p] === fs.readFileSync(path.join(REPO, p), 'utf8'), `${p}: one build changes the committed page (${fs.statSync(path.join(REPO, p)).size} -> ${Buffer.byteLength(pass1[p])} bytes)`);
-    check(pass2[p] === pass1[p], `${p}: a second build changes the page again (${Buffer.byteLength(pass1[p])} -> ${Buffer.byteLength(pass2[p])} bytes)`);
+    check(pass1[p] === fs.readFileSync(path.join(REPO, p), 'utf8'), `${p}: one build changes the committed page`);
+    check(pass2[p] === pass1[p], `${p}: a second build changes the page again`);
   }
 
-  console.log('▸ T2 generated-content invariants');
-  for (const p of PAGES) invariants(p, pass1[p]);
-  // build:css (postcss with no plugins, --no-map) copies css/styles.css; the
-  // build never runs it, so the committed file is what deploys. Stale or
-  // map-bearing output fails here.
-  const cssDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sapa-idempotent-'));
-  tempDirs.push(cssDir);
-  check(count(fs.readFileSync(path.join(REPO, 'dist/css/styles.min.css'), 'utf8'), /sourceMappingURL/g) === 0,
-    'dist/css/styles.min.css carries an inline source map (is --no-map missing from build:css?)');
-  // build-search-embedded.js replaces its block in search.html on every build;
-  // it must never stack a second copy.
+  console.log('▸ T2 pages load plain links and nothing is inlined');
+  for (const p of ROOT_HTML.filter((f) => !/^(test-|q4_update)/.test(f))) {
+    const html = fs.readFileSync(path.join(REPO, p), 'utf8');
+    check(count(html, /sourceMappingURL/g) === 0, `${p}: inline source map present`);
+    check(count(html, /<!-- \/?build:/g) === 0, `${p}: leftover build: region markers`);
+    check(count(html, /id="critical-css"/g) === 0, `${p}: inline critical CSS (id="critical-css")`);
+    check(count(html, /\/\/ Font Face Observer script/g) === 0, `${p}: an old inline font observer is still on the page`);
+    check(count(html, /<style\b/gi) === count(html, /<\/style>/gi), `${p}: unbalanced <style> tags`);
+    check(count(html, /<script\b/gi) === count(html, /<\/script>/gi), `${p}: unbalanced <script> tags`);
+    for (const name of ['critical', 'styles']) {
+      const n = count(html, new RegExp(`href="/?css/${name}\\.min\\.css"`, 'g'));
+      if (n > 0 || /href="\/?css\/(critical|styles)/.test(html)) {
+        check(n === 1, `${p}: css/${name}.min.css linked ${n} times, want 1`);
+        check(count(html, new RegExp(`href="/?css/${name}\\.css"`, 'g')) === 0, `${p}: still links the unminified css/${name}.css`);
+        check(count(html, new RegExp(`rel="preload" href="/?css/${name}`, 'g')) === 0, `${p}: css/${name} is preloaded, want a plain link`);
+      }
+    }
+    // The font-loading CSS shows system-ui until the script sets fonts-loaded:
+    // one without the other leaves the page on system fonts for good.
+    const fontCss = count(html, /href="css\/font-loading\.min\.css"/g);
+    const fontJs = count(html, /<script src="dist\/js\/font-loading\.min\.js"><\/script>/g);
+    const wantFont = FONT_PAGES.includes(p) ? 1 : 0;
+    check(fontCss === wantFont && fontJs === wantFont, `${p}: font-loading CSS/script = ${fontCss}/${fontJs}, want ${wantFont}/${wantFont}`);
+    if (wantFont) {
+      check(html.indexOf('css/font-loading.min.css') > html.indexOf('css/styles.min.css'),
+        `${p}: font-loading CSS must come after the main stylesheet`);
+      check(html.indexOf('dist/js/font-loading.min.js') < html.indexOf('</head>'),
+        `${p}: the font-loading script must run in <head>, before first paint`);
+    }
+  }
+
+  // The minified files are what build:css produces from the sources today.
+  // Compiled in memory with the same options, so nothing is written.
+  console.log('▸ T3 committed minified files match their sources');
+  const esbuild = require('esbuild');
+  for (const name of STYLESHEETS) {
+    const out = esbuild.buildSync({ entryPoints: [path.join(REPO, `css/${name}.css`)], minify: true, write: false, logLevel: 'silent' });
+    const committed = fs.readFileSync(path.join(REPO, `css/${name}.min.css`), 'utf8');
+    check(out.outputFiles[0].text === committed, `css/${name}.min.css is not what npm run build:css produces: run it and commit`);
+    check(!committed.includes('/*'), `css/${name}.min.css contains a comment (not minified, or a source map)`);
+  }
+  const js = esbuild.buildSync({ entryPoints: [path.join(REPO, 'js/font-loading.js')], bundle: true, format: 'iife', minify: true, write: false, logLevel: 'silent' });
+  check(js.outputFiles[0].text === fs.readFileSync(path.join(REPO, 'dist/js/font-loading.min.js'), 'utf8'),
+    'dist/js/font-loading.min.js is not what npm run build:css produces: run it and commit');
   check(count(fs.readFileSync(path.join(REPO, 'search.html'), 'utf8'), /window\.SEARCH_INDEX_DATA = /g) === 1,
     'search.html must embed the search index exactly once');
-  // Run the real build:css command from package.json, output redirected.
-  const buildCss = JSON.parse(fs.readFileSync(path.join(REPO, 'package.json'), 'utf8')).scripts['build:css'];
-  check(buildCss && buildCss.includes('dist/css/styles.min.css'), 'package.json build:css does not write dist/css/styles.min.css');
-  const pc = spawnSync('sh', ['-c', buildCss.replace('dist/css/styles.min.css', path.join(cssDir, 'styles.min.css'))], {
-    cwd: REPO, encoding: 'utf8',
-    env: { ...process.env, PATH: `${path.join(REPO, 'node_modules/.bin')}${path.delimiter}${process.env.PATH}` },
-  });
-  check(pc.status === 0, `postcss (build:css) failed: ${(pc.stderr || '').trim().split('\n').pop()}`);
-  check(pc.status === 0 && fs.readFileSync(path.join(cssDir, 'styles.min.css'), 'utf8') === fs.readFileSync(path.join(REPO, 'dist/css/styles.min.css'), 'utf8'),
-    'dist/css/styles.min.css is not what npm run build:css produces: run it and commit the result');
-
-  // T3: the critical region is regenerated from css/critical.css, in place.
-  console.log('▸ T3 critical CSS regenerates in place, never inlines a source map');
-  const probe = '.zz-idempotence-probe{color:red}';
-  const dir3 = stage((d) => fs.appendFileSync(path.join(d, 'css/critical.css'),
-    `\n${probe}\n/*# sourceMappingURL=data:application/json;base64,aDM= */\n`));
-  const regen1 = runChain(dir3);
-  const regen2 = runChain(dir3);
-  for (const p of PAGES) {
-    check(count(regionBody(regen1[p], 'critical-css'), /zz-idempotence-probe/g) === 1, `${p}: critical region did not pick up a css/critical.css change exactly once`);
-    check(count(regen1[p], /sourceMappingURL/g) === 0, `${p}: a source-map comment in the CSS was inlined`);
-    check(regen2[p] === regen1[p], `${p}: regenerated page is not stable on the next build`);
-    invariants(`${p} (regenerated)`, regen1[p]);
-  }
-
-  // T4: a page with no generated regions gets exactly one of each.
-  console.log('▸ T4 first build inserts exactly one of each region');
-  const dir4 = stage((d) => {
-    for (const p of PAGES) {
-      let html = read(d, p);
-      html = html.replace(/<!-- build:critical-css -->[\s\S]*?<!-- \/build:critical-css -->/,
-        '<link rel="stylesheet" href="dist/css/styles.min.css">');
-      html = html.replace(/\n?[ \t]*<!-- build:font-(styles|observer) -->[\s\S]*?<!-- \/build:font-\1 -->/g, '');
-      html = html.replace(/([?&](amp;)?)display=swap/g, '').replace(/(fonts\.googleapis\.com\/css2\?[^"']*?)(&amp;)+"/, '$1"');
-      fs.writeFileSync(path.join(d, p), html);
-    }
-  });
-  const fresh = runChain(dir4);
-  const freshAgain = runChain(dir4);
-  for (const p of PAGES) {
-    invariants(`${p} (fresh)`, fresh[p]);
-    // A first insert must already be final: e.g. a raw '&' written after
-    // fix-html-validation.js would be rewritten by the next build.
-    check(freshAgain[p] === fresh[p], `${p} (fresh): the build after a first insert changes the page again`);
-  }
-
-  // T6: each guard refuses its bad input with its own error, permanently.
-  console.log('▸ T6 guards refuse broken input');
-  const expectFail = (label, script, mutate, pattern) => {
-    const dir = stage(mutate);
-    const r = spawnSync(process.execPath, [path.join(REPO, 'scripts', script)], { cwd: dir, encoding: 'utf8' });
-    const out = `${r.stderr}\n${r.stdout}`;
-    check(r.status !== 0 && pattern.test(out), `${label}: ${script} should fail with ${pattern} (exit ${r.status})`);
-  };
-  const edit = (rel, fn) => (d) => fs.writeFileSync(path.join(d, rel), fn(read(d, rel)));
-  const swapMarkers = (html) => html.replace('<!-- build:font-styles -->', '@@OPEN@@')
-    .replace('<!-- /build:font-styles -->', '<!-- build:font-styles -->').replace('@@OPEN@@', '<!-- /build:font-styles -->');
-  expectFail('misordered markers', 'optimize-fonts.js', edit('index.html', swapMarkers), /close before open/);
-  expectFail('half-deleted region', 'extract-critical-css.js',
-    edit('index.html', (h) => h.replace('<!-- /build:critical-css -->', '')), /markers are broken/);
-  expectFail('duplicated region', 'optimize-fonts.js',
-    edit('index.html', (h) => h.replace('</head>', '<!-- build:font-styles --><!-- /build:font-styles -->\n</head>')), /markers are broken/);
-  expectFail('"</style" in critical.css', 'extract-critical-css.js',
-    edit('css/critical.css', (c) => `${c}\n.x::after{content:"</style>"}`), /<\/style/);
-  const stripRegion = (h) => h.replace(/<!-- build:critical-css -->[\s\S]*?<!-- \/build:critical-css -->/, '');
-  expectFail('first build with two stylesheet references', 'extract-critical-css.js',
-    edit('index.html', (h) => stripRegion(h).replace('</head>',
-      '<link rel="preload" href="dist/css/styles.min.css" as="style">\n<link rel="stylesheet" href="dist/css/styles.min.css">\n</head>')), /exactly one reference/);
-  expectFail('first build with the only reference inside <noscript>', 'extract-critical-css.js',
-    edit('index.html', (h) => stripRegion(h).replace('</head>',
-      '<noscript><link rel="stylesheet" href="dist/css/styles.min.css"></noscript>\n</head>')), /inside <noscript>/);
-  // ...and a brace inside a CSS string is not a false alarm.
-  const okDir = stage(edit('css/critical.css', (c) => `${c}\n.x::before{content:"{"}`));
-  const okRun = spawnSync(process.execPath, [path.join(REPO, 'scripts/extract-critical-css.js')], { cwd: okDir, encoding: 'utf8' });
-  check(okRun.status === 0, 'a brace inside a CSS string must not fail the brace check');
 } catch (err) {
   failures++;
   console.log(`  FAIL ${err.message}`);
 }
 
-for (const dir of tempDirs) fs.rmSync(dir, { recursive: true, force: true });
+for (const d of tempDirs) fs.rmSync(d, { recursive: true, force: true });
 
-// T5: nothing above may touch the real worktree.
+// Nothing above may touch the real worktree.
 const after = Object.fromEntries([...ROOT_HTML, ...INPUTS].map((f) => [f, sha(path.join(REPO, f))]));
 for (const f of Object.keys(before)) check(before[f] === after[f], `tripwire: ${f} in the real worktree changed`);
 
