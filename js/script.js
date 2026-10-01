@@ -99,7 +99,7 @@ async function fetchWithRetry(url, options = {}, retries = 3) {
       }
       return response;
     } catch (error) {
-      if (i === retries - 1) throw error;
+      if (i === retries - 1) { throw error; }
       logger.warn(`Fetch attempt ${i + 1} failed, retrying...`, error);
       await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, i)));
     }
@@ -107,7 +107,7 @@ async function fetchWithRetry(url, options = {}, retries = 3) {
 }
 
 // Wait for the DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
   // Initialize page components
 
   try {
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const createComponentBoundary = (name, fn, container = null) => {
       return new ErrorBoundary({
         componentName: name,
-        container: container,
+        container,
         onError: (error, componentName) => {
           logger.error(`[${componentName}] Component failed:`, error);
           // Track component failures
@@ -202,7 +202,7 @@ function setupMobileViewportHeight() {
   // Update on resize and orientation change with debouncing
   const debouncedSetViewportHeight = debounce(setViewportHeight, 250);
   addEventListenerWithCleanup(window, 'resize', debouncedSetViewportHeight);
-  addEventListenerWithCleanup(window, 'orientationchange', function() {
+  addEventListenerWithCleanup(window, 'orientationchange', () => {
     setTimeout(setViewportHeight, 100); // Small delay for iOS
   });
 
@@ -255,7 +255,7 @@ function setupEventCountdown() {
     }
 
     // Update the countdown every second
-    const countdownInterval = setInterval(function() {
+    const countdownInterval = setInterval(() => {
       try {
         const now = new Date().getTime();
         const distance = eventDateTime - now;
@@ -330,7 +330,7 @@ function setupFormValidation() {
       return;
     }
 
-    addEventListenerWithCleanup(contactForm, 'submit', function(e) {
+    addEventListenerWithCleanup(contactForm, 'submit', (e) => {
       e.preventDefault();
 
       // Basic form validation
@@ -402,7 +402,7 @@ function setupFormValidation() {
         fetchWithRetry(endpoint, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(formData)
         })
@@ -442,7 +442,7 @@ function setupFormValidation() {
               // Allow sending another message
               const sendAnotherBtn = document.getElementById('send-another');
               if (sendAnotherBtn) {
-                addEventListenerWithCleanup(sendAnotherBtn, 'click', function() {
+                addEventListenerWithCleanup(sendAnotherBtn, 'click', () => {
                   contactForm.reset();
                   successMessage.remove();
                   contactForm.style.display = 'block';
@@ -507,7 +507,7 @@ function setupFormValidation() {
 function setupAccordion() {
   const accordionHeaders = document.querySelectorAll('.accordion-header');
 
-  if (!accordionHeaders.length) return;
+  if (!accordionHeaders.length) { return; }
 
   accordionHeaders.forEach(header => {
     addEventListenerWithCleanup(header, 'click', function() {
@@ -521,12 +521,12 @@ function setupAccordion() {
         content.style.maxHeight = null;
         // Change icon if present
         const icon = this.querySelector('i');
-        if (icon) icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
+        if (icon) { icon.classList.replace('fa-chevron-up', 'fa-chevron-down'); }
       } else {
-        content.style.maxHeight = content.scrollHeight + 'px';
+        content.style.maxHeight = `${content.scrollHeight}px`;
         // Change icon if present
         const icon = this.querySelector('i');
-        if (icon) icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
+        if (icon) { icon.classList.replace('fa-chevron-down', 'fa-chevron-up'); }
       }
     });
   });
@@ -542,7 +542,7 @@ function setupImageGallery() {
   const galleryImages = document.querySelectorAll('.gallery-image');
   const lightbox = document.querySelector('.lightbox');
 
-  if (!galleryImages.length || !lightbox) return;
+  if (!galleryImages.length || !lightbox) { return; }
 
   galleryImages.forEach(image => {
     addEventListenerWithCleanup(image, 'click', function() {
@@ -563,14 +563,14 @@ function setupImageGallery() {
   // Close lightbox when clicking the close button
   const closeButton = lightbox.querySelector('.lightbox-close');
   if (closeButton) {
-    addEventListenerWithCleanup(closeButton, 'click', function() {
+    addEventListenerWithCleanup(closeButton, 'click', () => {
       lightbox.classList.remove('active');
       document.body.classList.remove('no-scroll');
     });
   }
 
   // Close lightbox when clicking outside the image
-  addEventListenerWithCleanup(lightbox, 'click', function(e) {
+  addEventListenerWithCleanup(lightbox, 'click', (e) => {
     if (e.target === lightbox) {
       lightbox.classList.remove('active');
       document.body.classList.remove('no-scroll');
@@ -578,7 +578,7 @@ function setupImageGallery() {
   });
 
   // Close lightbox when pressing ESC
-  addEventListenerWithCleanup(document, 'keydown', function(e) {
+  addEventListenerWithCleanup(document, 'keydown', (e) => {
     if (e.key === 'Escape' && lightbox.classList.contains('active')) {
       lightbox.classList.remove('active');
       document.body.classList.remove('no-scroll');
@@ -658,7 +658,7 @@ function setupThemeToggle() {
     }
 
     themeToggles.forEach(toggle => {
-      addEventListenerWithCleanup(toggle, 'click', function() {
+      addEventListenerWithCleanup(toggle, 'click', () => {
         try {
           // Get current theme
           const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -706,12 +706,12 @@ function setupThemeToggle() {
 function setupContactForm() {
   try {
     const contactForm = safeQuerySelector('#contact-form');
-    if (!contactForm) return;
+    if (!contactForm) { return; }
 
     // Fetch CSRF token when page loads
     fetchCSRFToken();
 
-    addEventListenerWithCleanup(contactForm, 'submit', async function(e) {
+    addEventListenerWithCleanup(contactForm, 'submit', async (e) => {
       e.preventDefault();
 
       const submitBtn = safeQuerySelector('#submit-btn');
@@ -736,7 +736,7 @@ function setupContactForm() {
           message: data.message
         };
 
-        let validationErrors = {};
+        const validationErrors = {};
 
         // Validate each input
         Object.keys(inputs).forEach(key => {
@@ -756,7 +756,7 @@ function setupContactForm() {
 
         // Clear previous messages
         clearFormErrors();
-        if (formMessage) formMessage.innerHTML = '';
+        if (formMessage) { formMessage.innerHTML = ''; }
 
         // Show loading state
         if (submitBtn) {
@@ -778,7 +778,7 @@ function setupContactForm() {
         const response = await fetchWithRetry(endpoint, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(data)
         }, 2);
@@ -803,7 +803,7 @@ function setupContactForm() {
 
             const icon = createSafeElement('i', { className: 'fas fa-check-circle' });
             successDiv.appendChild(icon);
-            successDiv.appendChild(document.createTextNode(' ' + sanitizeText(result.message)));
+            successDiv.appendChild(document.createTextNode(` ${sanitizeText(result.message)}`));
             formMessage.appendChild(successDiv);
           }
           contactForm.reset();
@@ -1079,7 +1079,7 @@ function setupDynamicContentBoundaries() {
     // Meeting schedule container boundary
     const meetingContainer = safeQuerySelector('#meeting-schedule-container');
     if (meetingContainer) {
-      const meetingBoundary = new ErrorBoundary({
+      new ErrorBoundary({
         componentName: 'Meeting Schedule',
         container: meetingContainer,
         onError: (error) => {
@@ -1115,7 +1115,7 @@ function setupDynamicContentBoundaries() {
           },
           {
             maxRetries: 2,
-            fallbackContent: (error) => `
+            fallbackContent: () => `
                             <div class="calendar-error" style="
                                 background-color: #fff3cd;
                                 color: #856404;
@@ -1139,10 +1139,10 @@ function setupDynamicContentBoundaries() {
     // Search container boundary
     const searchContainer = safeQuerySelector('.search-container, #search-container');
     if (searchContainer) {
-      const searchBoundary = new ErrorBoundary({
+      new ErrorBoundary({
         componentName: 'Search',
         container: searchContainer,
-        fallbackUI: (error) => `
+        fallbackUI: () => `
                     <div class="search-error" style="
                         background-color: #f8d7da;
                         color: #721c24;
@@ -1165,7 +1165,7 @@ function setupDynamicContentBoundaries() {
 
     // Newsletter content with lazy loading
     const newsletterContainers = document.querySelectorAll('.newsletter-content, [class*="newsletter"], [id*="newsletter"]');
-    newsletterContainers.forEach((container, index) => {
+    newsletterContainers.forEach((container) => {
       // Only apply to containers that seem to load dynamic content
       if (container.dataset.lazy === 'true' ||
                 container.classList.contains('dynamic-content') ||
@@ -1179,7 +1179,7 @@ function setupDynamicContentBoundaries() {
             
             const loader = new NewsletterLoader();
             const data = await loader.loadData();
-            const newsletters = data.newsletters;
+            const {newsletters} = data;
 
             // Render newsletter content
             if (newsletters && newsletters.length > 0) {
@@ -1208,7 +1208,7 @@ function setupDynamicContentBoundaries() {
                                 <p>Newsletter content will load when scrolled into view</p>
                             </div>
                         `,
-            fallbackContent: (error) => `
+            fallbackContent: () => `
                             <div class="newsletter-loading-fallback" style="
                                 background-color: #f8f9fa;
                                 border: 2px dashed #dee2e6;
@@ -1234,10 +1234,10 @@ function setupDynamicContentBoundaries() {
     const contactForm = safeQuerySelector('#contact-form');
     if (contactForm) {
       const formMessageContainer = safeQuerySelector('#form-message');
-      const contactFormBoundary = new ErrorBoundary({
+      new ErrorBoundary({
         componentName: 'Contact Form Component',
         container: formMessageContainer,
-        fallbackUI: (error) => `
+        fallbackUI: () => `
                     <div class="contact-form-error" style="
                         background-color: #f8d7da;
                         color: #721c24;
@@ -1258,9 +1258,9 @@ function setupDynamicContentBoundaries() {
     // Add boundary to any other containers with dynamic content
     const dynamicContainers = document.querySelectorAll('[id*="schedule"], [id*="events"], [class*="loading"]');
     dynamicContainers.forEach((container, index) => {
-      const containerBoundary = new ErrorBoundary({
+      new ErrorBoundary({
         componentName: `Dynamic Content ${index + 1}`,
-        container: container,
+        container,
         maxRetries: 1
       });
     });

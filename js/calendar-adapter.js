@@ -85,7 +85,7 @@ export class CalendarAdapter {
      * @returns {Object} Calendar event object
      */
   convertMeetingToEvent(meeting) {
-    const eventDate = new Date(meeting.date + 'T00:00:00');
+    const eventDate = new Date(`${meeting.date}T00:00:00`);
     const styleConfig = this.eventTypeStyles[meeting.type] || this.eventTypeStyles['regular'];
 
     return {
@@ -185,7 +185,7 @@ export class CalendarAdapter {
                 ${cancelledNote}
                 <h4>${escapeHTML(meeting.title)}</h4>
                 <div class="meeting-details">
-                    <strong>Date:</strong> ${escapeHTML(this.formatDisplayDate(new Date(meeting.date + 'T00:00:00')))}<br>
+                    <strong>Date:</strong> ${escapeHTML(this.formatDisplayDate(new Date(`${meeting.date}T00:00:00`)))}<br>
                     ${timeInfo}
                     <br><strong>Location:</strong><br>
                     ${location}

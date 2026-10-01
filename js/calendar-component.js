@@ -183,7 +183,7 @@ export class CalendarComponent {
      * Update calendar with events
      */
   updateCalendarEvents() {
-    if (!this.calendar || !this.events.length) return;
+    if (!this.calendar || !this.events.length) { return; }
 
     // Add event dots to dates
     this.addEventDots();
@@ -199,7 +199,7 @@ export class CalendarComponent {
 
       calendarDates.forEach(dateElement => {
         const dateValue = dateElement.getAttribute('data-vc-date');
-        if (!dateValue) return;
+        if (!dateValue) { return; }
 
         // Find events for this date
         const dayEvents = this.events.filter(event => event.date === dateValue);
@@ -238,11 +238,11 @@ export class CalendarComponent {
   /**
      * Handle day click
      * @param {Event} event - Click event
-     * @param {Object} self - Calendar instance
+     * @param {Object} _self - Calendar instance
      */
-  handleDayClick(event, self) {
+  handleDayClick(event, _self) {
     const clickedDate = event.target.closest('[data-vc-date]')?.dataset.vcDate;
-    if (!clickedDate) return;
+    if (!clickedDate) { return; }
 
     // Find events for clicked date
     const dayEvents = this.events.filter(event => event.date === clickedDate);
@@ -267,10 +267,10 @@ export class CalendarComponent {
 
   /**
      * Handle month change
-     * @param {Event} event - Change event
-     * @param {Object} self - Calendar instance
+     * @param {Event} _event - Change event
+     * @param {Object} _self - Calendar instance
      */
-  handleMonthChange(event, self) {
+  handleMonthChange(_event, _self) {
     // Re-add event dots after month change
     setTimeout(() => {
       this.addEventDots();
@@ -279,10 +279,10 @@ export class CalendarComponent {
 
   /**
      * Handle year change
-     * @param {Event} event - Change event
-     * @param {Object} self - Calendar instance
+     * @param {Event} _event - Change event
+     * @param {Object} _self - Calendar instance
      */
-  handleYearChange(event, self) {
+  handleYearChange(_event, _self) {
     // Re-add event dots after year change
     setTimeout(() => {
       this.addEventDots();
@@ -295,7 +295,7 @@ export class CalendarComponent {
      * @returns {Object|null} Meeting object or null
      */
   findMeetingById(id) {
-    if (!this.meetingsData || !this.meetingsData.meetings) return null;
+    if (!this.meetingsData || !this.meetingsData.meetings) { return null; }
     return this.meetingsData.meetings.find(meeting => meeting.id === id);
   }
 

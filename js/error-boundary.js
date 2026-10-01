@@ -96,7 +96,7 @@ class ErrorBoundary {
      * @param {Error} error - The error that occurred
      */
   showFallbackUI(error) {
-    if (!this.container) return;
+    if (!this.container) { return; }
 
     const fallbackElement = typeof this.fallbackUI === 'function'
       ? this.fallbackUI(error, this.componentName)
@@ -273,7 +273,7 @@ class GlobalErrorBoundary {
     this.showErrorNotification(errorInfo);
   }
 
-  showErrorNotification(errorInfo) {
+  showErrorNotification(_errorInfo) {
     // Create or update error notification
     let notification = document.getElementById('global-error-notification');
 

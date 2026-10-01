@@ -94,7 +94,7 @@ export class Modal {
      * @param {Object} meetingData - Meeting data object
      */
   open(meetingData) {
-    if (this.isOpen) return;
+    if (this.isOpen) { return; }
 
     this.previousFocus = document.activeElement;
     this.populateContent(meetingData);
@@ -122,7 +122,7 @@ export class Modal {
      * Close modal
      */
   close() {
-    if (!this.isOpen) return;
+    if (!this.isOpen) { return; }
 
     this.modal.classList.remove('modal-open');
     this.modal.setAttribute('aria-hidden', 'true');
@@ -162,7 +162,7 @@ export class Modal {
      * @returns {string} HTML content
      */
   buildMeetingContent(meeting) {
-    const eventDate = new Date(meeting.date + 'T00:00:00');
+    const eventDate = new Date(`${meeting.date}T00:00:00`);
     const formattedDate = eventDate.toLocaleDateString('en-US', {
       weekday: 'long',
       year: 'numeric',
@@ -173,7 +173,7 @@ export class Modal {
     const eventTypeClass = `event-type-${meeting.type}`;
     const cancelledClass = meeting.cancelled ? 'event-cancelled' : '';
 
-    let content = `
+    const content = `
             <div class="event-details ${eventTypeClass} ${cancelledClass}">
                 ${meeting.cancelled ? '<div class="cancelled-banner"><i class="fas fa-exclamation-triangle"></i> This event has been cancelled</div>' : ''}
                 
@@ -226,7 +226,7 @@ export class Modal {
      * @returns {string} HTML content
      */
   buildLocationSection(location) {
-    const address = location.address;
+    const {address} = location;
     const fullAddress = address ?
       `${address.street}, ${address.city}, ${address.state} ${address.zipCode}` : '';
 
@@ -354,7 +354,7 @@ export class Modal {
             </div>`;
     }
 
-    content += `</div></div>`;
+    content += '</div></div>';
     return content;
   }
 
@@ -407,7 +407,7 @@ export class Modal {
      * @param {Event} e - Keyboard event
      */
   trapFocus(e) {
-    if (this.focusableElements.length === 0) return;
+    if (this.focusableElements.length === 0) { return; }
 
     const firstElement = this.focusableElements[0];
     const lastElement = this.focusableElements[this.focusableElements.length - 1];
