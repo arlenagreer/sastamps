@@ -71,29 +71,23 @@ async function initializeMeetingsCalendar() {
       await adapter.loadMeetings();
     }
 
+    // vanilla-calendar-pro v3 API (flat options; v2's settings/actions are ignored)
     const calendar = new Calendar(calendarContainer, {
       type: 'default',
-      settings: {
-        visibility: {
-          daysOutside: false,
-          weekend: true
-        },
-        selection: {
-          day: 'single'
-        },
-        range: {
-          min: CALENDAR.DATE_RANGE.MIN,
-          max: CALENDAR.DATE_RANGE.MAX
-        }
-      },
-      actions: {
-        clickDay: (event, self) => {
-          const clickedDate = self.selectedDates[0];
-          const meeting = adapter.getMeetingByDate(clickedDate);
+      displayDatesOutside: false,
+      selectedWeekends: [0, 6],
+      selectionDatesMode: 'single',
+      displayDateMin: CALENDAR.DATE_RANGE.MIN,
+      displayDateMax: CALENDAR.DATE_RANGE.MAX,
+      onClickDate: (self, event) => {
+        // Read the clicked cell's date rather than self.context.selectedDates:
+        // re-clicking a date toggles it off (enableDateToggle), emptying the selection.
+        const dateEl = event?.target?.closest?.('[data-vc-date]');
+        const clickedDate = dateEl?.dataset.vcDate || self.context.selectedDates[0];
+        const meeting = clickedDate && adapter.getMeetingByDate(clickedDate);
 
-          if (meeting) {
-            modal.open(meeting);
-          }
+        if (meeting) {
+          modal.open(meeting);
         }
       }
     });
