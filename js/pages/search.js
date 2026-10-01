@@ -334,6 +334,13 @@ function clearSearchResults() {
 }
 
 function showSearchError(message) {
+  // #search-stats is the page's live region; put the short message there so
+  // the failure is announced, and keep the full error block in the results.
+  const stats = safeQuerySelector('#search-stats');
+  if (stats) {
+    stats.textContent = message;
+  }
+
   const container = safeQuerySelector('#results-container');
   if (container) {
     container.innerHTML = `

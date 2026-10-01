@@ -97,6 +97,7 @@ async function loadGlossarySearch(container) {
         clearButton.style.display = 'block';
         searchTimeout = setTimeout(() => performSearch(query, resultsContainer), 300);
       } else {
+        cancelPendingSearch();
         clearButton.style.display = 'none';
         resultsContainer.style.display = 'none';
         if (statusRegion) { statusRegion.textContent = ''; }
@@ -114,6 +115,8 @@ async function loadGlossarySearch(container) {
 
     // Clear button click
     addEventListenerWithCleanup(clearButton, 'click', () => {
+      clearTimeout(searchTimeout);
+      cancelPendingSearch();
       searchInput.value = '';
       clearButton.style.display = 'none';
       resultsContainer.style.display = 'none';
@@ -148,6 +151,18 @@ async function loadGlossarySearch(container) {
 async function loadGlossaryTerms() {
   const glossaryData = await fetchJSON('data/glossary/glossary.json');
   return [...(glossaryData.terms || [])];
+}
+
+/**
+ * Glossary search generation. Every search, and every clear, takes a new
+ * number; a search whose number is no longer current when its data arrives
+ * is stale and must not render or announce anything (a slow earlier query
+ * would otherwise overwrite a newer one, or speak after the box was cleared).
+ */
+let searchGeneration = 0;
+
+function cancelPendingSearch() {
+  searchGeneration++;
 }
 
 /**
@@ -442,8 +457,13 @@ function renderTermCard(term) {
  * @param {HTMLElement} resultsContainer - Results container
  */
 async function performSearch(query, resultsContainer) {
+  const generation = ++searchGeneration;
+  const statusRegion = document.getElementById('glossary-search-status');
   try {
     const terms = await loadGlossaryTerms();
+    if (generation !== searchGeneration) {
+      return; // superseded by a newer search or a clear
+    }
 
     const lowerQuery = query.toLowerCase();
     const results = terms.filter(term => {
@@ -486,7 +506,6 @@ async function performSearch(query, resultsContainer) {
 
     // Announce the outcome through the always-rendered status region: a live
     // region that is display:none while it fills is not reliably announced.
-    const statusRegion = document.getElementById('glossary-search-status');
     if (statusRegion) {
       statusRegion.textContent = results.length === 0
         ? `No results for "${query}"`
@@ -506,8 +525,14 @@ async function performSearch(query, resultsContainer) {
 
   } catch (error) {
     logger.error('Search failed:', error);
+    if (generation !== searchGeneration) {
+      return;
+    }
     resultsContainer.innerHTML = '<p class="error-message">Search temporarily unavailable. Please try again.</p>';
     resultsContainer.style.display = 'block';
+    if (statusRegion) {
+      statusRegion.textContent = 'Search temporarily unavailable. Please try again.';
+    }
   }
 }
 
