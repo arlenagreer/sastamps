@@ -182,8 +182,11 @@
             font-size: 1rem;
         }
 
+        /* Dimmed with a tinted, dashed card rather than opacity: opacity 0.55
+           took the label text to 1.84:1. --medium on this tint is 5.22:1. */
         .archive-item-unavailable {
-            opacity: 0.55;
+            background-color: #f7f9f9;
+            border-style: dashed;
         }
 
         .archive-item-unavailable .archive-label {
