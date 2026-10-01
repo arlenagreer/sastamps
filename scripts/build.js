@@ -93,8 +93,9 @@ async function build() {
         console.log('\nStarting build process...\n');
 
         // Start clean, so nothing stale from an earlier build reaches _site/.
-        // (A css/*.min.css whose stylesheet was dropped is kept out by
-        // isGenerated, which names only the current STYLESHEETS.)
+        // (A css/*.min.css whose stylesheet was dropped stays on disk but is
+        // kept out: isGenerated names only the current STYLESHEETS, and
+        // .gitignore keeps it out of deployableFiles.)
         for (const dir of [DIST, SITE]) {
             await fs.rm(dir, { recursive: true, force: true });
         }
