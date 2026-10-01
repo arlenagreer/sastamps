@@ -4,7 +4,7 @@
  */
 
 import { debounce } from '../utils/performance.js';
-import { safeQuerySelector, escapeHTML } from '../utils/safe-dom.js';
+import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { formatDate } from '../utils/helpers.js';
 import { createLogger } from '../utils/logger.js';
@@ -413,7 +413,7 @@ async function openResourceModal(resourceId) {
                             <ul class="external-links-list">
                                 ${resource.externalLinks.map(link => `
                                     <li>
-                                        <a href="${escapeHTML(link.url)}" target="_blank" rel="noopener">
+                                        <a href="${escapeHTML(safeUrl(link.url))}" target="_blank" rel="noopener">
                                             ${escapeHTML(link.title)}
                                         </a>
                                         ${link.description ? `<span class="link-description">${escapeHTML(link.description)}</span>` : ''}

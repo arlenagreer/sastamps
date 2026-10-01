@@ -174,7 +174,7 @@ export class Modal {
     const cancelledClass = meeting.cancelled ? 'event-cancelled' : '';
 
     const content = `
-            <div class="event-details ${eventTypeClass} ${cancelledClass}">
+            <div class="event-details ${escapeHTML(eventTypeClass)} ${cancelledClass}">
                 ${meeting.cancelled ? '<div class="cancelled-banner"><i class="fas fa-exclamation-triangle"></i> This event has been cancelled</div>' : ''}
                 
                 <div class="event-meta">

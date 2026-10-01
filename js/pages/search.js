@@ -4,7 +4,7 @@
  */
 
 import { debounce } from '../utils/performance.js';
-import { safeQuerySelector, escapeHTML } from '../utils/safe-dom.js';
+import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { createLogger } from '../utils/logger.js';
 
@@ -276,13 +276,13 @@ function displaySearchResults(results, query) {
         <article class="search-result" data-index="${index}">
             <header class="result-header">
                 <h3 class="result-title">
-                    <a href="${escapeHTML(result.url)}" target="_blank">
+                    <a href="${escapeHTML(safeUrl(result.url))}" target="_blank" rel="noopener">
                         ${highlightMatch(result.title, query)}
                     </a>
                 </h3>
                 <div class="result-meta">
-                    <span class="result-type">${formatContentType(result.type)}</span>
-                    ${result.date ? `<time datetime="${escapeHTML(result.date)}">${formatDate(result.date)}</time>` : ''}
+                    <span class="result-type">${escapeHTML(formatContentType(result.type))}</span>
+                    ${result.date ? `<time datetime="${escapeHTML(result.date)}">${escapeHTML(formatDate(result.date))}</time>` : ''}
                     ${result.score ? `<span class="result-score">${Math.round((result.score / maxScore) * 100)}% match</span>` : ''}
                 </div>
             </header>
@@ -297,8 +297,8 @@ function displaySearchResults(results, query) {
             </div>
 
             <footer class="result-actions">
-                <a href="${escapeHTML(result.url)}" class="btn-outline btn-small">View Full Content</a>
-                ${result.downloadUrl ? `<a href="${escapeHTML(result.downloadUrl)}" class="btn-outline btn-small">Download</a>` : ''}
+                <a href="${escapeHTML(safeUrl(result.url))}" class="btn-outline btn-small">View Full Content</a>
+                ${result.downloadUrl ? `<a href="${escapeHTML(safeUrl(result.downloadUrl))}" class="btn-outline btn-small">Download</a>` : ''}
             </footer>
         </article>
     `).join('');
@@ -445,27 +445,28 @@ function updateURLWithQuery(query, pushState = true) {
 }
 
 // Utility functions
+/**
+ * Escape text for HTML and wrap each occurrence of a query term in <mark>.
+ * Matching runs on the raw text and each piece is escaped separately, so a
+ * term can never match inside an entity the escaping introduced (searching
+ * "amp" or "quot" used to split "&amp;" / "&quot;" and garble the output).
+ */
 function highlightMatch(text, query) {
-  if (!query.trim()) {
-    return escapeHTML(text);
-  }
-
-  // Escape the text first to prevent XSS
-  const escapedText = escapeHTML(text);
-
-  // Escape query terms for safe regex and HTML insertion
+  const raw = typeof text === 'string' ? text : '';
   const queryTerms = query.split(' ')
     .map(term => term.trim())
     .filter(term => term.length > 0)
-    .map(term => escapeHTML(term))
     .map(term => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')); // Escape regex special chars
 
   if (queryTerms.length === 0) {
-    return escapedText;
+    return escapeHTML(raw);
   }
 
   const regex = new RegExp(`(${queryTerms.join('|')})`, 'gi');
-  return escapedText.replace(regex, '<mark>$1</mark>');
+  // split() with a capturing group puts the matches at the odd indexes
+  return raw.split(regex)
+    .map((part, i) => (i % 2 === 1 ? `<mark>${escapeHTML(part)}</mark>` : escapeHTML(part)))
+    .join('');
 }
 
 function formatContentType(type) {

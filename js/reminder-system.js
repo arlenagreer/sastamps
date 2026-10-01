@@ -422,7 +422,7 @@ export class ReminderSystem {
                             <strong>Reminder Times:</strong>
                             ${this.settings.reminderTimes.map(time => `
                                 <div class="reminder-time-item">
-                                    <span>${time.label}</span>
+                                    <span>${escapeHTML(String(time.label ?? ''))}</span>
                                 </div>
                             `).join('')}
                         </div>

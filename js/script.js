@@ -5,7 +5,7 @@
 
 import { ErrorBoundary } from './error-boundary.js';
 import { calendarLazyLoader } from './lazy-loader.js';
-import { safeLocalStorageGet, safeLocalStorageSet, safeQuerySelector, escapeHTML } from './utils/safe-dom.js';
+import { safeLocalStorageGet, safeLocalStorageSet, safeQuerySelector, escapeHTML, safeUrl } from './utils/safe-dom.js';
 import { createLogger } from './utils/logger.js';
 import { retireServiceWorkers } from './utils/service-worker.js';
 
@@ -425,7 +425,9 @@ function setupFormValidation() {
                 textContent: 'Thank you for your message!'
               });
               const message = createSafeElement('p', {
-                textContent: sanitizeText(data.message || 'We\'ve received your inquiry and will respond as soon as possible.')
+                // textContent never parses HTML, so the message must not be
+                // pre-escaped (sanitizeText here used to show "We&#x27;ve ...").
+                textContent: String(data.message || 'We\'ve received your inquiry and will respond as soon as possible.')
               });
               const button = createSafeElement('button', {
                 className: 'btn btn-primary mt-3',
@@ -803,7 +805,7 @@ function setupContactForm() {
 
             const icon = createSafeElement('i', { className: 'fas fa-check-circle' });
             successDiv.appendChild(icon);
-            successDiv.appendChild(document.createTextNode(` ${sanitizeText(result.message)}`));
+            successDiv.appendChild(document.createTextNode(` ${String(result.message ?? '')}`));
             formMessage.appendChild(successDiv);
           }
           contactForm.reset();
@@ -1000,8 +1002,8 @@ function displayFormErrors(errors) {
     const inputElement = safeQuerySelector(`#${field}`);
 
     if (errorElement) {
-      // Use textContent to prevent XSS, and sanitize the error message
-      errorElement.textContent = sanitizeText(errors[field]);
+      // textContent already prevents XSS; pre-escaping would show entities literally
+      errorElement.textContent = String(errors[field]);
       errorElement.style.color = 'var(--danger)';
       errorElement.style.fontSize = '0.875rem';
       errorElement.style.marginTop = '0.25rem';
@@ -1187,7 +1189,7 @@ function setupDynamicContentBoundaries() {
                                 <div class="newsletter-item">
                                     <h4>${escapeHTML(newsletter.title)}</h4>
                                     <p>${escapeHTML(newsletter.description)}</p>
-                                    <a href="${escapeHTML(newsletter.url)}" target="_blank" rel="noopener" class="btn btn-primary">
+                                    <a href="${escapeHTML(safeUrl(newsletter.url))}" target="_blank" rel="noopener" class="btn btn-primary">
                                         <i class="fas fa-file-pdf"></i> View PDF
                                     </a>
                                 </div>

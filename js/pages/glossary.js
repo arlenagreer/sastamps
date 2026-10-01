@@ -306,8 +306,8 @@ function renderGlossaryTerms(terms, container) {
   const sortedLetters = Object.keys(groupedTerms).sort();
 
   const html = sortedLetters.map(letter => `
-        <div class="glossary-section" id="section-${letter}">
-            <h2 class="glossary-letter-header">${letter}</h2>
+        <div class="glossary-section" id="section-${escapeHTML(letter)}">
+            <h2 class="glossary-letter-header">${escapeHTML(letter)}</h2>
             <div class="glossary-terms">
                 ${groupedTerms[letter].map(term => renderTermCard(term)).join('')}
             </div>

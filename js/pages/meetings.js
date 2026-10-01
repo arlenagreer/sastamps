@@ -4,7 +4,7 @@
  */
 
 import { debounce } from '../utils/performance.js';
-import { safeQuerySelector, escapeHTML } from '../utils/safe-dom.js';
+import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { createLogger } from '../utils/logger.js';
 import {
@@ -213,7 +213,7 @@ async function loadMeetingsList(container) {
                 <footer class="meeting-actions">
                     <button class="btn-rsvp" data-meeting-id="${escapeHTML(meeting.id)}">RSVP</button>
                     <button class="btn-reminder" data-meeting-id="${escapeHTML(meeting.id)}">Set Reminder</button>
-                    ${meeting.calendarLink ? `<a href="${escapeHTML(meeting.calendarLink)}" class="btn-calendar">Add to Calendar</a>` : ''}
+                    ${meeting.calendarLink ? `<a href="${escapeHTML(safeUrl(meeting.calendarLink))}" class="btn-calendar">Add to Calendar</a>` : ''}
                 </footer>
             </article>
         `).join('');

@@ -84,19 +84,66 @@ export function safeLocalStorageRemove(key) {
   }
 }
 
+const HTML_ESCAPES = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  '\'': '&#39;'
+};
+
 /**
- * Escape HTML special characters to prevent XSS
+ * Escape HTML special characters to prevent XSS.
+ *
+ * Escapes & < > " and ', so the result is safe both as element text and
+ * inside a quoted attribute value (href="...", data-id='...'). The previous
+ * implementation serialised a text node through a <div>, which leaves quotes
+ * untouched and therefore allowed a value to break out of an attribute.
+ * Non-string input still returns '' (unchanged contract).
+ *
  * @param {string} text - Text to escape
- * @returns {string} Escaped text safe for HTML insertion
+ * @returns {string} Escaped text safe for HTML text and quoted attributes
  */
 export function escapeHTML(text) {
   if (typeof text !== 'string') {
     return '';
   }
 
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
+  return text.replace(/[&<>"']/g, ch => HTML_ESCAPES[ch]);
+}
+
+const SAFE_URL_SCHEMES = ['http:', 'https:', 'mailto:', 'tel:'];
+
+/**
+ * Return a URL that is safe to place in an href/src attribute, or a fallback.
+ *
+ * Relative URLs (path, ./, ../, ?query, #fragment) and absolute http(s),
+ * mailto and tel URLs pass through unchanged. Anything else -- javascript:,
+ * data:, vbscript:, or a scheme hidden behind whitespace/control characters --
+ * yields the fallback. The result is NOT HTML-escaped; wrap it in escapeHTML()
+ * when interpolating into markup.
+ *
+ * @param {string} url - Candidate URL (typically from JSON data)
+ * @param {string} fallback - Value to return when the URL is rejected
+ * @returns {string} The original URL or the fallback
+ */
+export function safeUrl(url, fallback = '#') {
+  if (typeof url !== 'string') {
+    return fallback;
+  }
+  const trimmed = url.trim();
+  if (trimmed === '') {
+    return fallback;
+  }
+  // Browsers ignore ASCII tab/newline/control chars inside a scheme
+  // ("java\tscript:"), so strip them before looking for one.
+  const normalised = trimmed.replace(/[\u0000-\u001F\u007F\s]+/g, '');
+  const scheme = /^([a-zA-Z][a-zA-Z0-9+.-]*):/.exec(normalised);
+  if (!scheme) {
+    // No scheme: a relative URL. Protocol-relative //host is still http(s).
+    return trimmed;
+  }
+  return SAFE_URL_SCHEMES.includes(`${scheme[1].toLowerCase()}:`) ? trimmed : fallback;
 }
 
 /**

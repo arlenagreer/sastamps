@@ -3,7 +3,7 @@
  * Handles loading and rendering newsletter data from JSON
  */
 
-import { escapeHTML } from '../utils/safe-dom.js';
+import { escapeHTML, safeUrl } from '../utils/safe-dom.js';
 import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('NewsletterLoader');
@@ -229,20 +229,20 @@ class NewsletterLoader {
                         <label for="year-filter">Year:</label>
                         <select id="year-filter" class="filter-select">
                             <option value="">All Years</option>
-                            ${years.map(year => `<option value="${year}">${year}</option>`).join('')}
+                            ${years.map(year => `<option value="${escapeHTML(String(year))}">${escapeHTML(String(year))}</option>`).join('')}
                         </select>
                     </div>
                     <div class="filter-group">
                         <label for="quarter-filter">Quarter:</label>
                         <select id="quarter-filter" class="filter-select">
                             <option value="">All Quarters</option>
-                            ${quarters.map(quarter => `<option value="${quarter}">${quarter}</option>`).join('')}
+                            ${quarters.map(quarter => `<option value="${escapeHTML(String(quarter))}">${escapeHTML(String(quarter))}</option>`).join('')}
                         </select>
                     </div>
                     <div class="filter-group">
                         <label for="tags-filter">Tags:</label>
                         <select id="tags-filter" class="filter-select" multiple>
-                            ${tags.map(tag => `<option value="${tag}">${this.formatLabel(tag)}</option>`).join('')}
+                            ${tags.map(tag => `<option value="${escapeHTML(tag)}">${escapeHTML(this.formatLabel(tag))}</option>`).join('')}
                         </select>
                     </div>
                 </div>
@@ -265,7 +265,7 @@ class NewsletterLoader {
 
     return years.map(year => `
             <div class="archive-year-section">
-                <h2 class="archive-year-header">${year} Newsletter Archive</h2>
+                <h2 class="archive-year-header">${escapeHTML(String(year))} Newsletter Archive</h2>
                 <div class="archive-grid">
                     ${groupedNewsletters[year].map(newsletter => this.renderNewsletterCard(newsletter)).join('')}
                 </div>
@@ -350,7 +350,7 @@ class NewsletterLoader {
                         ${newsletter.fileSize ? `<span class="meta-item"><i class="fas fa-download"></i> ${escapeHTML(newsletter.fileSize)}</span>` : ''}
                     </div>
 
-                    <a href="${escapeHTML(newsletter.filePath)}" class="btn btn-primary" target="_blank" rel="noopener">
+                    <a href="${escapeHTML(safeUrl(newsletter.filePath))}" class="btn btn-primary" target="_blank" rel="noopener">
                         <i class="fas fa-file-pdf"></i> Download PDF
                     </a>
                 </div>
@@ -425,7 +425,7 @@ class NewsletterLoader {
     const years = Object.keys(grouped).sort((a, b) => b - a);
     const html = years.map(year => `
             <div class="archive-year-section">
-                <h2 class="archive-year-header">${year} Newsletter Archive</h2>
+                <h2 class="archive-year-header">${escapeHTML(String(year))} Newsletter Archive</h2>
                 <div class="archive-grid">
                     ${grouped[year].map(newsletter => this.renderNewsletterCard(newsletter)).join('')}
                 </div>

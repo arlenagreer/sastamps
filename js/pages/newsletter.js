@@ -4,7 +4,7 @@
  */
 
 import { debounce } from '../utils/performance.js';
-import { safeQuerySelector, escapeHTML } from '../utils/safe-dom.js';
+import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import _breadcrumb from '../modules/breadcrumb.js';
 import { createLogger } from '../utils/logger.js';
@@ -36,7 +36,7 @@ async function loadNewslettersList(container) {
             <article class="newsletter-item" data-date="${escapeHTML(newsletter.date)}" data-year="${new Date(newsletter.date).getFullYear()}">
                 <div class="newsletter-preview">
                     ${newsletter.coverImage ?
-    `<img src="${escapeHTML(newsletter.coverImage)}" alt="Cover of ${escapeHTML(newsletter.title)}" loading="lazy">` :
+    `<img src="${escapeHTML(safeUrl(newsletter.coverImage, ''))}" alt="Cover of ${escapeHTML(newsletter.title)}" loading="lazy">` :
     '<div class="newsletter-placeholder">📰</div>'
 }
                 </div>
@@ -72,10 +72,10 @@ async function loadNewslettersList(container) {
                     </div>
 
                     <footer class="newsletter-actions">
-                        <a href="${escapeHTML(newsletter.pdfUrl)}" target="_blank" class="btn-primary btn-view-pdf" data-newsletter-id="${escapeHTML(newsletter.id)}">
+                        <a href="${escapeHTML(safeUrl(newsletter.pdfUrl))}" target="_blank" rel="noopener" class="btn-primary btn-view-pdf" data-newsletter-id="${escapeHTML(newsletter.id)}">
                             📄 View PDF
                         </a>
-                        <button class="btn-secondary btn-download" data-url="${escapeHTML(newsletter.pdfUrl)}" data-title="${escapeHTML(newsletter.title)}">
+                        <button class="btn-secondary btn-download" data-url="${escapeHTML(safeUrl(newsletter.pdfUrl))}" data-title="${escapeHTML(newsletter.title)}">
                             💾 Download
                         </button>
                         ${newsletter.articleLinks && newsletter.articleLinks.length > 0 ? `
@@ -83,7 +83,7 @@ async function loadNewslettersList(container) {
                                 <summary>Articles (${newsletter.articleLinks.length})</summary>
                                 <ul>
                                     ${newsletter.articleLinks.map(article => `
-                                        <li><a href="${escapeHTML(article.url)}" target="_blank" rel="noopener">${escapeHTML(article.title)}</a></li>
+                                        <li><a href="${escapeHTML(safeUrl(article.url))}" target="_blank" rel="noopener">${escapeHTML(article.title)}</a></li>
                                     `).join('')}
                                 </ul>
                             </details>
@@ -293,7 +293,7 @@ function bindNewsletterActions(container) {
 function downloadNewsletter(url, title) {
   try {
     const link = document.createElement('a');
-    link.href = url;
+    link.href = safeUrl(url);
     link.download = `${title}.pdf`;
     link.style.display = 'none';
     document.body.appendChild(link);

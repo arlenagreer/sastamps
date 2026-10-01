@@ -3,7 +3,7 @@
  * Lightweight template engine for rendering JSON data into HTML components
  */
 
-import { escapeHTML } from '../utils/safe-dom.js';
+import { escapeHTML, safeUrl } from '../utils/safe-dom.js';
 import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('TemplateEngine');
@@ -400,14 +400,14 @@ class TemplateEngine {
     : `${escapeHTML(newsletter.quarter)} Quarter ${escapeHTML(String(newsletter.year))}`}</p>
                     </div>
                     <div class="card-content">
-                        <p class="publish-date">Published: ${this.helpers.get('formatDate')(newsletter.publishDate, 'short')}</p>
+                        <p class="publish-date">Published: ${escapeHTML(String(this.helpers.get('formatDate')(newsletter.publishDate, 'short')))}</p>
                         <p class="description">${escapeHTML(newsletter.description)}</p>
                         ${newsletter.highlights ? `
                             <ul class="highlights">
                                 ${newsletter.highlights.map(h => `<li>${escapeHTML(h)}</li>`).join('')}
                             </ul>
                         ` : ''}
-                        <a href="${newsletter.filePath}" class="btn btn-primary" target="_blank">
+                        <a href="${escapeHTML(safeUrl(newsletter.filePath))}" class="btn btn-primary" target="_blank" rel="noopener">
                             <i class="fas fa-file-pdf"></i> Download PDF
                         </a>
                     </div>
@@ -424,13 +424,13 @@ class TemplateEngine {
                 <div class="meeting-card">
                     <div class="card-header">
                         <h3>${escapeHTML(meeting.title || meeting.topic || 'SAPA Meeting')}</h3>
-                        <p class="date">${this.helpers.get('formatDate')(meeting.date)}</p>
+                        <p class="date">${escapeHTML(String(this.helpers.get('formatDate')(meeting.date)))}</p>
                     </div>
                     <div class="card-content">
                         <p class="time">
                             <i class="fas fa-clock"></i>
-                            Doors open: ${meeting.time.doorsOpen}
-                            ${meeting.time.meetingStart ? ` | Meeting: ${meeting.time.meetingStart}` : ''}
+                            Doors open: ${escapeHTML(meeting.time.doorsOpen)}
+                            ${meeting.time.meetingStart ? ` | Meeting: ${escapeHTML(meeting.time.meetingStart)}` : ''}
                         </p>
                         <p class="location">
                             <i class="fas fa-map-marker-alt"></i>
@@ -470,9 +470,9 @@ class TemplateEngine {
                     <div class="card-header">
                         <h3>${escapeHTML(resource.title)}</h3>
                         <div class="meta">
-                            <span class="difficulty ${resource.difficulty}">${this.helpers.get('capitalize')(resource.difficulty)}</span>
-                            <span class="category">${this.helpers.get('capitalize')(resource.category.replace('-', ' '))}</span>
-                            ${resource.estimatedReadTime ? `<span class="read-time">${resource.estimatedReadTime} min read</span>` : ''}
+                            <span class="difficulty ${escapeHTML(resource.difficulty)}">${escapeHTML(this.helpers.get('capitalize')(resource.difficulty))}</span>
+                            <span class="category">${escapeHTML(this.helpers.get('capitalize')(resource.category.replace('-', ' ')))}</span>
+                            ${resource.estimatedReadTime ? `<span class="read-time">${escapeHTML(String(resource.estimatedReadTime))} min read</span>` : ''}
                         </div>
                     </div>
                     <div class="card-content">
@@ -482,7 +482,7 @@ class TemplateEngine {
                                 ${resource.tags.map(tag => `<span class="tag">${escapeHTML(tag)}</span>`).join('')}
                             </div>
                         ` : ''}
-                        <a href="/resources/${resource.slug}" class="btn btn-primary">Read More</a>
+                        <a href="/resources/${encodeURIComponent(String(resource.slug ?? ''))}" class="btn btn-primary">Read More</a>
                     </div>
                 </div>
             `;
@@ -506,8 +506,8 @@ class TemplateEngine {
                         <p class="detailed-description">${escapeHTML(term.detailedDescription)}</p>
                     ` : ''}
                     <div class="term-meta">
-                        <span class="category">${this.helpers.get('capitalize')(term.category.replace('-', ' '))}</span>
-                        <span class="difficulty ${term.difficulty}">${this.helpers.get('capitalize')(term.difficulty)}</span>
+                        <span class="category">${escapeHTML(this.helpers.get('capitalize')(term.category.replace('-', ' ')))}</span>
+                        <span class="difficulty ${escapeHTML(term.difficulty)}">${escapeHTML(this.helpers.get('capitalize')(term.difficulty))}</span>
                     </div>
                 </div>
             `;

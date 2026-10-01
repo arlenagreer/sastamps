@@ -3,7 +3,7 @@
  * Handles search functionality using Lunr.js and provides UI components
  */
 
-import { escapeHTML } from '../utils/safe-dom.js';
+import { escapeHTML, safeUrl } from '../utils/safe-dom.js';
 import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('SearchEngine');
@@ -359,7 +359,7 @@ class SearchEngine {
                 <div class="search-input-wrapper">
                     <input type="search" 
                            class="search-input" 
-                           placeholder="${placeholder}"
+                           placeholder="${escapeHTML(placeholder)}"
                            autocomplete="off"
                            spellcheck="false">
                     <button class="search-button" type="button">
@@ -725,7 +725,7 @@ class SearchEngine {
                 <div class="search-result-header">
                     <h3 class="search-result-title">
                         <i class="${escapeHTML(typeIcon)}"></i>
-                        <a href="${escapeHTML(doc.url)}">${escapeHTML(doc.title)}</a>
+                        <a href="${escapeHTML(safeUrl(doc.url))}">${escapeHTML(doc.title)}</a>
                     </h3>
                     <div class="search-result-meta">
                         <span class="search-result-type">${escapeHTML(this.formatLabel(doc.type))}</span>
@@ -767,7 +767,7 @@ class SearchEngine {
 
       if (suggestions.length > 0) {
         container.innerHTML = suggestions.map(suggestion => `
-                    <div class="search-suggestion" data-url="${escapeHTML(suggestion.url)}">
+                    <div class="search-suggestion" data-url="${escapeHTML(safeUrl(suggestion.url))}">
                         <i class="${escapeHTML(this.getTypeIcon(suggestion.type))}"></i>
                         <span>${escapeHTML(suggestion.text)}</span>
                     </div>
