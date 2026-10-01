@@ -46,6 +46,7 @@ const ROOT_HTML = fs.readdirSync(REPO).filter((n) => n.endsWith('.html'));
 const sha = (file) => crypto.createHash('sha1').update(fs.readFileSync(file)).digest('hex');
 const read = (dir, rel) => fs.readFileSync(path.join(dir, rel), 'utf8');
 const tempDirs = [];
+const linkedMin = new Set(); // css/*.min.css names the pages link (filled by T2)
 
 function stage() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sapa-idempotent-'));
@@ -110,12 +111,13 @@ try {
     check(count(html, /<style\b/gi) === count(html, /<\/style>/gi), `${p}: unbalanced <style> tags`);
     check(count(html, /<script\b/gi) === count(html, /<\/script>/gi), `${p}: unbalanced <script> tags`);
     check(count(html, /dist\/css\//g) === 0, `${p}: references the retired dist/css/ stylesheet`);
+    for (const m of html.matchAll(/href=["']?(?:\.?\/)?css\/([\w-]+)\.min\.css/g)) linkedMin.add(m[1]);
     check(!/<link\b(?=[^>]*\brel=["']?preload)(?=[^>]*\bhref=["']?(\.?\/)?css\/)[^>]*>/i.test(html), `${p}: a site stylesheet is preloaded; want plain links`);
     if (!EXEMPT.has(p)) {
       for (const name of ['critical', 'styles']) {
         const n = count(html, new RegExp(`<link rel="stylesheet" href="/?css/${name}\\.min\\.css">`, 'g'));
         check(n === 1, `${p}: css/${name}.min.css linked ${n} times as a plain stylesheet, want 1`);
-        check(count(html, new RegExp(`href="/?css/${name}\\.css"`, 'g')) === 0, `${p}: still links the unminified css/${name}.css`);
+        check(count(html, new RegExp(`href=["']?(\\.?/)?css/${name}\\.css`, 'g')) === 0, `${p}: still links the unminified css/${name}.css`);
       }
       check(html.indexOf('css/critical.min.css') < html.indexOf('css/styles.min.css'), `${p}: critical.min.css must come before styles.min.css`);
     }
@@ -136,27 +138,27 @@ try {
         `${p}: the font-loading script must run in <head>, before first paint`);
       // Without the Google Fonts @font-face rules the script's loads resolve
       // at once with nothing, and it would remember fonts as loaded.
-      const gf = html.indexOf('fonts.googleapis.com/css2');
-      check(gf !== -1 && gf < html.indexOf('font-loading.min.js'),
-        `${p}: the Google Fonts stylesheet must be linked before the font-loading script`);
+      const live = html.replace(/<!--[\s\S]*?-->/g, '');
+      const gfLink = [...live.matchAll(/<link\b[^>]*>/g)].find((m) => m[0].includes('fonts.googleapis.com/css2'));
+      const blocking = gfLink && /\brel=["']?stylesheet/.test(gfLink[0]) && !/\b(media=["']?print|onload=)/.test(gfLink[0]);
+      check(blocking && gfLink.index < live.indexOf('font-loading.min.js'),
+        `${p}: the Google Fonts stylesheet must be a plain blocking link before the font-loading script`);
     }
   }
 
   // The minified files are what build:css produces from the sources today.
   // Compiled in memory with the same options, so nothing is written.
   console.log('▸ T3 committed minified files match their sources');
-  const esbuild = require('esbuild');
-  const { builds, STYLESHEETS } = require('./build-css');
+  const { builds, STYLESHEETS, compile } = require('./build-css');
   const outs = builds.map((b) => path.relative(REPO, b.outfile)).sort();
   const want = [...STYLESHEETS.map((n) => `css/${n}.min.css`), 'dist/js/font-loading.min.js'].sort();
   check(JSON.stringify(outs) === JSON.stringify(want), `build-css.js outputs ${outs.join(', ')}; want ${want.join(', ')}`);
-  for (const n of ['styles', 'critical', 'font-loading']) check(STYLESHEETS.includes(n), `build-css.js no longer builds css/${n}.min.css, which pages link`);
+  // Every css/*.min.css a page links must be one the build produces.
+  for (const n of linkedMin) check(STYLESHEETS.includes(n), `pages link css/${n}.min.css but build-css.js does not build it`);
   for (const options of builds) {
     const rel = path.relative(REPO, options.outfile);
-    const { outfile, ...inMemory } = options;
-    const out = esbuild.buildSync({ ...inMemory, write: false, logLevel: 'silent' });
-    const committed = fs.readFileSync(outfile, 'utf8');
-    check(out.outputFiles[0].text === committed, `${rel} is not what npm run build:css produces: run it and commit`);
+    const committed = fs.readFileSync(options.outfile, 'utf8');
+    check(compile(options) === committed, `${rel} is not what npm run build:css produces: run it and commit`);
     check(!/\/\*(?!!)/.test(committed), `${rel} contains a comment (not minified, or a source map)`);
     if (rel.endsWith('.css')) {
       // Syntax old Safari/Chrome ignore must not appear in shipped CSS.

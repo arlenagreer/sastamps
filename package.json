@@ -22,7 +22,7 @@
     "test:html": "html-validate '*.html' '!test-*.html' --config .htmlvalidate.json",
     "test:links": "echo 'Run npm run test:links:server in a separate terminal first' && linkinator http://localhost:3000 --recurse --skip 'external'",
     "test:links:server": "echo 'Starting server for link checking...' && npm run serve",
-    "test:js": "eslint js/**/*.js",
+    "test:js": "eslint js/**/*.js js/font-loading.js",
     "test:inline-js": "node scripts/check-inline-scripts.js",
     "test:css": "stylelint 'css/**/*.css' --config .stylelintrc.json",
     "test:md": "markdownlint '**/*.md' --ignore node_modules --ignore browser-tools-test --ignore 'dist/**' --ignore '*.bak' --ignore 'graphify-out/**' --config .markdownlintrc.json",
@@ -69,8 +69,6 @@
     "markdownlint-cli": "^0.49.1",
     "npm-run-all": "^4.1.5",
     "pa11y": "^10.0.0",
-    "postcss": "^8.5.28",
-    "postcss-cli": "^11.0.0",
     "stylelint": "^17.14.1",
     "stylelint-config-standard": "^40.0.0"
   },

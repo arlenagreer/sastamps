@@ -24,11 +24,8 @@ const REPO = path.resolve(__dirname, '..');
 function loadScript() {
   if (process.argv[2]) return fs.readFileSync(process.argv[2], 'utf8');
   // Exactly the options the build uses (target included), compiled in memory.
-  const esbuild = require('esbuild');
-  const { builds } = require('./build-css');
-  const opts = builds.find((b) => b.outfile.endsWith('font-loading.min.js'));
-  const { outfile, ...inMemory } = opts;
-  return esbuild.buildSync({ ...inMemory, write: false, logLevel: 'silent' }).outputFiles[0].text;
+  const { builds, compile } = require('./build-css');
+  return compile(builds.find((b) => b.outfile.endsWith('font-loading.min.js')));
 }
 
 const STORAGE = {

@@ -54,8 +54,14 @@ async function main() {
     }
 }
 
-// scripts/check-build-idempotent.js compiles with these same options in memory.
-module.exports = { builds, STYLESHEETS };
+// Compile one output in memory with exactly the build's options (used by the
+// checks so they test the bytes that ship, without writing anything).
+function compile(options) {
+    const { outfile, ...inMemory } = options;
+    return esbuild.buildSync({ ...inMemory, write: false, logLevel: 'silent' }).outputFiles[0].text;
+}
+
+module.exports = { builds, STYLESHEETS, compile };
 
 if (require.main === module) {
     main().catch((err) => {
