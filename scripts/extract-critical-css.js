@@ -1,5 +1,5 @@
 const fs = require('fs').promises;
-const path = require('path');
+const { upsertRegion } = require('./lib/html-region');
 
 const htmlFiles = [
     'index.html',
@@ -10,86 +10,43 @@ const htmlFiles = [
     'newsletter.html'
 ];
 
-// Critical CSS rules that should always be inlined
-const criticalSelectors = [
-    // Layout
-    'body',
-    'header',
-    'nav',
-    'main',
-    '.container',
-    // Typography
-    'h1',
-    'h2',
-    'h3',
-    // Navigation
-    '.nav-links',
-    '.nav-item',
-    // Hero section
-    '.hero',
-    '.hero-content',
-    // Cards
-    '.card',
-    // Images
-    '.blur-up',
-    'picture',
-    'img',
-    // Utilities
-    '.text-center',
-    '.mb-*',
-    '.mt-*'
-];
+// The first stylesheet reference to the full CSS, used only on a page's first
+// build. After that the page carries a build:critical-css region (which holds
+// the preload link itself) and the region is replaced in place.
+const STYLESHEET_LINK = /<link[^>]*href=["']dist\/css\/styles\.min\.css["'][^>]*>/;
 
-async function readCSSFile() {
-    const cssContent = await fs.readFile('dist/css/styles.min.css', 'utf8');
-    return cssContent;
-}
-
-function extractCriticalCSS(fullCSS) {
-    // Simple CSS parser
-    const rules = fullCSS.split('}').map(rule => rule.trim() + '}');
-    const criticalCSS = rules.filter(rule => {
-        return criticalSelectors.some(selector => 
-            rule.includes(selector) || 
-            rule.includes('@media') || 
-            rule.includes('@font-face')
-        );
-    });
-    
-    return criticalCSS.join('\n');
+// css/critical.css is the hand-maintained above-the-fold stylesheet: balanced,
+// and the only file that defines the :root custom properties the rest of the
+// CSS uses. It replaces an earlier split-on-'}' extract of the full stylesheet,
+// which left 26 @media blocks unclosed, defined no variables, and copied the
+// stylesheet's trailing inline source map (~110 KB) into every page.
+async function readCriticalCSS() {
+    const css = await fs.readFile('css/critical.css', 'utf8');
+    // Comments carry nothing the browser needs, and a sourceMappingURL comment
+    // must never be inlined.
+    return css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n{2,}/g, '\n').trim();
 }
 
 async function updateHTMLWithCriticalCSS(filename, criticalCSS) {
     console.log(`Processing ${filename}...`);
-    let content = await fs.readFile(filename, 'utf8');
+    const content = await fs.readFile(filename, 'utf8');
 
-    // Add critical CSS
-    const criticalStyle = `
+    const block = `
     <style id="critical-css">
-        ${criticalCSS}
-    </style>`;
-
-    // Add preload for main CSS
-    const preloadLink = `
+${criticalCSS}
+    </style>
     <link rel="preload" href="dist/css/styles.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="dist/css/styles.min.css"></noscript>`;
 
-    // Replace existing CSS link with critical CSS and async load
-    content = content.replace(
-        /<link[^>]*href=["']dist\/css\/styles\.min\.css["'][^>]*>/,
-        `${criticalStyle}${preloadLink}`
-    );
-
-    await fs.writeFile(filename, content, 'utf8');
+    const updated = upsertRegion(content, 'critical-css', block, STYLESHEET_LINK, filename);
+    await fs.writeFile(filename, updated, 'utf8');
     console.log(`Updated ${filename}`);
 }
 
 async function optimizeCSS() {
     try {
-        const fullCSS = await readCSSFile();
-        const criticalCSS = extractCriticalCSS(fullCSS);
-
-        await Promise.all(htmlFiles.map(file => 
+        const criticalCSS = await readCriticalCSS();
+        await Promise.all(htmlFiles.map(file =>
             updateHTMLWithCriticalCSS(file, criticalCSS)
         ));
 
@@ -100,4 +57,4 @@ async function optimizeCSS() {
     }
 }
 
-optimizeCSS(); 
+optimizeCSS();
