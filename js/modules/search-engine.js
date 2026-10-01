@@ -8,6 +8,12 @@ import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('SearchEngine');
 
+// Pinned Lunr build and its Subresource Integrity hash. Must match the
+// <script integrity> on search.html; recompute with
+//   curl -s https://unpkg.com/lunr@2.3.9/lunr.min.js | openssl dgst -sha384 -binary | openssl base64 -A
+const DEFAULT_LUNR_URL = 'https://unpkg.com/lunr@2.3.9/lunr.min.js';
+const DEFAULT_LUNR_INTEGRITY = 'sha384-203J0SNzyqHby3iU6hzvzltrWi/M41wOP5Gu+BiJMz5nwKykbkUx8Kp7iti0Lpli';
+
 class SearchEngine {
   constructor(options = {}) {
     this.index = null;
@@ -15,7 +21,10 @@ class SearchEngine {
     this.isLoaded = false;
     this.isLoading = false;
     this.baseUrl = options.baseUrl || './dist/data';
-    this.lunrUrl = options.lunrUrl || 'https://unpkg.com/lunr@2.3.9/lunr.min.js';
+    this.lunrUrl = options.lunrUrl || DEFAULT_LUNR_URL;
+    // A caller-supplied URL brings its own integrity (or none); the pinned
+    // hash only describes the default build.
+    this.lunrIntegrity = options.lunrUrl ? (options.lunrIntegrity || null) : DEFAULT_LUNR_INTEGRITY;
     this.callbacks = {
       onLoad: options.onLoad || (() => {}),
       onSearch: options.onSearch || (() => {}),
@@ -37,6 +46,10 @@ class SearchEngine {
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');
       script.src = this.lunrUrl;
+      if (this.lunrIntegrity) {
+        script.integrity = this.lunrIntegrity;
+        script.crossOrigin = 'anonymous';
+      }
       script.onload = () => resolve();
       script.onerror = () => reject(new Error('Failed to load Lunr.js'));
       document.head.appendChild(script);
