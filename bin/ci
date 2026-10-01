@@ -58,8 +58,8 @@ else
   echo "  the proxy-agent@8.0.2 subtree nested under lighthouse until pa11y 10"
   echo "  dropped the hard dependency that pulled proxy-agent in. @puppeteer/browsers"
   echo "  still declares optional peers (proxy-agent, yauzl) that can come back."
-  echo "  Compare against the last good lockfile first:"
-  echo "    git diff origin/main -- package-lock.json"
+  echo "  After a git fetch, diff against the branch point (this branch only):"
+  echo "    git diff \$(git merge-base origin/main HEAD) -- package-lock.json"
   echo "  Six of the last seven Dependabot PRs (#121-#125, #127, #128) were closed"
   echo "  unmerged for exactly this reason."
   echo
@@ -160,7 +160,7 @@ run_section "test:inline-js (inline <script> blocks parse, post-build)" npm run 
 #
 # Every line below is worded to avoid the phrases hooks/local-ci-gate.sh's
 # caveat grep matches case-insensitively. Find them in that gate file by its
-# `caveat=""` assignment and the grep just above it (cited by content, since
+# `caveat=""` assignment and the grep on the line just below it (cited by content, since
 # line numbers drift) rather than quoting the four phrases here, since quoting
 # them would itself trip the same scanner over this file's own source, not
 # just over a captured run log. A match would silently downgrade a GREEN run
