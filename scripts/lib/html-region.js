@@ -26,6 +26,13 @@ function renderRegion(name, block) {
  * its anchor fails the build instead of silently shipping without the block.
  */
 function upsertRegion(html, name, block, anchor, filename) {
+  const opens = html.split(`<!-- build:${name} -->`).length - 1;
+  const closes = html.split(`<!-- /build:${name} -->`).length - 1;
+  if (opens !== closes || opens > 1) {
+    // A half-deleted or duplicated region would otherwise be nested or
+    // stacked silently; make the build fail instead.
+    throw new Error(`${filename}: build:${name} markers are broken (${opens} open, ${closes} close)`);
+  }
   const region = renderRegion(name, block);
   const existing = regionPattern(name);
   if (existing.test(html)) {

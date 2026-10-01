@@ -112,7 +112,7 @@ async function generateFontStyles() {
     </style>`;
 }
 
-async function updateHTMLWithFontOptimizations(filename) {
+async function renderFontOptimizations(filename) {
     console.log(`Processing ${filename}...`);
     let content = await fs.readFile(filename, 'utf8');
 
@@ -131,13 +131,18 @@ async function updateHTMLWithFontOptimizations(filename) {
         (url) => (/[?&](amp;)?display=/.test(url) ? url : `${url}&amp;display=swap`)
     );
 
-    await fs.writeFile(filename, content, 'utf8');
-    console.log(`Updated ${filename}`);
+    return [filename, content];
 }
 
 async function optimizeFonts() {
     try {
-        await Promise.all(htmlFiles.map(updateHTMLWithFontOptimizations));
+        // Render every page before writing any, so a failure on one page never
+        // leaves the others half-updated.
+        const pages = await Promise.all(htmlFiles.map(renderFontOptimizations));
+        for (const [file, html] of pages) {
+            await fs.writeFile(file, html, 'utf8');
+            console.log(`Updated ${file}`);
+        }
         console.log('Font optimization complete!');
     } catch (err) {
         console.error('Error optimizing fonts:', err);

@@ -12,7 +12,7 @@ const htmlFiles = [
 
 // The first stylesheet reference to the full CSS, used only on a page's first
 // build. After that the page carries a build:critical-css region (which holds
-// the preload link itself) and the region is replaced in place.
+// the stylesheet link itself) and the region is replaced in place.
 const STYLESHEET_LINK = /<link[^>]*href=["']dist\/css\/styles\.min\.css["'][^>]*>/;
 
 // css/critical.css is the hand-maintained above-the-fold stylesheet: balanced,
@@ -23,32 +23,42 @@ const STYLESHEET_LINK = /<link[^>]*href=["']dist\/css\/styles\.min\.css["'][^>]*
 async function readCriticalCSS() {
     const css = await fs.readFile('css/critical.css', 'utf8');
     // Comments carry nothing the browser needs, and a sourceMappingURL comment
-    // must never be inlined.
-    return css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n{2,}/g, '\n').trim();
+    // must never be inlined. (Naive: fine while critical.css has no '/*' inside
+    // a string or url(); the brace check below catches a damaged result.)
+    const stripped = css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n(\s*\n)+/g, '\n').trim();
+    const open = (stripped.match(/{/g) || []).length;
+    const close = (stripped.match(/}/g) || []).length;
+    if (open !== close) {
+        throw new Error(`css/critical.css: unbalanced braces after stripping comments (${open} open, ${close} close)`);
+    }
+    return stripped;
 }
 
-async function updateHTMLWithCriticalCSS(filename, criticalCSS) {
-    console.log(`Processing ${filename}...`);
-    const content = await fs.readFile(filename, 'utf8');
-
+// critical.css is inlined (it defines the :root variables everything else
+// uses), and the full stylesheet is a normal render-blocking link: the page's
+// first paint is fully styled, as it was when the stylesheet was inlined.
+function renderPage(filename, content, criticalCSS) {
     const block = `
     <style id="critical-css">
 ${criticalCSS}
     </style>
-    <link rel="preload" href="dist/css/styles.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="dist/css/styles.min.css"></noscript>`;
-
-    const updated = upsertRegion(content, 'critical-css', block, STYLESHEET_LINK, filename);
-    await fs.writeFile(filename, updated, 'utf8');
-    console.log(`Updated ${filename}`);
+    <link rel="stylesheet" href="dist/css/styles.min.css">`;
+    return upsertRegion(content, 'critical-css', block, STYLESHEET_LINK, filename);
 }
 
 async function optimizeCSS() {
     try {
         const criticalCSS = await readCriticalCSS();
-        await Promise.all(htmlFiles.map(file =>
-            updateHTMLWithCriticalCSS(file, criticalCSS)
-        ));
+        // Render every page before writing any, so a failure on one page never
+        // leaves the others half-updated.
+        const pages = await Promise.all(htmlFiles.map(async (file) => {
+            console.log(`Processing ${file}...`);
+            return [file, renderPage(file, await fs.readFile(file, 'utf8'), criticalCSS)];
+        }));
+        for (const [file, html] of pages) {
+            await fs.writeFile(file, html, 'utf8');
+            console.log(`Updated ${file}`);
+        }
 
         console.log('Critical CSS optimization complete!');
     } catch (err) {

@@ -32,15 +32,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Styles -->
-    <link rel="preload" href="css/critical.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="css/critical.css"></noscript>
 
     <!-- External Styles -->
 
     <!-- build:critical-css -->
     <style id="critical-css">
 :root {
-
     --primary: #1a5276;
     --primary-light: #2980b9;
     --primary-dark: #0e2f44;
@@ -53,12 +50,8 @@
     --success: #27ae60;
     --warning: #f39c12;
     --danger: #c0392b;
-
-
     --font-heading: "Merriweather", georgia, serif;
     --font-body: "Open Sans", arial, sans-serif;
-
-
     --space-xxs: 0.25rem;
     --space-xs: 0.5rem;
     --space-sm: 0.75rem;
@@ -66,25 +59,17 @@
     --space-lg: 1.5rem;
     --space-xl: 2rem;
     --space-xxl: 3rem;
-
-
     --container-sm: 640px;
     --container-md: 768px;
     --container-lg: 1024px;
     --container-xl: 1280px;
-
-
     --radius-sm: 3px;
     --radius-md: 5px;
     --radius-lg: 8px;
     --radius-xl: 12px;
-
-
     --shadow-sm: 0 1px 3px rgb(0, 0, 0, 0.12);
     --shadow-md: 0 4px 6px rgb(0, 0, 0, 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(0, 0, 0, 0.1);
-
-
     --transition-fast: 0.15s ease;
     --transition-normal: 0.25s ease;
     --transition-slow: 0.4s ease;
@@ -259,21 +244,17 @@ nav a:hover::after {
         color: #000;
         font-size: 12pt;
     }
-
     .container {
         max-width: 100%;
         padding: 0;
     }
-
     #back-to-top, .hero, footer, header {
         display: none;
     }
-
     .card {
         border: 1px solid #ddd;
         box-shadow: none;
     }
-
     .card:hover {
         box-shadow: none;
         transform: none;
@@ -283,7 +264,6 @@ nav a:hover::after {
     .grid-cols-2, .grid-cols-3 {
         grid-template-columns: 1fr;
     }
-
     .menu-toggle {
         display: block;
         touch-action: manipulation;
@@ -291,7 +271,6 @@ nav a:hover::after {
         -webkit-user-select: none;
         user-select: none;
     }
-
     .nav-menu {
         background-color: var(--white);
         box-shadow: var(--shadow-lg);
@@ -311,19 +290,15 @@ nav a:hover::after {
         -webkit-overflow-scrolling: touch;
         overscroll-behavior: contain;
     }
-
     .nav-menu.active {
         right: 0;
     }
-
     nav li {
         margin: 0 0 1.5rem;
     }
-
     nav a::after {
         display: none;
     }
-
     .nav-menu a {
         padding: 0.75rem 1rem;
         position: relative;
@@ -340,31 +315,25 @@ nav a:hover::after {
         user-select: none;
         width: 100%;
     }
-
     .nav-menu li {
         display: block;
         width: 100%;
     }
-
     .nav-menu a:active {
         background-color: rgb(26, 82, 118, 0.1);
         transform: scale(0.98);
         transition: all 0.1s ease;
     }
-
     .nav-menu a:hover {
         background-color: rgb(26, 82, 118, 0.05);
     }
-
     body.menu-open {
         overflow: hidden;
     }
-
     .nav-icon {
         font-size: 1rem;
         margin-right: 5px;
     }
-
     .timeline::after {
         left: 20px;
     }
@@ -373,27 +342,21 @@ nav a:hover::after {
     html {
         font-size: 14px;
     }
-
     h1 {
         font-size: 2rem;
     }
-
     h2 {
         font-size: 1.75rem;
     }
-
     .hero, .section {
         padding: var(--space-xl) 0;
     }
-
     .hero h1 {
         font-size: 2.25rem;
     }
-
     .hero p {
         font-size: 1.125rem;
     }
-
     .container {
         padding: 0 1rem;
     }
@@ -403,7 +366,6 @@ nav a:hover::after {
         padding-left: env(safe-area-inset-left);
         padding-right: env(safe-area-inset-right);
     }
-
     .container {
         padding-left: max(1rem, env(safe-area-inset-left));
         padding-right: max(1rem, env(safe-area-inset-right));
@@ -431,8 +393,7 @@ nav a:hover::after {
     }
 }
     </style>
-    <link rel="preload" href="dist/css/styles.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="dist/css/styles.min.css"></noscript>
+    <link rel="stylesheet" href="dist/css/styles.min.css">
     <!-- /build:critical-css -->
 
     <style id="blur-up-style">
