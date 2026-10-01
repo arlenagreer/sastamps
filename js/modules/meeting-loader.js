@@ -5,6 +5,7 @@
 
 import { escapeHTML } from '../utils/safe-dom.js';
 import { createLogger } from '../utils/logger.js';
+import { fetchJSON } from '../utils/fetch-json.js';
 
 const logger = createLogger('MeetingLoader');
 
@@ -98,7 +99,7 @@ export function selectScheduleQuarter(meetings, now = new Date()) {
 
 class MeetingLoader {
   constructor(options = {}) {
-    this.dataUrl = options.dataUrl || './data/meetings/meetings.json';
+    this.dataUrl = options.dataUrl || 'data/meetings/meetings.json';
     this.meetings = [];
     this.metadata = {};
     this.isLoaded = false;
@@ -123,12 +124,7 @@ class MeetingLoader {
     try {
       // Loading meeting data
 
-      const response = await fetch(this.dataUrl);
-      if (!response.ok) {
-        throw new Error(`Failed to load meeting data: ${response.statusText}`);
-      }
-
-      const data = await response.json();
+      const data = await fetchJSON(this.dataUrl);
 
       this.meetings = data.meetings || [];
       this.metadata = data.metadata || {};

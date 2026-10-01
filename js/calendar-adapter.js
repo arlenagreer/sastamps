@@ -5,6 +5,7 @@
 
 import { escapeHTML } from './utils/safe-dom.js';
 import { createLogger } from './utils/logger.js';
+import { fetchJSON } from './utils/fetch-json.js';
 
 const logger = createLogger('CalendarAdapter');
 
@@ -44,11 +45,9 @@ export class CalendarAdapter {
    */
   async loadMeetings() {
     try {
-      const response = await fetch('data/meetings/meetings.json');
-      if (!response.ok) {
-        throw new Error(`Failed to load meetings: ${response.status}`);
-      }
-      this.meetingsData = await response.json();
+      // Same URL string as the meetings page list, so fetchJSON's memo
+      // serves both from one request.
+      this.meetingsData = await fetchJSON('data/meetings/meetings.json');
       return this.meetingsData;
     } catch (error) {
       logger.error('Error loading meetings:', error);

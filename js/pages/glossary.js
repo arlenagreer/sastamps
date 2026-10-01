@@ -4,6 +4,7 @@
  */
 
 import { safeQuerySelector, escapeHTML } from '../utils/safe-dom.js';
+import { fetchJSON } from '../utils/fetch-json.js';
 import { createLogger } from '../utils/logger.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 
@@ -135,14 +136,23 @@ async function loadGlossarySearch(container) {
 }
 
 /**
+ * Load the glossary terms. The JSON is fetched once per page (fetchJSON
+ * memoises it); callers get their own array so sorting or filtering never
+ * reorders the shared copy.
+ * @returns {Promise<Array>} Glossary terms
+ */
+async function loadGlossaryTerms() {
+  const glossaryData = await fetchJSON('data/glossary/glossary.json');
+  return [...(glossaryData.terms || [])];
+}
+
+/**
  * Load glossary filters
  * @param {HTMLElement} container - Filters container element
  */
 async function loadGlossaryFilters(container) {
   try {
-    const response = await fetch('data/glossary/glossary.json');
-    const glossaryData = await response.json();
-    const terms = glossaryData.terms || [];
+    const terms = await loadGlossaryTerms();
 
     // Extract unique categories and difficulties
     const categories = [...new Set(terms.map(term => term.category))].sort();
@@ -241,9 +251,7 @@ async function loadGlossaryFilters(container) {
  */
 async function loadGlossaryContent(container) {
   try {
-    const response = await fetch('data/glossary/glossary.json');
-    const glossaryData = await response.json();
-    const terms = glossaryData.terms || [];
+    const terms = await loadGlossaryTerms();
 
     if (terms.length === 0) {
       container.innerHTML = `
@@ -431,9 +439,7 @@ function renderTermCard(term) {
  */
 async function performSearch(query, resultsContainer) {
   try {
-    const response = await fetch('data/glossary/glossary.json');
-    const glossaryData = await response.json();
-    const terms = glossaryData.terms || [];
+    const terms = await loadGlossaryTerms();
 
     const lowerQuery = query.toLowerCase();
     const results = terms.filter(term => {
@@ -600,9 +606,7 @@ function scrollToTerm(termId) {
  */
 async function loadGlossaryStats() {
   try {
-    const response = await fetch('data/glossary/glossary.json');
-    const glossaryData = await response.json();
-    const terms = glossaryData.terms || [];
+    const terms = await loadGlossaryTerms();
 
     const totalTerms = terms.length;
     const categories = new Set(terms.map(term => term.category)).size;

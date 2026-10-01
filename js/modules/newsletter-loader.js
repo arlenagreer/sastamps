@@ -5,12 +5,13 @@
 
 import { escapeHTML, safeUrl } from '../utils/safe-dom.js';
 import { createLogger } from '../utils/logger.js';
+import { fetchJSON } from '../utils/fetch-json.js';
 
 const logger = createLogger('NewsletterLoader');
 
 class NewsletterLoader {
   constructor(options = {}) {
-    this.dataUrl = options.dataUrl || './data/newsletters/newsletters.json';
+    this.dataUrl = options.dataUrl || 'data/newsletters/newsletters.json';
     this.newsletters = [];
     this.metadata = {};
     this.isLoaded = false;
@@ -35,12 +36,7 @@ class NewsletterLoader {
     try {
       // Loading newsletter data
 
-      const response = await fetch(this.dataUrl);
-      if (!response.ok) {
-        throw new Error(`Failed to load newsletter data: ${response.statusText}`);
-      }
-
-      const data = await response.json();
+      const data = await fetchJSON(this.dataUrl);
 
       this.newsletters = data.newsletters || [];
       this.metadata = data.metadata || {};
