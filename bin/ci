@@ -170,7 +170,7 @@ echo "  - test:links      -- its own command text says to start a server in anot
 echo "                       terminal first; with no server running it has nothing to check."
 echo "  - test:a11y        -- calls pa11y-ci, which is not a devDependency (only pa11y is),"
 echo "                       and would also need npm run serve answering on localhost."
-echo "  - audit:lighthouse -- same: needs npm run serve answering on localhost first."
+echo "  - audit:lighthouse -- needs npm run serve answering on localhost first."
 echo "  - audit:security   -- npm audit depends on the registry's advisory feed; an advisory"
 echo "                       published overnight would redden this every push in a repo whose"
 echo "                       code did not change. Advisory coverage stays with Dependabot,"
