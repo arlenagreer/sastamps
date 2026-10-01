@@ -152,8 +152,9 @@ run_section "test:md (markdownlint)"                          npm run --silent t
 # place, and this checks that one more build would not change them (each
 # non-idempotent step used to stack another copy of its output per build).
 run_section "test:build-idempotent (committed pages are a build fixed point)" npm run --silent test:build-idempotent
+run_section "test:font-loading (fonts load even with storage blocked)"      npm run --silent test:font-loading
 run_section "build (node scripts/build.js)"                   npm run --silent build
-# Runs AFTER the build on purpose: the build rewrites the HTML (critical CSS,
+# Runs AFTER the build on purpose: the build rewrites the HTML (image tags,
 # fix-html-validation, embedded search data), and the post-build HTML is what
 # the Pages deploy copies. html-validate and eslint (js/**) never parse the
 # JavaScript inside HTML pages, which is how an entity-escaped `&amp;&amp;` in

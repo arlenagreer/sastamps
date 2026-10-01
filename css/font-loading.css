@@ -1,0 +1,35 @@
+/*
+ * Font loading states. Pairs with js/font-loading.js, which sets `fonts-loaded`
+ * on <html>: until then text uses system fonts, then Open Sans / Merriweather.
+ * Link this file only on pages that also load dist/js/font-loading.min.js,
+ * otherwise those pages stay on system-ui. It must come after the main
+ * stylesheet: the fallbacks below win only because they come later.
+ */
+
+.fonts-loading body {
+    opacity: 0.8;
+}
+
+.fonts-loaded body {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* Font fallbacks */
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+}
+
+.fonts-loaded h1,
+.fonts-loaded h2,
+.fonts-loaded h3,
+.fonts-loaded h4,
+.fonts-loaded h5,
+.fonts-loaded h6 {
+    font-family: Merriweather, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, serif;
+}

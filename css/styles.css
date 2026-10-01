@@ -653,7 +653,8 @@ footer {
 }
 
 .hero-meetings {
-    background-image: url('../images/meetings-page-image.png');
+    /* The optimized encode (454 KB); the original in images/ is 1.3 MB. */
+    background-image: url('../dist/images/meetings-page-image.png');
 }
 
 .hero-newsletter,

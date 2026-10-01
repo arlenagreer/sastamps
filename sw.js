@@ -14,7 +14,7 @@ const urlsToCache = [
   '/contact.html',
   '/search.html',
   '/offline.html',
-  '/dist/css/styles.min.css',
+  '/css/styles.min.css',
   '/dist/js/script.min.js',
   '/images/sapa-logo.webp',
   '/favicon.ico'

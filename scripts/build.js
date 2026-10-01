@@ -33,10 +33,9 @@ async function generateBuildInfo() {
         optimizations: [
             'Tree-shaking enabled with page-specific bundles',
             'JavaScript code splitting for optimal loading',
-            'Critical CSS inlined',
+            'Stylesheets minified (css/*.min.css), loaded as plain links',
             'Images optimized and converted to WebP',
-            'Fonts optimized with preload and fallbacks',
-            'Service worker configured',
+            'Font loading with system-font fallbacks (dist/js/font-loading.min.js)',
             'Assets minified',
             'Performance monitoring with Google Analytics'
         ]
@@ -54,22 +53,18 @@ async function build() {
 
         // Ensure build directory exists
         await ensureDir(BUILD_DIR);
-        await ensureDir(path.join(BUILD_DIR, 'css'));
         await ensureDir(path.join(BUILD_DIR, 'js'));
         await ensureDir(path.join(BUILD_DIR, 'images'));
 
-        console.log('1. Optimizing CSS...');
-        await runCommand('node', ['scripts/extract-critical-css.js']);
+        console.log('1. Minifying CSS and bundling the font-loading script...');
+        await runCommand('node', ['scripts/build-css.js']);
 
-        console.log('\n1b. Fixing HTML validation issues...');
+        console.log('\n2. Fixing HTML validation issues...');
         await runCommand('node', ['scripts/fix-html-validation.js']);
 
-        console.log('\n2. Optimizing images...');
+        console.log('\n3. Optimizing images...');
         await runCommand('node', ['scripts/optimize-images.js']);
         await runCommand('node', ['scripts/update-image-tags.js']);
-
-        console.log('\n3. Optimizing fonts...');
-        await runCommand('node', ['scripts/optimize-fonts.js']);
 
         console.log('\n4. Building search index...');
         await runCommand('node', ['scripts/build-search-index.js']);
@@ -90,12 +85,11 @@ async function build() {
         console.log('\nOptimizations applied:');
         console.log('- Tree-shaking optimized JavaScript bundles');
         console.log('- Page-specific code splitting for faster loading');
-        console.log('- Critical CSS extraction and inlining');
+        console.log('- Minified stylesheets loaded as plain links');
         console.log('- Image optimization and WebP conversion');
-        console.log('- Font optimization and preloading');
+        console.log('- Font loading with system-font fallbacks');
         console.log('- Full-text search with Lunr.js');
         console.log('- Embedded search data for offline functionality');
-        console.log('- Service worker configuration');
         console.log('- Asset minification');
         console.log('- Performance monitoring with Google Analytics');
         

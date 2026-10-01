@@ -25,8 +25,12 @@ Found on 2026-09-30 while fixing the Dependabot alerts (#158). All of these alre
 7. **2025-Q4 calendar files fail check-ics with 27 errors.** There are no individual files, the DTSTAMP is `20250923`, and Oct 17 starts at 17:30 where the JSON says 18:30. The events are in the past, so this is low priority.
 8. **DONE (fix/inlined-source-map): stacked build output removed from the six main pages.** Three build steps appended instead of replacing, so each build stacked another copy of the critical CSS (with a ~110 KB inline source map), the font block, the font-observer script and `display=swap`; pages reached 300-490 KB committed and 430-620 KB live. They now write marked regions that are replaced in place. The critical region inlines `css/critical.css` and loads the full stylesheet render-blocking. `build:css` uses `--no-map`. `scripts/check-build-idempotent.js` (in `bin/ci`) proves the committed pages are a fixed point of the build.
 
-9. **The generated font-observer script calls `localStorage` without try/catch** (`scripts/optimize-fonts.js`, `generateFontFaceObserver`). Where storage is blocked (Safari with site data blocked), it throws, `fonts-loaded` is never set, and the font-styles fallback keeps body text in `system-ui` instead of Open Sans and Merriweather. This predates the 2026-10-01 page-weight fix; wrap both calls as `js/utils/safe-dom.js` does.
+9. **DONE (feat/plain-css-links): font loading works with storage blocked.** The inline observer is replaced by `js/font-loading.js` (guarded storage, 3 s fallback, weights passed), loaded as a plain script with `css/font-loading.css`, and covered by `scripts/test-font-loading.js`.
+
+10. **resources.html still has an authored inline `<style class="critical-css">` block** (~240 lines) after its stylesheet links. It redefines `:root` tokens and base rules, so a token change in `css/critical.css` or `css/styles.css` will not reach that page. Removing it as-is changes the layout (header 82 → 137 px at 375 px), so fold its page-specific rules into `css/styles.css` deliberately, then delete it.
+
+11. **`test:js` never lints the top-level `js/*.js` files.** `eslint js/**/*.js` is unquoted, so the shell expands `**` as `*` and only `js/<dir>/*.js` is linted. Quoting it lints 41 files instead of 32 and reports 72 errors in 7 existing files (calendar-adapter, calendar-component, error-boundary, lazy-loader, modal, reminder-system, script). Fix those, then quote the glob. (`js/font-loading.js` is listed explicitly meanwhile.)
 
 ## Solution
 
-Pick the items worth doing. 1 (choose a runner: pa11y 10 per URL, or lighthouse accessibility) gives the most value. 4 and 8 are done.
+Pick the items worth doing. 1 (choose a runner: pa11y 10 per URL, or lighthouse accessibility) gives the most value. 4, 8 and 9 are done.

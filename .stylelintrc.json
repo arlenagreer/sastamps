@@ -14,7 +14,7 @@
   "ignoreFiles": [
     "dist/**",
     "node_modules/**",
-    "*.min.css",
+    "**/*.min.css",
     "vendor/**",
     "css/vendor/**"
   ]
