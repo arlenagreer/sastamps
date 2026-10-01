@@ -4,8 +4,10 @@
  *
  * - css/{styles,critical,font-loading}.css -> css/*.min.css, next to their
  *   sources, so relative url(../images/...) paths resolve to the same files
- *   as the sources do. No --bundle (it fails on the PNG url()s) and no
- *   browser target (it would rewrite the range media queries).
+ *   as the sources do. No --bundle (it fails on the PNG url()s). The browser
+ *   target keeps the output readable by older Safari/Chrome: with no target
+ *   esbuild assumes the newest syntax and collapses top/right/bottom/left
+ *   into `inset`, which Safari < 14.1 ignores (the hero overlays vanish).
  * - js/font-loading.js -> dist/js/font-loading.min.js, a self-contained IIFE
  *   loaded as a plain <script> in <head> (see the file for why).
  *
@@ -16,12 +18,14 @@ const esbuild = require('esbuild');
 
 const ROOT = path.resolve(__dirname, '..');
 const STYLESHEETS = ['styles', 'critical', 'font-loading'];
+const TARGET = ['chrome80', 'firefox78', 'safari13', 'edge80'];
 
 const builds = [
     ...STYLESHEETS.map((name) => ({
         entryPoints: [path.join(ROOT, 'css', `${name}.css`)],
         outfile: path.join(ROOT, 'css', `${name}.min.css`),
         minify: true,
+        target: TARGET,
         logLevel: 'warning',
     })),
     {
@@ -30,6 +34,7 @@ const builds = [
         bundle: true,
         format: 'iife',
         minify: true,
+        target: TARGET,
         logLevel: 'warning',
     },
 ];
@@ -49,7 +54,12 @@ async function main() {
     }
 }
 
-main().catch((err) => {
-    console.error('CSS build failed:', err.message);
-    process.exit(1);
-});
+// scripts/check-build-idempotent.js compiles with these same options in memory.
+module.exports = { builds };
+
+if (require.main === module) {
+    main().catch((err) => {
+        console.error('CSS build failed:', err.message);
+        process.exit(1);
+    });
+}

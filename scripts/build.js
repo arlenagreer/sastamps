@@ -91,7 +91,6 @@ async function build() {
         console.log('- Font loading with system-font fallbacks');
         console.log('- Full-text search with Lunr.js');
         console.log('- Embedded search data for offline functionality');
-        console.log('- Service worker configuration');
         console.log('- Asset minification');
         console.log('- Performance monitoring with Google Analytics');
         

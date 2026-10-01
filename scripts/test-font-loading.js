@@ -39,13 +39,17 @@ const STORAGE = {
   setItemThrows: 'localStorage.setItem throws',
 };
 
-async function run(source, mode, { noFontsApi = false } = {}) {
+async function run(source, mode, { noFontsApi = false, fontLoad = 'resolve' } = {}) {
   const classes = new Set();
   const loads = [];
   const stored = {};
+  const timers = [];
   const sandbox = {
     console,
-    setTimeout,
+    // Timers are recorded and fired by the test, so a 3 s fallback is checked
+    // without waiting 3 s.
+    setTimeout: (fn, ms) => { timers.push({ fn, ms }); return timers.length; },
+    clearTimeout: (id) => { if (timers[id - 1]) timers[id - 1].cleared = true; },
     document: {
       documentElement: {
         classList: {
@@ -54,7 +58,15 @@ async function run(source, mode, { noFontsApi = false } = {}) {
           contains: (c) => classes.has(c),
         },
       },
-      fonts: noFontsApi ? undefined : { load: (spec) => { loads.push(spec); return Promise.resolve([{}]); } },
+      fonts: noFontsApi ? undefined : {
+        load: (spec) => {
+          loads.push(spec);
+          if (fontLoad === 'throw') throw new Error('SyntaxError');
+          if (fontLoad === 'reject') return Promise.reject(new Error('NetworkError'));
+          if (fontLoad === 'hang') return new Promise(() => {});
+          return Promise.resolve([{}]);
+        },
+      },
     },
   };
   sandbox.window = sandbox;
@@ -85,8 +97,10 @@ async function run(source, mode, { noFontsApi = false } = {}) {
   }
   const syncClasses = new Set(classes);
   await new Promise((r) => setTimeout(r, 30));
+  const beforeTimers = new Set(classes);
+  for (const t of timers) if (!t.cleared) t.fn();
   process.off('unhandledRejection', onRejection);
-  return { classes, syncClasses, loads, stored, errors };
+  return { classes, syncClasses, beforeTimers, timers, loads, stored, errors };
 }
 
 let checks = 0;
@@ -127,6 +141,19 @@ function check(cond, msg) {
   const noApi = await run(source, 'available', { noFontsApi: true });
   check(noApi.errors.length === 0, `no document.fonts: ${noApi.errors.join('; ')}`);
   check(noApi.classes.has('fonts-loaded'), 'no document.fonts: fonts-loaded never set');
+
+  console.log('▸ font loads that fail, hang or throw still end on the web fonts');
+  const rejected = await run(source, 'available', { fontLoad: 'reject' });
+  check(rejected.errors.length === 0, `a font load rejects: ${rejected.errors.join('; ')}`);
+  check(rejected.beforeTimers.has('fonts-loaded') && !rejected.beforeTimers.has('fonts-loading'),
+    'a font load rejects: fonts-loaded must be set once the loads settle, without waiting for the fallback timer');
+  const hung = await run(source, 'available', { fontLoad: 'hang' });
+  check(!hung.beforeTimers.has('fonts-loaded'), 'a font load hangs: fonts-loaded set before the fallback (test is not exercising the timer)');
+  check(hung.timers.some((t) => !t.cleared && t.ms > 0 && t.ms <= 5000), 'a font load hangs: no fallback timer of at most 5 s');
+  check(hung.classes.has('fonts-loaded') && !hung.classes.has('fonts-loading'), 'a font load hangs: fallback timer did not switch to the web fonts');
+  const thrown = await run(source, 'available', { fontLoad: 'throw' });
+  check(thrown.errors.length === 0, `document.fonts.load throws synchronously: ${thrown.errors.join('; ')}`);
+  check(thrown.classes.has('fonts-loaded') && !thrown.classes.has('fonts-loading'), 'document.fonts.load throws synchronously: page left on system fonts');
 
   console.log(`test-font-loading: ${checks} checks, ${failures} failed`);
   process.exit(failures === 0 ? 0 : 1);

@@ -20,6 +20,7 @@
 (() => {
   const root = document.documentElement;
   const KEY = 'fonts-loaded';
+  const TIMEOUT_MS = 3000;
   const FONTS = [
     ['400', 'Open Sans'],
     ['600', 'Open Sans'],
@@ -61,12 +62,23 @@
   }
 
   root.classList.add('fonts-loading');
-  const loads = FONTS.map(([weight, family]) =>
-    document.fonts.load(`${weight} 1em "${family}"`, 'BESbswy').catch(() => null)
-  );
-  Promise.all(loads).then(() => {
-    // Shown even if a font failed to load: each stack has system fallbacks.
+  // Never wait longer than this: a stalled font request must not keep the
+  // page dimmed and on system fonts until the network gives up.
+  const fallback = setTimeout(showWebFonts, TIMEOUT_MS);
+  try {
+    // Indexed rather than destructured: the build targets Safari 13.
+    const loads = FONTS.map((font) =>
+      document.fonts.load(`${font[0]} 1em "${font[1]}"`, 'BESbswy').catch(() => null)
+    );
+    Promise.all(loads).then(() => {
+      // Shown even if a font failed to load: each stack has system fallbacks.
+      clearTimeout(fallback);
+      showWebFonts();
+      remember();
+    });
+  } catch (_e) {
+    // A FontFaceSet that throws instead of rejecting.
+    clearTimeout(fallback);
     showWebFonts();
-    remember();
-  });
+  }
 })();
