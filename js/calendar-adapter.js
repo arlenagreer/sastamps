@@ -171,7 +171,7 @@ export class CalendarAdapter {
     const timeInfo = meeting.time ? `
             <strong>Schedule:</strong><br>
             Doors: ${escapeHTML(meeting.time.doorsOpen)}<br>
-            Meeting: ${escapeHTML(meeting.time.meetingStart)} - ${escapeHTML(meeting.time.meetingEnd)}
+            Meeting: ${escapeHTML(meeting.time.meetingStart)}${meeting.time.meetingEnd ? ` - ${escapeHTML(meeting.time.meetingEnd)}` : ''}
         ` : '';
 
     const presenter = meeting.presenter ?

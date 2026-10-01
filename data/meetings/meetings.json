@@ -3952,8 +3952,7 @@
       "date": "2026-12-18",
       "time": {
         "doorsOpen": "6:00 PM",
-        "meetingStart": "6:00 PM",
-        "meetingEnd": "9:00 PM"
+        "meetingStart": "6:00 PM"
       },
       "location": {
         "name": "MacArthur Park Lutheran Church",
