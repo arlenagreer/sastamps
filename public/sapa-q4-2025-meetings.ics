@@ -110,7 +110,7 @@ UID:sapa-2025-11-28@sastamps.org
 SUMMARY:Meeting Cancelled - Thanksgiving Holiday
 DESCRIPTION:Regular meeting cancelled due to Thanksgiving holiday weekend. Happy Thanksgiving to all members!
 LOCATION:Meeting Cancelled
-CATEGORIES:cancelled,cancelled,holiday,thanksgiving
+CATEGORIES:cancelled,holiday,thanksgiving
 STATUS:CANCELLED
 END:VEVENT
 
@@ -158,7 +158,7 @@ UID:sapa-2025-12-26@sastamps.org
 SUMMARY:Meeting Cancelled - Holiday Week
 DESCRIPTION:Regular meeting cancelled due to Christmas holiday week. Wishing all members a wonderful holiday season and Happy New Year!
 LOCATION:Meeting Cancelled
-CATEGORIES:cancelled,cancelled,holiday,christmas
+CATEGORIES:cancelled,holiday,christmas
 STATUS:CANCELLED
 END:VEVENT
 
