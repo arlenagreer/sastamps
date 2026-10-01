@@ -127,7 +127,7 @@ Append-only memory for `/philatex-update`. The research and planning phases read
 - **Source:** review-panel (4 reviewers + codex)
 - **Generalizable rule:** Whether to keep site-convention notes that a newsletter doesn't restate is the operator's call, not the extractor's.
 - **Seen in:** 2026-Q3, 2026-Q4
-- **Status:** proposed (awaiting human). Facts settled 2026-09-30 by a club officer: no dealer-table fee is charged (removed from every meeting; provisional until he confirms it at the next club meeting), and "Cash or check accepted" and the 10% commission are current and kept. Not yet encoded as a skill rule: a draft (agent instruction + standing contract assertion) was withdrawn after review found it could drop the confirmed auction terms and raise false blockers. Until a rule lands, do not carry a table fee forward onto bourse entries. Still unconfirmed: "donated materials", the 8:45 PM checkout, and "Contact secretary to reserve tables".
+- **Status:** proposed (awaiting human): confirm these terms are still current, or drop them in a cross-quarter cleanup.
 
 ### 2026-Q4 — PROCESS: Codex cross-model review needs `codex-auto-review` on this account
 - **Observed:** codex-cli 0.135.0 could not parse the service's model list. The operator approved an upgrade to 0.159.2. gstack's default `gpt-6-astra` then returned 400 ("not supported when using Codex with a ChatGPT account") and `gpt-5.5` returned 404. `codex-auto-review` worked, through the custom-instructions `codex exec` path, since the diff is uncommitted and includes untracked files.
