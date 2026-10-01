@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-03-24)
 Phase: 12 of 12 (Human Checkpoint Design)
 Plan: 1 of 1 in current phase
 Status: Complete — v1.3 milestone audited and shipped
-Last activity: 2026-03-24 — v1.3 milestone audit: 10/10 requirements passed, 12/12 success criteria met, audit report archived
+Last activity: 2026-07-17 — Quick task 5: Philatex Q3 2026 Rev1 + July 31 Sam Rodgers program (merged #119 → c592fbf, deployed + verified live on sastamps.org)
 
 Progress: [██████████] 100% (v1.3)
 
@@ -69,11 +69,14 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-9 pending todos (see .planning/todos/pending/):
+12 pending todos (see .planning/todos/pending/):
 
 - Add automated testing framework, fix accessibility gaps, audit XSS surface area
 - Reduce JS bundle sizes, update SEO/structured data, verify dark mode contrast
 - Add performance refinements, harden security config, improve developer experience
+- Add clickjacking protection to the contact page (security, minor; added 2026-09-30)
+- Confirm the provisional bourse no-table-fee policy after the Oct 2 club meeting, and design the /philatex-update rule (content; added 2026-10-01)
+- CI and tooling hygiene from the Dependabot fix #158: a11y test never runs, unused CSS toolchain, deploy Chrome download (tooling; added 2026-10-01)
 
 ### Blockers/Concerns
 
@@ -87,6 +90,9 @@ Recent decisions affecting current work:
 |---|-------------|------|--------|-----------|
 | 1 | Rebuild stale archive JS bundle to show older newsletter links | 2026-03-09 | dc4cf71 | [1-i-don-t-see-the-links-to-older-editions-](./quick/1-i-don-t-see-the-links-to-older-editions-/) |
 | 2 | Review SAPA Philatex Q2 2026 newsletter with proofreading and layout recommendations | 2026-03-24 | acf6640 | [2-review-sapa-philatex-q2-2026-newsletter-](./quick/2-review-sapa-philatex-q2-2026-newsletter-/) |
+| 3 | Surface Steve Mabie tribute on homepage (top-of-page callout + Highlights bullet, links to newsletter p.2) per Jim Durham; deployed (PR #107) and emailed Jim/Nancy | 2026-06-24 | b58bdbc | [20260624-highlight-steve-mabie-tribute](./quick/20260624-highlight-steve-mabie-tribute/) |
+| 4 | Migrate ajv 6 → 8 for `validate:data` (ajv-formats + `dataPath`→`instancePath` + `example`→`examples`); superseded Dependabot #112 (broken lockfile) via own PR #117 off a worktree | 2026-07-07 | 1c394a9 | [20260707-ajv-8-migration](./quick/20260707-ajv-8-migration/) |
+| 5 | Post Philatex Q3 2026 Rev1 PDF (Jim Durham) + fill July 31 "Stamp Program: Cataloging U.S. Stamps" (Sam Rodgers) across meetings.json/ICS/search + swap homepage Club-News card & highlights bullet; adversarial review SHIP, local + live /browse UAT passed, deployed | 2026-07-17 | c592fbf (#119, deployed+verified live) | [20260717-july31-sam-rodgers-program](./quick/20260717-july31-sam-rodgers-program/) |
 | Phase 10 P01 | 7m 24s | 2 tasks | 1 files |
 | Phase 11 P01 | 27min | 2 tasks | 3 files |
 | Phase 11 P02 | 1min | 1 task | 1 file |
