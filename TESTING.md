@@ -136,7 +136,7 @@ Checks npm dependencies for known vulnerabilities.
 ### CSS Validation
 
 **Issue**: Vendor prefix warnings
-**Solution**: The vendor-prefix rules are disabled. Note that nothing adds prefixes at build time (there is no PostCSS config and no autoprefixer), so write any prefixes a property needs by hand
+**Solution**: `property-no-vendor-prefix` and `value-no-vendor-prefix` are disabled; the at-rule, selector and media-feature prefix rules from `stylelint-config-standard` stay on. Nothing adds prefixes at build time (there is no PostCSS config and no autoprefixer)
 
 ### Link Checking
 
