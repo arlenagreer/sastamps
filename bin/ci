@@ -149,6 +149,9 @@ run_section "test:js (eslint)"                               npm run --silent te
 run_section "test:css (stylelint)"                            npm run --silent test:css
 run_section "test:md (markdownlint)"                          npm run --silent test:md
 run_section "test:font-loading (fonts load even with storage blocked)"      npm run --silent test:font-loading
+# node:test unit tests (tests/*.test.*): the deploy allowlist in
+# scripts/lib/site.js and the DOM-free helpers in js/utils.
+run_section "test:unit (node --test tests/)"                  npm run --silent test:unit
 # Runs the build itself: checks that it writes no tracked file, that _site/
 # holds every page and nothing private, and that every local reference in
 # _site/ resolves. _site/ is exactly what the Pages deploy uploads.

@@ -76,6 +76,18 @@ Validates:
 - Selector patterns
 - Modern CSS features
 
+### Unit Tests
+```bash
+npm run test:unit
+```
+Runs `tests/*.test.*` with Node's built-in test runner (`node:test`, no
+dependencies). They cover what decides what deploys (`scripts/lib/site.js`,
+the sitemap URLs) and the DOM-free helpers in `js/utils` (`escapeHTML`,
+`safeUrl`, the `safeLocalStorage*` helpers, `validateEmail`/`validatePhone`).
+Modules that need a browser DOM are covered by the browser checks instead
+(`test:search-page`, `test:a11y`). A test that needs a newer export than the
+code has skips itself with the reason.
+
 ### Markdown Documentation
 ```bash
 npm run test:md

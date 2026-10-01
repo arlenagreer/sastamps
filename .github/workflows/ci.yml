@@ -60,6 +60,9 @@ jobs:
       run: npm run test:md
       continue-on-error: true
       
+    - name: Run unit tests
+      run: npm run test:unit
+
     # One build: _site/ is both what the checks below test and, on a push to
     # main, exactly what the deploy job publishes. test:site-build runs
     # npm run build and fails if it rewrote a tracked file or assembled a
