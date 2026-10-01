@@ -56,8 +56,9 @@ else
   echo "  This is most likely the known Dependabot defect: its weekly grouped-update"
   echo "  PR regenerates package-lock.json and drops entries npm ci needs. It was"
   echo "  the proxy-agent@8.0.2 subtree nested under lighthouse until pa11y 10"
-  echo "  dropped the hard dependency that pulled proxy-agent in; it is still an"
-  echo "  optional peer of @puppeteer/browsers, so it can come back."
+  echo "  dropped the hard dependency that pulled proxy-agent in. @puppeteer/browsers"
+  echo "  still declares optional peers (proxy-agent, yauzl): diff the lockfile's"
+  echo "  entries marked peer+optional first, since those are what gets dropped."
   echo "  Six of the last seven Dependabot PRs (#121-#125, #127, #128) were closed"
   echo "  unmerged for exactly this reason."
   echo
@@ -157,8 +158,8 @@ run_section "test:inline-js (inline <script> blocks parse, post-build)" npm run 
 # ── Declared exclusions -- outside this local gate, each with its own reason ──
 #
 # Every line below is worded to avoid the phrases hooks/local-ci-gate.sh's
-# caveat grep matches case-insensitively at its gate file, line ~845 -- read
-# that line directly rather than quoting its four phrases here, since quoting
+# caveat grep matches case-insensitively in that gate file (search it for the
+# caveat-grep regex; line numbers drift) -- read that line directly rather than quoting its four phrases here, since quoting
 # them would itself trip the same scanner over this file's own source, not
 # just over a captured run log. A match would silently downgrade a GREEN run
 # to "covers the BLOCKING gates only" -- see hooks/lib/run-log.sh:99-107 for
