@@ -18,10 +18,12 @@
          navigate the top window to it.
          What it cannot do: a sandboxed iframe without allow-scripts never
          runs it, so the page is visible there, and with allow-forms the
-         contact form can still be submitted natively. The form is
-         method="post" so that native submit puts no personal data in the
-         URL; on GitHub Pages it delivers nothing (only the JS handler sends
-         messages, and it calls preventDefault on every submit).
+         contact form can still be submitted natively (a GET back to this page:
+         the fields land in that URL, but nothing is delivered anywhere). A
+         POST would avoid the URL but makes GitHub Pages answer 405 with a
+         bare error page for every no-JavaScript visitor, so the form keeps
+         the default. Only the JS handler sends messages, and it calls
+         preventDefault on every submit.
          Why not hide-by-default (CSS display:none, revealed by script): that
          would show a blank page to every visitor with JavaScript disabled.
          The CSP above allows inline scripts; if 'unsafe-inline' is ever
@@ -170,7 +172,7 @@
 
                 <div class="card" style="max-width: 800px; margin: 2rem auto 0;">
                     <div class="card-content">
-                        <form id="contact-form" method="post" novalidate>
+                        <form id="contact-form" novalidate>
                             <input type="hidden" id="csrf-token" name="csrf_token" value="">
 
                             <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
