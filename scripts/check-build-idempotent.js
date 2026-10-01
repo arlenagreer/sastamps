@@ -138,10 +138,14 @@ try {
         `${p}: the font-loading script must run in <head>, before first paint`);
       // Without the Google Fonts @font-face rules the script's loads resolve
       // at once with nothing, and it would remember fonts as loaded.
-      const live = html.replace(/<!--[\s\S]*?-->/g, '');
-      const gfLink = [...live.matchAll(/<link\b[^>]*>/g)].find((m) => m[0].includes('fonts.googleapis.com/css2'));
+      // Skip anything inside an HTML comment by position (no string rewriting).
+      const comments = [...html.matchAll(/<!--[\s\S]*?-->/g)].map((m) => [m.index, m.index + m[0].length]);
+      const inComment = (i) => comments.some(([a, z]) => i >= a && i < z);
+      const gfLink = [...html.matchAll(/<link\b[^>]*>/g)]
+        .find((m) => m[0].includes('fonts.googleapis.com/css2') && !inComment(m.index));
       const blocking = gfLink && /\brel=["']?stylesheet/.test(gfLink[0]) && !/\b(media=["']?print|onload=)/.test(gfLink[0]);
-      check(blocking && gfLink.index < live.indexOf('font-loading.min.js'),
+      const script = [...html.matchAll(/font-loading\.min\.js/g)].find((m) => !inComment(m.index));
+      check(blocking && script && gfLink.index < script.index,
         `${p}: the Google Fonts stylesheet must be a plain blocking link before the font-loading script`);
     }
   }
