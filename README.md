@@ -68,11 +68,11 @@ Visit `http://localhost:3000` to view the site.
 
 ```bash
 # Development
-npm start                # Start development server (port 3000)
-npm run watch           # Watch for CSS/JS changes
+npm start                # Build into _site/ and serve it (port 3000)
+npm run serve           # Serve the last build (_site/) without rebuilding
 
 # Building
-npm run build           # Full production build
+npm run build           # Full build: generates dist/ and css/*.min.css, assembles the site in _site/
 npm run build:js        # Build JavaScript with tree-shaking
 npm run build:css       # Minify css/*.css into css/*.min.css and bundle dist/js/font-loading.min.js (esbuild)
 
@@ -105,7 +105,8 @@ sastamps/
 │   ├── newsletters/    # Newsletter metadata
 │   └── glossary/       # Philatelic terms
 ├── images/             # Image assets
-├── dist/               # Build output (git-ignored)
+├── dist/               # Generated assets (git-ignored)
+├── _site/              # The built site that deploys (git-ignored)
 ├── scripts/            # Build and utility scripts
 └── .github/workflows/  # CI/CD pipelines
 ```

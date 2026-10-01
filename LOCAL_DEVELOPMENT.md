@@ -19,6 +19,13 @@ python -m SimpleHTTPServer 8000
 
 Then open your browser to: <http://localhost:8000>
 
+### Recommended: npm start
+
+`npm start` runs the full build and serves the result, `_site/`, on
+<http://localhost:3000>. That is exactly what deploys. The options below serve
+the source files directly; run `npm run build` first, because the pages load
+`css/*.min.css` and `dist/` assets that only the build creates.
+
 ### Option 2: Node.js
 If you have Node.js installed:
 

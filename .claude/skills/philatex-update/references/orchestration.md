@@ -130,7 +130,7 @@ const DIMENSIONS = [
     prompt: `Verify ICS correctness for ${args.editionId}. For each generated .ics, confirm UTC math (individual files) and local serialization (quarterly file), CDT vs CST for the quarter's dates, cancelled-meeting 1-minute duration, and UID/PRODID conventions. Cross-check against the newest existing template .ics files.` },
   // Use an installed agentType. A missing persona returns null, and that is logged as review-incomplete, a blocker that never clears.
   { key: 'diff-safety', agentType: 'gsd-code-reviewer', effort: 'high',
-    prompt: `Review the working-tree diff for edition ${args.editionId}. Flag any modification outside the permitted-file scope (the declared build outputs search.html and dist/** are allowed), any silently swallowed error, and confirm npm run build:js actually rebuilt the meeting bundle. Changed files: ${JSON.stringify(args.changedFiles)}.` },
+    prompt: `Review the working-tree diff for edition ${args.editionId}. Flag any modification outside the permitted-file scope (build outputs are gitignored and never appear; a changed search.html or package.json is a scope breach), any silently swallowed error, and confirm npm run build:js actually rebuilt the meeting bundle. Changed files: ${JSON.stringify(args.changedFiles)}.` },
 ]
 
 const WHERE = `Work in the run worktree ${args.worktree}; start every shell command with cd "${args.worktree}" &&.`

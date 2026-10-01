@@ -75,7 +75,7 @@ Before pushing code:
 npm run test:quick
 
 # Full test suite
-npm run serve  # Terminal 1
+npm run build && npm run serve  # Terminal 1
 npm test       # Terminal 2
 
 # Individual tests

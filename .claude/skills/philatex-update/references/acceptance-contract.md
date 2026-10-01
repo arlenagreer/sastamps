@@ -27,7 +27,7 @@ Every assertion is authored `status: RED`, and **the file is never edited to fli
 5. **ICS** — one individual `.ics` per meeting + one edition aggregate (`public/sapa-qN-YYYY-meetings.ics` for quarterly, `public/sapa-YYYY-MM-meetings.ics` for bimonthly); UTC math correct for the DST regime of each date in the edition's months; cancelled = 1-minute duration; UID/PRODID conventions per `data-contract.md` §C.
 6. **Provenance** — every below-high-confidence field carries `[UNVERIFIED]`.
 7. **Negative assertions** — what must NOT appear (e.g., "no picnic this quarter"; "no file modified outside permitted scope"). Negative assertions are where over-fit hides; derive them from the calendar, **including footnotes under the calendar table**, not from habit. Mark each one `negative: true`, so the review panel puts it through the ≥3-skeptic challenge.
-8. **Automated green bar** — `build:js` exits 0; `build:search` + `build:search:embed` refresh the search index; `validate:data` (scoped to the new ids via `VALIDATE_NEW_IDS`) passes with 0 hard errors; `test:quick` passes; `scripts/check-ics.mjs --edition {ID}` exits 0.
+8. **Automated green bar** — `build:js` exits 0; `build:search` refreshes the search index; `validate:data` (scoped to the new ids via `VALIDATE_NEW_IDS`) passes with 0 hard errors; `test:quick` passes; `scripts/check-ics.mjs --edition {ID}` exits 0.
 
 ## Bimonthly editions (`YYYY-MM`)
 
@@ -81,11 +81,11 @@ Derived from the page-1 calendar (July/August/September 2026), schemas, and lear
 
 ## Negative
 - **[N1]** NO picnic this quarter (Q3 has none; the picnic is Q2) — source: calendar-table + learnings — negative: true — status: RED
-- **[N2]** NO file modified outside permitted-file scope (declared build outputs `search.html` and `dist/**` excepted) — negative: true — status: RED
+- **[N2]** NO file modified outside permitted-file scope (build outputs `dist/`, `_site/`, `css/*.min.css` are gitignored, so they never appear) — negative: true — status: RED
 
 ## Green bar
 - **[G1]** npm run build:js exits 0 — status: RED
-- **[G2]** npm run build:search && npm run build:search:embed succeed (search index refreshed + re-embedded) — status: RED
+- **[G2]** npm run build:search succeeds (search index refreshed) — status: RED
 - **[G3]** VALIDATE_NEW_IDS=<2026-Q3 + the 13 meeting ids> npm run validate:data exits 0 (0 hard errors) — status: RED
 - **[G4]** npm run test:quick passes — status: RED
 - **[G5]** node .claude/skills/philatex-update/scripts/check-ics.mjs --edition 2026-Q3 --root "$WORKTREE" exits 0 (every .ics time recomputed from America/Chicago rules) — status: RED

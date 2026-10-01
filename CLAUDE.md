@@ -11,15 +11,14 @@ This is the **San Antonio Philatelic Association (SAPA)** website - a modern, pr
 ### Build System
 ```bash
 # Complete build process
-npm run build                 # Full build with tree-shaking optimization
-npm run build:js              # JavaScript build with advanced tree-shaking
+npm run build                 # Full build: dist/ + css/*.min.css, site assembled in _site/
+npm run build:js              # JavaScript bundles into dist/ (npm run build to see them in _site/)
 npm run build:css             # PostCSS processing and minification
 npm run build:js:legacy       # Legacy single bundle (fallback)
 
 # Development server
-npm start                     # Start development server (port 3000)
-npm run serve                 # Same as start
-npm run watch                 # Watch mode for CSS/JS changes
+npm start                     # Build, then serve _site/ (port 3000)
+npm run serve                 # Serve the last build (_site/) without rebuilding
 
 # Analysis and optimization
 npm run analyze:bundle        # View detailed bundle analysis
@@ -34,11 +33,11 @@ npm run audit:lighthouse      # Performance audit with Lighthouse
 
 ### Development Workflow
 ```bash
-# 1. Start development server
-npm run serve
+# 1. Build and serve the site (_site/)
+npm start
 
-# 2. Build optimized bundles
-npm run build:js
+# 2. After an edit, rebuild: _site/ is a copy, so only a full build shows it
+npm start
 
 # 3. Analyze bundle sizes
 npm run analyze:bundle
@@ -77,7 +76,8 @@ sastamps/
 │   ├── newsletters/     # Newsletter metadata
 │   ├── glossary/        # Philatelic terminology
 │   └── schemas/         # JSON validation schemas
-└── dist/               # Built assets output
+├── dist/               # Generated assets (git-ignored)
+└── _site/              # Built, deployable site (git-ignored; what Pages serves)
 ```
 
 ## Data Architecture
@@ -163,7 +163,7 @@ function setupFeature() {
 ### Build Validation
 ```bash
 # Always run after changes
-npm run build:js          # Verify tree-shaking works
+npm run build             # Full build; check-site-build checks it via bin/ci
 npm run analyze:bundle    # Check bundle sizes
 npm run test:quick        # Run HTML, JS, CSS validation
 ```
@@ -171,7 +171,7 @@ npm run test:quick        # Run HTML, JS, CSS validation
 ### Comprehensive Testing
 ```bash
 # Full test suite (requires server)
-npm run serve             # In terminal 1
+npm start                 # In terminal 1 (builds, then serves _site/)
 npm test                  # In terminal 2
 
 # Individual tests
@@ -254,13 +254,13 @@ The build system generates detailed bundle analysis:
 ## Important Notes
 
 ### Never Edit Directly
-- `dist/` directory - auto-generated build output
+- `dist/`, `_site/` and `css/*.min.css` - build output (git-ignored; CI rebuilds and deploys `_site/`)
 - `data/schemas/` - JSON validation schemas
 
 ### Always Run After Changes
-- `npm run build:js` to verify tree-shaking
+- `npm run build` (or `npm start`): `_site/` is a copy, so only a full build shows your change
 - `npm run analyze:bundle` to check bundle sizes
-- Test locally with `npm run serve`
+- Test locally with `npm start` (builds, then serves `_site/`)
 
 ### Security Considerations
 - Never commit API keys or sensitive data

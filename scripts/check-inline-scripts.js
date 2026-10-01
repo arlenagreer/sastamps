@@ -29,6 +29,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const vm = require('vm');
+const { isSitePage } = require('./lib/site');
 
 const root = path.resolve(process.argv[2] || path.join(__dirname, '..'));
 const SCAN_DIRS = ['.', 'showcase'];
@@ -40,7 +41,7 @@ function htmlFiles() {
     const abs = path.join(root, dir);
     if (!fs.existsSync(abs)) {continue;}
     for (const name of fs.readdirSync(abs).sort()) {
-      if (name.endsWith('.html') && !name.startsWith('test-')) {
+      if (isSitePage(name)) {
         files.push(path.join(dir, name));
       }
     }
@@ -69,7 +70,15 @@ function parseError(code, isModule) {
 let checked = 0;
 const failures = [];
 
-for (const rel of htmlFiles()) {
+// No pages means nothing was checked (say, _site/ was never built): fail
+// rather than report a pass for an empty run.
+const pages = htmlFiles();
+if (pages.length === 0) {
+  console.error(`Inline script parse check: no pages found under ${root}`);
+  process.exit(1);
+}
+
+for (const rel of pages) {
   const html = fs.readFileSync(path.join(root, rel), 'utf8');
   // The HTML parser ends a script element at the first </script, so this
   // non-greedy match extracts exactly what a browser would execute.

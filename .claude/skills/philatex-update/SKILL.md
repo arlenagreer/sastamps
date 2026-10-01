@@ -149,7 +149,7 @@ Spawn the `philatex-newsletter-agent` with full context:
 
 Files the agent must read before starting: its own instructions (`.claude/agents/philatex-newsletter-agent.md`), `data/schemas/newsletter.schema.json`, `data/schemas/meeting.schema.json`, `data/newsletters/newsletters.json`, `data/meetings/meetings.json`.
 
-The agent's definition of done is **every contract assertion GREEN**. It handles extraction, validation, data-file updates, ICS generation, HTML updates, then runs the green bar — `build:js`, `build:search` + `build:search:embed`, `validate:data` (scoped to the new ids via `VALIDATE_NEW_IDS`), `test:quick`, and `check-ics.mjs` (G1–G5) — and reports each contract assertion as GREEN or still-RED. It does NOT commit. It returns a structured Step 9 summary.
+The agent's definition of done is **every contract assertion GREEN**. It handles extraction, validation, data-file updates, ICS generation, HTML updates, then runs the green bar — `build:js`, `build:search`, `validate:data` (scoped to the new ids via `VALIDATE_NEW_IDS`), `test:quick`, and `check-ics.mjs` (G1–G5) — and reports each contract assertion as GREEN or still-RED. It does NOT commit. It returns a structured Step 9 summary.
 
 ## Phase 9: QC Loop — review → fix → re-verify (agent team)
 
@@ -175,14 +175,10 @@ Run it in full after a CLEAN exit. After an escalation, go to Phase 11 in "incom
 1. **Every acceptance-contract assertion is GREEN**, including the automated green bar `[G1]`-`[G5]`: `build:js`, search rebuild + embed, scoped `validate:data`, `test:quick`, `check-ics.mjs`.
 2. All expected files were modified: `data/newsletters/newsletters.json` (new edition ID), `data/meetings/meetings.json` (the edition's new dates), ≥1 ICS in `data/calendar/`, the edition's aggregate ICS in `public/` (`sapa-qN-YYYY-meetings.ics` or `sapa-YYYY-MM-meetings.ics`), the source PDF copied to `public/SAPA-PHILATEX-…pdf` (filePath must resolve — `[S4]`), and `index.html` / `newsletter.html` / `meetings.html`.
 3. The final full pass found no blocker, major or minor items.
-4. **The local CI gate is green: `bin/ci` exits 0.** A clean checkpoint then means "pushable" as well as "clean". Because `bin/ci` runs the full build, and **the full build rewrites the HTML pages this update edits**:
-   1. **Before:** in the worktree, record `git status --porcelain --untracked-files=all`, and a content hash (`shasum`) of every modified or untracked file. The `--untracked-files=all` matters: plain `--porcelain` collapses a new untracked directory to one `?? dir/` line, and a restore keyed on that line deletes every new file inside it. Copy each of those files to `$REVIEWS/{EDITION_ID}-qc/pre-ci/`.
+4. **The local CI gate is green: `bin/ci` exits 0.** A clean checkpoint then means "pushable" as well as "clean". `bin/ci` runs the full build, which assembles the site in the gitignored `_site/` and must never rewrite a tracked file. Prove that it did not touch the content being committed:
+   1. **Before:** in the worktree, record `git status --porcelain --untracked-files=all`, and a content hash (`shasum`) of every modified or untracked file. The `--untracked-files=all` matters: plain `--porcelain` collapses a new untracked directory to one `?? dir/` line.
    2. **Run:** `cd "$WORKTREE" && bin/ci`, and read its summary line.
-   3. **Restore:**
-      - `git checkout --` every tracked file that was clean before (the build also rewrites `package.json`);
-      - copy back every file that was already modified;
-      - delete every untracked file that was not there before.
-   4. **Prove it:** recompute the hashes and compare them with step 1. They must match **exactly**. `git status` alone cannot show this, because a file that was already modified still reads `M` after being rewritten.
+   3. **Prove it:** record both again and compare. They must match **exactly**. `git status` alone cannot show this, because a file that was already modified still reads `M` after being rewritten. Any difference is a blocker: the build changed a source file, so stop and report it rather than restoring over it.
 
    Report the real counts (tests / assertions / failures / errors).
 
@@ -243,11 +239,11 @@ After either, re-present the full checkpoint from 11a with the new report. This 
 Never partially revert. The update is one transaction.
 
 **On Approve — atomic commit:**
-1. List what changed: `git -C "$WORKTREE" status --porcelain`. Keep only permitted files and build outputs. Anything else is a scope breach: stop and report it; don't stage it.
+1. List what changed: `git -C "$WORKTREE" status --porcelain`. Keep only permitted files (build outputs are gitignored and never appear). Anything else is a scope breach: stop and report it; don't stage it.
 2. Cross-check the list against the union of the Phase 8 Files Created/Modified and every fix report's Files Touched. A mismatch in either direction is reported before committing.
-3. `git add <file>`, one path at a time (NEVER `git add .` / `-A`). For `dist/`, stage bundle files whose content changed. Skip the timestamp-only `dist/build-info.json` and `dist/bundle-analysis.json` unless the bundle list itself changed (data-contract §E).
+3. `git add <file>`, one path at a time (NEVER `git add .` / `-A`). Never stage `dist/`, `_site/` or `css/*.min.css`: they are gitignored build output, rebuilt by CI on deploy.
 4. `git commit` on `content/{EDITION_ID}` using the Phase 11d message, including the `Known open issues:` body when approving in incomplete mode.
-5. Report: "Changes committed: <hash> on branch content/{EDITION_ID} (worktree <path>). When ready: push, open a PR, merge, and after the site deploys run `/philatex-update --verify-live {EDITION_ID}`." Pushing re-runs `bin/ci` through the local CI hook, which rewrites the worktree's HTML after the commit. That is harmless, because the commit is already made; the worktree can simply be removed once merged.
+5. Report: "Changes committed: <hash> on branch content/{EDITION_ID} (worktree <path>). When ready: push, open a PR, merge, and after the site deploys run `/philatex-update --verify-live {EDITION_ID}`." Pushing re-runs `bin/ci` through the local CI hook; it builds into `_site/` and leaves the committed files alone. The worktree can be removed once merged.
 
 Do NOT push. The operator chose "publish = commit only", and controls deployment.
 
@@ -298,11 +294,11 @@ PERMITTED FILES (agent may modify freely):
   about.html
   contact.html
 
-BUILD OUTPUTS (written only by the green bar's npm scripts, never
-edited by hand; excluded from the out-of-scope check [N2]; snapshotted
-and committed with the update):
-  search.html                      (build:search:embed re-embeds the index)
+BUILD OUTPUTS (written only by npm scripts, never edited by hand,
+gitignored, so never in git status and never committed; CI rebuilds
+them on deploy):
   dist/**                          (build:js, build:search)
+  css/*.min.css, _site/**          (npm run build; _site/ is the deployed site)
 
 RUN BOOKKEEPING — in the MAIN checkout's .planning/reviews/ ($REVIEWS), never in
 the worktree, never committed with the site:

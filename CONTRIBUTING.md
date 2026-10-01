@@ -211,7 +211,7 @@ Run these commands locally:
 npm run test:quick
 
 # Full test suite
-npm run serve  # In terminal 1
+npm run build && npm run serve  # In terminal 1
 npm test       # In terminal 2
 
 # Check bundle size
