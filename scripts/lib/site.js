@@ -12,7 +12,8 @@ const SITE_DIRS = ['css', 'dist', 'images', 'public', 'downloads', 'showcase', '
 const SITE_FILES = ['favicon.ico', 'site.webmanifest'];
 
 // Never public, wherever it sits: the build leaves these out and the check
-// fails if one reaches _site/. robots.txt is the one text file a site serves.
+// fails if one reaches _site/. robots.txt is exempt so it can be added to
+// SITE_FILES once refreshed (todo 12); it is not deployed today.
 const isPrivate = (rel) => /\.(php|db|env|md)$/i.test(rel)
     || (/\.txt$/i.test(rel) && rel !== 'robots.txt')
     || /(^|\/)\./.test(rel); // dotfiles: the Pages artifact upload drops them anyway
@@ -21,6 +22,10 @@ const isPrivate = (rel) => /\.(php|db|env|md)$/i.test(rel)
 const NOT_PAGES = /^(test-.*|q4_update)\.html$/;
 
 const isSitePage = (name) => name.endsWith('.html') && !NOT_PAGES.test(name);
+
+// The root pages that deploy, given deployableFiles(root).
+const sitePages = (root, deployable) => require('fs').readdirSync(root)
+    .filter((f) => isSitePage(f) && deployable.has(f));
 
 // Files git tracks, plus new files it would track (untracked and not
 // ignored). New files count so that content added but not yet committed,
@@ -33,4 +38,4 @@ function deployableFiles(root) {
         .split('\0').filter(Boolean));
 }
 
-module.exports = { SITE_DIRS, SITE_FILES, NOT_PAGES, isSitePage, isPrivate, deployableFiles };
+module.exports = { SITE_DIRS, SITE_FILES, NOT_PAGES, isSitePage, sitePages, isPrivate, deployableFiles };

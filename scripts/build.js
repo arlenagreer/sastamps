@@ -14,7 +14,8 @@ const { spawn } = require('child_process');
 const { constants } = require('fs');
 const fs = require('fs').promises;
 const path = require('path');
-const { SITE_DIRS, SITE_FILES, isSitePage, isPrivate, deployableFiles } = require('./lib/site');
+const { SITE_DIRS, SITE_FILES, sitePages, isPrivate, deployableFiles } = require('./lib/site');
+const { STYLESHEETS } = require('./build-css');
 
 const VERSION = '1.0.0';
 const ROOT = path.resolve(__dirname, '..');
@@ -56,7 +57,7 @@ async function generateBuildInfo() {
 const CLONE = constants.COPYFILE_FICLONE;
 
 function isGenerated(rel) {
-    return rel === 'dist' || rel.startsWith('dist/') || /^css\/[^/]+\.min\.css$/.test(rel);
+    return rel === 'dist' || rel.startsWith('dist/') || STYLESHEETS.some((name) => rel === `css/${name}.min.css`);
 }
 
 async function assembleSite() {
@@ -64,7 +65,7 @@ async function assembleSite() {
     // Only files git tracks or would track are deployed (plus the build's own
     // output), so a local build never ships ignored local files.
     const deployable = deployableFiles(ROOT);
-    const pages = (await fs.readdir(ROOT)).filter((f) => isSitePage(f) && deployable.has(f));
+    const pages = sitePages(ROOT, deployable);
     for (const page of pages) {
         await fs.copyFile(path.join(ROOT, page), path.join(SITE, page), CLONE);
     }
@@ -91,13 +92,11 @@ async function build() {
     try {
         console.log('\nStarting build process...\n');
 
-        // Start clean, so nothing stale from an earlier build reaches _site/:
-        // that includes a css/*.min.css whose stylesheet has since been dropped.
+        // Start clean, so nothing stale from an earlier build reaches _site/.
+        // (A css/*.min.css whose stylesheet was dropped is kept out by
+        // isGenerated, which names only the current STYLESHEETS.)
         for (const dir of [DIST, SITE]) {
             await fs.rm(dir, { recursive: true, force: true });
-        }
-        for (const f of await fs.readdir(path.join(ROOT, 'css'))) {
-            if (f.endsWith('.min.css')) await fs.rm(path.join(ROOT, 'css', f));
         }
         await fs.mkdir(path.join(DIST, 'js'), { recursive: true });
 

@@ -15,10 +15,11 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync, execFileSync } = require('child_process');
-const { SITE_DIRS, isSitePage, isPrivate, deployableFiles } = require('./lib/site');
+const { SITE_DIRS, SITE_FILES, isSitePage, sitePages, isPrivate, deployableFiles } = require('./lib/site');
 
 const REPO = path.resolve(__dirname, '..');
 const SITE = path.join(REPO, '_site');
+const DEPLOYABLE = deployableFiles(REPO);
 
 let checks = 0;
 let failures = 0;
@@ -97,12 +98,15 @@ if (!fs.existsSync(SITE)) {
   check(false, '_site/ was not produced');
 } else {
   console.log('▸ _site holds the deployable pages and nothing private');
-  const deployable = deployableFiles(REPO);
-  const sourcePages = fs.readdirSync(REPO).filter((f) => isSitePage(f) && deployable.has(f));
+  const sourcePages = sitePages(REPO, DEPLOYABLE);
   for (const p of sourcePages) check(existsExact(path.join(SITE, p)), `_site/${p} missing`);
+  for (const f of SITE_FILES) check(existsExact(path.join(SITE, f)), `_site/${f} missing`);
   for (const d of SITE_DIRS) check(existsExact(path.join(SITE, d)), `_site/${d}/ missing`);
   const all = walk(SITE).map((f) => path.relative(SITE, f));
-  const forbidden = all.filter((f) => isPrivate(f) || /^(scripts|js|node_modules)\//.test(f)
+  // isPrivate is the build's own rule; the explicit list beside it is an
+  // independent second opinion, so a gap in that rule still fails here.
+  const forbidden = all.filter((f) => isPrivate(f) || /\.(php|db|sqlite3?|env|md|bak|log|sh|py|rb)$/i.test(f)
+    || /^(scripts|js|node_modules|\.planning|\.claude|\.github)\//.test(f)
     || (!f.includes('/') && f.endsWith('.html') && !isSitePage(f)) || /(^|\/)sw\.js$/.test(f));
   check(forbidden.length === 0, `_site contains files that must not be public: ${forbidden.slice(0, 8).join(', ')}`);
 
@@ -163,9 +167,9 @@ console.log('▸ source pages load plain links and nothing is inlined');
 // Every deployed page links both minified stylesheets, except these, which
 // are self-contained or not deployed.
 const EXEMPT = new Set(['offline.html']); // works with no network: inline styles only
-const sitePages = fs.readdirSync(REPO).filter((f) => isSitePage(f) && deployableFiles(REPO).has(f));
-check(sitePages.length >= 10, `only ${sitePages.length} site pages found`);
-for (const p of sitePages) {
+const sourceSitePages = sitePages(REPO, DEPLOYABLE);
+check(sourceSitePages.length >= 10, `only ${sourceSitePages.length} site pages found`);
+for (const p of sourceSitePages) {
   const html = fs.readFileSync(path.join(REPO, p), 'utf8');
   check(count(html, /sourceMappingURL/g) === 0, `${p}: inline source map present`);
   check(count(html, /<!-- \/?build:/g) === 0, `${p}: leftover build: region markers`);
