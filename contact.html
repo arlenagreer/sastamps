@@ -17,8 +17,11 @@
          What this guard does: when framed, it hides the page and tries to
          navigate the top window to it.
          What it cannot do: a sandboxed iframe without allow-scripts never
-         runs it, so the page can still be displayed there (its scripts and
-         form handling are inert in that frame).
+         runs it, so the page is visible there, and with allow-forms the
+         contact form can still be submitted natively. The form is
+         method="post" so that native submit puts no personal data in the
+         URL; on GitHub Pages it delivers nothing (only the JS handler sends
+         messages, and it calls preventDefault on every submit).
          Why not hide-by-default (CSS display:none, revealed by script): that
          would show a blank page to every visitor with JavaScript disabled.
          The CSP above allows inline scripts; if 'unsafe-inline' is ever
@@ -167,7 +170,7 @@
 
                 <div class="card" style="max-width: 800px; margin: 2rem auto 0;">
                     <div class="card-content">
-                        <form id="contact-form" novalidate>
+                        <form id="contact-form" method="post" novalidate>
                             <input type="hidden" id="csrf-token" name="csrf_token" value="">
 
                             <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
