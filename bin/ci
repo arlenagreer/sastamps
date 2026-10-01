@@ -57,8 +57,9 @@ else
   echo "  PR regenerates package-lock.json and drops entries npm ci needs. It was"
   echo "  the proxy-agent@8.0.2 subtree nested under lighthouse until pa11y 10"
   echo "  dropped the hard dependency that pulled proxy-agent in. @puppeteer/browsers"
-  echo "  still declares optional peers (proxy-agent, yauzl): diff the lockfile's"
-  echo "  entries marked peer+optional first, since those are what gets dropped."
+  echo "  still declares optional peers (proxy-agent, yauzl) that can come back."
+  echo "  Compare against the last good lockfile first:"
+  echo "    git diff origin/main -- package-lock.json"
   echo "  Six of the last seven Dependabot PRs (#121-#125, #127, #128) were closed"
   echo "  unmerged for exactly this reason."
   echo
@@ -158,13 +159,15 @@ run_section "test:inline-js (inline <script> blocks parse, post-build)" npm run 
 # ── Declared exclusions -- outside this local gate, each with its own reason ──
 #
 # Every line below is worded to avoid the phrases hooks/local-ci-gate.sh's
-# caveat grep matches case-insensitively in that gate file (search it for the
-# caveat-grep regex; line numbers drift) -- read that line directly rather than quoting its four phrases here, since quoting
+# caveat grep matches case-insensitively. Find them in that gate file by its
+# `caveat=""` assignment and the grep just above it (cited by content, since
+# line numbers drift) rather than quoting the four phrases here, since quoting
 # them would itself trip the same scanner over this file's own source, not
 # just over a captured run log. A match would silently downgrade a GREEN run
-# to "covers the BLOCKING gates only" -- see hooks/lib/run-log.sh:99-107 for
-# the same constraint on the gate's own side. Phrased instead as plain
-# statements of what each check needs and does not have here.
+# to "covers the BLOCKING gates only" -- see the comment above the LOG TRIMMED
+# printf in hooks/lib/run-log.sh for the same constraint on the gate's side.
+# Phrased instead as plain statements of what each check needs and does not
+# have here.
 echo
 echo "▸ declared OUTSIDE this local gate (each needs something this runner does not provide)"
 echo "  - test:links      -- its own command text says to start a server in another"
