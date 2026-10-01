@@ -9,58 +9,58 @@ X-WR-CALDESC:San Antonio Philatelic Association Fourth Quarter 2025 Meeting Sche
 BEGIN:VEVENT
 DTSTART:20251003T183000
 DTEND:20251003T210000
-DTSTAMP:20250923T000000Z
+DTSTAMP:20251001T000000Z
 UID:sapa-2025-10-03@sastamps.org
 SUMMARY:Board of Governors Meeting & Show and Tell
-DESCRIPTION:Monthly Board of Governors meeting followed by member show and tell presentations. Bring items for Show and Tell. Circuit books available for purchase.
-LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 13030 Jones Maltsberger Road\, San Antonio\, TX 78247
-CATEGORIES:business,show-and-tell,board-meeting,trading
+DESCRIPTION:Monthly Board of Governors meeting followed by member show and tell presentations.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:bog,business,show-and-tell
 STATUS:CONFIRMED
 END:VEVENT
 
 BEGIN:VEVENT
 DTSTART:20251010T183000
 DTEND:20251010T210000
-DTSTAMP:20250923T000000Z
+DTSTAMP:20251001T000000Z
 UID:sapa-2025-10-10@sastamps.org
-SUMMARY:Auction
-DESCRIPTION:Annual year-end auction featuring stamps\, covers\, and philatelic supplies from members and estates. Preview starts at 6:00 PM. Registration required for bidders. Cash and checks accepted.
-LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 13030 Jones Maltsberger Road\, San Antonio\, TX 78247
-CATEGORIES:auction,special-event,fundraiser
+SUMMARY:Year-End Stamp Auction
+DESCRIPTION:Special year-end auction featuring premium lots\, collections\, and donated materials for club fundraising. Cash or check accepted for purchases. Premium year-end lots available. All proceeds support club activities.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:auction,year-end,fundraising,premium-lots
 STATUS:CONFIRMED
 END:VEVENT
 
 BEGIN:VEVENT
-DTSTART:20251017T173000
+DTSTART:20251017T183000
 DTEND:20251017T210000
-DTSTAMP:20250923T000000Z
+DTSTAMP:20251001T000000Z
 UID:sapa-2025-10-17@sastamps.org
 SUMMARY:Stamp Bourse
-DESCRIPTION:Monthly bourse featuring multiple dealers with stamps\, covers\, supplies\, and philatelic literature. Great opportunity for buying\, selling\, and trading.
-LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 13030 Jones Maltsberger Road\, San Antonio\, TX 78247
-CATEGORIES:bourse,dealers,trading,buying,selling
+DESCRIPTION:Monthly bourse featuring dealer tables and opportunities for buying\, selling\, and trading stamps and covers. Tables available for dealers and members. Bring stamps for trading or selling.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:bourse,trading,dealers,buying,selling
 STATUS:CONFIRMED
 END:VEVENT
 
 BEGIN:VEVENT
 DTSTART:20251024T173000
 DTEND:20251024T210000
-DTSTAMP:20250923T000000Z
+DTSTAMP:20251001T000000Z
 UID:sapa-2025-10-24@sastamps.org
 SUMMARY:Stamp Bourse
-DESCRIPTION:Monthly bourse featuring multiple dealers with stamps\, covers\, supplies\, and philatelic literature. Great opportunity for buying\, selling\, and trading.
-LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 13030 Jones Maltsberger Road\, San Antonio\, TX 78247
-CATEGORIES:bourse,dealers,trading
+DESCRIPTION:Monthly bourse featuring dealer tables and opportunities for buying\, selling\, and trading stamps and covers. Contact secretary to reserve tables.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:bourse,dealers,trading,buying,selling
 STATUS:CONFIRMED
 END:VEVENT
 
 BEGIN:VEVENT
 DTSTART:20251031T183000
 DTEND:20251031T183100
-DTSTAMP:20250923T000000Z
+DTSTAMP:20251001T000000Z
 UID:sapa-2025-10-31@sastamps.org
 SUMMARY:NO MEETING - HALLOWEEN
-DESCRIPTION:Regular meeting cancelled due to Halloween. Happy Halloween to all members! Next meeting: November 7\, 2025.
+DESCRIPTION:No meeting scheduled due to Halloween holiday.
 LOCATION:Meeting Cancelled
 CATEGORIES:cancelled,holiday,halloween
 STATUS:CANCELLED
@@ -69,11 +69,11 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART:20251107T183000
 DTEND:20251107T210000
-DTSTAMP:20250923T000000Z
+DTSTAMP:20251001T000000Z
 UID:sapa-2025-11-07@sastamps.org
 SUMMARY:Board of Governors Meeting & Show and Tell
-DESCRIPTION:Monthly Board of Governors meeting followed by member show and tell presentations. Nominations open for 2026 board positions. Circuit books available for purchase.
-LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 13030 Jones Maltsberger Road\, San Antonio\, TX 78247
+DESCRIPTION:Monthly Board of Governors meeting followed by member show and tell presentations. Bring items for Show and Tell. Circuit books available for purchase. Nominations open for 2026 board positions.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
 CATEGORIES:business,show-and-tell,board-meeting,trading
 STATUS:CONFIRMED
 END:VEVENT
@@ -81,23 +81,23 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART:20251114T183000
 DTEND:20251114T210000
-DTSTAMP:20250923T000000Z
+DTSTAMP:20251001T000000Z
 UID:sapa-2025-11-14@sastamps.org
 SUMMARY:Auction
-DESCRIPTION:Monthly stamp auction featuring a variety of philatelic material. Lot viewing at 6:30 PM\, auction begins at 7:00 PM. All members welcome to consign items.
-LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 13030 Jones Maltsberger Road\, San Antonio\, TX 78247
-CATEGORIES:auction,trading,sales
+DESCRIPTION:Monthly club auction featuring member consignments and donated materials. Cash or check accepted for purchases. Bring lots for consignment (10% commission).
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:auction,buying,selling,consignment
 STATUS:CONFIRMED
 END:VEVENT
 
 BEGIN:VEVENT
 DTSTART:20251121T173000
 DTEND:20251121T210000
-DTSTAMP:20250923T000000Z
+DTSTAMP:20251001T000000Z
 UID:sapa-2025-11-21@sastamps.org
-SUMMARY:Stamp Bourse
-DESCRIPTION:Monthly bourse featuring multiple dealers with stamps\, covers\, supplies\, and philatelic literature. Early holiday shopping opportunity with special discounts from participating dealers.
-LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 13030 Jones Maltsberger Road\, San Antonio\, TX 78247
+SUMMARY:November Stamp Bourse
+DESCRIPTION:Monthly bourse featuring multiple dealers with stamps\, covers\, supplies\, and philatelic literature. Great opportunity for buying\, selling\, and trading. Early holiday shopping opportunity. Special discounts from participating dealers.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
 CATEGORIES:bourse,dealers,trading,buying,selling
 STATUS:CONFIRMED
 END:VEVENT
@@ -105,46 +105,46 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART:20251128T183000
 DTEND:20251128T183100
-DTSTAMP:20250923T000000Z
+DTSTAMP:20251001T000000Z
 UID:sapa-2025-11-28@sastamps.org
-SUMMARY:NO MEETING - THANKSGIVING
-DESCRIPTION:Regular meeting cancelled due to Thanksgiving holiday weekend. Happy Thanksgiving to all members! Next meeting: December 5\, 2025.
+SUMMARY:Meeting Cancelled - Thanksgiving Holiday
+DESCRIPTION:Regular meeting cancelled due to Thanksgiving holiday weekend. Happy Thanksgiving to all members!
 LOCATION:Meeting Cancelled
-CATEGORIES:cancelled,holiday,thanksgiving
+CATEGORIES:cancelled,cancelled,holiday,thanksgiving
 STATUS:CANCELLED
 END:VEVENT
 
 BEGIN:VEVENT
 DTSTART:20251205T183000
 DTEND:20251205T210000
-DTSTAMP:20250923T000000Z
+DTSTAMP:20251001T000000Z
 UID:sapa-2025-12-05@sastamps.org
 SUMMARY:Board of Governors Meeting & Blue Chip Auction
-DESCRIPTION:Annual Board of Governors meeting with special Blue Chip Auction featuring premium philatelic material. All members encouraged to attend and participate.
-LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 13030 Jones Maltsberger Road\, San Antonio\, TX 78247
-CATEGORIES:business,auction,board-meeting,special-event
+DESCRIPTION:Annual Board of Governors elections for 2026 officers\, followed by member presentations and holiday season preparation. Annual elections for 2026 board positions. All members encouraged to vote. Holiday party planning discussion.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:business,elections,board-meeting,annual
 STATUS:CONFIRMED
 END:VEVENT
 
 BEGIN:VEVENT
 DTSTART:20251212T183000
 DTEND:20251212T210000
-DTSTAMP:20250923T000000Z
+DTSTAMP:20251001T000000Z
 UID:sapa-2025-12-12@sastamps.org
 SUMMARY:Christmas Party & Silent Auction
-DESCRIPTION:Annual SAPA Christmas party featuring a potluck dinner\, silent auction\, and special recognition of volunteers and long-time members. RSVP required. Spouses and family members welcome. Bring a dish to share.
-LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 13030 Jones Maltsberger Road\, San Antonio\, TX 78247
-CATEGORIES:holiday,party,social,silent-auction,potluck
+DESCRIPTION:Annual SAPA holiday party featuring a potluck dinner\, philatelic gift exchange\, and special recognition of volunteers and long-time members. Potluck dinner - bring a dish to share. Philatelic gift exchange - $15 maximum value. Spouses and family members welcome. Special recognition for 2025 volunteers.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+CATEGORIES:holiday,party,social,gift-exchange,potluck
 STATUS:CONFIRMED
 END:VEVENT
 
 BEGIN:VEVENT
 DTSTART:20251219T183000
 DTEND:20251219T183100
-DTSTAMP:20250923T000000Z
+DTSTAMP:20251001T000000Z
 UID:sapa-2025-12-19@sastamps.org
 SUMMARY:NO MEETING - CHRISTMAS
-DESCRIPTION:Regular meeting cancelled due to Christmas holiday week. Wishing all members a Merry Christmas! Next meeting: December 26\, 2025.
+DESCRIPTION:No meeting scheduled due to Christmas holiday.
 LOCATION:Meeting Cancelled
 CATEGORIES:cancelled,holiday,christmas
 STATUS:CANCELLED
@@ -153,12 +153,12 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART:20251226T183000
 DTEND:20251226T183100
-DTSTAMP:20250923T000000Z
+DTSTAMP:20251001T000000Z
 UID:sapa-2025-12-26@sastamps.org
-SUMMARY:NO MEETING - CHRISTMAS
-DESCRIPTION:Regular meeting cancelled due to Christmas holiday week. Happy Holidays and Happy New Year! Next meeting: January 2\, 2026.
+SUMMARY:Meeting Cancelled - Holiday Week
+DESCRIPTION:Regular meeting cancelled due to Christmas holiday week. Wishing all members a wonderful holiday season and Happy New Year!
 LOCATION:Meeting Cancelled
-CATEGORIES:cancelled,holiday,christmas
+CATEGORIES:cancelled,cancelled,holiday,christmas
 STATUS:CANCELLED
 END:VEVENT
 

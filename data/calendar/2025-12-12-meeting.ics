@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//San Antonio Philatelic Association//SAPA Meetings//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:20251212T193000Z-sapa@sastamps.org
+DTSTAMP:20251001T000000Z
+DTSTART:20251213T010000Z
+DTEND:20251213T030000Z
+SUMMARY:SAPA Meeting - Christmas Party & Silent Auction
+DESCRIPTION:Annual SAPA holiday party featuring a potluck dinner\, philatelic gift exchange\, and special recognition of volunteers and long-time members. Potluck dinner - bring a dish to share. Philatelic gift exchange - $15 maximum value. Spouses and family members welcome. Special recognition for 2025 volunteers. Doors open at 6:30 PM\, meeting begins at 7:00 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting
+END:VEVENT
+END:VCALENDAR
