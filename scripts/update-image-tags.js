@@ -1,14 +1,7 @@
 const fs = require('fs').promises;
 const path = require('path');
 
-const htmlFiles = [
-    'index.html',
-    'about.html',
-    'contact.html',
-    'meetings.html',
-    'membership.html',
-    'newsletter.html'
-];
+const htmlFiles = require('./lib/pages');
 
 async function getPlaceholders() {
     try {

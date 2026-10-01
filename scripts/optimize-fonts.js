@@ -1,13 +1,7 @@
 const fs = require('fs').promises;
+const { upsertRegion } = require('./lib/html-region');
 
-const htmlFiles = [
-    'index.html',
-    'about.html',
-    'contact.html',
-    'meetings.html',
-    'membership.html',
-    'newsletter.html'
-];
+const htmlFiles = require('./lib/pages');
 
 const fontConfig = {
     'Open Sans': {
@@ -19,12 +13,6 @@ const fontConfig = {
         display: 'swap'
     }
 };
-
-async function generateFontPreloadTags() {
-    // Font preload tags removed — Google Fonts uses versioned, hashed URLs
-    // that cannot be predicted. The fonts load correctly via the CSS link.
-    return '';
-}
 
 async function generateFontFaceObserver() {
     return `
@@ -117,45 +105,37 @@ async function generateFontStyles() {
     </style>`;
 }
 
-async function updateHTMLWithFontOptimizations(filename) {
+async function renderFontOptimizations(filename) {
     console.log(`Processing ${filename}...`);
     let content = await fs.readFile(filename, 'utf8');
 
-    const preloadTags = await generateFontPreloadTags();
-    const fontStyles = await generateFontStyles();
-    const fontObserver = await generateFontFaceObserver();
+    // Each block lives in a build:* region that is replaced in place, so a
+    // rebuild never adds another copy (see scripts/lib/html-region.js). The
+    // font styles must stay after the full stylesheet: their fallbacks win only
+    // because they come later in the cascade, so they go just before </head>.
+    content = upsertRegion(content, 'font-styles', await generateFontStyles(), '</head>', filename);
+    content = upsertRegion(content, 'font-observer', await generateFontFaceObserver(), '</body>', filename);
 
-    // Add font preload tags
-    // NOTE: no literal leading "    " prefix here -- fontStyles/fontObserver
-    // below are template literals that already open with their own leading
-    // newline + indentation (see generateFontStyles():85, generateFontFaceObserver():31).
-    // A bare four-space prefix in front of that leading newline produced a
-    // blank line containing ONLY four trailing spaces, which is exactly the
-    // no-trailing-whitespace defect `npm run test:html` caught (18 errors,
-    // 3 per file, across these six root-level HTML files). These six files
-    // are this script's generated output -- test:html is what keeps them
-    // clean on every re-run of this script, not a one-time hand edit.
-    content = content.replace('</head>', `${preloadTags}\n</head>`);
-
-    // Add font styles
-    content = content.replace('</head>', `${fontStyles}\n</head>`);
-
-    // Add font observer script
-    content = content.replace('</body>', `${fontObserver}\n</body>`);
-
-    // Update Google Fonts link to include display=swap
+    // Ensure the Google Fonts URL asks for display=swap, once. It is written
+    // already escaped because fix-html-validation.js (which runs earlier in the
+    // build) would otherwise rewrite a raw '&' on the next build.
     content = content.replace(
         /(https:\/\/fonts\.googleapis\.com\/css2\?[^"']+)/g,
-        '$1&display=swap'
+        (url) => (/[?&](amp;)?display=/.test(url) ? url : `${url}&amp;display=swap`)
     );
 
-    await fs.writeFile(filename, content, 'utf8');
-    console.log(`Updated ${filename}`);
+    return [filename, content];
 }
 
 async function optimizeFonts() {
     try {
-        await Promise.all(htmlFiles.map(updateHTMLWithFontOptimizations));
+        // Render every page before writing any, so a failure on one page never
+        // leaves the others half-updated.
+        const pages = await Promise.all(htmlFiles.map(renderFontOptimizations));
+        for (const [file, html] of pages) {
+            await fs.writeFile(file, html, 'utf8');
+            console.log(`Updated ${file}`);
+        }
         console.log('Font optimization complete!');
     } catch (err) {
         console.error('Error optimizing fonts:', err);
