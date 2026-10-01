@@ -49,3 +49,7 @@ graphify-out/
 
 # Claude Code worktrees (local, regenerable)
 .claude/worktrees/
+.gstack/
+
+# /philatex-update QC snapshots (restore points; regenerable, include full PDF copies)
+.planning/reviews/*-qc/
