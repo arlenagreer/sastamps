@@ -395,7 +395,9 @@ class TemplateEngine {
                 <div class="newsletter-card">
                     <div class="card-header">
                         <h3>${escapeHTML(newsletter.title)}</h3>
-                        <p class="quarter">${escapeHTML(newsletter.quarter)} Quarter ${newsletter.year}</p>
+                        <p class="quarter">${Array.isArray(newsletter.months) && newsletter.months.length
+    ? `${escapeHTML(newsletter.months.join('/'))} ${escapeHTML(String(newsletter.year))}`
+    : `${escapeHTML(newsletter.quarter)} Quarter ${escapeHTML(String(newsletter.year))}`}</p>
                     </div>
                     <div class="card-content">
                         <p class="publish-date">Published: ${this.helpers.get('formatDate')(newsletter.publishDate, 'short')}</p>

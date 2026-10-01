@@ -20,14 +20,25 @@ Every assertion is authored `status: RED`, and **the file is never edited to fli
 
 ## Assertion categories (derive every applicable one)
 
-1. **Counts** — exact totals from the calendar table: total meetings, holidays/cancelled, BOG/business, auctions, bourses/social, regular/program, picnic, special/exhibition.
+1. **Counts** — exact totals from the calendar table, **over the edition's own span** (three months for `YYYY-QN`, two months for `YYYY-MM`). Never carry a per-quarter number such as "13 meetings" into a bimonthly contract; count the calendar. Totals cover: total meetings, holidays/cancelled, BOG/business, auctions, bourses/social, regular/program, picnic, special/exhibition.
 2. **Per-meeting facts** — one assertion per meeting: `{date} = {type}` (+ `cancelled` for holidays, + `bogStart` for BOG). These are the highest-risk facts the skeptic panel refutes.
 3. **Schema** — every newsletter and meeting entry validates against `data/schemas/*.schema.json`; all enums in range. Plus the newsletter PDF exists at `public/<filePath>` (a missing PDF = **blocker**; the extractor must copy the source PDF there).
 4. **Continuity** — new meeting dates strictly after the last existing date in `meetings.json`; no duplicates; chronological.
-5. **ICS** — one individual `.ics` per meeting + one quarterly aggregate; UTC math correct for the quarter's DST regime; cancelled = 1-minute duration; UID/PRODID conventions per `data-contract.md` §C.
+5. **ICS** — one individual `.ics` per meeting + one edition aggregate (`public/sapa-qN-YYYY-meetings.ics` for quarterly, `public/sapa-YYYY-MM-meetings.ics` for bimonthly); UTC math correct for the DST regime of each date in the edition's months; cancelled = 1-minute duration; UID/PRODID conventions per `data-contract.md` §C.
 6. **Provenance** — every below-high-confidence field carries `[UNVERIFIED]`.
 7. **Negative assertions** — what must NOT appear (e.g., "no picnic this quarter"; "no file modified outside permitted scope"). Negative assertions are where over-fit hides; derive them from the calendar, **including footnotes under the calendar table**, not from habit. Mark each one `negative: true`, so the review panel puts it through the ≥3-skeptic challenge.
 8. **Automated green bar** — `build:js` exits 0; `build:search` + `build:search:embed` refresh the search index; `validate:data` (scoped to the new ids via `VALIDATE_NEW_IDS`) passes with 0 hard errors; `test:quick` passes; `scripts/check-ics.mjs --edition {ID}` exits 0.
+
+## Bimonthly editions (`YYYY-MM`)
+
+The assertion shape is the same. What changes:
+
+- **Counts** cover two months. January/February 2027 has 9 Fridays, for example, against the 13 of a typical quarter.
+- **[S1]** reads: id `2027-01`, `months` `["January", "February"]`, no `quarter`, year 2027, publishDate `2027-01-01`, and it validates.
+- **[S4]** reads: the PDF exists at `public/SAPA-PHILATEX-January-February-2027.pdf`.
+- **[I1]** names `public/sapa-2027-01-meetings.ics` as the aggregate.
+- **[G5]** runs `check-ics.mjs --edition 2027-01`.
+- **Negative assertions** come from the two months on the calendar. Do not carry over a quarter's habits, such as "the picnic is Q2".
 
 ## Worked example — `2026-Q3`
 
@@ -80,4 +91,4 @@ Derived from the page-1 calendar (July/August/September 2026), schemas, and lear
 - **[G5]** node .claude/skills/philatex-update/scripts/check-ics.mjs --edition 2026-Q3 --root "$WORKTREE" exits 0 (every .ics time recomputed from America/Chicago rules) — status: RED
 ```
 
-The extractor (Phase 8) must satisfy every assertion; the panel (Phase 9) flips each to GREEN only after independently checking it, and tries to refute the per-meeting and negative assertions against the source PDF. Promoted learnings (`self-improvement.md`) often become standing assertions reused every quarter (e.g. N1, M2/M6/M11's `bogStart`).
+The extractor (Phase 8) must satisfy every assertion; the panel (Phase 9) flips each to GREEN only after independently checking it, and tries to refute the per-meeting and negative assertions against the source PDF. Promoted learnings (`self-improvement.md`) often become standing assertions reused every edition (e.g. N1, M2/M6/M11's `bogStart`).

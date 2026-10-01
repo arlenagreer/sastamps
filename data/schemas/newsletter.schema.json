@@ -6,8 +6,8 @@
   "properties": {
     "id": {
       "type": "string",
-      "description": "Unique identifier for the newsletter",
-      "pattern": "^[0-9]{4}-Q[1-4]$"
+      "description": "Unique identifier for the newsletter: YYYY-QN for quarterly issues, YYYY-MM (first month of the issue) for bimonthly issues",
+      "pattern": "^[0-9]{4}-(Q[1-4]|0[1-9]|1[0-2])$"
     },
     "title": {
       "type": "string",
@@ -17,7 +17,18 @@
     "quarter": {
       "type": "string",
       "enum": ["First", "Second", "Third", "Fourth"],
-      "description": "Quarter of publication"
+      "description": "Quarter of publication (quarterly issues)"
+    },
+    "months": {
+      "type": "array",
+      "description": "Months covered, in order (bimonthly issues), e.g. [\"January\", \"February\"]",
+      "items": {
+        "type": "string",
+        "enum": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+      },
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true
     },
     "year": {
       "type": "integer",
@@ -97,6 +108,11 @@
       "description": "Publication status"
     }
   },
-  "required": ["id", "title", "quarter", "year", "publishDate", "filePath", "description"],
+  "required": ["id", "title", "year", "publishDate", "filePath", "description"],
+  "if": {
+    "properties": { "id": { "type": "string", "pattern": "^[0-9]{4}-Q[1-4]$" } }
+  },
+  "then": { "required": ["quarter"] },
+  "else": { "required": ["months"] },
   "additionalProperties": false
 }

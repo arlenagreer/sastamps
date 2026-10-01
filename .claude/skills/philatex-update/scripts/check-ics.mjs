@@ -7,7 +7,9 @@
 // into a CST date (Q1/Q4) shifts the meeting by an hour, and a fixer regenerating
 // sibling files can re-introduce it after it was fixed.
 //
-// Usage: node check-ics.mjs --edition 2026-Q4 [--root <repo>] [--json]
+// Usage: node check-ics.mjs --edition 2026-Q4|2027-01 [--root <repo>] [--json]
+//   YYYY-QN = quarterly issue: three months, aggregate public/sapa-qN-YYYY-meetings.ics.
+//   YYYY-MM = bimonthly issue: two months starting at MM, aggregate public/sapa-YYYY-MM-meetings.ics.
 // Exit:  0 = every check passed, 1 = at least one failure, 2 = bad invocation.
 // Conventions checked are data-contract.md §C. Two cancellation shapes exist:
 //   type "holiday" (cancelled at publication) → fixed 18:30→18:31 placeholder, LOCATION "Meeting Cancelled";
@@ -23,24 +25,29 @@ const edition = opt('--edition');
 const root = path.resolve(opt('--root') ?? process.cwd());
 const asJson = argv.includes('--json');
 
-const m = /^(\d{4})-Q([1-4])$/.exec(edition ?? '');
-if (!m) { console.error('usage: check-ics.mjs --edition YYYY-QN [--root <repo>] [--json]'); process.exit(2); }
+const m = /^(\d{4})-(?:Q([1-4])|(0[1-9]|1[0-2]))$/.exec(edition ?? '');
+if (!m) { console.error('usage: check-ics.mjs --edition YYYY-QN|YYYY-MM [--root <repo>] [--json]'); process.exit(2); }
 const year = Number(m[1]);
-const q = Number(m[2]);
-const firstMonth = (q - 1) * 3 + 1;
+const q = m[2] ? Number(m[2]) : null; // null = bimonthly edition
+const firstMonth = q ? (q - 1) * 3 + 1 : Number(m[3]);
+const span = q ? 3 : 2; // months covered by the edition
 const pad = (n) => String(n).padStart(2, '0');
+// The edition's first day (DTSTAMP). Named for the quarterly case; also the bimonthly start.
 const quarterStart = `${year}${pad(firstMonth)}01`;
+// Is (y, mo) inside the edition? Month-index arithmetic, so a span may cross a year end.
+const startIdx = year * 12 + firstMonth - 1;
+const inEdition = (y, mo) => { const i = y * 12 + mo - 1; return i >= startIdx && i < startIdx + span; };
 
 const meetingsPath = path.join(root, 'data/meetings/meetings.json');
 const meetings = JSON.parse(fs.readFileSync(meetingsPath, 'utf8')).meetings
-  .filter((x) => { const [y, mo] = x.date.split('-').map(Number); return y === year && mo >= firstMonth && mo < firstMonth + 3; })
+  .filter((x) => { const [y, mo] = x.date.split('-').map(Number); return inEdition(y, mo); })
   .sort((a, b) => a.date.localeCompare(b.date));
 
 const failures = [];
 const passes = [];
 const fail = (where, msg) => failures.push(`${where}: ${msg}`);
 
-if (meetings.length === 0) fail(edition, `no meetings for this quarter in ${meetingsPath}`);
+if (meetings.length === 0) fail(edition, `no meetings for this edition in ${meetingsPath}`);
 
 // "7:30 PM" → [19, 30]
 function parseClock(s) {
@@ -112,16 +119,16 @@ for (const mt of meetings) {
   if (failures.length === before) passes.push(file);
 }
 
-// ── Stray individual files: a dated .ics in this quarter with no matching meeting ──
+// ── Stray individual files: a dated .ics in this edition with no matching meeting ──
 const expected = new Set(meetings.map((mt) => `${mt.date}-${mt.type === 'picnic' ? 'picnic' : 'meeting'}.ics`));
 const calDir = path.join(root, 'data/calendar');
 for (const f of fs.existsSync(calDir) ? fs.readdirSync(calDir) : []) {
   const d = /^(\d{4})-(\d{2})-\d{2}-.*\.ics$/.exec(f);
-  if (d && +d[1] === year && +d[2] >= firstMonth && +d[2] < firstMonth + 3 && !expected.has(f)) fail(`data/calendar/${f}`, 'stray file: no matching meeting in meetings.json (wrong name, or a meeting that no longer exists)');
+  if (d && inEdition(+d[1], +d[2]) && !expected.has(f)) fail(`data/calendar/${f}`, 'stray file: no matching meeting in meetings.json (wrong name, or a meeting that no longer exists)');
 }
 
-// ── Quarterly aggregate: public/sapa-qN-YYYY-meetings.ics (local/floating) ──
-const qfile = `public/sapa-q${q}-${year}-meetings.ics`;
+// ── Edition aggregate: public/sapa-qN-YYYY-meetings.ics or public/sapa-YYYY-MM-meetings.ics (local/floating) ──
+const qfile = q ? `public/sapa-q${q}-${year}-meetings.ics` : `public/sapa-${year}-${pad(firstMonth)}-meetings.ics`;
 const qfull = path.join(root, qfile);
 if (!fs.existsSync(qfull)) fail(qfile, 'missing');
 else {

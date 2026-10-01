@@ -164,3 +164,10 @@ Append-only memory for `/philatex-update`. The research and planning phases read
 - **Source:** live verification
 - **Generalizable rule:** The Meetings bundle rolls to the next quarter 14 days before the quarter ends, so an edition should deploy by roughly the 15th of the quarter's last month or the live schedule goes empty. PR #149 makes an empty quarter fall back to the current one.
 - **Status:** logged
+
+### 2026-09-30 — DECIDED: bimonthly edition id and naming (resolves the 2026-Q4 "FORMAT DRIFT … bimonthly from January 2027" item)
+- **Observed:** The 2026-Q4 run logged, as `proposed (awaiting human)`, that a return to a bimonthly schedule in January 2027 would break every quarter-based assumption. The operator chose a scheme before the January 2027 issue.
+- **Source:** human-decision
+- **Generalizable rule:** Find the edition from the masthead's month span. Three months is `YYYY-QN`. Two months is `YYYY-MM`, where MM is the issue's first month (Jan/Feb 2027 → `2027-01`). For a bimonthly issue the title is `SAPA PHILATEX January/February 2027` and the PDF is `public/SAPA-PHILATEX-January-February-2027.pdf`. The aggregate ICS is `public/sapa-2027-01-meetings.ics`. The `newsletters.json` entry carries `months` instead of `quarter`. Individual `.ics` naming is unchanged. Existing `YYYY-QN` ids are never rewritten. The meetings page stays quarter-based, because the meeting schedule does not follow the newsletter's cadence.
+- **Seen in:** 2026-Q4 (announcement on p.6)
+- **Status:** decided and implemented. The 2026-Q4 item above is superseded by this entry. Changed: `newsletter.schema.json` (both id patterns, plus a conditional that requires `quarter` or `months`), `check-ics.mjs --edition YYYY-MM` (with `check-ics.test.mjs`), SKILL.md Phase 3/4b/8/10/11/14, data-contract.md §A–D, acceptance-contract.md, and philatex-newsletter-agent.md. Still open: `js/modules/template-engine.js` (`{quarter} Quarter {year}`) and the pages' general "quarterly" prose. These need a separate, operator-approved change.
