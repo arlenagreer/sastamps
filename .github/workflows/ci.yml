@@ -66,15 +66,18 @@ jobs:
     - name: Check inline scripts in the built pages
       run: npm run test:inline-js:site
       
-    - name: Start server for link checking
+    # linkinator (a pinned devDependency; this used to npx an unpinned
+    # broken-link-checker and ignore its result) crawls _site/ from its own
+    # local server. linkinator.config.json skips external links, so a
+    # third-party outage cannot fail a build; every local link must resolve.
+    - name: Check links in the built site
+      run: npm run test:links
+
+    - name: Start server for Lighthouse
       run: |
         npm run serve &
         sleep 5
-        
-    - name: Run link checker
-      run: |
-        npx broken-link-checker http://localhost:3000 --recursive --exclude-external --filter-level 3 || true
-        
+
     # pa11y 10 (axe, WCAG2AA) over every built page in _site/, served by the
     # script itself on a free port. Until 2026-10 this step called pa11y-ci,
     # which was never installed, so it had never run. It does not block yet:

@@ -1,0 +1,10 @@
+{
+  "recurse": true,
+  "checkCss": true,
+  "skip": [
+    "^(?!https?://(localhost|127\\.0\\.0\\.1)[:/])"
+  ],
+  "verbosity": "error",
+  "concurrency": 50,
+  "timeout": 20000
+}

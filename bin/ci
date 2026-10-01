@@ -159,6 +159,10 @@ run_section "test:site-build (npm run build -> _site/, sources untouched)" npm r
 # pages, which is how an entity-escaped `&amp;&amp;` in search.html's inline
 # script broke site search in production unnoticed.
 run_section "test:inline-js (inline <script> blocks parse, in _site/)" npm run --silent test:inline-js:site
+# linkinator crawls _site/ from its own local server (no port to manage) and
+# fails on any local link, stylesheet url() or asset that does not resolve.
+# External links are left out (linkinator.config.json), so it cannot flap.
+run_section "test:links (linkinator crawl of _site/, local links only)" npm run --silent test:links
 
 # ── Declared exclusions -- outside this local gate, each with its own reason ──
 #
@@ -174,8 +178,8 @@ run_section "test:inline-js (inline <script> blocks parse, in _site/)" npm run -
 # have here.
 echo
 echo "▸ declared OUTSIDE this local gate (each needs something this runner does not provide)"
-echo "  - test:links      -- its own command text says to start a server in another"
-echo "                       terminal first; with no server running it has nothing to check."
+echo "  - external links  -- third-party sites change and time out on their own schedule;"
+echo "                       the weekly scheduled workflow crawls them and reports."
 echo "  - test:a11y        -- pa11y 10 over every built page (scripts/a11y-check.js). Its first"
 echo "                       real run found 5 link-in-text-block errors in today's pages;"
 echo "                       it joins this gate once those pages are fixed."

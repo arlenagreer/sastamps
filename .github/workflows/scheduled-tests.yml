@@ -47,10 +47,12 @@ jobs:
         npm run serve &
         sleep 5
         
+    # External links too: --skip on the command line replaces the config's
+    # skip-everything-external rule. Report only (third-party sites flap).
     - name: Run link checker (including external)
       run: |
         echo "Checking all links including external..."
-        npx broken-link-checker http://localhost:3000 --recursive --filter-level 3 > reports/link-check-report.txt 2>&1 || true
+        npx linkinator _site --skip '^(mailto|tel):' --retry --retry-errors > reports/link-check-report.txt 2>&1 || true
         
     # pa11y 10 over every page in _site/ (it serves _site itself). Report only.
     - name: Run accessibility audit

@@ -43,17 +43,18 @@ Tests all HTML files for:
 
 ### Link Checking
 ```bash
-# First, start the server in a separate terminal
-npm run test:links:server
-
-# Then run the link checker
+npm run build        # test:links crawls the built site in _site/
 npm run test:links
 ```
-Checks for:
+linkinator (a devDependency) crawls `_site/` from its own local server, with
+the settings in `linkinator.config.json`. It fails on:
 - Broken internal links
-- Missing anchors
-- Invalid file references
-- Orphaned pages
+- Missing images, scripts and stylesheets
+- Broken `url()` references in CSS
+
+External links are skipped there, so the check cannot fail because a
+third-party site is down. The weekly scheduled workflow checks them too and
+only reports.
 
 ### JavaScript Linting
 ```bash
@@ -124,6 +125,7 @@ Checks npm dependencies for known vulnerabilities.
 - `.eslintrc.json` - JavaScript linting rules
 - `.stylelintrc.json` - CSS validation rules
 - `.pa11yrc.json` - Accessibility test configuration
+- `linkinator.config.json` - Link checker configuration
 - `.markdownlintrc.json` - Markdown formatting rules
 
 ## Common Issues and Solutions
@@ -151,8 +153,8 @@ Checks npm dependencies for known vulnerabilities.
 
 ### Link Checking
 
-**Issue**: False positives for anchor links
-**Solution**: The checker validates both page existence and anchor presence
+**Issue**: A link works on the live site but fails locally
+**Solution**: The check runs against `_site/`, so rebuild (`npm run build`) after editing a page
 
 ## Continuous Testing Workflow
 
