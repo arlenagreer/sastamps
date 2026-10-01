@@ -40,14 +40,6 @@ async function initializeResourcesPage() {
 
   // Update bookmark states
   updateBookmarkStates();
-
-  // Track page view
-  if (typeof gtag === 'function') {
-    gtag('event', 'page_view', {
-      page_title: 'Resources Page',
-      page_location: window.location.href
-    });
-  }
 }
 
 async function loadResourcesData() {
@@ -211,14 +203,6 @@ function initializeResourceSearch(resources) {
     const results = searchResources(resources, query);
     filterResourcesDisplay(results);
 
-    // Track search
-    if (typeof gtag === 'function') {
-      gtag('event', 'search', {
-        search_term: query,
-        search_type: 'resources',
-        results_count: results.length
-      });
-    }
   }, 300);
 
   addEventListenerWithCleanup(searchInput, 'input', (e) => {
@@ -456,15 +440,6 @@ async function openResourceModal(resourceId) {
         modalBookmarkButton.setAttribute('aria-label', 'Bookmark resource');
         modalBookmarkButton.classList.remove('bookmarked');
       }
-    }
-
-    // Track resource view
-    if (typeof gtag === 'function') {
-      gtag('event', 'resource_view', {
-        resource_id: resourceId,
-        resource_title: resource.title,
-        resource_category: resource.category
-      });
     }
 
   } catch (error) {

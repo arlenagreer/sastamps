@@ -175,14 +175,6 @@ class ErrorBoundary {
     // Log to console
     console.error(`[ErrorBoundary] ${componentName}:`, error);
 
-    // Send to analytics if available
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'exception', {
-        description: `${componentName}: ${error.message}`,
-        fatal: false
-      });
-    }
-
     try {
       const errorLog = JSON.parse(localStorage.getItem('errorBoundaryLog') || '[]');
       errorLog.push({
@@ -263,14 +255,6 @@ class GlobalErrorBoundary {
     };
 
     console.error('[GlobalErrorBoundary] Uncaught error:', errorInfo);
-
-    // Send to analytics
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'exception', {
-        description: `Global: ${errorInfo.message}`,
-        fatal: false
-      });
-    }
 
     // Show user-friendly error notification
     this.showErrorNotification(errorInfo);

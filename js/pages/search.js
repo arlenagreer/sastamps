@@ -305,13 +305,6 @@ function displaySearchResults(results, query) {
 
   container.innerHTML = html;
 
-  // Track search
-  if (typeof gtag === 'function') {
-    gtag('event', 'search', {
-      search_term: query,
-      results_count: results.length
-    });
-  }
 }
 
 function updateSearchStats(count, query) {

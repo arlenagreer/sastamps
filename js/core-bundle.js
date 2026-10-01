@@ -11,4 +11,3 @@ export { retireServiceWorkers } from './utils/service-worker.js';
 export { addEventListenerWithCleanup, cleanupEventListeners } from './utils/event-cleanup.js';
 
 import './utils/global-error-handler.js';
-import './utils/analytics.js';

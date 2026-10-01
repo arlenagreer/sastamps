@@ -281,13 +281,6 @@ function bindNewsletterActions(container) {
       downloadNewsletter(url, title);
     });
   });
-  const viewButtons = container.querySelectorAll('.btn-view-pdf');
-  viewButtons.forEach(button => {
-    addEventListenerWithCleanup(button, 'click', (e) => {
-      const {newsletterId} = e.currentTarget.dataset;
-      trackNewsletterView(newsletterId);
-    });
-  });
 }
 
 function downloadNewsletter(url, title) {
@@ -299,7 +292,6 @@ function downloadNewsletter(url, title) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    trackNewsletterDownload(title);
 
   } catch (error) {
     logger.error('Download failed:', error);
@@ -307,21 +299,6 @@ function downloadNewsletter(url, title) {
   }
 }
 
-function trackNewsletterView(newsletterId) {
-  if (typeof gtag === 'function') {
-    gtag('event', 'newsletter_view', {
-      newsletter_id: newsletterId
-    });
-  }
-}
-
-function trackNewsletterDownload(title) {
-  if (typeof gtag === 'function') {
-    gtag('event', 'newsletter_download', {
-      newsletter_title: title
-    });
-  }
-}
 
 
 if (document.readyState === 'loading') {

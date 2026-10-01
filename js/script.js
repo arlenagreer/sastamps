@@ -118,13 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
         container,
         onError: (error, componentName) => {
           logger.error(`[${componentName}] Component failed:`, error);
-          // Track component failures
-          if (typeof gtag !== 'undefined') {
-            gtag('event', 'exception', {
-              description: `Component failure: ${componentName}`,
-              fatal: false
-            });
-          }
         },
         retryCallback: () => {
           try {
