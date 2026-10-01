@@ -1,14 +1,7 @@
 const fs = require('fs').promises;
 const { upsertRegion } = require('./lib/html-region');
 
-const htmlFiles = [
-    'index.html',
-    'about.html',
-    'contact.html',
-    'meetings.html',
-    'membership.html',
-    'newsletter.html'
-];
+const htmlFiles = require('./lib/pages');
 
 // The first stylesheet reference to the full CSS, used only on a page's first
 // build. After that the page carries a build:critical-css region (which holds
@@ -26,8 +19,9 @@ async function readCriticalCSS() {
     // must never be inlined. (Naive: fine while critical.css has no '/*' inside
     // a string or url(); the brace check below catches a damaged result.)
     const stripped = css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n(\s*\n)+/g, '\n').trim();
-    const open = (stripped.match(/{/g) || []).length;
-    const close = (stripped.match(/}/g) || []).length;
+    const outsideStrings = stripped.replace(/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/g, '""');
+    const open = (outsideStrings.match(/{/g) || []).length;
+    const close = (outsideStrings.match(/}/g) || []).length;
     if (open !== close) {
         throw new Error(`css/critical.css: unbalanced braces after stripping comments (${open} open, ${close} close)`);
     }
@@ -47,6 +41,9 @@ function renderPage(filename, content, criticalCSS) {
         // copies) has no single safe insertion point; the first match could
         // even sit inside <noscript>. Fail rather than guess.
         throw new Error(`${filename}: first build needs exactly one reference to dist/css/styles.min.css, found ${refs}`);
+    }
+    if (!content.includes('<!-- build:critical-css -->') && /<noscript>[^<]*<link[^>]*dist\/css\/styles\.min\.css/.test(content)) {
+        throw new Error(`${filename}: the only stylesheet reference is inside <noscript>; not a safe insertion point`);
     }
     const block = `
     <style id="critical-css">

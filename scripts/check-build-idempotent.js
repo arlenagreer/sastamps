@@ -4,8 +4,9 @@
  * (critical CSS, HTML fixes, image tags, font loading), and the Pages deploy
  * builds from those committed files. Any step that appends instead of
  * replacing stacks one more copy per build: on 2026-10-01 the six main pages
- * carried 3-9 stacked stylesheet blocks (two with a ~110 KB inline source
- * map), 7-15 font blocks and 7-13 font-observer scripts, 300-490 KB each.
+ * carried 3-9 stacked stylesheet blocks (2-3 per page held a ~110 KB inline
+ * source map; each build added ~130 KB), 7-15 font blocks and 7-13
+ * font-observer scripts, 300-490 KB each.
  *
  * Every run happens in a fresh temp dir, with each script started as its own
  * process (absolute path, cwd = the temp dir), so the real worktree is never
@@ -18,7 +19,7 @@ const crypto = require('crypto');
 const { spawnSync } = require('child_process');
 
 const REPO = path.resolve(__dirname, '..');
-const PAGES = ['index.html', 'about.html', 'contact.html', 'meetings.html', 'membership.html', 'newsletter.html'];
+const PAGES = require('./lib/pages');
 // The steps of scripts/build.js that rewrite root HTML, in build order. The
 // drift check below fails when build.js gains, loses or reorders a step until
 // it is classified here or in NOT_HTML_WRITERS.
@@ -133,6 +134,12 @@ try {
   // map-bearing output fails here.
   const cssDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sapa-idempotent-'));
   tempDirs.push(cssDir);
+  check(count(fs.readFileSync(path.join(REPO, 'dist/css/styles.min.css'), 'utf8'), /sourceMappingURL/g) === 0,
+    'dist/css/styles.min.css carries an inline source map (is --no-map missing from build:css?)');
+  // build-search-embedded.js replaces its block in search.html on every build;
+  // it must never stack a second copy.
+  check(count(fs.readFileSync(path.join(REPO, 'search.html'), 'utf8'), /window\.SEARCH_INDEX_DATA = /g) === 1,
+    'search.html must embed the search index exactly once');
   // Run the real build:css command from package.json, output redirected.
   const buildCss = JSON.parse(fs.readFileSync(path.join(REPO, 'package.json'), 'utf8')).scripts['build:css'];
   check(buildCss && buildCss.includes('dist/css/styles.min.css'), 'package.json build:css does not write dist/css/styles.min.css');
@@ -178,6 +185,36 @@ try {
     // fix-html-validation.js would be rewritten by the next build.
     check(freshAgain[p] === fresh[p], `${p} (fresh): the build after a first insert changes the page again`);
   }
+
+  // T6: each guard refuses its bad input with its own error, permanently.
+  console.log('▸ T6 guards refuse broken input');
+  const expectFail = (label, script, mutate, pattern) => {
+    const dir = stage(mutate);
+    const r = spawnSync(process.execPath, [path.join(REPO, 'scripts', script)], { cwd: dir, encoding: 'utf8' });
+    const out = `${r.stderr}\n${r.stdout}`;
+    check(r.status !== 0 && pattern.test(out), `${label}: ${script} should fail with ${pattern} (exit ${r.status})`);
+  };
+  const edit = (rel, fn) => (d) => fs.writeFileSync(path.join(d, rel), fn(read(d, rel)));
+  const swapMarkers = (html) => html.replace('<!-- build:font-styles -->', '@@OPEN@@')
+    .replace('<!-- /build:font-styles -->', '<!-- build:font-styles -->').replace('@@OPEN@@', '<!-- /build:font-styles -->');
+  expectFail('misordered markers', 'optimize-fonts.js', edit('index.html', swapMarkers), /close before open/);
+  expectFail('half-deleted region', 'extract-critical-css.js',
+    edit('index.html', (h) => h.replace('<!-- /build:critical-css -->', '')), /markers are broken/);
+  expectFail('duplicated region', 'optimize-fonts.js',
+    edit('index.html', (h) => h.replace('</head>', '<!-- build:font-styles --><!-- /build:font-styles -->\n</head>')), /markers are broken/);
+  expectFail('"</style" in critical.css', 'extract-critical-css.js',
+    edit('css/critical.css', (c) => `${c}\n.x::after{content:"</style>"}`), /<\/style/);
+  const stripRegion = (h) => h.replace(/<!-- build:critical-css -->[\s\S]*?<!-- \/build:critical-css -->/, '');
+  expectFail('first build with two stylesheet references', 'extract-critical-css.js',
+    edit('index.html', (h) => stripRegion(h).replace('</head>',
+      '<link rel="preload" href="dist/css/styles.min.css" as="style">\n<link rel="stylesheet" href="dist/css/styles.min.css">\n</head>')), /exactly one reference/);
+  expectFail('first build with the only reference inside <noscript>', 'extract-critical-css.js',
+    edit('index.html', (h) => stripRegion(h).replace('</head>',
+      '<noscript><link rel="stylesheet" href="dist/css/styles.min.css"></noscript>\n</head>')), /inside <noscript>/);
+  // ...and a brace inside a CSS string is not a false alarm.
+  const okDir = stage(edit('css/critical.css', (c) => `${c}\n.x::before{content:"{"}`));
+  const okRun = spawnSync(process.execPath, [path.join(REPO, 'scripts/extract-critical-css.js')], { cwd: okDir, encoding: 'utf8' });
+  check(okRun.status === 0, 'a brace inside a CSS string must not fail the brace check');
 } catch (err) {
   failures++;
   console.log(`  FAIL ${err.message}`);
