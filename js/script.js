@@ -5,7 +5,7 @@
 
 import { ErrorBoundary } from './error-boundary.js';
 import { calendarLazyLoader } from './lazy-loader.js';
-import { safeLocalStorageGet, safeLocalStorageSet, safeQuerySelector, escapeHTML, safeUrl } from './utils/safe-dom.js';
+import { safeLocalStorageGet, safeLocalStorageSet, safeQuerySelector, escapeHTML, firstSafeUrl } from './utils/safe-dom.js';
 import { createLogger } from './utils/logger.js';
 import { retireServiceWorkers } from './utils/service-worker.js';
 
@@ -1178,15 +1178,19 @@ function setupDynamicContentBoundaries() {
 
             // Render newsletter content
             if (newsletters && newsletters.length > 0) {
-              element.innerHTML = newsletters.map(newsletter => `
+              element.innerHTML = newsletters.map(newsletter => {
+                // newsletters.json names the PDF filePath; url is an older name
+                const pdfUrl = firstSafeUrl(newsletter.filePath, newsletter.url);
+                return `
                                 <div class="newsletter-item">
                                     <h4>${escapeHTML(newsletter.title)}</h4>
                                     <p>${escapeHTML(newsletter.description)}</p>
-                                    <a href="${escapeHTML(safeUrl(newsletter.url))}" target="_blank" rel="noopener" class="btn btn-primary" aria-label="View PDF: ${escapeHTML(newsletter.title)} (opens in a new tab)">
+                                    ${pdfUrl ? `<a href="${escapeHTML(pdfUrl)}" target="_blank" rel="noopener" class="btn btn-primary" aria-label="View PDF: ${escapeHTML(newsletter.title)} (opens in a new tab)">
                                         <i class="fas fa-file-pdf" aria-hidden="true"></i> View PDF
-                                    </a>
+                                    </a>` : ''}
                                 </div>
-                            `).join('');
+                            `;
+              }).join('');
             }
           },
           {

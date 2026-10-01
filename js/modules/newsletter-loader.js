@@ -350,9 +350,9 @@ class NewsletterLoader {
                         ${newsletter.fileSize ? `<span class="meta-item"><i class="fas fa-download"></i> ${escapeHTML(newsletter.fileSize)}</span>` : ''}
                     </div>
 
-                    <a href="${escapeHTML(safeUrl(newsletter.filePath))}" class="btn btn-primary" target="_blank" rel="noopener" aria-label="Download PDF: ${escapeHTML(newsletter.title || `${newsletter.quarter} Quarter ${newsletter.year} Philatex`)} (opens in a new tab)">
+                    ${safeUrl(newsletter.filePath, '') ? `<a href="${escapeHTML(safeUrl(newsletter.filePath, ''))}" class="btn btn-primary" target="_blank" rel="noopener" aria-label="Download PDF: ${escapeHTML(newsletter.title || `${newsletter.quarter} Quarter ${newsletter.year} Philatex`)} (opens in a new tab)">
                         <i class="fas fa-file-pdf" aria-hidden="true"></i> Download PDF
-                    </a>
+                    </a>` : ''}
                 </div>
             </div>
         `;

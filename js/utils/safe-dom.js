@@ -112,38 +112,59 @@ export function escapeHTML(text) {
   return text.replace(/[&<>"']/g, ch => HTML_ESCAPES[ch]);
 }
 
-const SAFE_URL_SCHEMES = ['http:', 'https:', 'mailto:', 'tel:'];
+const SAFE_URL_SCHEMES = ['http:', 'https:', 'mailto:', 'tel:', 'sms:', 'webcal:'];
 
 /**
  * Return a URL that is safe to place in an href/src attribute, or a fallback.
  *
- * Relative URLs (path, ./, ../, ?query, #fragment) and absolute http(s),
- * mailto and tel URLs pass through unchanged. Anything else -- javascript:,
- * data:, vbscript:, or a scheme hidden behind whitespace/control characters --
- * yields the fallback. The result is NOT HTML-escaped; wrap it in escapeHTML()
- * when interpolating into markup.
+ * Relative URLs (path, ./, ../, ?query, #fragment, //host) and absolute
+ * http(s), mailto, tel, sms and webcal URLs pass through. Anything else --
+ * javascript:, data:, vbscript:, or any other scheme -- yields the fallback.
+ * The result is NOT HTML-escaped; wrap it in escapeHTML() when interpolating
+ * into markup.
+ *
+ * Scheme detection mirrors the WHATWG URL parser: leading/trailing C0 control
+ * characters and spaces are trimmed, and ASCII tab, LF and CR are removed
+ * anywhere ("java\tscript:" is javascript:). Nothing else is removed, so an
+ * ordinary file name with a space before a colon ("Philatex Q1: 2025.pdf")
+ * has no scheme and stays a relative path.
  *
  * @param {string} url - Candidate URL (typically from JSON data)
  * @param {string} fallback - Value to return when the URL is rejected
- * @returns {string} The original URL or the fallback
+ * @returns {string} The URL (outer whitespace/controls trimmed) or the fallback
  */
 export function safeUrl(url, fallback = '#') {
   if (typeof url !== 'string') {
     return fallback;
   }
-  const trimmed = url.trim();
+  const trimmed = url.replace(/^[\u0000-\u0020]+|[\u0000-\u0020]+$/g, '');
   if (trimmed === '') {
     return fallback;
   }
-  // Browsers ignore ASCII tab/newline/control chars inside a scheme
-  // ("java\tscript:"), so strip them before looking for one.
-  const normalised = trimmed.replace(/[\u0000-\u001F\u007F\s]+/g, '');
+  const normalised = trimmed.replace(/[\t\n\r]/g, '');
   const scheme = /^([a-zA-Z][a-zA-Z0-9+.-]*):/.exec(normalised);
   if (!scheme) {
-    // No scheme: a relative URL. Protocol-relative //host is still http(s).
     return trimmed;
   }
   return SAFE_URL_SCHEMES.includes(`${scheme[1].toLowerCase()}:`) ? trimmed : fallback;
+}
+
+/**
+ * Like safeUrl, but returns '' when there is no usable URL (missing, empty,
+ * or rejected), so callers can omit a link entirely instead of rendering a
+ * dead href="#".
+ *
+ * @param {...*} candidates - Values to try in order (e.g. filePath, pdfUrl)
+ * @returns {string} The first acceptable URL, or ''
+ */
+export function firstSafeUrl(...candidates) {
+  for (const candidate of candidates) {
+    const url = safeUrl(candidate, '');
+    if (url) {
+      return url;
+    }
+  }
+  return '';
 }
 
 /**

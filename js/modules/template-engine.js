@@ -407,9 +407,9 @@ class TemplateEngine {
                                 ${newsletter.highlights.map(h => `<li>${escapeHTML(h)}</li>`).join('')}
                             </ul>
                         ` : ''}
-                        <a href="${escapeHTML(safeUrl(newsletter.filePath))}" class="btn btn-primary" target="_blank" rel="noopener" aria-label="Download PDF: ${escapeHTML(newsletter.title)} (opens in a new tab)">
+                        ${safeUrl(newsletter.filePath, '') ? `<a href="${escapeHTML(safeUrl(newsletter.filePath, ''))}" class="btn btn-primary" target="_blank" rel="noopener" aria-label="Download PDF: ${escapeHTML(newsletter.title)} (opens in a new tab)">
                             <i class="fas fa-file-pdf" aria-hidden="true"></i> Download PDF
-                        </a>
+                        </a>` : ''}
                     </div>
                 </div>
             `;

@@ -4,7 +4,7 @@
  */
 
 import { debounce } from '../utils/performance.js';
-import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
+import { safeQuerySelector, escapeHTML, safeUrl, firstSafeUrl } from '../utils/safe-dom.js';
 import { fetchJSON } from '../utils/fetch-json.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import _breadcrumb from '../modules/breadcrumb.js';
@@ -27,16 +27,33 @@ async function initializeNewsletterPage() {
   }
 }
 
+/**
+ * Map a newsletters.json record onto the fields this page renders.
+ * The data file uses filePath / publishDate / description / pageCount; older
+ * records (and the original version of this page) used pdfUrl / date /
+ * summary / pages, so those remain as fallbacks.
+ */
+function normaliseNewsletter(newsletter) {
+  return {
+    ...newsletter,
+    date: newsletter.publishDate || newsletter.date,
+    summary: newsletter.description || newsletter.summary,
+    pages: newsletter.pageCount || newsletter.pages,
+    pdfUrl: firstSafeUrl(newsletter.filePath, newsletter.pdfUrl)
+  };
+}
+
 async function loadNewslettersList(container) {
   try {
     const newslettersData = await fetchJSON('data/newsletters/newsletters.json');
     const newsletters = newslettersData.newsletters
+      .map(normaliseNewsletter)
       .sort((a, b) => new Date(b.date) - new Date(a.date));
 
     const html = newsletters.map(newsletter => `
             <article class="newsletter-item" data-date="${escapeHTML(newsletter.date)}" data-year="${new Date(newsletter.date).getFullYear()}">
                 <div class="newsletter-preview">
-                    ${newsletter.coverImage ?
+                    ${safeUrl(newsletter.coverImage, '') ?
     `<img src="${escapeHTML(safeUrl(newsletter.coverImage, ''))}" alt="Cover of ${escapeHTML(newsletter.title)}" loading="lazy">` :
     '<div class="newsletter-placeholder">📰</div>'
 }
@@ -73,19 +90,24 @@ async function loadNewslettersList(container) {
                     </div>
 
                     <footer class="newsletter-actions">
-                        <a href="${escapeHTML(safeUrl(newsletter.pdfUrl))}" target="_blank" rel="noopener" class="btn-primary btn-view-pdf" data-newsletter-id="${escapeHTML(newsletter.id)}" aria-label="View PDF: ${escapeHTML(newsletter.title)} (opens in a new tab)">
+                        ${newsletter.pdfUrl ? `
+                        <a href="${escapeHTML(newsletter.pdfUrl)}" target="_blank" rel="noopener" class="btn-primary btn-view-pdf" data-newsletter-id="${escapeHTML(newsletter.id)}" aria-label="View PDF: ${escapeHTML(newsletter.title)} (opens in a new tab)">
                             <span aria-hidden="true">📄</span> View PDF
                         </a>
-                        <button class="btn-secondary btn-download" data-url="${escapeHTML(safeUrl(newsletter.pdfUrl))}" data-title="${escapeHTML(newsletter.title)}" aria-label="Download PDF: ${escapeHTML(newsletter.title)}">
+                        <button class="btn-secondary btn-download" data-url="${escapeHTML(newsletter.pdfUrl)}" data-title="${escapeHTML(newsletter.title)}" aria-label="Download PDF: ${escapeHTML(newsletter.title)}">
                             <span aria-hidden="true">💾</span> Download
                         </button>
+                        ` : ''}
                         ${newsletter.articleLinks && newsletter.articleLinks.length > 0 ? `
                             <details class="newsletter-articles">
                                 <summary>Articles (${newsletter.articleLinks.length})</summary>
                                 <ul>
-                                    ${newsletter.articleLinks.map(article => `
-                                        <li><a href="${escapeHTML(safeUrl(article.url))}" target="_blank" rel="noopener">${escapeHTML(article.title)}</a></li>
-                                    `).join('')}
+                                    ${newsletter.articleLinks.map(article => {
+    const articleUrl = safeUrl(article.url, '');
+    return articleUrl
+      ? `<li><a href="${escapeHTML(articleUrl)}" target="_blank" rel="noopener">${escapeHTML(article.title)}</a></li>`
+      : `<li>${escapeHTML(article.title)}</li>`;
+  }).join('')}
                                 </ul>
                             </details>
                         ` : ''}
@@ -125,7 +147,7 @@ function initializeNewsletterSearch(container) {
 
     try {
       const newslettersData = await fetchJSON('data/newsletters/newsletters.json');
-      const results = searchNewsletters(newslettersData.newsletters, query);
+      const results = searchNewsletters(newslettersData.newsletters.map(normaliseNewsletter), query);
 
       if (results.length === 0) {
         resultsContainer.innerHTML = '<p>No newsletters found matching your search.</p>';
@@ -286,7 +308,11 @@ function bindNewsletterActions(container) {
 function downloadNewsletter(url, title) {
   try {
     const link = document.createElement('a');
-    link.href = safeUrl(url);
+    const safe = safeUrl(url, '');
+    if (!safe) {
+      return;
+    }
+    link.href = safe;
     link.download = `${title}.pdf`;
     link.style.display = 'none';
     document.body.appendChild(link);

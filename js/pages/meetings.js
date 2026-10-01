@@ -214,7 +214,7 @@ async function loadMeetingsList(container) {
                 <footer class="meeting-actions">
                     <button class="btn-rsvp" data-meeting-id="${escapeHTML(meeting.id)}">RSVP</button>
                     <button class="btn-reminder" data-meeting-id="${escapeHTML(meeting.id)}">Set Reminder</button>
-                    ${meeting.calendarLink ? `<a href="${escapeHTML(safeUrl(meeting.calendarLink))}" class="btn-calendar" aria-label="Add to Calendar: ${escapeHTML(meeting.title)}">Add to Calendar</a>` : ''}
+                    ${safeUrl(meeting.calendarLink, '') ? `<a href="${escapeHTML(safeUrl(meeting.calendarLink, ''))}" class="btn-calendar" aria-label="Add to Calendar: ${escapeHTML(meeting.title)}">Add to Calendar</a>` : ''}
                 </footer>
             </article>
         `).join('');

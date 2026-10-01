@@ -398,9 +398,9 @@ async function openResourceModal(resourceId) {
                             <ul class="external-links-list">
                                 ${resource.externalLinks.map(link => `
                                     <li>
-                                        <a href="${escapeHTML(safeUrl(link.url))}" target="_blank" rel="noopener">
+                                        ${safeUrl(link.url, '') ? `<a href="${escapeHTML(safeUrl(link.url, ''))}" target="_blank" rel="noopener">
                                             ${escapeHTML(link.title)}
-                                        </a>
+                                        </a>` : escapeHTML(link.title)}
                                         ${link.description ? `<span class="link-description">${escapeHTML(link.description)}</span>` : ''}
                                     </li>
                                 `).join('')}
