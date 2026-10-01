@@ -9,13 +9,20 @@
     <!-- Security Headers -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://cdnjs.cloudflare.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://www.google-analytics.com https://maps.gstatic.com https://maps.googleapis.com https://*.ggpht.com; connect-src 'self' https://www.google-analytics.com; frame-src 'self' https://www.google.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <!-- Clickjacking: GitHub Pages cannot send X-Frame-Options or a CSP
-         frame-ancestors header, and browsers ignore both in a <meta> tag, so
-         nothing here stops another site framing this page. (Neither one would
-         affect the Google Maps iframe below; they govern who may frame THIS
-         page.) This guard hides the page when it is framed and tries to break
-         out to the top window. The CSP above allows inline scripts; if
-         'unsafe-inline' is ever dropped, add this script's sha256 hash. -->
+    <!-- Clickjacking: a best-effort, script-based guard, not real protection.
+         The real fix is an X-Frame-Options or CSP frame-ancestors RESPONSE
+         HEADER, which GitHub Pages cannot send; browsers ignore both in a
+         <meta> tag. (Neither would affect the Google Maps iframe below; they
+         govern who may frame THIS page.)
+         What this guard does: when framed, it hides the page and tries to
+         navigate the top window to it.
+         What it cannot do: a sandboxed iframe without allow-scripts never
+         runs it, so the page can still be displayed there (its scripts and
+         form handling are inert in that frame).
+         Why not hide-by-default (CSS display:none, revealed by script): that
+         would show a blank page to every visitor with JavaScript disabled.
+         The CSP above allows inline scripts; if 'unsafe-inline' is ever
+         dropped, add this script's sha256 hash to script-src. -->
     <script>
         if (window.top !== window.self) {
             document.documentElement.style.display = 'none';
