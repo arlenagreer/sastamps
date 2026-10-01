@@ -24,7 +24,7 @@ allowed-tools:
 
 # /philatex-update
 
-Quarterly newsletter update workflow for the San Antonio Philatelic Association website. The skill validates a new Philatex PDF, identifies its edition, checks for duplicates, then runs a **multi-agent, adversarially-reviewed** pipeline -- research → plan → extract → a bounded **QC loop** (review → fix → re-verify) -- presents changes for human approval, and finally captures learnings so each run improves the next.
+Newsletter update workflow (quarterly or bimonthly editions) for the San Antonio Philatelic Association website. The skill validates a new Philatex PDF, identifies its edition, checks for duplicates, then runs a **multi-agent, adversarially-reviewed** pipeline -- research → plan → extract → a bounded **QC loop** (review → fix → re-verify) -- presents changes for human approval, and finally captures learnings so each run improves the next.
 
 ## Operating Mode
 
@@ -76,8 +76,12 @@ Example: `/philatex-update ~/Downloads/philatex-q3-2026.pdf --max-cycles 4`
 ## Phase 3: Edition Identification
 
 1. Use the **Read** tool on the PDF (no `pages` parameter -- newsletters are under 10 pages).
-2. On page 1, read the masthead: "THE PHILATEX" with the quarter and year (e.g., "Second Quarter 2026").
-3. Map quarter name → edition ID `YYYY-QN` (First=Q1, Second=Q2, Third=Q3, Fourth=Q4), e.g. `2026-Q3`.
+2. On page 1, read the masthead: "THE PHILATEX" with its **date range** and year (e.g., "October – December 2026"). Older issues name the quarter instead (e.g., "Second Quarter 2026"); since 2026-Q4 the masthead may show only the months.
+3. Derive the edition ID from the span of months the masthead covers:
+   - **3-month span → quarterly, `YYYY-QN`** (Jan–Mar=Q1, Apr–Jun=Q2, Jul–Sep=Q3, Oct–Dec=Q4; or First=Q1 … Fourth=Q4 when the quarter is named), e.g. `2026-Q3`.
+   - **2-month span → bimonthly, `YYYY-MM`**, where `MM` is the **first** month of the issue: January/February 2027 → `2027-01`, March/April 2027 → `2027-03`.
+   - Any other span, or a masthead that disagrees with the page-1 calendar's months: **stop and ask** the operator. Do not guess a cadence.
+4. Record the cadence (`quarterly` | `bimonthly`), the quarter name (quarterly) or the two month names (bimonthly), and the year. Naming for each cadence (PDF, aggregate ICS, `newsletters.json` fields) is in `references/data-contract.md`.
 
 **The newsletter identifies itself on page 1. Do NOT rely on the filename.**
 
@@ -97,7 +101,7 @@ Run the comparison against the freshly fetched default branch (`git fetch origin
 
 ## Phase 4b: Worktree (gate for all writes)
 
-Every later phase writes site files only in the run's own worktree, never in the main checkout.
+Every later phase writes site files only in the run's own worktree, never in the main checkout. The naming below works for both cadences: `2026-Q3` → `.claude/worktrees/philatex-2026-q3` on `content/2026-Q3`; `2027-01` → `.claude/worktrees/philatex-2027-01` on `content/2027-01`.
 1. `git worktree add .claude/worktrees/philatex-{edition-id-lowercase} -b content/{EDITION_ID} origin/main`. If that path or branch already exists, stop and ask; it may hold an earlier run's work.
 2. `npm ci` inside it. The green bar needs `node_modules`.
 3. Set two absolute paths and pass **both** to every agent and workflow:
@@ -123,13 +127,13 @@ Run the **research workflow** from `references/orchestration.md`. It fans out tw
 - Context7 researcher — confirms current constraints for esbuild, lunr, and vanilla-calendar-pro (and resolves any iCalendar ambiguity against the existing template `.ics` files).
 - Completeness critic (`xhigh`) — enumerates what the researchers missed that could break extraction or the build.
 
-Pass `args = { editionId, quarter, year, learnings }`. Keep the returned `{ patterns, specs, gaps }` for the planning and extraction phases.
+Pass `args = { editionId, cadence, quarter, months, year, learnings }` (`quarter` for a quarterly edition, `months` for a bimonthly one). Keep the returned `{ patterns, specs, gaps }` for the planning and extraction phases.
 
 ## Phase 7: Plan + Acceptance Contract — RED (sequential thinking + GSD plan-check)
 
 This phase produces the **failing test** the rest of the run must pass. Nothing is extracted yet.
 
-1. Use `mcp__sequential-thinking__sequentialthinking` to build the edition-specific plan from the research output. Decompose at least: DST regime (CDT/CST) for this quarter, expected meeting count and span, non-standard meetings (picnic time, holidays, BOG), officer/address changes, and likely `[UNVERIFIED]` risks.
+1. Use `mcp__sequential-thinking__sequentialthinking` to build the edition-specific plan from the research output. Decompose at least: DST regime (CDT/CST) for this edition's months, expected meeting count and span, non-standard meetings (picnic time, holidays, BOG), officer/address changes, and likely `[UNVERIFIED]` risks.
 2. From the plan + the page-1 calendar + the schemas + learnings, author the **acceptance contract**: a list of checkable assertions (counts, per-meeting facts, schema, continuity, ICS, provenance, negative assertions, automated green bar), every one `status: RED`. Format and a full worked example: `references/acceptance-contract.md`. Write it to `$REVIEWS/{EDITION_ID}-acceptance-contract.md`.
 3. Gate both with `gsd-plan-checker` (fallback `quality-engineer`, `xhigh`) doing goal-backward analysis: "if extraction satisfies this contract, will the data be correct AND complete? What assertion is missing, wrong, or back-filled from habit rather than the source?" Pay special attention to **negative assertions** (e.g., no picnic outside Q2) — that is where over-fit hides.
 4. Revise with whatever the checker surfaces, then **freeze** the contract. Authoring the contract from the source — never from extractor output — is mandatory.
@@ -138,7 +142,7 @@ This phase produces the **failing test** the rest of the run must pass. Nothing 
 
 Spawn the `philatex-newsletter-agent` with full context:
 
-- `PDF_PATH`, `EDITION_YEAR`, `QUARTER_NAME`, `EDITION_ID`
+- `PDF_PATH`, `EDITION_YEAR`, `EDITION_ID`, `CADENCE`, and `QUARTER_NAME` (quarterly) or `EDITION_MONTHS` (bimonthly, e.g. `January,February`)
 - `WORKTREE` and `REVIEWS` (Phase 4b)
 - **Research findings** (`patterns`, `specs`, `gaps`), the **frozen plan**, and the **frozen acceptance contract** from Phases 6–7
 - The **learnings** loaded in Phase 5
@@ -169,7 +173,7 @@ A fix-required verdict is **not** a reason to go to the checkpoint; it is a reas
 Run it in full after a CLEAN exit. After an escalation, go to Phase 11 in "incomplete" mode. **Before Approve can be offered in incomplete mode, checks 2 and 4 must pass**, so an Approve always commits a tree that has the expected files and is pushable. Confirm:
 
 1. **Every acceptance-contract assertion is GREEN**, including the automated green bar `[G1]`-`[G5]`: `build:js`, search rebuild + embed, scoped `validate:data`, `test:quick`, `check-ics.mjs`.
-2. All expected files were modified: `data/newsletters/newsletters.json` (new edition ID), `data/meetings/meetings.json` (new quarter dates), ≥1 ICS in `data/calendar/`, the quarterly aggregate ICS in `public/`, the source PDF copied to `public/SAPA-PHILATEX-…pdf` (filePath must resolve — `[S4]`), and `index.html` / `newsletter.html` / `meetings.html`.
+2. All expected files were modified: `data/newsletters/newsletters.json` (new edition ID), `data/meetings/meetings.json` (the edition's new dates), ≥1 ICS in `data/calendar/`, the edition's aggregate ICS in `public/` (`sapa-qN-YYYY-meetings.ics` or `sapa-YYYY-MM-meetings.ics`), the source PDF copied to `public/SAPA-PHILATEX-…pdf` (filePath must resolve — `[S4]`), and `index.html` / `newsletter.html` / `meetings.html`.
 3. The final full pass found no blocker, major or minor items.
 4. **The local CI gate is green: `bin/ci` exits 0.** A clean checkpoint then means "pushable" as well as "clean". Because `bin/ci` runs the full build, and **the full build rewrites the HTML pages this update edits**:
    1. **Before:** in the worktree, record `git status --porcelain --untracked-files=all`, and a content hash (`shasum`) of every modified or untracked file. The `--untracked-files=all` matters: plain `--porcelain` collapses a new untracked directory to one `?? dir/` line, and a restore keyed on that line deletes every new file inside it. Copy each of those files to `$REVIEWS/{EDITION_ID}-qc/pre-ci/`.
@@ -198,7 +202,7 @@ Present, in order:
 1. `[UNVERIFIED] count` — "0 items" or "N items -- REVIEW REQUIRED"
 2. `Schema validation status` — "All passed" or "N warnings: {details}"
 3. `Newsletter ID + title`
-4. `Quarter date range`
+4. `Edition date range` (the quarter's or the two months')
 5. `Meetings added` — count and date span
 6. `Officer changes` — names/roles or "No changes"
 7. `New members` — count and names or "None"
@@ -213,7 +217,7 @@ If item 1 or 2 is non-zero/non-pass, or the checkpoint is in **incomplete** mode
 
 **11c. Changes by Category** — group modified files (Data / HTML / ICS / Build) with `git diff --stat` line counts and a one-line semantic annotation each. Collapse ICS to a single summary line.
 
-**11d. Proposed Commit Message** — a conventional commit, e.g. `content(Q3-2026): add Third Quarter 2026 newsletter update`. In incomplete mode, the body lists every open major/minor item under `Known open issues:`. In either mode, it lists every operator correction and ruling applied.
+**11d. Proposed Commit Message** — a conventional commit, e.g. `content(Q3-2026): add Third Quarter 2026 newsletter update`, or for a bimonthly edition `content(2027-01): add January/February 2027 newsletter update`. In incomplete mode, the body lists every open major/minor item under `Known open issues:`. In either mode, it lists every operator correction and ruling applied.
 
 **11e. Decision Prompt** — offer these options:
 - **clean mode:** **Approve** (commit) or **Reject** (revert).
@@ -265,9 +269,9 @@ Run this after the operator has pushed, merged and deployed. It verifies the rea
 1. **REQUIRED SUB-SKILL:** `browse` (gstack). Use a **fresh browser context** (the site has a service worker, and a cached worker can serve stale pages even with a new URL). Load `https://sastamps.org/` with a cache-busting query (`?v=<timestamp>`), then `/newsletter.html` and `/meetings.html`. Confirm:
    - the new edition's banner and PDF link are on the homepage;
    - the PDF URL returns 200, and its size equals `public/SAPA-PHILATEX-…pdf` on `origin/main`;
-   - the meeting calendar shows the new quarter's dates;
-   - each quarterly and individual `.ics` link returns 200;
-   - the homepage's dated sections (announcements, TSDA shows) show this quarter;
+   - the meeting calendar shows the new edition's dates;
+   - each aggregate and individual `.ics` link returns 200;
+   - the homepage's dated sections (announcements, TSDA shows) show this edition;
    - there are no **new** console errors (compare against the previous edition's pages; errors that predate this edition are reported but don't block).
 
    Report each check with its evidence. A 404 or stale page is **not** a pass.

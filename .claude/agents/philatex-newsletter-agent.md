@@ -18,8 +18,10 @@ You are spawned by the `/philatex-update` skill at its Extraction phase, after a
 
 - `PDF_PATH`: absolute path to the newsletter PDF file
 - `EDITION_YEAR`: the publication year (e.g., 2026)
-- `QUARTER_NAME`: the quarter name (e.g., "Third")
-- `EDITION_ID`: the edition identifier (e.g., "2026-Q3")
+- `EDITION_ID`: the edition identifier: `YYYY-QN` for a quarterly edition (e.g., "2026-Q3"), `YYYY-MM` for a bimonthly one, where MM is the issue's first month (e.g., "2027-01" for January/February 2027)
+- `CADENCE`: `quarterly` or `bimonthly`
+- `QUARTER_NAME`: quarterly editions only, the quarter name (e.g., "Third")
+- `EDITION_MONTHS`: bimonthly editions only, the two month names (e.g., "January,February")
 - `RESEARCH_FINDINGS`: the research workflow's `{ patterns, specs, gaps }` -- exact current data shapes/anchors the update must match, format/library constraints, and gaps the completeness critic flagged
 - `PLAN`: the frozen, adversarially-checked extraction + update plan for this edition (DST regime, expected meeting count/span, non-standard meetings, officer/address-change checks)
 - `ACCEPTANCE_CONTRACT`: the frozen list of checkable assertions (the TDD "test") this run must satisfy, from `$REVIEWS/{EDITION_ID}-acceptance-contract.md`. **Your definition of done is every assertion GREEN.**
@@ -77,7 +79,7 @@ Review the newsletter for quality issues and generate a proofreading report.
 When discrepancies between PDF sections affect extraction (e.g., prose says "April" but the calendar table shows May 29 for a program), note them prominently in the report. These are critical because they affect data extraction accuracy.
 
 **Report destination (per D-07):**
-Save the report to `$REVIEWS/YYYY-QN-newsletter-review.md` (e.g., `$REVIEWS/2026-Q3-newsletter-review.md`). That is the main checkout's `.planning/reviews/`, not the worktree's.
+Save the report to `$REVIEWS/{EDITION_ID}-newsletter-review.md` (e.g., `$REVIEWS/2026-Q3-newsletter-review.md` or `$REVIEWS/2027-01-newsletter-review.md`). That is the main checkout's `.planning/reviews/`, not the worktree's.
 
 Create the directory if it does not exist:
 ```bash
@@ -97,10 +99,10 @@ Perform a single-pass extraction against the PDF content already in context. Hol
 ### Extraction Targets
 
 ```
-- newsletter_metadata: title, quarter, year, publishDate, description,
+- newsletter_metadata: title, quarter (quarterly) or months (bimonthly), year, publishDate, description,
     featuredArticles[], highlights[], tags[], pageCount, fileSize
 - meetings: array of meeting objects matching meetings.json format
-    (13 per quarter is typical)
+    (13 per quarter is typical; a bimonthly issue has about 9 -- count the calendar)
 - officers: key-value pairs of role:name (for about.html comparison)
 - announcements: list of discrete announcements (new members, condolences, events)
 - tsda_shows: stamp show entries (dates, names, locations)
@@ -191,15 +193,17 @@ Before writing any data file, validate extracted data against the schemas.
 ### Newsletter Entry Validation
 
 Read `data/schemas/newsletter.schema.json` and verify:
-- `id` matches pattern `^[0-9]{4}-Q[1-4]$`
-- `title` is a non-empty string
-- `quarter` is one of: First, Second, Third, Fourth
+- `id` matches `^[0-9]{4}-Q[1-4]$` (quarterly) or `^[0-9]{4}-(0[1-9]|1[0-2])$` (bimonthly)
+- `title` is a non-empty string: `SAPA PHILATEX Third Quarter 2026` (quarterly) or `SAPA PHILATEX January/February 2027` (bimonthly)
+- Quarterly: `quarter` is one of First, Second, Third, Fourth, and there is no `months`
+- Bimonthly: `months` is the two month names in order (e.g., `["January", "February"]`), and there is no `quarter`
 - `year` is an integer between 1954 and 2099
 - `publishDate` is a valid date in YYYY-MM-DD format
 - `filePath` matches pattern `^public/.*\.pdf$`
 - `description` is a non-empty string
 - Each `featuredArticles[].category` is in the enum: Calendar, Collection Tips, Education, Feature, History, Humor, Meeting Report, Member Spotlight, News, Show Report
-- All required fields are present: id, title, quarter, year, publishDate, filePath, description
+- All required fields are present: id, title, year, publishDate, filePath, description, plus `quarter` (quarterly) or `months` (bimonthly)
+- `publishDate` is the edition's first day (e.g., `2026-07-01` for 2026-Q3, `2027-01-01` for 2027-01)
 
 ### Meeting Entry Validation
 
@@ -230,14 +234,15 @@ Report all validation findings (passes and failures) in the extraction output.
 3. Update the `metadata` block:
    - Set `lastUpdated` to the newsletter's `publishDate` formatted as ISO 8601 UTC: `YYYY-MM-DDT00:00:00.000Z`
    - Increment `totalIssues` by 1
-   - Set `latestIssue` to the new edition ID (e.g., "2026-Q3")
+   - Set `latestIssue` to the new edition ID (e.g., "2026-Q3" or "2027-01")
 4. Write the complete updated file using the Write tool
 
 ### Copy the newsletter PDF (MANDATORY -- the filePath must resolve)
 
-The newsletter `filePath` points at `public/SAPA-PHILATEX-[Quarter]-Quarter-[Year].pdf`, and index.html / newsletter.html link to it. Copy the source PDF there so the link does not 404:
+The newsletter `filePath` points at `public/SAPA-PHILATEX-[Quarter]-Quarter-[Year].pdf` (quarterly) or `public/SAPA-PHILATEX-[Month1]-[Month2]-[Year].pdf` (bimonthly, e.g. `public/SAPA-PHILATEX-January-February-2027.pdf`), and index.html / newsletter.html link to it. Copy the source PDF there so the link does not 404:
 ```bash
-cd "$WORKTREE" && cp "$PDF_PATH" "public/SAPA-PHILATEX-[Quarter]-Quarter-[Year].pdf"
+cd "$WORKTREE" && cp "$PDF_PATH" "public/SAPA-PHILATEX-[Quarter]-Quarter-[Year].pdf"        # quarterly
+cd "$WORKTREE" && cp "$PDF_PATH" "public/SAPA-PHILATEX-[Month1]-[Month2]-[Year].pdf"      # bimonthly
 ```
 Verify the target exists. This is `[S4]` in the acceptance contract -- a missing PDF is a **blocker** (the 2026-Q3 rehearsal shipped with every download link 404ing because this step did not exist).
 
@@ -251,7 +256,7 @@ Verify the target exists. This is `[S4]` in the acceptance contract -- a missing
 
 ## Step 6: ICS Calendar File Generation (WORK-03 part 2)
 
-Generate BOTH individual per-meeting ICS files AND a quarterly aggregate ICS file.
+Generate BOTH individual per-meeting ICS files AND an aggregate ICS file for the edition (called "quarterly" below for either cadence).
 
 ### Individual ICS Files (one per meeting in `data/calendar/`)
 
@@ -265,7 +270,7 @@ Generate BOTH individual per-meeting ICS files AND a quarterly aggregate ICS fil
 - `CALSCALE:GREGORIAN`
 - `VERSION:2.0`
 - UID format: `YYYYMMDDT193000Z-sapa@sastamps.org` -- the time portion is a FIXED `193000Z` for EVERY meeting (verified across BOG/regular/picnic/holiday files); only the date varies. It is NOT the meeting's actual time.
-- DTSTAMP: first day of quarter at midnight UTC (e.g., `20260701T000000Z` for Q3)
+- DTSTAMP: the edition's first day at midnight UTC (e.g., `20260701T000000Z` for 2026-Q3, `20270101T000000Z` for 2027-01)
 - DTSTART/DTEND: **UTC timestamps** (Z suffix)
 - Cancelled meetings: `STATUS:CANCELLED`, 1-minute duration (`DTEND = DTSTART + 1 min`), `LOCATION:Meeting Cancelled`
 - Active meetings: `STATUS:CONFIRMED`, location uses `\,` escaping for commas
@@ -282,14 +287,14 @@ MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antoni
 
 ### Quarterly Aggregate ICS File (one file in `public/`)
 
-**Filename (per D-12):** `sapa-qN-YYYY-meetings.ics` (e.g., `public/sapa-q3-2026-meetings.ics`)
+**Filename (per D-12):** quarterly `sapa-qN-YYYY-meetings.ics` (e.g., `public/sapa-q3-2026-meetings.ics`); bimonthly `sapa-YYYY-MM-meetings.ics`, MM = the issue's first month (e.g., `public/sapa-2027-01-meetings.ics`, covering January and February)
 
 **Format specifications (differs from individual files):**
 - `PRODID:-//San Antonio Philatelic Association//SAPA Meeting Calendar//EN`
 - Include headers: `X-WR-CALNAME`, `X-WR-TIMEZONE` (America/Chicago), `X-WR-CALDESC`
 - UID format: `sapa-YYYY-MM-DD@sastamps.org` (date-only, no timestamp)
 - DTSTART/DTEND: **LOCAL timestamps** (no TZID prefix, no Z suffix)
-- Contains one VEVENT per meeting in the quarter
+- Contains one VEVENT per meeting in the edition's months
 - Model after `public/sapa-q2-2026-meetings.ics`
 
 ### Time Conversion Reference (CDT = UTC-5) -- VERIFIED against existing files
@@ -339,14 +344,14 @@ Read each HTML page, identify the relevant section by looking at adjacent existi
 
 ### meetings.html
 - Update the meeting schedule section with the new quarter's meetings
-- Update the "Download complete schedule" link to point to the new quarterly ICS file
+- Update the "Download complete schedule" link to point to the new edition's aggregate ICS file
 
 ### index.html
 - Update the "Upcoming Meeting" section with the first active (non-cancelled) meeting of the new quarter
 - Update the "Read Latest Issue" / newsletter link to point to the new PDF
 - Update highlights section if applicable
 - **Update the "Club News &amp; Announcements" section** (the cards): replace stale items with this edition's new members, officer changes, and key announcements/events from the newsletter. Q2-only items (e.g. the picnic) must NOT carry over.
-- **Update the "Upcoming TSDA Stamp Shows" table** with this quarter's shows. Update the `<caption>` too -- it hard-codes the quarter (e.g. "...for Q2 2026"). Replace every row.
+- **Update the "Upcoming TSDA Stamp Shows" table** with this quarter's shows. Update the `<caption>` too -- it hard-codes the quarter (e.g. "...for Q2 2026"); for a bimonthly edition name the months instead (e.g. "...for January–February 2027"). Replace every row. Labels for other bimonthly page text: `.claude/skills/philatex-update/references/data-contract.md` §B.
 
 ### about.html
 - Compare extracted officer roster against current about.html content
@@ -402,7 +407,7 @@ Report a structured summary of all changes made:
 
 ### Data Statistics
 - Meetings added: {count}
-- ICS files generated: {individual count} individual + 1 quarterly
+- ICS files generated: {individual count} individual + 1 aggregate
 - Featured articles extracted: {count}
 
 ### [UNVERIFIED] Markers
