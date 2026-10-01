@@ -5,6 +5,7 @@
 
 import { debounce } from '../utils/performance.js';
 import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
+import { fetchJSON } from '../utils/fetch-json.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { formatDate } from '../utils/helpers.js';
 import { createLogger } from '../utils/logger.js';
@@ -51,7 +52,7 @@ async function initializeResourcesPage() {
 
 async function loadResourcesData() {
   try {
-    const { default: data } = await import('../../data/members/resources.json');
+    const data = await fetchJSON('data/members/resources.json');
     // Resources data loaded successfully
     return data;
   } catch (error) {
@@ -384,7 +385,7 @@ function bindCategoryActions(container) {
 
 async function openResourceModal(resourceId) {
   try {
-    const { default: resourcesData } = await import('../../data/members/resources.json');
+    const resourcesData = await fetchJSON('data/members/resources.json');
     const resource = resourcesData.resources.find(r => r.id === resourceId);
 
     if (!resource) {
@@ -569,7 +570,7 @@ function closeModal(modal) {
 
 async function showResourceSections(resourceId) {
   try {
-    const { default: resourcesData } = await import('../../data/members/resources.json');
+    const resourcesData = await fetchJSON('data/members/resources.json');
     const resource = resourcesData.resources.find(r => r.id === resourceId);
 
     if (!resource || !resource.sections) {

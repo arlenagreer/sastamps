@@ -5,6 +5,7 @@
 
 import { debounce } from '../utils/performance.js';
 import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
+import { fetchJSON } from '../utils/fetch-json.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import _breadcrumb from '../modules/breadcrumb.js';
 import { createLogger } from '../utils/logger.js';
@@ -28,7 +29,7 @@ async function initializeNewsletterPage() {
 
 async function loadNewslettersList(container) {
   try {
-    const { default: newslettersData } = await import('../../data/newsletters/newsletters.json');
+    const newslettersData = await fetchJSON('data/newsletters/newsletters.json');
     const newsletters = newslettersData.newsletters
       .sort((a, b) => new Date(b.date) - new Date(a.date));
 
@@ -123,7 +124,7 @@ function initializeNewsletterSearch(container) {
     }
 
     try {
-      const { default: newslettersData } = await import('../../data/newsletters/newsletters.json');
+      const newslettersData = await fetchJSON('data/newsletters/newsletters.json');
       const results = searchNewsletters(newslettersData.newsletters, query);
 
       if (results.length === 0) {

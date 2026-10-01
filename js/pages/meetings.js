@@ -5,6 +5,7 @@
 
 import { debounce } from '../utils/performance.js';
 import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
+import { fetchJSON } from '../utils/fetch-json.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { createLogger } from '../utils/logger.js';
 import {
@@ -169,7 +170,7 @@ function formatMeetingLocation(location) {
 
 async function loadMeetingsList(container) {
   try {
-    const { default: meetingsData } = await import('../../data/meetings/meetings.json');
+    const meetingsData = await fetchJSON('data/meetings/meetings.json');
     
     // Show the current quarter (rolling over to the next one near quarter end,
     // once its schedule is posted). Shared with MeetingLoader so the rule lives

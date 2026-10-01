@@ -6,6 +6,7 @@
 // Core utilities (will be tree-shaken if not used)
 import { debounce } from '../utils/performance.js';
 import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
+import { fetchJSON } from '../utils/fetch-json.js';
 import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('HomePage');
@@ -77,7 +78,7 @@ function initializeHomeFunctionality() {
 function initializeCountdownTimer(element) {
   const updateCountdown = debounce(async () => {
     try {
-      const { default: meetingsData } = await import('../../data/meetings/meetings.json');
+      const meetingsData = await fetchJSON('data/meetings/meetings.json');
       const nextMeeting = findNextMeeting(meetingsData.meetings);
 
       if (nextMeeting) {
@@ -138,14 +139,14 @@ function formatCountdown(time) {
 async function loadQuickStats(container) {
   try {
     const [meetingsData, newslettersData] = await Promise.all([
-      import('../../data/meetings/meetings.json'),
-      import('../../data/newsletters/newsletters.json')
+      fetchJSON('data/meetings/meetings.json'),
+      fetchJSON('data/newsletters/newsletters.json')
     ]);
 
     const stats = {
-      totalMeetings: meetingsData.default.meetings.length,
-      totalNewsletters: newslettersData.default.newsletters.length,
-      nextMeeting: findNextMeeting(meetingsData.default.meetings)
+      totalMeetings: meetingsData.meetings.length,
+      totalNewsletters: newslettersData.newsletters.length,
+      nextMeeting: findNextMeeting(meetingsData.meetings)
     };
 
     container.innerHTML = `
@@ -172,7 +173,7 @@ async function loadQuickStats(container) {
 
 async function loadRecentNewsletters(container) {
   try {
-    const { default: newslettersData } = await import('../../data/newsletters/newsletters.json');
+    const newslettersData = await fetchJSON('data/newsletters/newsletters.json');
     const recentNewsletters = newslettersData.newsletters
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .slice(0, 3);
