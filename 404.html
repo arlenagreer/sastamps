@@ -9,7 +9,6 @@
     <!-- Security Headers -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://cdnjs.cloudflare.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://www.google-analytics.com; connect-src 'self' https://www.google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 
@@ -24,15 +23,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Critical CSS -->
-    <link rel="preload" href="css/critical.css" as="style">
-    <link rel="stylesheet" href="css/critical.css">
+    <link rel="preload" href="/css/critical.css" as="style">
+    <link rel="stylesheet" href="/css/critical.css">
 
     <!-- Full CSS -->
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
 
     <!-- Favicon and Web App -->
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="manifest" href="site.webmanifest">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#1a5276">
 
     <!-- Custom 404 Styles -->
@@ -156,7 +155,7 @@
     <!-- Header -->
     <header>
         <div class="container header-container">
-            <h1 class="site-title"><a href="index.html">San Antonio Philatelic Association</a></h1>
+            <h1 class="site-title"><a href="/index.html">San Antonio Philatelic Association</a></h1>
             <nav class="flex-center">
                 <!-- CSS-only mobile menu checkbox -->
                 <input type="checkbox" id="menu-toggle-checkbox" class="menu-toggle-checkbox" />
@@ -164,16 +163,16 @@
                     <i class="fas fa-bars"></i><span class="sr-only">Menu</span>
                 </label>
                 <ul class="nav-menu" id="nav-menu">
-                    <li><a href="index.html"><i class="fas fa-home nav-icon"></i>Home</a></li>
-                    <li><a href="about.html"><i class="fas fa-info-circle nav-icon"></i>About</a></li>
-                    <li><a href="meetings.html"><i class="fas fa-calendar nav-icon"></i>Meetings</a></li>
-                    <li><a href="newsletter.html"><i class="fas fa-newspaper nav-icon"></i>Newsletter</a></li>
-                    <li><a href="archive.html"><i class="fas fa-archive nav-icon"></i>Archive</a></li>
-                    <li><a href="membership.html"><i class="fas fa-users nav-icon"></i>Membership</a></li>
-                    <li><a href="resources.html"><i class="fas fa-book nav-icon"></i>Resources</a></li>
-                    <li><a href="glossary.html"><i class="fas fa-spell-check nav-icon"></i>Glossary</a></li>
-                    <li><a href="contact.html"><i class="fas fa-envelope nav-icon"></i>Contact</a></li>
-                    <li><a href="search.html"><i class="fas fa-search nav-icon"></i>Search</a></li>
+                    <li><a href="/index.html"><i class="fas fa-home nav-icon"></i>Home</a></li>
+                    <li><a href="/about.html"><i class="fas fa-info-circle nav-icon"></i>About</a></li>
+                    <li><a href="/meetings.html"><i class="fas fa-calendar nav-icon"></i>Meetings</a></li>
+                    <li><a href="/newsletter.html"><i class="fas fa-newspaper nav-icon"></i>Newsletter</a></li>
+                    <li><a href="/archive.html"><i class="fas fa-archive nav-icon"></i>Archive</a></li>
+                    <li><a href="/membership.html"><i class="fas fa-users nav-icon"></i>Membership</a></li>
+                    <li><a href="/resources.html"><i class="fas fa-book nav-icon"></i>Resources</a></li>
+                    <li><a href="/glossary.html"><i class="fas fa-spell-check nav-icon"></i>Glossary</a></li>
+                    <li><a href="/contact.html"><i class="fas fa-envelope nav-icon"></i>Contact</a></li>
+                    <li><a href="/search.html"><i class="fas fa-search nav-icon"></i>Search</a></li>
                 </ul>
             </nav>
         </div>
@@ -194,10 +193,10 @@
                         The page you were looking for could not be found. It may have been moved or removed.
                     </p>
                     <div class="error-404-actions">
-                        <a href="index.html" class="btn btn-primary">
+                        <a href="/index.html" class="btn btn-primary">
                             <i class="fas fa-home"></i> Go to Homepage
                         </a>
-                        <a href="search.html" class="btn btn-secondary">
+                        <a href="/search.html" class="btn btn-secondary">
                             <i class="fas fa-search"></i> Search Site
                         </a>
                     </div>
@@ -212,28 +211,28 @@
                 <p class="text-center">Here are some pages that might help you:</p>
 
                 <div class="suggestions-grid">
-                    <a href="meetings.html" class="suggestion-card">
+                    <a href="/meetings.html" class="suggestion-card">
                         <i class="fas fa-calendar-alt"></i>
                         <h3>Meetings</h3>
                         <p>View our meeting schedule and upcoming events</p>
                         <span class="btn btn-sm btn-outline">View Schedule</span>
                     </a>
 
-                    <a href="contact.html" class="suggestion-card">
+                    <a href="/contact.html" class="suggestion-card">
                         <i class="fas fa-envelope"></i>
                         <h3>Contact</h3>
                         <p>Get in touch with the club</p>
                         <span class="btn btn-sm btn-outline">Contact Us</span>
                     </a>
 
-                    <a href="newsletter.html" class="suggestion-card">
+                    <a href="/newsletter.html" class="suggestion-card">
                         <i class="fas fa-newspaper"></i>
                         <h3>Newsletter</h3>
                         <p>Browse our PHILATEX newsletters</p>
                         <span class="btn btn-sm btn-outline">View Newsletters</span>
                     </a>
 
-                    <a href="resources.html" class="suggestion-card">
+                    <a href="/resources.html" class="suggestion-card">
                         <i class="fas fa-book"></i>
                         <h3>Resources</h3>
                         <p>Guides and tips for collectors</p>
@@ -257,14 +256,14 @@
                 <div class="footer-section">
                     <h3>Quick Links</h3>
                     <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="about.html">About</a></li>
-                        <li><a href="meetings.html">Meetings</a></li>
-                        <li><a href="newsletter.html">Newsletter</a></li>
-                        <li><a href="resources.html">Resources</a></li>
-                        <li><a href="glossary.html">Glossary</a></li>
-                        <li><a href="membership.html">Membership</a></li>
-                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="/index.html">Home</a></li>
+                        <li><a href="/about.html">About</a></li>
+                        <li><a href="/meetings.html">Meetings</a></li>
+                        <li><a href="/newsletter.html">Newsletter</a></li>
+                        <li><a href="/resources.html">Resources</a></li>
+                        <li><a href="/glossary.html">Glossary</a></li>
+                        <li><a href="/membership.html">Membership</a></li>
+                        <li><a href="/contact.html">Contact</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -282,7 +281,7 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="dist/js/script.min.js" defer></script>
+    <script src="/dist/js/script.min.js" defer></script>
 
     <!-- 404 Tracking -->
     <script>
