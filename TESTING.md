@@ -43,18 +43,19 @@ Tests all HTML files for:
 
 ### Link Checking
 ```bash
-npm run build        # test:links crawls the built site in _site/
-npm run test:links
+npm run test:site-build          # builds _site/, then checks it (in bin/ci)
+npm run report:links:external    # after a build: every link, external ones too
 ```
-linkinator (a devDependency) crawls `_site/` from its own local server, with
-the settings in `linkinator.config.json`. It fails on:
-- Broken internal links
-- Missing images, scripts and stylesheets
-- Broken `url()` references in CSS
+Links on this site are checked by `test:site-build` (`scripts/check-site-build.js`)
+against the built `_site/`. It fails on:
+- A relative `href`, `src`, `srcset` or CSS `url()` that names no file
+- An absolute link to this site (`https://www.sastamps.org/...` or the bare
+  host), such as an `og:image` or JSON-LD URL, that names no file
+- A page whose `rel=canonical` is not its sitemap URL on the CNAME host
 
-External links are skipped there, so the check cannot fail because a
-third-party site is down. The weekly scheduled workflow checks them too and
-only reports.
+`report:links:external` runs linkinator (a devDependency) over `_site/` with
+`linkinator.config.json`, external links included. Third-party sites fail on
+their own schedule, so it only reports, weekly.
 
 ### JavaScript Linting
 ```bash
@@ -199,7 +200,7 @@ Checks npm dependencies for known vulnerabilities.
 When adding new HTML pages:
 1. Run `npm run build && npm run test:a11y` (every deployed page is tested; nothing to register)
 2. Run `npm run test:html` to validate the new page
-3. Check all internal links with `npm run test:links`
+3. Check all internal links with `npm run test:site-build`
 4. Verify performance with `npm run audit:lighthouse`
 
 ## Reports

@@ -161,10 +161,6 @@ run_section "test:site-build (npm run build -> _site/, sources untouched)" npm r
 # pages, which is how an entity-escaped `&amp;&amp;` in search.html's inline
 # script broke site search in production unnoticed.
 run_section "test:inline-js (inline <script> blocks parse, in _site/)" npm run --silent test:inline-js:site
-# linkinator crawls _site/ from its own local server (no port to manage) and
-# fails on any local link, stylesheet url() or asset that does not resolve.
-# External links are left out (linkinator.config.json), so it cannot flap.
-run_section "test:links (linkinator crawl of _site/, local links only)" npm run --silent test:links
 # Headless Chrome (the one puppeteer's npm ci install downloads; no network
 # needed after that) loads _site/search.html, which fetches its lunr index
 # from dist/data/, and searches. The index is no longer inlined into the
@@ -186,7 +182,8 @@ run_section "test:search-page (search.html loads its index and finds results)" n
 echo
 echo "▸ declared OUTSIDE this local gate (each needs something this runner does not provide)"
 echo "  - external links  -- third-party sites change and time out on their own schedule;"
-echo "                       the weekly scheduled workflow crawls them and reports."
+echo "                       the weekly workflow crawls them (npm run report:links:external)."
+echo "                       Links on this site, relative or absolute, are checked by test:site-build."
 echo "  - test:a11y        -- pa11y 10 over every built page (scripts/a11y-check.js). Its first"
 echo "                       real run found 5 link-in-text-block errors in today's pages;"
 echo "                       it joins this gate once those pages are fixed."

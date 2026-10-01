@@ -16,7 +16,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync, execFileSync } = require('child_process');
 const { SITE_DIRS, SITE_FILES, isSitePage, sitePages, isPrivate, deployableFiles } = require('./lib/site');
-const { ORIGIN, EXCLUDE, pageUrl } = require('./build-sitemap');
+const { HOST, ORIGIN, EXCLUDE, pageUrl, isShallow } = require('./build-sitemap');
 
 const REPO = path.resolve(__dirname, '..');
 const SITE = path.join(REPO, '_site');
@@ -143,6 +143,29 @@ if (!fs.existsSync(SITE)) {
       if (abs && !fileExact(abs)) missing.push(`${path.relative(SITE, file)} -> ${m[1]}`);
     }
   }
+  // Absolute URLs on this site (either host) anywhere in a page, stylesheet or
+  // the manifest: og:image, JSON-LD, canonical, plain links. They are not
+  // relative references, so the scan above skips them, but a dead one is just
+  // as broken (a missing og:image served 404 for a year). Each must name a
+  // file in _site/, as Pages would serve it.
+  const SAME_SITE = /https?:\/\/(?:www\.)?sastamps\.org(\/[^\s"'<>)\\,]*)?/gi;
+  let sameSite = 0;
+  for (const file of walk(SITE).filter((f) => /\.(html?|css|webmanifest|xml|txt)$/.test(f))) {
+    const text = fs.readFileSync(file, 'utf8');
+    for (const m of text.matchAll(SAME_SITE)) {
+      sameSite++;
+      let rel = (m[1] || '/').split(/[?#]/)[0];
+      try {
+        rel = decodeURIComponent(rel);
+      } catch {
+        missing.push(`${path.relative(SITE, file)} -> ${m[0]} (malformed escape)`);
+        continue;
+      }
+      if (rel.endsWith('/')) rel += 'index.html';
+      if (!fileExact(path.join(SITE, rel))) missing.push(`${path.relative(SITE, file)} -> ${m[0]}`);
+    }
+  }
+  check(sameSite >= 10, `only ${sameSite} absolute same-site URLs found (parser problem?)`);
   check(missing.length === 0, `${missing.length} unresolved reference(s): ${missing.slice(0, 8).join(' ; ')}`);
 
   console.log('▸ built assets');
@@ -183,7 +206,8 @@ if (fs.existsSync(SITE)) {
   const sitemap = existsExact(path.join(SITE, 'sitemap.xml')) ? fs.readFileSync(path.join(SITE, 'sitemap.xml'), 'utf8') : '';
   check(sitemap.length > 0, '_site/sitemap.xml missing');
   // Parse it as a sitemap: one <urlset>, and every <url> exactly one <loc>
-  // and one well-formed <lastmod>.
+  // and one well-formed <lastmod> (none in a shallow clone: no history to date it).
+  const wantLastmod = isShallow(REPO) ? 0 : 1;
   check(/^<\?xml version="1\.0" encoding="UTF-8"\?>\n<urlset xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9">\n[\s\S]*<\/urlset>\n$/.test(sitemap),
     '_site/sitemap.xml is not a well-formed <urlset>');
   const entries = [...sitemap.matchAll(/<url>([\s\S]*?)<\/url>/g)].map((m) => m[1]);
@@ -192,8 +216,10 @@ if (fs.existsSync(SITE)) {
   for (const e of entries) {
     const loc = [...e.matchAll(/<loc>([^<]*)<\/loc>/g)].map((m) => m[1]);
     const lastmod = [...e.matchAll(/<lastmod>([^<]*)<\/lastmod>/g)].map((m) => m[1]);
-    check(loc.length === 1 && lastmod.length === 1, `sitemap entry needs one <loc> and one <lastmod>: ${e.trim().slice(0, 80)}`);
-    check(lastmod.length === 1 && /^\d{4}-\d{2}-\d{2}$/.test(lastmod[0]) && !Number.isNaN(Date.parse(lastmod[0])), `sitemap <lastmod> is not a date: ${lastmod[0]}`);
+    check(loc.length === 1 && lastmod.length === wantLastmod, `sitemap entry needs one <loc> and ${wantLastmod} <lastmod>: ${e.trim().slice(0, 80)}`);
+    if (lastmod.length) {
+      check(/^\d{4}-\d{2}-\d{2}$/.test(lastmod[0]) && !Number.isNaN(Date.parse(lastmod[0])), `sitemap <lastmod> is not a date: ${lastmod[0]}`);
+    }
     if (loc.length !== 1) continue;
     locs.push(loc[0]);
     check(loc[0].startsWith(ORIGIN), `sitemap <loc> is not on ${ORIGIN}: ${loc[0]}`);
@@ -203,6 +229,21 @@ if (fs.existsSync(SITE)) {
   // And the other way: every deployed page except the excluded ones is listed.
   for (const p of sitePages(REPO, DEPLOYABLE).filter((x) => !EXCLUDE.has(x))) {
     check(locs.includes(pageUrl(p)), `sitemap.xml does not list ${p}`);
+  }
+  // Each listed page's rel=canonical is exactly its sitemap <loc>, on the
+  // CNAME host: search engines treat a mismatch as two different URLs.
+  console.log(`▸ rel=canonical matches the sitemap and uses https://${HOST}/`);
+  for (const loc of locs) {
+    const rel = loc.slice(ORIGIN.length) || 'index.html';
+    if (!fileExact(path.join(SITE, rel))) continue;
+    const html = fs.readFileSync(path.join(SITE, rel), 'utf8');
+    const canon = [...html.matchAll(/<link\b[^>]*\brel=["']canonical["'][^>]*>/gi)]
+      .map((m) => (m[0].match(/\bhref=["']([^"']*)["']/i) || [])[1]);
+    check(canon.length === 1, `${rel}: ${canon.length} rel=canonical links, want 1`);
+    if (canon.length === 1) {
+      check(canon[0] === loc, `${rel}: canonical ${canon[0]} is not its sitemap <loc> ${loc}`);
+      check(canon[0].startsWith(`https://${HOST}/`), `${rel}: canonical ${canon[0]} is not on https://${HOST}/ (CNAME)`);
+    }
   }
   check(!existsExact(path.join(REPO, 'sitemap.xml')) || !DEPLOYABLE.has('sitemap.xml'), 'a committed sitemap.xml would go stale: the build generates it');
 }

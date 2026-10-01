@@ -178,7 +178,7 @@ npm test                  # In terminal 2
 npm run test:html         # HTML validation
 npm run test:js           # JavaScript linting
 npm run test:css          # CSS validation
-npm run test:links        # Link checking (requires server)
+npm run test:site-build   # Build and check _site/, links included
 npm run test:a11y         # Accessibility (requires server)
 ```
 

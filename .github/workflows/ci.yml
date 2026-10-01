@@ -24,12 +24,15 @@ jobs:
       contents: read
 
     steps:
-    # Full history, so the build's sitemap.xml can date each page by its
-    # last commit (<lastmod>). blob:none fetches commits and trees only.
+    # Full history only on a push to main, where _site/ deploys, so the
+    # build's sitemap.xml can date each page by its last commit (<lastmod>);
+    # blob:none fetches commits and trees only. Other runs stay shallow and
+    # the sitemap simply omits <lastmod>. '0' is quoted on purpose: a bare 0
+    # is falsy in an expression, so `cond && 0 || 1` would always give 1.
     - name: Checkout code
       uses: actions/checkout@v7
       with:
-        fetch-depth: 0
+        fetch-depth: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') && '0' || '1' }}
         filter: blob:none
 
     - name: Setup Node.js
@@ -66,21 +69,16 @@ jobs:
     # One build: _site/ is both what the checks below test and, on a push to
     # main, exactly what the deploy job publishes. test:site-build runs
     # npm run build and fails if it rewrote a tracked file or assembled a
-    # _site/ with a missing page, a broken local reference, or a file that
-    # must never be served (*.php, *.db, scripts/, dotfiles).
+    # _site/ with a missing page, a broken link to this site (relative or
+    # https://www.sastamps.org/...), or a file that must never be served
+    # (*.php, *.db, scripts/, dotfiles). It is this repo's only internal
+    # link checker; external links are the weekly workflow's report.
     - name: Build the site and check it
       run: npm run test:site-build
 
     - name: Check inline scripts in the built pages
       run: npm run test:inline-js:site
       
-    # linkinator (a pinned devDependency; this used to npx an unpinned
-    # broken-link-checker and ignore its result) crawls _site/ from its own
-    # local server. linkinator.config.json skips external links, so a
-    # third-party outage cannot fail a build; every local link must resolve.
-    - name: Check links in the built site
-      run: npm run test:links
-
     # search.html fetches its lunr index from dist/data/ (it is no longer
     # inlined), so load the page in headless Chrome and search.
     - name: Check site search in a browser

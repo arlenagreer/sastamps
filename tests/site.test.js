@@ -81,3 +81,31 @@ test('sitemap URLs: canonical www host, index as the bare origin', () => {
   assert.equal(pageUrl('about.html'), 'https://www.sastamps.org/about.html');
   assert.ok(EXCLUDE.has('404.html') && EXCLUDE.has('offline.html'));
 });
+
+test('buildSitemap: dated by the page or its data file; no <lastmod> without history', () => {
+  const { buildSitemap, PAGE_DATA } = require('../scripts/build-sitemap');
+  const { execFileSync } = require('child_process');
+  const root = path.resolve(__dirname, '..');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sitemap-test-'));
+  const warn = console.warn;
+  try {
+    for (const f of ['index.html', 'meetings.html', '404.html']) {
+      fs.writeFileSync(path.join(dir, f), '');
+    }
+    console.warn = () => {};
+    buildSitemap(root, dir, { dated: true });
+    const dated = fs.readFileSync(path.join(dir, 'sitemap.xml'), 'utf8');
+    assert.match(dated, /<loc>https:\/\/www\.sastamps\.org\/<\/loc>/);
+    assert.ok(!dated.includes('404.html'));
+    const latest = execFileSync('git', ['log', '-1', '--format=%cs', '--', 'meetings.html', ...PAGE_DATA['meetings.html']],
+      { cwd: root, encoding: 'utf8' }).trim();
+    assert.match(dated, new RegExp(`meetings\\.html</loc>\\n    <lastmod>${latest}</lastmod>`));
+    buildSitemap(root, dir, { dated: false });
+    const shallow = fs.readFileSync(path.join(dir, 'sitemap.xml'), 'utf8');
+    assert.equal((shallow.match(/<loc>/g) || []).length, 2);
+    assert.ok(!shallow.includes('<lastmod>'));
+  } finally {
+    console.warn = warn;
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
