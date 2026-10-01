@@ -25,12 +25,15 @@ if (!fs.existsSync(searchHtmlPath)) {
 }
 let searchHtml = fs.readFileSync(searchHtmlPath, 'utf8');
 
-// Create the embedded data script
+// Create the embedded data script. '<' is escaped (valid JSON, since it can
+// only occur inside strings) so newsletter text containing '</script' cannot
+// end the element early.
+const inScript = (json) => json.replace(/</g, '\\u003c');
 const embeddedDataScript = `
     <!-- Embedded search data for offline functionality -->
     <script>
-        window.SEARCH_INDEX_DATA = ${searchIndex};
-        window.SEARCH_DOCUMENTS_DATA = ${searchDocs};
+        window.SEARCH_INDEX_DATA = ${inScript(searchIndex)};
+        window.SEARCH_DOCUMENTS_DATA = ${inScript(searchDocs)};
     </script>
 `;
 
@@ -45,10 +48,10 @@ searchHtml = searchHtml.replace(
 // Find where to insert the embedded data (before the search functionality script)
 const searchScriptMarker = '<!-- Search functionality -->';
 if (searchHtml.includes(searchScriptMarker)) {
-    searchHtml = searchHtml.replace(searchScriptMarker, embeddedDataScript + '\n    ' + searchScriptMarker);
+    searchHtml = searchHtml.replace(searchScriptMarker, () => embeddedDataScript + '\n    ' + searchScriptMarker);
 } else {
     // If marker not found, insert before closing body tag
-    searchHtml = searchHtml.replace('</body>', embeddedDataScript + '\n</body>');
+    searchHtml = searchHtml.replace('</body>', () => embeddedDataScript + '\n</body>');
 }
 
 // Write the updated search.html

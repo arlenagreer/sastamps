@@ -29,6 +29,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const vm = require('vm');
+const { isSitePage } = require('./lib/site');
 
 const root = path.resolve(process.argv[2] || path.join(__dirname, '..'));
 const SCAN_DIRS = ['.', 'showcase'];
@@ -40,7 +41,7 @@ function htmlFiles() {
     const abs = path.join(root, dir);
     if (!fs.existsSync(abs)) {continue;}
     for (const name of fs.readdirSync(abs).sort()) {
-      if (name.endsWith('.html') && !name.startsWith('test-')) {
+      if (isSitePage(name)) {
         files.push(path.join(dir, name));
       }
     }

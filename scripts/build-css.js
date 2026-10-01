@@ -11,7 +11,7 @@
  * - js/font-loading.js -> dist/js/font-loading.min.js, a self-contained IIFE
  *   loaded as a plain <script> in <head> (see the file for why).
  *
- * Usage: node scripts/build-css.js [--watch]
+ * Usage: node scripts/build-css.js
  */
 const path = require('path');
 const esbuild = require('esbuild');
@@ -40,14 +40,6 @@ const builds = [
 ];
 
 async function main() {
-    if (process.argv.includes('--watch')) {
-        for (const options of builds) {
-            const ctx = await esbuild.context(options);
-            await ctx.watch();
-        }
-        console.log('Watching css/*.css and js/font-loading.js...');
-        return;
-    }
     for (const options of builds) {
         await esbuild.build(options);
         console.log(`Built ${path.relative(ROOT, options.outfile)}`);

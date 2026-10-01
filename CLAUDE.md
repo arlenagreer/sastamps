@@ -12,7 +12,7 @@ This is the **San Antonio Philatelic Association (SAPA)** website - a modern, pr
 ```bash
 # Complete build process
 npm run build                 # Full build: dist/ + css/*.min.css, site assembled in _site/
-npm run build:js              # JavaScript build with advanced tree-shaking
+npm run build:js              # JavaScript bundles into dist/ (npm run build to see them in _site/)
 npm run build:css             # PostCSS processing and minification
 npm run build:js:legacy       # Legacy single bundle (fallback)
 
@@ -36,8 +36,8 @@ npm run audit:lighthouse      # Performance audit with Lighthouse
 # 1. Build and serve the site (_site/)
 npm start
 
-# 2. Build optimized bundles
-npm run build:js
+# 2. After an edit, rebuild: _site/ is a copy, so only a full build shows it
+npm start
 
 # 3. Analyze bundle sizes
 npm run analyze:bundle
@@ -163,7 +163,7 @@ function setupFeature() {
 ### Build Validation
 ```bash
 # Always run after changes
-npm run build:js          # Verify tree-shaking works
+npm run build             # Full build; check-site-build checks it via bin/ci
 npm run analyze:bundle    # Check bundle sizes
 npm run test:quick        # Run HTML, JS, CSS validation
 ```
@@ -258,7 +258,7 @@ The build system generates detailed bundle analysis:
 - `data/schemas/` - JSON validation schemas
 
 ### Always Run After Changes
-- `npm run build:js` to verify tree-shaking
+- `npm run build` (or `npm start`): `_site/` is a copy, so only a full build shows your change
 - `npm run analyze:bundle` to check bundle sizes
 - Test locally with `npm start` (builds, then serves `_site/`)
 

@@ -190,7 +190,7 @@ The `reports/` directory is git-ignored to avoid committing test artifacts.
 ### Server Not Running
 Many tests require the local server. It serves the built site in `_site/`, so build first:
 ```bash
-npm run serve
+npm start   # npm run build, then npm run serve
 ```
 
 ### Port Conflicts

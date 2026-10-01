@@ -57,6 +57,10 @@ function existsExact(abs) {
   return true;
 }
 
+// A reference must name a file: Pages serves no directory listings, so a
+// directory resolves only through its index.html.
+const fileExact = (abs) => existsExact(abs) && fs.statSync(abs).isFile();
+
 function walk(dir, out = []) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, e.name);
@@ -79,8 +83,9 @@ function resolveRef(ref, fromFile) {
 
 console.log('▸ build');
 const before = snapshot();
-const build = spawnSync(process.execPath, [path.join(REPO, 'scripts/build.js')], { cwd: REPO, encoding: 'utf8' });
-check(build.status === 0, `npm run build failed (exit ${build.status}): ${`${build.stderr}\n${build.stdout}`.trim().split('\n').slice(-3).join(' | ')}`);
+// The build's own log streams through, so a failure shows its real diagnostics.
+const build = spawnSync(process.execPath, [path.join(REPO, 'scripts/build.js')], { cwd: REPO, stdio: ['ignore', 'inherit', 'inherit'] });
+check(build.status === 0, `npm run build failed (exit ${build.status}); its log is above`);
 const after = snapshot();
 
 console.log('▸ the build writes no tracked file and leaves the tree as it was');
@@ -98,7 +103,7 @@ if (!fs.existsSync(SITE)) {
   for (const d of ['css', 'dist', 'images', 'public', 'data']) check(existsExact(path.join(SITE, d)), `_site/${d}/ missing`);
   const all = walk(SITE).map((f) => path.relative(SITE, f));
   const forbidden = all.filter((f) => /\.(php|db|env|md)$/i.test(f) || (/\.txt$/i.test(f) && f !== 'robots.txt') || /^(scripts|\.planning|js|node_modules|\.claude|\.github)\//.test(f)
-    || (!f.includes('/') && f.endsWith('.html') && !isSitePage(f)) || /(^|\/)(sw\.js|\.env[^/]*|\.DS_Store)$/.test(f));
+    || (!f.includes('/') && f.endsWith('.html') && !isSitePage(f)) || /(^|\/)sw\.js$/.test(f) || /(^|\/)\./.test(f));
   check(forbidden.length === 0, `_site contains files that must not be public: ${forbidden.slice(0, 8).join(', ')}`);
 
   console.log('▸ every local reference in _site resolves');
@@ -110,7 +115,7 @@ if (!fs.existsSync(SITE)) {
       if (SKIP_REF.test(m[1])) continue;
       refs++;
       const abs = resolveRef(m[1], file);
-      if (abs && !existsExact(abs) && !existsExact(path.join(abs, 'index.html'))) missing.push(`${path.relative(SITE, file)} -> ${m[1]}`);
+      if (abs && !fileExact(abs) && !fileExact(path.join(abs, 'index.html'))) missing.push(`${path.relative(SITE, file)} -> ${m[1]}`);
     }
     for (const m of html.matchAll(/\bsrcset=["']([^"']+)["']/g)) {
       for (const part of m[1].split(',')) {
@@ -118,7 +123,7 @@ if (!fs.existsSync(SITE)) {
         if (!url || SKIP_REF.test(url)) continue;
         refs++;
         const abs = resolveRef(url, file);
-        if (abs && !existsExact(abs)) missing.push(`${path.relative(SITE, file)} -> ${url}`);
+        if (abs && !fileExact(abs)) missing.push(`${path.relative(SITE, file)} -> ${url}`);
       }
     }
     if (path.dirname(file) === SITE && !/^(offline|404)\.html$/.test(path.basename(file))) {
@@ -130,7 +135,7 @@ if (!fs.existsSync(SITE)) {
     for (const m of css.matchAll(/url\(\s*['"]?([^'")]+)['"]?\s*\)/g)) {
       if (SKIP_REF.test(m[1])) continue;
       const abs = resolveRef(m[1], file);
-      if (abs && !existsExact(abs)) missing.push(`${path.relative(SITE, file)} -> ${m[1]}`);
+      if (abs && !fileExact(abs)) missing.push(`${path.relative(SITE, file)} -> ${m[1]}`);
     }
   }
   check(missing.length === 0, `${missing.length} unresolved reference(s): ${missing.slice(0, 8).join(' ; ')}`);

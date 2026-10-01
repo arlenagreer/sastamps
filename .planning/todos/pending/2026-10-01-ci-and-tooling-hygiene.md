@@ -35,6 +35,8 @@ Found on 2026-09-30 while fixing the Dependabot alerts (#158). All of these alre
 
 13. **The deployed `search.html` still inlines the whole search index (~345 KB).** The build embeds it into `_site/search.html`, so that page is ~368 KB against a 23 KB source, and the index cannot be cached apart from the page. The source page already falls back to fetching `dist/data/search-*.json`, which always deploys. The embed exists for `file://` use, which the live site never needs. Dropping it removes a build step, `scripts/build-search-embedded.js` and a check. It was kept in feat/site-build only so that PR changed no page behaviour; measure search load time both ways before removing it.
 
+14. **Dead blur-up blocks remain in 7 pages.** `<style id="blur-up-style">` and `<script id="blur-up-script">` in index, about, contact, archive, meetings, membership and newsletter were written by `scripts/update-image-tags.js`, retired in feat/site-build. No page has a `blur-up` or `data-src` image any more, so the handler matches nothing. Delete both blocks from the 7 pages and spot-check them in a browser.
+
 ## Solution
 
 Pick the items worth doing. 1 (choose a runner: pa11y 10 per URL, or lighthouse accessibility) gives the most value. 3, 4, 6, 8 and 9 are done.
