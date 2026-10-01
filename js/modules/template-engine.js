@@ -4,6 +4,7 @@
  */
 
 import { escapeHTML, safeUrl } from '../utils/safe-dom.js';
+import { parseLocalDate } from '../utils/dates.js';
 import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('TemplateEngine');
@@ -314,7 +315,7 @@ class TemplateEngine {
     this.registerHelper('formatDate', (date, format = 'long') => {
       if (!date) {return '';}
 
-      const d = new Date(date);
+      const d = parseLocalDate(date);
       if (isNaN(d.getTime())) {return date;}
 
       const options = {

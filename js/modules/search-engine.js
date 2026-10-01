@@ -4,6 +4,7 @@
  */
 
 import { escapeHTML, safeUrl } from '../utils/safe-dom.js';
+import { parseLocalDate } from '../utils/dates.js';
 import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('SearchEngine');
@@ -240,7 +241,7 @@ class SearchEngine {
 
       // Filter by years (for newsletters and meetings)
       if (years && years.length > 0 && doc.date) {
-        const docYear = new Date(doc.date).getFullYear();
+        const docYear = parseLocalDate(doc.date).getFullYear();
         if (!years.includes(docYear.toString())) {
           return false;
         }
@@ -312,7 +313,7 @@ class SearchEngine {
       if (doc.difficulty) {options.difficulty.add(doc.difficulty);}
       if (doc.quarter) {options.quarters.add(doc.quarter);}
       if (doc.date) {
-        const year = new Date(doc.date).getFullYear();
+        const year = parseLocalDate(doc.date).getFullYear();
         options.years.add(year.toString());
       }
       if (doc.tags && Array.isArray(doc.tags)) {
@@ -732,7 +733,7 @@ class SearchEngine {
   renderSearchResult(result, maxScore = 1) {
     const doc = result.document;
     const typeIcon = this.getTypeIcon(doc.type);
-    const formattedDate = doc.date ? new Date(doc.date).toLocaleDateString() : '';
+    const formattedDate = doc.date ? parseLocalDate(doc.date).toLocaleDateString() : '';
 
     return `
             <div class="search-result-item" data-type="${escapeHTML(doc.type)}">

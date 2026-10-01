@@ -5,7 +5,8 @@
 
 // Core utilities (will be tree-shaken if not used)
 import { debounce } from '../utils/performance.js';
-import { safeQuerySelector, escapeHTML, firstSafeUrl } from '../utils/safe-dom.js';
+import { safeQuerySelector, escapeHTML } from '../utils/safe-dom.js';
+import { normaliseNewsletter } from '../modules/newsletter-normalise.js';
 import { fetchJSON } from '../utils/fetch-json.js';
 import { createLogger } from '../utils/logger.js';
 
@@ -174,21 +175,18 @@ async function loadQuickStats(container) {
 async function loadRecentNewsletters(container) {
   try {
     const newslettersData = await fetchJSON('data/newsletters/newsletters.json');
-    // newsletters.json uses publishDate / filePath / description; pdfUrl /
-    // date / summary are older names kept as fallbacks.
-    const dateOf = newsletter => new Date(newsletter.publishDate || newsletter.date);
-    const recentNewsletters = [...newslettersData.newsletters]
-      .sort((a, b) => dateOf(b) - dateOf(a))
+    const recentNewsletters = newslettersData.newsletters
+      .map(normaliseNewsletter)
+      .sort((a, b) => b.dateValue - a.dateValue)
       .slice(0, 3);
 
     const html = recentNewsletters.map(newsletter => {
-      const pdfUrl = firstSafeUrl(newsletter.filePath, newsletter.pdfUrl);
       const title = escapeHTML(newsletter.title);
       return `
             <div class="newsletter-preview-item">
-                <h4>${pdfUrl ? `<a href="${escapeHTML(pdfUrl)}" target="_blank" rel="noopener">${title}</a>` : title}</h4>
-                <p class="newsletter-date">${escapeHTML(dateOf(newsletter).toLocaleDateString())}</p>
-                <p class="newsletter-summary">${escapeHTML(newsletter.description || newsletter.summary || 'Latest newsletter from SAPA')}</p>
+                <h4>${newsletter.pdfUrl ? `<a href="${escapeHTML(newsletter.pdfUrl)}" target="_blank" rel="noopener">${title}</a>` : title}</h4>
+                <p class="newsletter-date">${escapeHTML(newsletter.dateValue.toLocaleDateString())}</p>
+                <p class="newsletter-summary">${escapeHTML(newsletter.summary || 'Latest newsletter from SAPA')}</p>
             </div>
         `;
     }).join('');

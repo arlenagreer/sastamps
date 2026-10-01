@@ -4,7 +4,8 @@
  */
 
 import { debounce } from '../utils/performance.js';
-import { safeQuerySelector, escapeHTML, safeUrl, firstSafeUrl } from '../utils/safe-dom.js';
+import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
+import { normaliseNewsletter } from '../modules/newsletter-normalise.js';
 import { fetchJSON } from '../utils/fetch-json.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import _breadcrumb from '../modules/breadcrumb.js';
@@ -27,31 +28,15 @@ async function initializeNewsletterPage() {
   }
 }
 
-/**
- * Map a newsletters.json record onto the fields this page renders.
- * The data file uses filePath / publishDate / description / pageCount; older
- * records (and the original version of this page) used pdfUrl / date /
- * summary / pages, so those remain as fallbacks.
- */
-function normaliseNewsletter(newsletter) {
-  return {
-    ...newsletter,
-    date: newsletter.publishDate || newsletter.date,
-    summary: newsletter.description || newsletter.summary,
-    pages: newsletter.pageCount || newsletter.pages,
-    pdfUrl: firstSafeUrl(newsletter.filePath, newsletter.pdfUrl)
-  };
-}
-
 async function loadNewslettersList(container) {
   try {
     const newslettersData = await fetchJSON('data/newsletters/newsletters.json');
     const newsletters = newslettersData.newsletters
       .map(normaliseNewsletter)
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
+      .sort((a, b) => b.dateValue - a.dateValue);
 
     const html = newsletters.map(newsletter => `
-            <article class="newsletter-item" data-date="${escapeHTML(newsletter.date)}" data-year="${new Date(newsletter.date).getFullYear()}">
+            <article class="newsletter-item" data-date="${escapeHTML(newsletter.date)}" data-year="${newsletter.dateValue.getFullYear()}">
                 <div class="newsletter-preview">
                     ${safeUrl(newsletter.coverImage, '') ?
     `<img src="${escapeHTML(safeUrl(newsletter.coverImage, ''))}" alt="Cover of ${escapeHTML(newsletter.title)}" loading="lazy">` :
@@ -63,7 +48,7 @@ async function loadNewslettersList(container) {
                     <header class="newsletter-header">
                         <h3>${escapeHTML(newsletter.title)}</h3>
                         <time datetime="${escapeHTML(newsletter.date)}" class="newsletter-date">
-                            ${escapeHTML(new Date(newsletter.date).toLocaleDateString('en-US', {
+                            ${escapeHTML(newsletter.dateValue.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
@@ -185,7 +170,7 @@ function searchNewsletters(newsletters, query) {
       newsletter.title,
       newsletter.summary,
       ...(newsletter.features || []),
-      new Date(newsletter.date).toLocaleDateString()
+      newsletter.dateValue.toLocaleDateString()
     ].join(' ').toLowerCase();
 
     return searchTerms.every(term => searchText.includes(term));

@@ -6,6 +6,7 @@
 import { escapeHTML, safeUrl } from '../utils/safe-dom.js';
 import { createLogger } from '../utils/logger.js';
 import { fetchJSON } from '../utils/fetch-json.js';
+import { parseLocalDate } from '../utils/dates.js';
 
 const logger = createLogger('NewsletterLoader');
 
@@ -290,7 +291,7 @@ class NewsletterLoader {
      * Render individual newsletter card
      */
   renderNewsletterCard(newsletter) {
-    const publishDate = new Date(newsletter.publishDate).toLocaleDateString('en-US', {
+    const publishDate = parseLocalDate(newsletter.publishDate).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'

@@ -5,6 +5,7 @@
 
 import { debounce } from '../utils/performance.js';
 import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
+import { parseLocalDate } from '../utils/dates.js';
 import { fetchJSON } from '../utils/fetch-json.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { createLogger } from '../utils/logger.js';
@@ -279,7 +280,7 @@ function initializeMeetingFilters(container) {
     const now = new Date();
 
     meetings.forEach(meeting => {
-      const meetingDate = new Date(meeting.dataset.date);
+      const meetingDate = parseLocalDate(meeting.dataset.date);
       const meetingType = meeting.dataset.type;
 
       let show = true;

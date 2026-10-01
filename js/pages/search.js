@@ -5,6 +5,7 @@
 
 import { debounce } from '../utils/performance.js';
 import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
+import { parseLocalDate } from '../utils/dates.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { createLogger } from '../utils/logger.js';
 
@@ -473,7 +474,7 @@ function formatContentType(type) {
 }
 
 function formatDate(dateString) {
-  const date = new Date(dateString);
+  const date = parseLocalDate(dateString);
   return date.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
