@@ -7,7 +7,7 @@
 #
 # sastamps is a static-site npm project with no application server of its own;
 # "the build" IS the product. This runner exists because Dependabot's weekly
-# grouped PR, when it regenerates package-lock.json, reliably drops the
+# grouped PR, when it regenerates package-lock.json, reliably dropped the
 # `proxy-agent@8.0.2` subtree nested under `lighthouse` -- six of the last seven
 # Dependabot PRs (#121-#125, #127, #128) were closed unmerged for exactly this
 # reason and replaced by a hand-regenerated lockfile (#129). Every one of those
@@ -53,12 +53,13 @@ else
   cat "$preflight_log"
   rm -f "$preflight_log"
   echo
-  echo "  This is the known Dependabot defect: its weekly grouped-update PR"
-  echo "  regenerates package-lock.json and drops the proxy-agent@8.0.2 subtree"
-  echo "  nested under lighthouse (plus that subtree's own transitive deps --"
-  echo "  agent-base, http-proxy-agent, https-proxy-agent, pac-proxy-agent, and"
-  echo "  friends). Six of the last seven Dependabot PRs (#121-#125, #127, #128)"
-  echo "  were closed unmerged for exactly this reason."
+  echo "  This is most likely the known Dependabot defect: its weekly grouped-update"
+  echo "  PR regenerates package-lock.json and drops entries npm ci needs. It was"
+  echo "  the proxy-agent@8.0.2 subtree nested under lighthouse until pa11y 10"
+  echo "  dropped the hard dependency that pulled proxy-agent in; it is still an"
+  echo "  optional peer of @puppeteer/browsers, so it can come back."
+  echo "  Six of the last seven Dependabot PRs (#121-#125, #127, #128) were closed"
+  echo "  unmerged for exactly this reason."
   echo
   echo "  The fix is a lockfile regenerated with real npm -- \`npm install\` on a"
   echo "  clean checkout, then commit the result -- never a code change here."
@@ -167,7 +168,8 @@ echo
 echo "▸ declared OUTSIDE this local gate (each needs something this runner does not provide)"
 echo "  - test:links      -- its own command text says to start a server in another"
 echo "                       terminal first; with no server running it has nothing to check."
-echo "  - test:a11y        -- pa11y-ci needs npm run serve answering on localhost first."
+echo "  - test:a11y        -- calls pa11y-ci, which is not a devDependency (only pa11y is),"
+echo "                       and would also need npm run serve answering on localhost."
 echo "  - audit:lighthouse -- same: needs npm run serve answering on localhost first."
 echo "  - audit:security   -- npm audit depends on the registry's advisory feed; an advisory"
 echo "                       published overnight would redden this every push in a repo whose"
