@@ -3182,7 +3182,7 @@ tr:hover {
 
 .featured-badge {
     background: var(--accent);
-    color: var(--dark);
+    color: #2c3e50; /* fixed: --dark flips to near-white in dark mode (1.31:1 on gold) */
     padding: 0.25rem 0.5rem;
     border-radius: var(--radius-sm);
     font-size: 0.75rem;
@@ -3383,6 +3383,19 @@ tr:hover {
 
 [data-theme="dark"] .resource-item:hover {
     background: #2a2a2a;
+}
+
+/* Dark-mode contrast (WCAG AA). Light mode is unaffected by these. */
+[data-theme="dark"] .resource-meta {
+    color: var(--medium); /* was #666 on #1e1e1e (2.9:1); 9.36:1 */
+}
+
+[data-theme="dark"] :is(input, select, textarea) {
+    color: var(--dark); /* was UA black on #1a1a1a (1.2:1); 15.17:1 */
+}
+
+[data-theme="dark"] .resource-count {
+    color: var(--white); /* #1a1a1a on the light-blue dark --primary: 7.08:1 (white was 2.45:1) */
 }
 
 [data-theme="dark"] .tag {
