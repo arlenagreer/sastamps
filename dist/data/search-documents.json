@@ -186,16 +186,15 @@
     {
       "id": "meeting-2026-01-30",
       "type": "meeting",
-      "title": "Stamp Bourse",
-      "summary": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers. Guests welcome!",
+      "title": "Club Auction",
+      "summary": "Monthly club auction featuring member consignments and donated materials. Guests welcome!",
       "url": "/meetings.html#2026-01-30",
       "date": "2026-01-30",
       "tags": [
-        "bourse",
-        "dealers",
-        "trading",
+        "auction",
         "buying",
         "selling",
+        "consignment",
         "guests-welcome"
       ],
       "category": "meeting"
@@ -1468,6 +1467,6 @@
       "resource": 3,
       "glossary": 5
     },
-    "buildDate": "2026-09-30T21:40:10.094Z"
+    "buildDate": "2026-10-01T02:08:00.049Z"
   }
 }

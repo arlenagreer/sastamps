@@ -130,6 +130,8 @@ Meeting extraction is the most error-prone step. Follow these rules strictly:
    | "Annual Club Picnic"          | `picnic`     | Start time is 6:00 PM            |
    | Anything unclear              | `regular`    | Mark as [UNVERIFIED]             |
 
+   **Bourses carry no table fee or price.** A club officer confirmed on 2026-09-30 that SAPA charges nothing for bourse dealer tables (provisional until confirmed at the next club meeting). Never copy a fee or price note forward from an earlier meeting entry or template `.ics`. Add one only if this newsletter states it, and cite the page in the proofreading report.
+
 5. **Meeting ID** = date in `YYYY-MM-DD` format.
 
 6. **BOG meetings:** Include `bogStart: "7:15 PM"` to match existing data pattern, even though this field is not in the schema.
