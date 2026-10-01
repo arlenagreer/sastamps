@@ -8,6 +8,7 @@ import { safeQuerySelector } from '../utils/safe-dom.js';
 import { debounce as _debounce } from '../utils/performance.js';
 import { createLogger } from '../utils/logger.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
+import { retireServiceWorkers } from '../utils/service-worker.js';
 
 // Import core modules
 import breadcrumb from '../modules/breadcrumb.js';
@@ -123,8 +124,8 @@ async function initArchivePage() {
     // Add mobile menu functionality
     initMobileMenu();
 
-    // Initialize service worker if available
-    initServiceWorker();
+    // Remove any stale service worker (the site no longer registers one)
+    retireServiceWorkers();
 
     // Render archived newsletters (2008-2024) from JSON
     await renderArchivedNewsletters();
@@ -159,21 +160,6 @@ function initMobileMenu() {
   }
 }
 
-/**
- * Initialize service worker if available
- */
-async function initServiceWorker() {
-  if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
-    try {
-      await navigator.serviceWorker.register('/sw.js');
-      logger.info('Service Worker registered successfully');
-    } catch (error) {
-      logger.warn('Service Worker registration failed:', error);
-    }
-  } else if ('serviceWorker' in navigator) {
-    logger.info('Service Worker not supported on file:// protocol');
-  }
-}
 
 /**
  * Initialize when DOM is ready
