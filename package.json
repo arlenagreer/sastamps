@@ -72,11 +72,6 @@
     "stylelint": "^17.14.1",
     "stylelint-config-standard": "^40.0.0"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not op_mini all"
-  ],
   "overrides": {
     "glob": "^11.1.0",
     "markdownlint-cli": {

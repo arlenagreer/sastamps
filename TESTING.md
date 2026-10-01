@@ -136,7 +136,7 @@ Checks npm dependencies for known vulnerabilities.
 ### CSS Validation
 
 **Issue**: Vendor prefix warnings
-**Solution**: Disabled as PostCSS handles prefixing automatically
+**Solution**: The vendor-prefix rules are disabled. Note that nothing adds prefixes at build time (there is no PostCSS config and no autoprefixer), so write any prefixes a property needs by hand
 
 ### Link Checking
 

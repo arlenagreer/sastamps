@@ -74,7 +74,7 @@ npm run watch           # Watch for CSS/JS changes
 # Building
 npm run build           # Full production build
 npm run build:js        # Build JavaScript with tree-shaking
-npm run build:css       # Build and minify CSS
+npm run build:css       # Copy css/styles.css to dist/css/styles.min.css (no PostCSS plugins: not minified or prefixed)
 
 # Testing
 npm test                # Run all tests
