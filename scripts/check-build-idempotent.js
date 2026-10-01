@@ -64,7 +64,9 @@ function runChain(dir) {
   for (const script of CHAIN) {
     const r = spawnSync(process.execPath, [path.join(REPO, 'scripts', script)], { cwd: dir, encoding: 'utf8' });
     if (r.status !== 0) {
-      throw new Error(`${script} exited ${r.status}: ${(r.stderr || r.stdout).trim().split('\n').slice(-3).join(' | ')}`);
+      const out = `${r.stderr}\n${r.stdout}`;
+      const reason = (out.match(/Error: .*/) || [out.trim().split('\n').pop()])[0];
+      throw new Error(`${script} exited ${r.status}: ${reason}`);
     }
   }
   return Object.fromEntries(ROOT_HTML.map((p) => [p, read(dir, p)]));
