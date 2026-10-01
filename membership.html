@@ -3,25 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://cdnjs.cloudflare.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
     <meta name="description" content="Join the San Antonio Philatelic Association and become part of a vibrant community of stamp collectors in San Antonio, Texas. Learn about membership benefits and how to apply.">
     <meta name="keywords" content="SAPA membership, San Antonio Philatelic Association join, stamp collecting club, philately membership, San Antonio stamp club join">
 
     <title>Membership - San Antonio Philatelic Association</title>
+    <link rel="canonical" href="https://www.sastamps.org/membership.html">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://sastamps.org/membership.html">
+    <meta property="og:url" content="https://www.sastamps.org/membership.html">
     <meta property="og:title" content="Membership - San Antonio Philatelic Association">
     <meta property="og:description" content="Join the San Antonio Philatelic Association and become part of a vibrant community of stamp collectors in San Antonio, Texas. Learn about membership benefits and how to apply.">
-    <meta property="og:image" content="dist/images/membership-page-image.webp">
+    <meta property="og:image" content="https://www.sastamps.org/dist/images/membership-page-image.webp">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://sastamps.org/membership.html">
+    <meta property="twitter:url" content="https://www.sastamps.org/membership.html">
     <meta property="twitter:title" content="Membership - San Antonio Philatelic Association">
     <meta property="twitter:description" content="Join the San Antonio Philatelic Association and become part of a vibrant community of stamp collectors in San Antonio, Texas. Learn about membership benefits and how to apply.">
-    <meta property="twitter:image" content="dist/images/membership-page-image.webp">
+    <meta property="twitter:image" content="https://www.sastamps.org/dist/images/membership-page-image.webp">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,7 +30,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&amp;family=Open+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet">
 
     <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha384-iw3OoTErCYJJB9mCa8LNS2hbsQ7M3C0EpIsO/H5+EGAkPGc6rk+V8i04oW/K5xq0" crossorigin="anonymous">
 
     <!-- Styles -->
 
@@ -37,16 +38,6 @@
 
     <link rel="stylesheet" href="css/critical.min.css">
     <link rel="stylesheet" href="css/styles.min.css">
-
-    <style id="blur-up-style">
-        .blur-up {
-            filter: blur(5px);
-            transition: filter 400ms;
-        }
-        .blur-up.loaded {
-            filter: blur(0);
-        }
-    </style>
 
     <link rel="stylesheet" href="css/font-loading.min.css">
     <script src="dist/js/font-loading.min.js"></script>
@@ -229,220 +220,6 @@
 
     <!-- Scripts -->
     <script src="dist/js/script.min.js" defer></script>
-
-    <script id="blur-up-script">
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('img[data-src]').forEach(img => {
-                img.onload = function() {
-                    img.classList.add('loaded');
-                };
-                img.src = img.dataset.src;
-            });
-        });
-    </script>
-
-<script type="module">
-    import {onCLS, onFID, onLCP, onFCP, onTTFB} from 'https://unpkg.com/web-vitals@3.5.2/dist/web-vitals.attribution.js';
-
-    // Performance metrics storage
-    const metrics = {
-        vitals: {},
-        resources: {},
-        errors: [],
-        navigation: []
-    };
-
-    // Initialize monitoring
-    function initMonitoring() {
-        // Core Web Vitals monitoring
-        onCLS(sendToAnalytics);
-        onFID(sendToAnalytics);
-        onLCP(sendToAnalytics);
-        onFCP(sendToAnalytics);
-        onTTFB(sendToAnalytics);
-
-        // Resource timing monitoring
-        observeResourceTiming();
-
-        // Error monitoring
-        observeErrors();
-
-        // Navigation monitoring
-        observeNavigation();
-
-        // Font loading monitoring
-        observeFonts();
-
-        // Save metrics periodically
-        setInterval(saveMetrics, 60000);
-    }
-
-    // Send metrics to analytics
-    function sendToAnalytics(metric) {
-        metrics.vitals[metric.name] = {
-            value: metric.value,
-            rating: metric.rating,
-            delta: metric.delta,
-            id: metric.id,
-            timestamp: new Date().toISOString()
-        };
-
-        // Log to console in development
-        if (location.hostname === 'localhost') {
-            console.log(metric.name, metric);
-        }
-
-        saveMetrics();
-    }
-
-    // Observe resource timing
-    function observeResourceTiming() {
-        const observer = new PerformanceObserver((list) => {
-            list.getEntries().forEach(entry => {
-                if (entry.initiatorType === 'img' || entry.initiatorType === 'css' || entry.initiatorType === 'script') {
-                    metrics.resources[entry.name] = {
-                        duration: entry.duration,
-                        transferSize: entry.transferSize,
-                        initiatorType: entry.initiatorType,
-                        timestamp: new Date().toISOString()
-                    };
-                }
-            });
-        });
-
-        observer.observe({ entryTypes: ['resource'] });
-    }
-
-    // Observe errors
-    function observeErrors() {
-        window.addEventListener('error', (event) => {
-            metrics.errors.push({
-                message: event.message,
-                filename: event.filename,
-                lineno: event.lineno,
-                colno: event.colno,
-                timestamp: new Date().toISOString()
-            });
-            saveMetrics();
-        });
-    }
-
-    // Observe navigation
-    function observeNavigation() {
-        const observer = new PerformanceObserver((list) => {
-            list.getEntries().forEach(entry => {
-                metrics.navigation.push({
-                    type: entry.type,
-                    duration: entry.duration,
-                    timestamp: new Date().toISOString()
-                });
-            });
-        });
-
-        observer.observe({ entryTypes: ['navigation'] });
-    }
-
-    // Observe font loading
-    function observeFonts() {
-        if (document.fonts) {
-            document.fonts.ready.then(() => {
-                metrics.fonts = {
-                    loadTime: performance.now(),
-                    timestamp: new Date().toISOString()
-                };
-                saveMetrics();
-            });
-        }
-    }
-
-    // Save metrics to localStorage
-    function saveMetrics() {
-        try {
-            localStorage.setItem('performance_metrics', JSON.stringify(metrics));
-
-            // Send to server if available
-            if (typeof sendMetricsToServer === 'function') {
-                sendMetricsToServer(metrics);
-            }
-        } catch (e) {
-            console.warn('Failed to save metrics:', e);
-        }
-    }
-
-    // Initialize monitoring on load
-    if (document.readyState === 'complete') {
-        initMonitoring();
-    } else {
-        window.addEventListener('load', initMonitoring);
-    }
-</script>
-
-<!-- Development monitoring panel -->
-<script>
-    if (location.hostname === 'localhost') {
-        const style = document.createElement('style');
-        style.textContent = `
-            #monitoring-panel {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                background: rgba(0, 0, 0, 0.8);
-                color: white;
-                padding: 15px;
-                border-radius: 8px;
-                font-family: monospace;
-                font-size: 12px;
-                z-index: 9999;
-                max-width: 300px;
-                max-height: 400px;
-                overflow: auto;
-            }
-            #monitoring-panel h3 {
-                margin: 0 0 10px;
-                color: #4CAF50;
-            }
-            #monitoring-panel div {
-                margin-bottom: 8px;
-            }
-            .metric-good { color: #4CAF50; }
-            .metric-needs-improvement { color: #FFC107; }
-            .metric-poor { color: #F44336; }
-        `;
-        document.head.appendChild(style);
-
-        const panel = document.createElement('div');
-        panel.id = 'monitoring-panel';
-        panel.innerHTML = '<h3>Performance Metrics</h3>';
-        document.body.appendChild(panel);
-
-        setInterval(() => {
-            const metrics = JSON.parse(localStorage.getItem('performance_metrics') || '{}');
-            const vitals = metrics.vitals || {};
-
-            panel.innerHTML = `
-                <h3>Performance Metrics</h3>
-                <div>
-                    CLS: <span class="metric-${vitals.CLS?.rating || 'poor'}">${(vitals.CLS?.value || 0).toFixed(3)}</span>
-                </div>
-                <div>
-                    FID: <span class="metric-${vitals.FID?.rating || 'poor'}">${(vitals.FID?.value || 0).toFixed(1)}ms</span>
-                </div>
-                <div>
-                    LCP: <span class="metric-${vitals.LCP?.rating || 'poor'}">${(vitals.LCP?.value || 0).toFixed(0)}ms</span>
-                </div>
-                <div>
-                    FCP: <span class="metric-${vitals.FCP?.rating || 'poor'}">${(vitals.FCP?.value || 0).toFixed(0)}ms</span>
-                </div>
-                <div>
-                    TTFB: <span class="metric-${vitals.TTFB?.rating || 'poor'}">${(vitals.TTFB?.value || 0).toFixed(0)}ms</span>
-                </div>
-                <div>
-                    Errors: ${metrics.errors?.length || 0}
-                </div>
-            `;
-        }, 1000);
-    }
-</script>
 
 </body>
 </html>
