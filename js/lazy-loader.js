@@ -6,6 +6,9 @@
  */
 
 import { LAZY_LOADING, TIMING } from './constants/index.js';
+import { createLogger } from './utils/logger.js';
+
+const logger = createLogger('LazyLoader');
 
 class LazyLoader {
   constructor(options = {}) {
@@ -34,7 +37,7 @@ class LazyLoader {
       );
     } else {
       // Fallback for older browsers - load everything immediately
-      console.warn('IntersectionObserver not supported, loading all components immediately');
+      logger.warn('IntersectionObserver not supported, loading all components immediately');
     }
   }
 

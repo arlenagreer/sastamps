@@ -6,6 +6,9 @@
  */
 
 import { escapeHTML } from './utils/safe-dom.js';
+import { createLogger } from './utils/logger.js';
+
+const logger = createLogger('ErrorBoundary');
 
 class ErrorBoundary {
   constructor(options = {}) {
@@ -76,7 +79,7 @@ class ErrorBoundary {
     // Try retry if configured
     if (this.retryCallback && this.currentRetries < this.maxRetries) {
       this.currentRetries++;
-      console.log(`[${this.componentName}] Retrying... (${this.currentRetries}/${this.maxRetries})`);
+      logger.info(`[${this.componentName}] Retrying... (${this.currentRetries}/${this.maxRetries})`);
 
       setTimeout(() => {
         try {
@@ -197,7 +200,7 @@ class ErrorBoundary {
 
       localStorage.setItem('errorBoundaryLog', JSON.stringify(errorLog));
     } catch (storageError) {
-      console.warn('Failed to log error to localStorage:', storageError);
+      logger.warn('Failed to log error to localStorage', { error: storageError });
     }
   }
 
@@ -242,7 +245,7 @@ class GlobalErrorBoundary {
 
     // Check if we're getting too many errors
     if (this.errorTimes.length >= this.maxErrors) {
-      console.warn('Too many errors detected. Stopping error boundary logging to prevent spam.');
+      logger.warn('Too many errors detected. Stopping error boundary logging to prevent spam.');
       return;
     }
 
