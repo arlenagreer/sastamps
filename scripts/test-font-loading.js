@@ -23,12 +23,12 @@ const REPO = path.resolve(__dirname, '..');
 
 function loadScript() {
   if (process.argv[2]) return fs.readFileSync(process.argv[2], 'utf8');
+  // Exactly the options the build uses (target included), compiled in memory.
   const esbuild = require('esbuild');
-  const out = esbuild.buildSync({
-    entryPoints: [path.join(REPO, 'js/font-loading.js')],
-    bundle: true, format: 'iife', minify: true, write: false,
-  });
-  return out.outputFiles[0].text;
+  const { builds } = require('./build-css');
+  const opts = builds.find((b) => b.outfile.endsWith('font-loading.min.js'));
+  const { outfile, ...inMemory } = opts;
+  return esbuild.buildSync({ ...inMemory, write: false, logLevel: 'silent' }).outputFiles[0].text;
 }
 
 const STORAGE = {

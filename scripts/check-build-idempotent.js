@@ -28,7 +28,6 @@ const CHAIN = ['fix-html-validation.js', 'update-image-tags.js'];
 // write only under dist/.
 const NOT_HTML_WRITERS = ['build-css.js', 'optimize-images.js', 'build-search-index.js', 'build-search-embedded.js', 'esbuild.config.js', 'analyze-image-savings.js'];
 const INPUTS = ['dist/images/placeholders.json'];
-const STYLESHEETS = ['styles', 'critical', 'font-loading'];
 // Pages that use the font-loading CSS, and therefore need the script.
 const FONT_PAGES = [...require('./lib/pages'), 'archive.html'];
 
@@ -111,7 +110,7 @@ try {
     check(count(html, /<style\b/gi) === count(html, /<\/style>/gi), `${p}: unbalanced <style> tags`);
     check(count(html, /<script\b/gi) === count(html, /<\/script>/gi), `${p}: unbalanced <script> tags`);
     check(count(html, /dist\/css\//g) === 0, `${p}: references the retired dist/css/ stylesheet`);
-    check(!/<link\b(?=[^>]*\brel="preload")(?=[^>]*\bhref="\/?css\/)[^>]*>/.test(html), `${p}: a site stylesheet is preloaded; want plain links`);
+    check(!/<link\b(?=[^>]*\brel=["']?preload)(?=[^>]*\bhref=["']?(\.?\/)?css\/)[^>]*>/i.test(html), `${p}: a site stylesheet is preloaded; want plain links`);
     if (!EXEMPT.has(p)) {
       for (const name of ['critical', 'styles']) {
         const n = count(html, new RegExp(`<link rel="stylesheet" href="/?css/${name}\\.min\\.css">`, 'g'));
@@ -135,6 +134,11 @@ try {
         `${p}: font-loading CSS must come after the main stylesheet`);
       check(html.indexOf('font-loading.min.js') < html.indexOf('</head>'),
         `${p}: the font-loading script must run in <head>, before first paint`);
+      // Without the Google Fonts @font-face rules the script's loads resolve
+      // at once with nothing, and it would remember fonts as loaded.
+      const gf = html.indexOf('fonts.googleapis.com/css2');
+      check(gf !== -1 && gf < html.indexOf('font-loading.min.js'),
+        `${p}: the Google Fonts stylesheet must be linked before the font-loading script`);
     }
   }
 
@@ -142,18 +146,21 @@ try {
   // Compiled in memory with the same options, so nothing is written.
   console.log('▸ T3 committed minified files match their sources');
   const esbuild = require('esbuild');
-  const { builds } = require('./build-css');
-  check(builds.length === STYLESHEETS.length + 1, `build-css.js defines ${builds.length} outputs, want ${STYLESHEETS.length + 1}`);
+  const { builds, STYLESHEETS } = require('./build-css');
+  const outs = builds.map((b) => path.relative(REPO, b.outfile)).sort();
+  const want = [...STYLESHEETS.map((n) => `css/${n}.min.css`), 'dist/js/font-loading.min.js'].sort();
+  check(JSON.stringify(outs) === JSON.stringify(want), `build-css.js outputs ${outs.join(', ')}; want ${want.join(', ')}`);
+  for (const n of ['styles', 'critical', 'font-loading']) check(STYLESHEETS.includes(n), `build-css.js no longer builds css/${n}.min.css, which pages link`);
   for (const options of builds) {
     const rel = path.relative(REPO, options.outfile);
     const { outfile, ...inMemory } = options;
     const out = esbuild.buildSync({ ...inMemory, write: false, logLevel: 'silent' });
     const committed = fs.readFileSync(outfile, 'utf8');
     check(out.outputFiles[0].text === committed, `${rel} is not what npm run build:css produces: run it and commit`);
-    check(!committed.includes('/*'), `${rel} contains a comment (not minified, or a source map)`);
+    check(!/\/\*(?!!)/.test(committed), `${rel} contains a comment (not minified, or a source map)`);
     if (rel.endsWith('.css')) {
       // Syntax old Safari/Chrome ignore must not appear in shipped CSS.
-      check(!/(^|[;{])inset:/.test(committed), `${rel} uses the inset shorthand (Safari < 14.1 ignores it)`);
+      check(!/(^|[;{])inset(-inline|-block)?(-start|-end)?:/.test(committed), `${rel} uses an inset property (Safari < 14.1 ignores it)`);
     }
   }
   check(count(fs.readFileSync(path.join(REPO, 'search.html'), 'utf8'), /window\.SEARCH_INDEX_DATA = /g) === 1,

@@ -55,7 +55,7 @@ async function main() {
 }
 
 // scripts/check-build-idempotent.js compiles with these same options in memory.
-module.exports = { builds };
+module.exports = { builds, STYLESHEETS };
 
 if (require.main === module) {
     main().catch((err) => {

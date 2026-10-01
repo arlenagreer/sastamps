@@ -53,17 +53,16 @@ async function build() {
 
         // Ensure build directory exists
         await ensureDir(BUILD_DIR);
-        await ensureDir(path.join(BUILD_DIR, 'css'));
         await ensureDir(path.join(BUILD_DIR, 'js'));
         await ensureDir(path.join(BUILD_DIR, 'images'));
 
         console.log('1. Minifying CSS and bundling the font-loading script...');
         await runCommand('node', ['scripts/build-css.js']);
 
-        console.log('\n1b. Fixing HTML validation issues...');
+        console.log('\n2. Fixing HTML validation issues...');
         await runCommand('node', ['scripts/fix-html-validation.js']);
 
-        console.log('\n2. Optimizing images...');
+        console.log('\n3. Optimizing images...');
         await runCommand('node', ['scripts/optimize-images.js']);
         await runCommand('node', ['scripts/update-image-tags.js']);
 
