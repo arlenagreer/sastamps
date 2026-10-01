@@ -419,7 +419,7 @@ function setupFormValidation() {
               });
               const message = createSafeElement('p', {
                 // textContent never parses HTML, so the message must not be
-                // pre-escaped (sanitizeText here used to show "We&#x27;ve ...").
+                // pre-escaped (it used to show "We&#x27;ve ..." literally).
                 textContent: String(data.message || 'We\'ve received your inquiry and will respond as soon as possible.')
               });
               const button = createSafeElement('button', {
@@ -913,7 +913,6 @@ function checkClientRateLimit(key, maxRequests = 3, timeWindow = 3600000) { // 1
 function validateAndSanitizeInput(input, type = 'text') {
   const result = {
     isValid: true,
-    sanitized: input,
     errors: []
   };
 
@@ -957,9 +956,6 @@ function validateAndSanitizeInput(input, type = 'text') {
     }
     break;
   }
-
-  // Sanitize output for safe display only (security handled server-side)
-  result.sanitized = sanitizeText(input);
 
   return result;
 }
@@ -1049,21 +1045,6 @@ function createSafeElement(tagName, options = {}) {
   }
 
   return element;
-}
-
-/**
- * Safely sanitize text input for display
- * @param {string} input - Raw text input
- * @returns {string} Sanitized text
- */
-function sanitizeText(input) {
-  return String(input)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;')
-    .replace(/\//g, '&#x2F;');
 }
 
 /**
