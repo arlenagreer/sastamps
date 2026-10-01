@@ -73,6 +73,11 @@ jobs:
     - name: Check links in the built site
       run: npm run test:links
 
+    # search.html fetches its lunr index from dist/data/ (it is no longer
+    # inlined), so load the page in headless Chrome and search.
+    - name: Check site search in a browser
+      run: npm run test:search-page
+
     - name: Start server for Lighthouse
       run: |
         npm run serve &

@@ -153,8 +153,7 @@ run_section "test:font-loading (fonts load even with storage blocked)"      npm 
 # holds every page and nothing private, and that every local reference in
 # _site/ resolves. _site/ is exactly what the Pages deploy uploads.
 run_section "test:site-build (npm run build -> _site/, sources untouched)" npm run --silent test:site-build
-# Runs AFTER the build on purpose, against _site/: the build embeds the
-# search data into _site/search.html, and _site/ is what deploys.
+# Runs AFTER the build on purpose, against _site/, which is what deploys.
 # html-validate and eslint (js/**) never parse the JavaScript inside HTML
 # pages, which is how an entity-escaped `&amp;&amp;` in search.html's inline
 # script broke site search in production unnoticed.
@@ -163,6 +162,11 @@ run_section "test:inline-js (inline <script> blocks parse, in _site/)" npm run -
 # fails on any local link, stylesheet url() or asset that does not resolve.
 # External links are left out (linkinator.config.json), so it cannot flap.
 run_section "test:links (linkinator crawl of _site/, local links only)" npm run --silent test:links
+# Headless Chrome (the one puppeteer's npm ci install downloads; no network
+# needed after that) loads _site/search.html, which fetches its lunr index
+# from dist/data/, and searches. The index is no longer inlined into the
+# page, so this is the only proof that search works in the built site.
+run_section "test:search-page (search.html loads its index and finds results)" npm run --silent test:search-page
 
 # ── Declared exclusions -- outside this local gate, each with its own reason ──
 #

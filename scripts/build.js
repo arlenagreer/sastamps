@@ -122,9 +122,6 @@ async function build() {
         console.log('\n7. Assembling _site/...');
         await assembleSite();
 
-        console.log('\n8. Embedding search data into _site/search.html...');
-        await runCommand('node', ['scripts/build-search-embedded.js', path.join(SITE, 'search.html')]);
-
         console.log('\nBuild completed successfully: _site/ is ready to deploy.');
     } catch (err) {
         console.error('\nBuild failed:', err.stack || err);

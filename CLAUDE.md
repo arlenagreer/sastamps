@@ -223,7 +223,7 @@ npm run test:a11y         # Accessibility (requires server)
 
 ### Search Engine
 - Lunr.js powered client-side search
-- Embedded search index for fast results
+- Search index fetched on demand from `dist/data/search-*.json`
 - Search across meetings, newsletters, and glossary
 
 ### Newsletter System

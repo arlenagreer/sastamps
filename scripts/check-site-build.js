@@ -156,9 +156,22 @@ if (!fs.existsSync(SITE)) {
   check(existsExact(path.join(SITE, 'dist/js/font-loading.min.js')), '_site/dist/js/font-loading.min.js missing');
   check(existsExact(path.join(SITE, 'dist/js/script.min.js')), '_site/dist/js/script.min.js missing (every page loads it)');
   const siteSearch = existsExact(path.join(SITE, 'search.html')) ? fs.readFileSync(path.join(SITE, 'search.html'), 'utf8') : '';
-  check(count(siteSearch, /window\.SEARCH_INDEX_DATA = /g) === 1, '_site/search.html must embed the search index exactly once');
-  check(count(fs.readFileSync(path.join(REPO, 'search.html'), 'utf8'), /window\.SEARCH_INDEX_DATA = /g) === 0,
-    'the source search.html must not carry an embedded index (the build adds it to _site only)');
+  // search.html fetches its index at runtime (scripts/test-search-page.js
+  // proves that in a browser). Inlining it made the page ~368 KB and kept the
+  // index from being cached apart from the page.
+  check(siteSearch.length > 0 && count(siteSearch, /window\.SEARCH_INDEX_DATA\s*=/g) === 0, '_site/search.html must not embed the search index');
+  check(count(fs.readFileSync(path.join(REPO, 'search.html'), 'utf8'), /window\.SEARCH_INDEX_DATA\s*=/g) === 0,
+    'the source search.html must not carry an embedded index');
+  for (const name of ['search-index.json', 'search-documents.json']) {
+    const p = path.join(SITE, 'dist/data', name);
+    let ok = false;
+    try {
+      ok = existsExact(p) && JSON.parse(fs.readFileSync(p, 'utf8')) !== null;
+    } catch {
+      ok = false;
+    }
+    check(ok, `_site/dist/data/${name} missing or not valid JSON (search.html fetches it)`);
+  }
 }
 
 // Pages that use the font-loading CSS, and therefore need the script.

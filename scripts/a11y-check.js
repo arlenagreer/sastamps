@@ -17,44 +17,15 @@
  * Usage: node scripts/a11y-check.js [page.html ...]
  */
 const fs = require('fs');
-const http = require('http');
 const path = require('path');
 const pa11y = require('pa11y');
 const puppeteer = require('puppeteer');
 const { sitePages, deployableFiles } = require('./lib/site');
+const { serve, chromeArgs } = require('./lib/serve');
 
 const REPO = path.resolve(__dirname, '..');
 const SITE = path.join(REPO, '_site');
 const CONFIG = JSON.parse(fs.readFileSync(path.join(REPO, '.pa11yrc.json'), 'utf8')).defaults || {};
-
-const TYPES = {
-  '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript',
-  '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png',
-  '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.ico': 'image/x-icon',
-  '.woff2': 'font/woff2', '.webmanifest': 'application/manifest+json', '.pdf': 'application/pdf',
-  '.ics': 'text/calendar', '.xml': 'application/xml', '.txt': 'text/plain'
-};
-
-// A minimal static server for _site/, like GitHub Pages: files only, and a
-// directory only through its index.html.
-function serve(root) {
-  const server = http.createServer((req, res) => {
-    let rel;
-    try {
-      rel = decodeURIComponent(new URL(req.url, 'http://x').pathname);
-    } catch {
-      res.writeHead(400).end();
-      return;
-    }
-    let file = path.join(root, rel);
-    if (!file.startsWith(root)) { res.writeHead(403).end(); return; }
-    if (fs.existsSync(file) && fs.statSync(file).isDirectory()) {file = path.join(file, 'index.html');}
-    if (!fs.existsSync(file) || !fs.statSync(file).isFile()) { res.writeHead(404).end('not found'); return; }
-    res.writeHead(200, { 'Content-Type': TYPES[path.extname(file).toLowerCase()] || 'application/octet-stream' });
-    fs.createReadStream(file).pipe(res);
-  });
-  return new Promise((resolve) => server.listen(0, '127.0.0.1', () => resolve(server)));
-}
 
 async function main() {
   if (!fs.existsSync(SITE)) {
@@ -66,17 +37,13 @@ async function main() {
 
   let browser;
   try {
-    // GitHub's Ubuntu runners block the unprivileged user namespaces Chrome's
-    // sandbox needs; the pages under test are this repo's own build.
-    const args = process.env.CI ? ['--no-sandbox'] : [];
-    browser = await puppeteer.launch({ headless: true, args, ...(CONFIG.chromeLaunchConfig || {}) });
+    browser = await puppeteer.launch({ headless: true, args: chromeArgs(), ...(CONFIG.chromeLaunchConfig || {}) });
   } catch (err) {
     console.error(`a11y-check: could not launch headless Chrome (${err.message.split('\n')[0]}).`);
     console.error('a11y-check: run `npx puppeteer browsers install chrome` (or npm ci without PUPPETEER_SKIP_DOWNLOAD).');
     return 2;
   }
-  const server = await serve(SITE);
-  const base = `http://127.0.0.1:${server.address().port}/`;
+  const { server, base } = await serve(SITE);
   const ignore = CONFIG.ignore || [];
   console.log(`a11y-check: pa11y ${require('pa11y/package.json').version}, runners ${(CONFIG.runners || ['htmlcs']).join('+')}, ${CONFIG.standard || 'WCAG2AA'}, ignoring: ${ignore.join(', ') || 'nothing'}`);
 

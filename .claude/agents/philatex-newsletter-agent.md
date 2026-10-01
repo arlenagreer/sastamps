@@ -376,7 +376,7 @@ cd "$WORKTREE" && node .claude/skills/philatex-update/scripts/check-ics.mjs --ed
 ```
 
 1. **`build:js`** -- rebuild JS bundles (exit 0). Note: meeting/newsletter JSON is fetched at runtime, not embedded by esbuild, so this does not bundle the data -- but run it anyway for parity.
-2. **`build:search`** -- rebuild the lunr search index (into `dist/data/`) so the new newsletter/meeting content is searchable. The deploy embeds it into the built `search.html`; never edit the source `search.html`. Skipping this silently leaves site search stale.
+2. **`build:search`** -- rebuild the lunr search index (into `dist/data/`) so the new newsletter/meeting content is searchable. `search.html` fetches it at runtime (nothing is embedded); never edit `search.html` to add data. Skipping this silently leaves site search stale.
 3. **`validate:data`** with `VALIDATE_NEW_IDS` set to the new edition id and EVERY new meeting id -- schema-validates exactly the entries this run added (pre-existing data carries known violations that are out of scope). Exit 0 required; a hard FAIL means a new entry breaks its schema.
 4. **`test:quick`** -- HTML/JS/CSS validation.
 
