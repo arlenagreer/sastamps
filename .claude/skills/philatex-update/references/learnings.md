@@ -95,3 +95,72 @@ Append-only memory for `/philatex-update`. The research and planning phases read
 - **Source:** human-correction (post-publish) — directly downstream of the content-fidelity reviewer no-op (it would have caught this).
 - **Generalizable rule:** A page can have several dated sections; update ALL of them and grep each page for prior-quarter markers before declaring done.
 - **Status:** promoted → agent Step 7 (index.html now lists both sections + a "check every dated section" caution), data-contract.md §B, new contract assertion [H1]. Reinforces: the content-fidelity review dimension must actually run — a no-op there let a real gap ship.
+
+### 2026-Q4 — FORMAT DRIFT: masthead no longer names the quarter; bimonthly from January 2027
+- **Observed:** Page 1 reads "Vol 132 #4 · October – December 2026" with no "Fourth Quarter" text, so the edition id was inferred from the months. Page 6 says that beginning in January 2027 The Philatex will "(hopefully)" return to a bimonthly schedule.
+- **Source:** format-drift
+- **Generalizable rule:** Identify the edition from the masthead's date range, not only from a "Nth Quarter" phrase. A bimonthly issue will break every quarter-based assumption: the `YYYY-QN` id pattern and quarter enum, PDF and `sapa-qN` ICS naming, `check-ics --edition`, the quarter logic in `js/pages/meetings.js`, and `CALENDAR.DATE_RANGE.MAX` (2026-12-31).
+- **Seen in:** 2026-Q4
+- **Status:** proposed (awaiting human): decide the id and naming scheme for bimonthly issues before the January 2027 edition arrives.
+
+### 2026-Q4 — type-mapping traps (holiday party, Blue-Chip nights)
+- **Observed:** Research flagged three calendar cells that the agent's type table would mislabel. "Club Holiday Party" matches the HOLIDAY row, which gives `holiday`, and the loader renders that as NO MEETING. Nov 20 (bourse) and Dec 4 (BOG) both mention "Blue-Chip Auction Lot Viewing" and could be typed `auction`. The contract pinned them as `special` / `social` / `business`, and extraction got them right.
+- **Source:** review-panel (research critic)
+- **Generalizable rule:** Only a cell whose main event is an auction gets type auction. A non-cancelled party is `special` with real times; `holiday` always means cancelled.
+- **Seen in:** 2026-Q4 (the 2025-12-12 party used `holiday` with `cancelled:false`, a bad precedent)
+- **Status:** logged
+
+### 2026-Q4 — extractor leaked process wording and dropped a source hedge
+- **Observed:** The QC loop caught 5 minors, all text the extraction wrote:
+  - reviewer language in public copy: "Per the newsletter,", and "roster and mailing address unchanged" (a comparison, not content);
+  - "(hopefully)" dropped from two headings or titles that describe the bimonthly return;
+  - "memorial tribute" wording the operator had dropped.
+
+  Review 1 found the second hedge only after round 1 fixed the first.
+- **Source:** review-panel (QC loop, rounds 1–2; codex agreed on the roster item)
+- **Generalizable rule:** Public copy states source facts only, never where they came from or how they compare with the site. When fixing a wording defect, grep every surface this edition wrote for the same claim, not just the cited one.
+- **Seen in:** 2026-Q4
+- **Status:** logged (candidate agent rule if it recurs)
+
+### 2026-Q4 — auction/bourse template notes are not in the source
+- **Observed:** The club auctions carry "Cash or check accepted", "10% commission", "donated materials" and an 8:45 PM checkout. The bourses carry "$10/$15 dealer table" fees. None of this appears in the Q4 PDF. The same text is on every Q3 2026 auction and bourse.
+- **Source:** review-panel (4 reviewers + codex)
+- **Generalizable rule:** Whether to keep site-convention notes that a newsletter doesn't restate is the operator's call, not the extractor's.
+- **Seen in:** 2026-Q3, 2026-Q4
+- **Status:** proposed (awaiting human): confirm these terms are still current, or drop them in a cross-quarter cleanup.
+
+### 2026-Q4 — PROCESS: Codex cross-model review needs `codex-auto-review` on this account
+- **Observed:** codex-cli 0.135.0 could not parse the service's model list. The operator approved an upgrade to 0.159.2. gstack's default `gpt-6-astra` then returned 400 ("not supported when using Codex with a ChatGPT account") and `gpt-5.5` returned 404. `codex-auto-review` worked, through the custom-instructions `codex exec` path, since the diff is uncommitted and includes untracked files.
+- **Source:** orchestration self-observation
+- **Generalizable rule:** Probe the model before the review. On this account, run the cross-model dimension with `-c 'model="codex-auto-review"'`.
+- **Status:** logged
+
+### 2026-Q4 — PROCESS: the Workflow args-binding guard caught a bad launch; worktrees need `npm ci` before push
+- **Observed:** The first full-review launch passed a literal placeholder string as `args`. The script's `args.contract.length === 45` guard aborted it before any agent ran. Separately, a global `.trim()` on `git status --porcelain` output cut the first path to "rchive.html". The Phase 13 learnings worktree also could not push until `npm ci` ran, because the local CI gate reports NOT VERIFIED (exit 3) without `node_modules`.
+- **Source:** orchestration self-observation
+- **Generalizable rule:**
+  - Keep an args-binding guard at the top of every review script (this reinforces the promoted Q3 rule).
+  - Build path lists with `--untracked-files=all` and a per-line `substr($0,4)`, never a whole-output trim.
+  - Run `npm ci` in the learnings worktree too.
+- **Status:** logged
+
+### 2026-Q4 — pre-existing site defects found during the run
+- **Observed:**
+  - **Fixed separately in PR #146:** Q1 2026 individual `.ics` files were an hour early (CDT offset during CST); Q1/Q2 2026 non-BOG meetings were recorded as 7:00 instead of the newsletters' 7:30; the Jan 30 type was wrong.
+  - **Still open, separate fixes pending:** site search never renders results in production, because the inline script in `search.html` is HTML-escaped (`&amp;&amp;`); the meetings loader only knows two quarters, and `ci.yml` never deploys `js/`, so production shows the pages' hard-coded fallback blocks.
+- **Source:** review-panel / browser UAT
+- **Status:** logged
+
+### 2026-Q4 — Phase 14 live verification: PASS (2026-09-30, after #147 and #146 deployed)
+- **Observed:** On sastamps.org, in a fresh headless-browser context with cache-busted URLs:
+  - the homepage shows "SAPA PHILATEX – Fourth Quarter 2026", published October 1, 2026;
+  - the Q4 PDF returns 200 at 653,527 bytes, equal to `origin/main`;
+  - the Meetings page lists all 13 Q4 dates and the calendar widget renders;
+  - the quarterly `.ics` and all 13 individual `.ics` files return 200;
+  - the TSDA caption reads "for Q4 2026", all four Q4 announcement cards are present, and no Q3 text or "Honoring Steve Mabie" banner remains;
+  - there are 0 console errors on the homepage, newsletter and meetings pages.
+
+  Before #147 deployed, the live Meetings schedule was blank, because the bundle had switched to Q4 on about Sep 16 and no Q4 data existed.
+- **Source:** live verification
+- **Generalizable rule:** The Meetings bundle rolls to the next quarter 14 days before the quarter ends, so an edition should deploy by roughly the 15th of the quarter's last month or the live schedule goes empty. PR #149 makes an empty quarter fall back to the current one.
+- **Status:** logged
