@@ -236,7 +236,7 @@ function initializeSearchFilters(container) {
 
 function initializeSearchResults(container) {
   container.innerHTML = `
-        <div id="results-container" class="results-container" aria-live="polite">
+        <div id="results-container" class="results-container">
             <!-- Search results will be displayed here -->
         </div>
         <div id="results-pagination" class="results-pagination">

@@ -74,7 +74,8 @@ async function loadGlossarySearch(container) {
                     </div>
                     <div class="search-suggestions" id="search-suggestions" style="display: none;"></div>
                 </div>
-                <div id="search-results" aria-live="polite" style="display: none;"></div>
+                <div id="glossary-search-status" class="sr-only" role="status" aria-live="polite"></div>
+                <div id="search-results" style="display: none;"></div>
             </div>
         `;
 
@@ -83,6 +84,7 @@ async function loadGlossarySearch(container) {
     const searchButton = container.querySelector('#glossary-search-button');
     const clearButton = container.querySelector('#glossary-clear-button');
     const resultsContainer = container.querySelector('#search-results');
+    const statusRegion = container.querySelector('#glossary-search-status');
 
     let searchTimeout;
 
@@ -97,6 +99,7 @@ async function loadGlossarySearch(container) {
       } else {
         clearButton.style.display = 'none';
         resultsContainer.style.display = 'none';
+        if (statusRegion) { statusRegion.textContent = ''; }
         showAllTerms();
       }
     });
@@ -114,6 +117,7 @@ async function loadGlossarySearch(container) {
       searchInput.value = '';
       clearButton.style.display = 'none';
       resultsContainer.style.display = 'none';
+      if (statusRegion) { statusRegion.textContent = ''; }
       showAllTerms();
       searchInput.focus();
     });
@@ -479,6 +483,15 @@ async function performSearch(query, resultsContainer) {
     }
 
     resultsContainer.style.display = 'block';
+
+    // Announce the outcome through the always-rendered status region: a live
+    // region that is display:none while it fills is not reliably announced.
+    const statusRegion = document.getElementById('glossary-search-status');
+    if (statusRegion) {
+      statusRegion.textContent = results.length === 0
+        ? `No results for "${query}"`
+        : `${results.length} result${results.length !== 1 ? 's' : ''} for "${query}"`;
+    }
 
     // Bind click handlers for search result links
     resultsContainer.querySelectorAll('.search-result-link').forEach(link => {
