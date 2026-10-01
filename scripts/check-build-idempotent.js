@@ -130,7 +130,13 @@ try {
     }
   });
   const fresh = runChain(dir4);
-  for (const p of PAGES) invariants(`${p} (fresh)`, fresh[p]);
+  const freshAgain = runChain(dir4);
+  for (const p of PAGES) {
+    invariants(`${p} (fresh)`, fresh[p]);
+    // A first insert must already be final: e.g. a raw '&' written after
+    // fix-html-validation.js would be rewritten by the next build.
+    check(freshAgain[p] === fresh[p], `${p} (fresh): the build after a first insert changes the page again`);
+  }
 } catch (err) {
   failures++;
   console.log(`  FAIL ${err.message}`);
