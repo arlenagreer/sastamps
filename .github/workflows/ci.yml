@@ -75,8 +75,15 @@ jobs:
       run: |
         npx broken-link-checker http://localhost:3000 --recursive --exclude-external --filter-level 3 || true
         
+    # pa11y 10 (axe, WCAG2AA) over every built page in _site/, served by the
+    # script itself on a free port. Until 2026-10 this step called pa11y-ci,
+    # which was never installed, so it had never run. It does not block yet:
+    # on its first real run it found 5 link-in-text-block errors in
+    # index/glossary/membership/newsletter. Drop continue-on-error once those
+    # pages are fixed (and add test:a11y to bin/ci in the same change).
     - name: Run accessibility tests
-      run: npm run test:a11y
+      shell: bash  # explicit: -o pipefail, so tee cannot hide the exit status
+      run: npm run test:a11y 2>&1 | tee reports/accessibility-report.txt
       continue-on-error: true
       
     - name: Run Lighthouse audit

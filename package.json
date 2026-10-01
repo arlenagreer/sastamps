@@ -24,7 +24,7 @@
     "test:inline-js:site": "node scripts/check-inline-scripts.js _site",
     "test:css": "stylelint 'css/**/*.css' --config .stylelintrc.json",
     "test:md": "markdownlint '**/*.md' --ignore node_modules --ignore browser-tools-test --ignore 'dist/**' --ignore '_site/**' --ignore '*.bak' --ignore 'graphify-out/**' --config .markdownlintrc.json",
-    "test:a11y": "pa11y-ci --config .pa11yrc.json",
+    "test:a11y": "node scripts/a11y-check.js",
     "audit": "npm run audit:lighthouse && npm run audit:security",
     "audit:lighthouse": "lighthouse http://localhost:3000 --output html --output-path ./reports/lighthouse.html --view",
     "audit:security": "npm audit",

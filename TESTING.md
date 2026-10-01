@@ -83,10 +83,21 @@ Checks all markdown files for formatting consistency.
 
 ### Accessibility Testing
 ```bash
-# Requires server running
-npm run test:a11y
+npm run build       # test:a11y checks the built site in _site/
+npm run test:a11y   # every deployed page
+node scripts/a11y-check.js index.html about.html   # just these pages
 ```
-Tests against WCAG 2.0 AA standards using axe-core.
+`scripts/a11y-check.js` serves `_site/` on a free local port (no server to
+start) and runs pa11y 10 with the axe runner against every deployed root page,
+using the `defaults` in `.pa11yrc.json` (WCAG2AA). It exits 1 on any error,
+including axe results that need review. It needs puppeteer's Chrome, which
+`npm ci` installs unless `PUPPETEER_SKIP_DOWNLOAD` is set.
+
+Rules in the `ignore` list, and why:
+- `color-contrast` -- known failures, ignored until the colour palette is fixed.
+- `frame-tested` -- reported for the embedded Google Maps iframes (contact,
+  meetings): axe cannot test inside a cross-origin frame. Those iframes still
+  get the `frame-title` check.
 
 ## Advanced Testing
 
@@ -172,8 +183,8 @@ Checks npm dependencies for known vulnerabilities.
 ## Adding New Pages
 
 When adding new HTML pages:
-1. Add the page URL to `.pa11yrc.json` for accessibility testing
-2. Run `npm test:html` to validate the new page
+1. Run `npm run build && npm run test:a11y` (every deployed page is tested; nothing to register)
+2. Run `npm run test:html` to validate the new page
 3. Check all internal links with `npm run test:links`
 4. Verify performance with `npm run audit:lighthouse`
 
