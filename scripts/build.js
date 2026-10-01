@@ -10,9 +10,11 @@
  * local build dirtied the checkout, and steps that appended instead of
  * replacing grew the main pages to 300-490 KB.
  */
-const { spawn, execFileSync } = require('child_process');
+const { spawn } = require('child_process');
+const { constants } = require('fs');
 const fs = require('fs').promises;
 const path = require('path');
+const { isSitePage, deployableFiles } = require('./lib/site');
 
 const VERSION = '1.0.0';
 const ROOT = path.resolve(__dirname, '..');
@@ -24,7 +26,6 @@ const SITE = path.join(ROOT, '_site');
 // js/ sources, sw.js (retired), docs, and root text files.
 const SITE_DIRS = ['css', 'dist', 'images', 'public', 'downloads', 'showcase', 'data'];
 const SITE_FILES = ['favicon.ico', 'site.webmanifest'];
-const NOT_PAGES = /^(test-.*|q4_update)\.html$/;
 const NOT_DEPLOYED = /\.db$/;
 
 async function runCommand(command, args) {
@@ -56,13 +57,9 @@ async function generateBuildInfo() {
     await fs.writeFile(path.join(DIST, 'build-info.json'), JSON.stringify(buildInfo, null, 2));
 }
 
-// Only files the repository tracks are deployed (plus the build's own
-// output), so a local build cannot ship stray local files (.DS_Store, drafts)
-// and matches what CI, which checks out tracked files only, deploys.
-function trackedFiles() {
-    return new Set(execFileSync('git', ['ls-files', '-z'], { cwd: ROOT, encoding: 'utf8' })
-        .split('\0').filter(Boolean));
-}
+// Copy-on-write clone where the file system supports it (APFS, Btrfs, XFS),
+// a plain copy elsewhere: public/ alone is several hundred MB of PDFs.
+const CLONE = constants.COPYFILE_FICLONE;
 
 function isGenerated(rel) {
     return rel === 'dist' || rel.startsWith('dist/') || /^css\/[^/]+\.min\.css$/.test(rel);
@@ -70,26 +67,29 @@ function isGenerated(rel) {
 
 async function assembleSite() {
     await fs.mkdir(SITE, { recursive: true });
-    const tracked = trackedFiles();
-    const pages = (await fs.readdir(ROOT)).filter((f) => f.endsWith('.html') && !NOT_PAGES.test(f));
+    // Only files git tracks or would track are deployed (plus the build's own
+    // output), so a local build never ships ignored local files.
+    const deployable = deployableFiles(ROOT);
+    const pages = (await fs.readdir(ROOT)).filter((f) => isSitePage(f) && deployable.has(f));
     for (const page of pages) {
-        await fs.copyFile(path.join(ROOT, page), path.join(SITE, page));
+        await fs.copyFile(path.join(ROOT, page), path.join(SITE, page), CLONE);
     }
     for (const dir of SITE_DIRS) {
         await fs.cp(path.join(ROOT, dir), path.join(SITE, dir), {
             recursive: true,
+            mode: CLONE,
             filter: async (src) => {
                 const rel = path.relative(ROOT, src).split(path.sep).join('/');
                 // Dotfiles are never served: the Pages artifact upload drops them.
                 if (NOT_DEPLOYED.test(rel) || path.basename(rel).startsWith('.')) return false;
                 if (isGenerated(rel)) return true;
                 if ((await fs.stat(src)).isDirectory()) return true;
-                return tracked.has(rel);
+                return deployable.has(rel);
             },
         });
     }
     for (const file of SITE_FILES) {
-        await fs.copyFile(path.join(ROOT, file), path.join(SITE, file));
+        await fs.copyFile(path.join(ROOT, file), path.join(SITE, file), CLONE);
     }
     console.log(`Assembled _site/: ${pages.length} pages, ${SITE_DIRS.join('/, ')}/`);
 }

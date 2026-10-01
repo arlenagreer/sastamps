@@ -8,14 +8,14 @@
  * steps grew the pages to 300-490 KB. The deploy now uploads exactly the
  * _site/ this check inspects.
  *
- * Runs the real build once (snapshotting every tracked file's content hash
- * AND mtime before and after, so even a same-bytes rewrite counts as a
- * write), then checks _site/.
+ * Runs the real build once (snapshotting every tracked file's size, mtime
+ * and ctime before and after, so even a same-bytes rewrite counts as a write:
+ * ctime moves on any write and cannot be set back), then checks _site/.
  */
 const fs = require('fs');
 const path = require('path');
-const crypto = require('crypto');
 const { spawnSync, execFileSync } = require('child_process');
+const { isSitePage, deployableFiles } = require('./lib/site');
 
 const REPO = path.resolve(__dirname, '..');
 const SITE = path.join(REPO, '_site');
@@ -40,7 +40,7 @@ function snapshot() {
     if (!fs.existsSync(p)) continue;
     const st = fs.statSync(p);
     if (!st.isFile()) continue;
-    state[f] = `${crypto.createHash('sha1').update(fs.readFileSync(p)).digest('hex')}:${st.mtimeMs}`;
+    state[f] = `${st.size}:${st.mtimeMs}:${st.ctimeMs}`;
   }
   return { state, status: git('status', '--porcelain', '--untracked-files=all') };
 }
@@ -67,7 +67,12 @@ function walk(dir, out = []) {
 
 const SKIP_REF = /^(https?:|\/\/|data:|mailto:|tel:|javascript:|#|\$\{)/i;
 function resolveRef(ref, fromFile) {
-  const clean = decodeURIComponent(ref.split(/[?#]/)[0]);
+  let clean = ref.split(/[?#]/)[0];
+  try {
+    clean = decodeURIComponent(clean);
+  } catch {
+    return path.join(SITE, '\0malformed-escape'); // never exists: reported, not a crash
+  }
   if (!clean) return null;
   return clean.startsWith('/') ? path.join(SITE, clean) : path.resolve(path.dirname(fromFile), clean);
 }
@@ -87,12 +92,13 @@ if (!fs.existsSync(SITE)) {
   check(false, '_site/ was not produced');
 } else {
   console.log('▸ _site holds the deployable pages and nothing private');
-  const sourcePages = fs.readdirSync(REPO).filter((f) => f.endsWith('.html') && !/^(test-|q4_update)/.test(f));
+  const deployable = deployableFiles(REPO);
+  const sourcePages = fs.readdirSync(REPO).filter((f) => isSitePage(f) && deployable.has(f));
   for (const p of sourcePages) check(existsExact(path.join(SITE, p)), `_site/${p} missing`);
   for (const d of ['css', 'dist', 'images', 'public', 'data']) check(existsExact(path.join(SITE, d)), `_site/${d}/ missing`);
   const all = walk(SITE).map((f) => path.relative(SITE, f));
-  const forbidden = all.filter((f) => /\.(php|db|env|txt|md)$/i.test(f) || /^(scripts|\.planning|js|node_modules|\.claude|\.github)\//.test(f)
-    || /^(test-[^/]*|q4_update)\.html$/.test(f) || /(^|\/)(sw\.js|\.env[^/]*|\.DS_Store)$/.test(f));
+  const forbidden = all.filter((f) => /\.(php|db|env|md)$/i.test(f) || (/\.txt$/i.test(f) && f !== 'robots.txt') || /^(scripts|\.planning|js|node_modules|\.claude|\.github)\//.test(f)
+    || (!f.includes('/') && f.endsWith('.html') && !isSitePage(f)) || /(^|\/)(sw\.js|\.env[^/]*|\.DS_Store)$/.test(f));
   check(forbidden.length === 0, `_site contains files that must not be public: ${forbidden.slice(0, 8).join(', ')}`);
 
   console.log('▸ every local reference in _site resolves');
@@ -152,7 +158,7 @@ console.log('▸ source pages load plain links and nothing is inlined');
 // Every deployed page links both minified stylesheets, except these, which
 // are self-contained or not deployed.
 const EXEMPT = new Set(['offline.html']); // works with no network: inline styles only
-const sitePages = fs.readdirSync(REPO).filter((f) => f.endsWith('.html') && !/^(test-|q4_update)/.test(f));
+const sitePages = fs.readdirSync(REPO).filter(isSitePage);
 check(sitePages.length >= 10, `only ${sitePages.length} site pages found`);
 for (const p of sitePages) {
   const html = fs.readFileSync(path.join(REPO, p), 'utf8');

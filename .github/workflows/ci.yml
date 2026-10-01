@@ -7,12 +7,13 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
-# One run per branch at a time, queued rather than cancelled. The deploy job
-# publishes the artifact its own test job built, so without this a slow run for
-# an older push to main could deploy after, and over, a newer one.
+# One run per branch at a time. On main, runs queue rather than cancel: the
+# deploy job publishes the artifact its own test job built, so without this a
+# slow run for an older push could deploy after, and over, a newer one.
+# Elsewhere a newer push cancels the superseded run, saving Actions minutes.
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   test:
