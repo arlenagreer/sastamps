@@ -124,8 +124,9 @@ const SAFE_URL_SCHEMES = ['http:', 'https:', 'mailto:', 'tel:', 'sms:', 'webcal:
  * into markup.
  *
  * Scheme detection mirrors the WHATWG URL parser: leading/trailing C0 control
- * characters and spaces are trimmed, and ASCII tab, LF and CR are removed
- * anywhere ("java\tscript:" is javascript:). Nothing else is removed, so an
+ * characters, spaces and other Unicode whitespace (NBSP, BOM, ...) are
+ * trimmed, and ASCII tab, LF and CR are removed anywhere ("java\tscript:" is
+ * javascript:). Nothing else is removed, so an
  * ordinary file name with a space before a colon ("Philatex Q1: 2025.pdf")
  * has no scheme and stays a relative path.
  *
@@ -137,7 +138,11 @@ export function safeUrl(url, fallback = '#') {
   if (typeof url !== 'string') {
     return fallback;
   }
-  const trimmed = url.replace(/^[\u0000-\u0020]+|[\u0000-\u0020]+$/g, '');
+  // Ends only: C0 controls and space (what the URL parser strips) plus the
+  // Unicode whitespace String#trim removes (NBSP, BOM, line separators...),
+  // which hand-edited JSON picks up and which would otherwise survive into
+  // the href.
+  const trimmed = url.replace(/^[\u0000-\u0020\s]+|[\u0000-\u0020\s]+$/g, '');
   if (trimmed === '') {
     return fallback;
   }

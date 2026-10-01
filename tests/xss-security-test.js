@@ -12,7 +12,8 @@
  *   and webcal pass through (outer whitespace/control chars trimmed); any
  *   other scheme -- javascript:, data:, vbscript:, in any disguise a browser
  *   would still honour -- returns the fallback. Detection removes only what
- *   browsers ignore: tab/LF/CR anywhere, C0 controls and spaces at the ends.
+ *   browsers ignore: tab/LF/CR anywhere; C0 controls, spaces and other
+ *   Unicode whitespace (NBSP, BOM, ...) at the ends only.
  */
 
 import assert from 'node:assert/strict';
@@ -113,6 +114,20 @@ for (const url of accepted) {
 check('safeUrl trims outer whitespace and controls only', () => {
   assert.equal(safeUrl('  public/a b.pdf \n'), 'public/a b.pdf');
   assert.equal(safeUrl('\u0001https://example.org/\u0000'), 'https://example.org/');
+});
+check('safeUrl trims Unicode whitespace at the ends (NBSP, BOM, line separator)', () => {
+  assert.equal(safeUrl('public/X.pdf '), 'public/X.pdf');
+  assert.equal(safeUrl('﻿public/X.pdf'), 'public/X.pdf');
+  assert.equal(safeUrl(' public/X.pdf　'), 'public/X.pdf');
+  assert.equal(safeUrl(' ﻿'), '#');
+});
+check('safeUrl keeps interior Unicode whitespace', () => {
+  assert.equal(safeUrl('public/Philatex Q1.pdf'), 'public/Philatex Q1.pdf');
+});
+check('safeUrl rejects javascript: behind Unicode whitespace', () => {
+  assert.equal(safeUrl(' javascript:alert(1)'), '#');
+  assert.equal(safeUrl('﻿javascript:alert(1)'), '#');
+  assert.equal(safeUrl('javascript:alert(1) '), '#');
 });
 
 // ── firstSafeUrl ────────────────────────────────────────────────────────────
