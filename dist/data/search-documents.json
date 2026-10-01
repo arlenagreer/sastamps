@@ -1,6 +1,26 @@
 {
   "documents": [
     {
+      "id": "newsletter-2026-Q4",
+      "type": "newsletter",
+      "title": "SAPA PHILATEX Fourth Quarter 2026",
+      "summary": "Fourth Quarter 2026 newsletter featuring the October-December meeting calendar, the October 9 stamp program 'Expertising Philatelics' by Jimmy Tomchesson of Philatelic Stamp Authentication and Grading (PSAG), the San Antonio TSDA Stamp Show on October 9-10, the SAPA Annual Blue-Chip Auction on December 11, the SAPA Holiday Party on December 18, a memorial to Steve Mabie ('In Fond Memory of Steve Mabie'), a feature article on Postal Note Stamps, and the upcoming TSDA show schedule.",
+      "url": "/newsletter.html#2026-Q4",
+      "date": "2026-10-01",
+      "tags": [
+        "2026",
+        "Q4",
+        "meetings",
+        "memorial",
+        "stamp-program",
+        "blue-chip-auction",
+        "holiday-party",
+        "postal-note-stamps",
+        "tsda-shows"
+      ],
+      "category": "newsletter"
+    },
+    {
       "id": "newsletter-2026-Q3",
       "type": "newsletter",
       "title": "SAPA PHILATEX Third Quarter 2026",
@@ -1103,6 +1123,203 @@
       "category": "meeting"
     },
     {
+      "id": "meeting-2026-10-02",
+      "type": "meeting",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "summary": "Monthly Board of Governors meeting followed by member show and tell presentations. Guests welcome!",
+      "url": "/meetings.html#2026-10-02",
+      "date": "2026-10-02",
+      "tags": [
+        "bog",
+        "business",
+        "show-and-tell",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-10-09",
+      "type": "meeting",
+      "title": "Stamp Program: Expertising Philatelics",
+      "summary": "Jimmy Tomchesson of Philatelic Stamp Authentication and Grading (PSAG), a firm specializing in expertising and grading stamps, presents 'Expertising Philatelics': how stamps are expertised, which stamps should be expertised, and why. Held the evening of October 9, after the first day of the San Antonio TSDA Stamp Show (October 9-10). Visitors welcome!",
+      "url": "/meetings.html#2026-10-09",
+      "date": "2026-10-09",
+      "tags": [
+        "stamp-program",
+        "expertising",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-10-16",
+      "type": "meeting",
+      "title": "Club Auction",
+      "summary": "Monthly club auction featuring member consignments and donated materials. Visitors welcome!",
+      "url": "/meetings.html#2026-10-16",
+      "date": "2026-10-16",
+      "tags": [
+        "auction",
+        "buying",
+        "selling",
+        "consignment",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-10-23",
+      "type": "meeting",
+      "title": "Stamp Bourse",
+      "summary": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers. Visitors welcome!",
+      "url": "/meetings.html#2026-10-23",
+      "date": "2026-10-23",
+      "tags": [
+        "bourse",
+        "dealers",
+        "trading",
+        "buying",
+        "selling",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-10-30",
+      "type": "meeting",
+      "title": "No Meeting - Halloween",
+      "summary": "No meeting scheduled due to Halloween holiday.",
+      "url": "/meetings.html#2026-10-30",
+      "date": "2026-10-30",
+      "tags": [
+        "holiday",
+        "halloween"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-11-06",
+      "type": "meeting",
+      "title": "Board of Governors Meeting & Show and Tell",
+      "summary": "Monthly Board of Governors meeting followed by member show and tell presentations. Guests welcome!",
+      "url": "/meetings.html#2026-11-06",
+      "date": "2026-11-06",
+      "tags": [
+        "bog",
+        "business",
+        "show-and-tell",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-11-13",
+      "type": "meeting",
+      "title": "Club Auction",
+      "summary": "Monthly club auction featuring member consignments and donated materials. Visitors welcome!",
+      "url": "/meetings.html#2026-11-13",
+      "date": "2026-11-13",
+      "tags": [
+        "auction",
+        "buying",
+        "selling",
+        "consignment",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-11-20",
+      "type": "meeting",
+      "title": "Stamp Bourse & Blue-Chip Auction Lot Viewing/Verification",
+      "summary": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers, plus Blue-Chip Auction Lot Viewing and Blue-Chip Auction Lot Verification ahead of the December 11 SAPA Blue-Chip Auction. All lots submitted before November 20 will be reviewed by a panel of experts who will verify the lot description and the catalog value. Visitors welcome!",
+      "url": "/meetings.html#2026-11-20",
+      "date": "2026-11-20",
+      "tags": [
+        "bourse",
+        "dealers",
+        "trading",
+        "buying",
+        "selling",
+        "blue-chip-auction",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-11-27",
+      "type": "meeting",
+      "title": "No Meeting - Thanksgiving",
+      "summary": "No meeting scheduled due to Thanksgiving holiday.",
+      "url": "/meetings.html#2026-11-27",
+      "date": "2026-11-27",
+      "tags": [
+        "holiday",
+        "thanksgiving"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-12-04",
+      "type": "meeting",
+      "title": "Board of Governors Meeting & Show and Tell + Blue-Chip Auction Lot Viewing",
+      "summary": "Monthly Board of Governors meeting followed by member show and tell presentations, plus Blue-Chip Auction Lot Viewing ahead of the December 11 SAPA Blue-Chip Auction. Guests welcome!",
+      "url": "/meetings.html#2026-12-04",
+      "date": "2026-12-04",
+      "tags": [
+        "bog",
+        "business",
+        "show-and-tell",
+        "blue-chip-auction",
+        "guests-welcome"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-12-11",
+      "type": "meeting",
+      "title": "SAPA Blue-Chip Auction",
+      "summary": "SAPA's annual Blue-Chip Auction. Blue-Chip lots must have a catalog value of at least $20, although the opening bid on a lot may be lower than $20. Each lot containing stamps must include the Scott (or other recognized) catalog number, the catalog value, and the year of the catalog used to determine the value, and the condition of the stamp(s) must be described. Lots submitted before November 20 are reviewed by a panel of experts who verify the lot description and catalog value; lots submitted after November 20, including on the day of the auction, are not verified by SAPA experts.",
+      "url": "/meetings.html#2026-12-11",
+      "date": "2026-12-11",
+      "tags": [
+        "auction",
+        "blue-chip-auction",
+        "annual",
+        "buying",
+        "selling"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-12-18",
+      "type": "meeting",
+      "title": "Club Holiday Party",
+      "summary": "The annual SAPA Holiday Party, starting at 6:00 PM in the meeting room. SAPA will provide barbecue (brisket and turkey). Please bring a side dish or a dessert to share if you are able.",
+      "url": "/meetings.html#2026-12-18",
+      "date": "2026-12-18",
+      "tags": [
+        "party",
+        "social",
+        "annual",
+        "barbecue"
+      ],
+      "category": "meeting"
+    },
+    {
+      "id": "meeting-2026-12-25",
+      "type": "meeting",
+      "title": "No Meeting - Christmas",
+      "summary": "No meeting scheduled due to Christmas holiday.",
+      "url": "/meetings.html#2026-12-25",
+      "date": "2026-12-25",
+      "tags": [
+        "holiday",
+        "christmas"
+      ],
+      "category": "meeting"
+    },
+    {
       "id": "resource-beginners-guide",
       "type": "resource",
       "title": "Complete Beginner's Guide to Stamp Collecting",
@@ -1244,13 +1461,13 @@
     }
   ],
   "metadata": {
-    "totalDocuments": 80,
+    "totalDocuments": 94,
     "types": {
-      "newsletter": 6,
-      "meeting": 66,
+      "newsletter": 7,
+      "meeting": 79,
       "resource": 3,
       "glossary": 5
     },
-    "buildDate": "2026-07-17T07:48:59.267Z"
+    "buildDate": "2026-09-30T21:40:10.094Z"
   }
 }

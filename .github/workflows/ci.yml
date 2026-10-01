@@ -130,12 +130,20 @@ jobs:
     - name: Prepare deployment directory
       run: |
         mkdir -p _site
-        # Copy HTML files from root
-        cp *.html _site/ 2>/dev/null || true
+        # Copy HTML files from root, minus non-site pages (test-*.html, q4_update.html)
+        for f in *.html; do
+          case "$f" in
+            test-*.html|q4_update.html) echo "skip (not a site page): $f" ;;
+            *) cp "$f" _site/ ;;
+          esac
+        done
         # Copy built assets
         cp -r dist _site/
         # Copy static files
         cp site.webmanifest _site/ 2>/dev/null || true
+        cp favicon.ico _site/
+        # sw.js is deliberately NOT deployed: it is cache-first with a fixed cache
+        # name and would pin visitors to stale pages. See js/utils/service-worker.js.
         cp .nojekyll _site/ 2>/dev/null || true
         cp -r images _site/ 2>/dev/null || true
         # Copy public directory (PDFs, newsletters, downloads)

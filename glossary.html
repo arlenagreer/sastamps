@@ -45,29 +45,18 @@
     <link rel="preload" href="css/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="css/styles.css"></noscript>
 
-    <!-- Service Worker -->
+    <!-- Service Worker cleanup: the site registers no service worker; remove any stale one -->
     <script>
-        if ('serviceWorker' in navigator &amp;&amp; window.location.protocol !== 'file:') {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then((registration) => {
-                        console.log('SW registered: ', registration);
-                    })
-                    .catch((registrationError) => {
-                        console.log('SW registration failed: ', registrationError);
-                    });
-            });
+        if ('serviceWorker' in navigator && navigator.serviceWorker.getRegistrations) {
+            navigator.serviceWorker.getRegistrations().then(function (regs) {
+                regs.forEach(function (r) { r.unregister(); });
+            }).catch(function () {});
         }
-    </script>
-
-    <!-- Theme Detection -->
-    <script>
-        (function() {
-            const theme = localStorage.getItem('theme') || 'auto';
-            if (theme === 'dark' || (theme === 'auto' &amp;&amp; window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            }
-        })();
+        if (window.caches && caches.keys) {
+            caches.keys().then(function (keys) {
+                keys.forEach(function (k) { if (k.indexOf('sapa-') === 0) { caches.delete(k); } });
+            }).catch(function () {});
+        }
     </script>
 </head>
 <body>
@@ -304,7 +293,7 @@
     <!-- Scripts -->
     <script>
         // Check if we can use modules (will fail on file:// protocol)
-        var moduleSupport = 'noModule' in HTMLScriptElement.prototype &amp;&amp; window.location.protocol !== 'file:';
+        var moduleSupport = 'noModule' in HTMLScriptElement.prototype && window.location.protocol !== 'file:';
 
         // Fallback content function
         function showFallbackContent() {
@@ -350,18 +339,18 @@
                     const filtersContainer = document.getElementById('glossary-filters-container');
                     const contentContainer = document.getElementById('glossary-content-container');
 
-                    if (searchContainer &amp;&amp; searchContainer.innerHTML.includes('Loading search')) {
+                    if (searchContainer && searchContainer.innerHTML.includes('Loading search')) {
                         console.error('❌ Search container still showing loading message');
                     }
-                    if (filtersContainer &amp;&amp; filtersContainer.innerHTML.includes('Loading filters')) {
+                    if (filtersContainer && filtersContainer.innerHTML.includes('Loading filters')) {
                         console.error('❌ Filters container still showing loading message');
                     }
-                    if (contentContainer &amp;&amp; contentContainer.innerHTML.includes('Loading glossary')) {
+                    if (contentContainer && contentContainer.innerHTML.includes('Loading glossary')) {
                         console.error('❌ Content container still showing loading message');
                     }
 
                     // Try manual initialization if auto-init failed
-                    if (window.initializeGlossary &amp;&amp;
+                    if (window.initializeGlossary &&
                         (searchContainer.innerHTML.includes('Loading') ||
                          filtersContainer.innerHTML.includes('Loading') ||
                          contentContainer.innerHTML.includes('Loading'))) {

@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//San Antonio Philatelic Association//SAPA Meetings//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:20261211T193000Z-sapa@sastamps.org
+DTSTAMP:20261001T000000Z
+DTSTART:20261212T013000Z
+DTEND:20261212T030000Z
+SUMMARY:SAPA Blue-Chip Auction
+DESCRIPTION:SAPA's annual Blue-Chip Auction. Lots must have a catalog value of at least $20 (the opening bid may be lower). Each lot containing stamps must include the Scott (or other recognized) catalog number\, catalog value\, and catalog year\, and the condition must be described. Lots submitted before November 20 are verified by a panel of experts\; later lots\, including those submitted on auction night\, are not verified. Doors open at 6:30 PM\, auction begins at 7:30 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting
+END:VEVENT
+END:VCALENDAR

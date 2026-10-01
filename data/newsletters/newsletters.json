@@ -1,6 +1,105 @@
 {
   "newsletters": [
     {
+      "id": "2026-Q4",
+      "title": "SAPA PHILATEX Fourth Quarter 2026",
+      "quarter": "Fourth",
+      "year": 2026,
+      "publishDate": "2026-10-01",
+      "filePath": "public/SAPA-PHILATEX-Fourth-Quarter-2026.pdf",
+      "description": "Fourth Quarter 2026 newsletter featuring the October-December meeting calendar, the October 9 stamp program 'Expertising Philatelics' by Jimmy Tomchesson of Philatelic Stamp Authentication and Grading (PSAG), the San Antonio TSDA Stamp Show on October 9-10, the SAPA Annual Blue-Chip Auction on December 11, the SAPA Holiday Party on December 18, a memorial to Steve Mabie ('In Fond Memory of Steve Mabie'), a feature article on Postal Note Stamps, and the upcoming TSDA show schedule.",
+      "featuredArticles": [
+        {
+          "title": "Q4 2026 Meeting Calendar",
+          "category": "Calendar",
+          "page": 1
+        },
+        {
+          "title": "In Fond Memory of Steve Mabie",
+          "category": "News",
+          "page": 2
+        },
+        {
+          "title": "October 9 Stamp Program: Expertising Philatelics (Jimmy Tomchesson)",
+          "category": "Education",
+          "page": 2
+        },
+        {
+          "title": "Mark Your Calendars for the San Antonio Stamp Show",
+          "category": "News",
+          "page": 2
+        },
+        {
+          "title": "SAPA Annual Blue-Chip Auction",
+          "category": "News",
+          "page": 3
+        },
+        {
+          "title": "Something Punny",
+          "category": "Humor",
+          "page": 3
+        },
+        {
+          "title": "SAPA Holiday Party",
+          "category": "News",
+          "page": 4
+        },
+        {
+          "title": "Talking Stamps",
+          "category": "Humor",
+          "page": 4
+        },
+        {
+          "title": "What is a Bourse?",
+          "category": "Education",
+          "page": 4
+        },
+        {
+          "title": "Featured Article: Postal Note Stamps!",
+          "category": "Feature",
+          "page": 5
+        },
+        {
+          "title": "Error in Stamp Design",
+          "category": "Education",
+          "page": 5
+        },
+        {
+          "title": "Our Board of Governors",
+          "category": "News",
+          "page": 6
+        },
+        {
+          "title": "Upcoming TSDA Shows",
+          "category": "News",
+          "page": 6
+        },
+        {
+          "title": "Coming Soon!",
+          "category": "News",
+          "page": 6
+        }
+      ],
+      "highlights": [
+        "In Fond Memory of Steve Mabie: Steve passed away peacefully on July 1, 2026; he served as SAPA treasurer from 2024 until 2026 and newsletter editor from 2024 until 2025 (page 2)",
+        "Complete October-December 2026 meeting schedule",
+        "October 9 Stamp Program: Jimmy Tomchesson of Philatelic Stamp Authentication and Grading (PSAG) presents 'Expertising Philatelics' - how stamps are expertised, which stamps should be expertised, and why",
+        "San Antonio TSDA Stamp Show, October 9-10 at the Norris Conference Center, 618 Northwest Freeway Loop 410 (Friday 10-5, Saturday 9-4)",
+        "SAPA Annual Blue-Chip Auction on December 11: lots must have a catalog value of at least $20; lots submitted before November 20 are verified by a panel of experts; lots on display November 20 and December 4",
+        "SAPA Holiday Party on December 18 at 6:00 PM - SAPA provides barbecue (brisket and turkey); bring a side dish or dessert to share if you are able",
+        "Featured article: Postal Note Stamps (1945-1951), the 'PN' back-of-book issues",
+        "What is a Bourse? - a night of buying, selling, trading, and talking stamps",
+        "Something Punny, Talking Stamps holiday humor, and an Error in Stamp Design puzzle (answer on page 6)",
+        "Our Board of Governors roster and the 'Write to SAPA' mailing address (c/o Al Lozano, 13530 FM 1560N, Helotes, TX 78023)",
+        "Upcoming TSDA shows: Mid-Cities Stamp Club Expo (Nov 13-14, Grapevine), Dallas TSDA (Dec 11-12, McKinney), Houston TSDA (Jan 8-9, 2027)",
+        "Coming Soon: beginning in January 2027, The Philatex will (hopefully) return to a bimonthly schedule"
+      ],
+      "tags": ["2026", "Q4", "meetings", "memorial", "stamp-program", "blue-chip-auction", "holiday-party", "postal-note-stamps", "tsda-shows"],
+      "pageCount": 6,
+      "fileSize": "638 KB",
+      "status": "published"
+    },
+    {
       "id": "2026-Q3",
       "title": "SAPA PHILATEX Third Quarter 2026",
       "quarter": "Third",
@@ -254,9 +353,9 @@
     }
   ],
   "metadata": {
-    "lastUpdated": "2026-07-01T00:00:00.000Z",
-    "totalIssues": 6,
-    "latestIssue": "2026-Q3",
+    "lastUpdated": "2026-10-01T00:00:00.000Z",
+    "totalIssues": 7,
+    "latestIssue": "2026-Q4",
     "version": "1.0"
   }
 }
