@@ -108,39 +108,26 @@ export class CalendarComponent {
 
     // Initialize Vanilla Calendar
     this.calendar = new Calendar(calendarElement, {
+      // vanilla-calendar-pro v3 API (flat options; v2's settings/actions are ignored)
       type: 'default',
-      settings: {
-        lang: 'en',
-        iso8601: false,
-        selection: {
-          day: 'single',
-          month: true,
-          year: true
-        },
-        selected: {
-          dates: [],
-          month: new Date().getMonth(),
-          year: new Date().getFullYear()
-        },
-        visibility: {
-          theme: 'system',
-          themeDetect: true,
-          monthShort: true,
-          weekNumbers: false,
-          weekend: true,
-          today: true,
-          rangeDisabled: false
-        },
-        range: {
-          min: '1970-01-01',
-          max: '2030-12-31'
-        }
-      },
-      actions: {
-        clickDay: (event, self) => this.handleDayClick(event, self),
-        changeMonth: (event, self) => this.handleMonthChange(event, self),
-        changeYear: (event, self) => this.handleYearChange(event, self)
-      }
+      locale: 'en',
+      firstWeekday: 0,
+      selectionDatesMode: 'single',
+      selectionMonthsMode: true,
+      selectionYearsMode: true,
+      selectedDates: [],
+      selectedMonth: new Date().getMonth(),
+      selectedYear: new Date().getFullYear(),
+      selectedTheme: 'system',
+      selectedWeekends: [0, 6],
+      enableWeekNumbers: false,
+      disableToday: false,
+      displayDateMin: '1970-01-01',
+      displayDateMax: '2030-12-31',
+      onClickDate: (self, event) => this.handleDayClick(event, self),
+      onClickArrow: (self, event) => this.handleMonthChange(event, self),
+      onClickMonth: (self, event) => this.handleMonthChange(event, self),
+      onClickYear: (self, event) => this.handleYearChange(event, self)
     });
 
     // Initialize calendar
@@ -208,7 +195,7 @@ export class CalendarComponent {
   addEventDots() {
     // Wait for calendar to render, then add event dots
     setTimeout(() => {
-      const calendarDates = this.calendar.HTMLElement.querySelectorAll('.vc-date');
+      const calendarDates = this.calendar.context.mainElement.querySelectorAll('[data-vc-date]');
 
       calendarDates.forEach(dateElement => {
         const dateValue = dateElement.getAttribute('data-vc-date');
@@ -254,7 +241,7 @@ export class CalendarComponent {
      * @param {Object} self - Calendar instance
      */
   handleDayClick(event, self) {
-    const clickedDate = event.target.getAttribute('data-vc-date');
+    const clickedDate = event.target.closest('[data-vc-date]')?.dataset.vcDate;
     if (!clickedDate) return;
 
     // Find events for clicked date

@@ -8,6 +8,94 @@ import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('MeetingLoader');
 
+/**
+ * Days before a quarter ends at which the schedule rolls over to show the
+ * next quarter, so members can see upcoming meetings as they are planned.
+ */
+export const QUARTER_ADVANCE_DAYS = 14;
+
+const MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+/**
+ * First and last day (local midnight) of a calendar quarter.
+ * @param {number} year
+ * @param {number} quarter - 1-4
+ * @returns {{start: Date, end: Date}}
+ */
+export function getQuarterBounds(year, quarter) {
+  const firstMonth = (quarter - 1) * 3;
+  return {
+    start: new Date(year, firstMonth, 1),
+    end: new Date(year, firstMonth + 3, 0)
+  };
+}
+
+/**
+ * Parse a 'Qn-YYYY' string (e.g. 'Q4-2026').
+ * @param {string} value
+ * @returns {{year: number, quarter: number}|null}
+ */
+export function parseQuarter(value) {
+  const match = /^Q([1-4])-(\d{4})$/i.exec(String(value ?? '').trim());
+  return match ? { year: Number(match[2]), quarter: Number(match[1]) } : null;
+}
+
+function quarterOf(date) {
+  return { year: date.getFullYear(), quarter: Math.floor(date.getMonth() / 3) + 1 };
+}
+
+function nextQuarter({ year, quarter }) {
+  return quarter === 4 ? { year: year + 1, quarter: 1 } : { year, quarter: quarter + 1 };
+}
+
+/**
+ * The quarter the schedule should show on a given day: the current quarter,
+ * or the next one once we are within QUARTER_ADVANCE_DAYS of its end.
+ * @param {Date} [now]
+ * @returns {{year: number, quarter: number}}
+ */
+export function getDisplayQuarter(now = new Date()) {
+  const current = quarterOf(now);
+  const { end } = getQuarterBounds(current.year, current.quarter);
+  const daysUntilQuarterEnd = (end - now) / MS_PER_DAY;
+  return daysUntilQuarterEnd <= QUARTER_ADVANCE_DAYS ? nextQuarter(current) : current;
+}
+
+function isInQuarter(meeting, { year, quarter }) {
+  const { start, end } = getQuarterBounds(year, quarter);
+  const meetingDate = new Date(`${meeting.date}T00:00:00`);
+  return meetingDate >= start && meetingDate <= end;
+}
+
+/**
+ * Filter meetings to one quarter, sorted chronologically.
+ * @param {Array<{date: string}>} meetings
+ * @param {{year: number, quarter: number}} quarter
+ */
+export function meetingsInQuarter(meetings, quarter) {
+  return (meetings || [])
+    .filter(meeting => isInQuarter(meeting, quarter))
+    .sort((a, b) => new Date(`${a.date}T00:00:00`) - new Date(`${b.date}T00:00:00`));
+}
+
+/**
+ * The quarter to render: getDisplayQuarter(), except that an early rollover
+ * falls back to the current quarter while the next quarter's schedule has not
+ * been posted yet (so the page never goes blank at a quarter boundary).
+ * @param {Array<{date: string}>} meetings
+ * @param {Date} [now]
+ * @returns {{year: number, quarter: number}}
+ */
+export function selectScheduleQuarter(meetings, now = new Date()) {
+  const display = getDisplayQuarter(now);
+  const current = quarterOf(now);
+  const rolledOver = display.year !== current.year || display.quarter !== current.quarter;
+  if (rolledOver && meetingsInQuarter(meetings, display).length === 0) {
+    return current;
+  }
+  return display;
+}
+
 class MeetingLoader {
   constructor(options = {}) {
     this.dataUrl = options.dataUrl || './data/meetings/meetings.json';
@@ -79,24 +167,23 @@ class MeetingLoader {
   }
 
   /**
-     * Get meetings for Q3 2025 (July-September)
+     * Get meetings for one quarter
+     * @param {{year: number, quarter: number}} quarter
      */
-  getQ3Meetings() {
-    return this.filterMeetingsByDateRange('2025-07-01', '2025-09-30');
+  getMeetingsForQuarter(quarter) {
+    if (!this.isLoaded) {
+      logger.warn('Meeting data not loaded yet');
+      return [];
+    }
+    return meetingsInQuarter(this.meetings, quarter);
   }
 
   /**
-     * Get meetings for Q4 2025 (October-December)
+     * Resolve a 'Qn-YYYY' dateRange option; anything else (including
+     * omitting it) means the quarter the schedule should show today.
      */
-  getQ4Meetings() {
-    return this.filterMeetingsByDateRange('2025-10-01', '2025-12-31');
-  }
-
-  /**
-     * Get meetings for Q1 2026 (January-March)
-     */
-  getQ1Meetings() {
-    return this.filterMeetingsByDateRange('2026-01-01', '2026-03-31');
+  resolveQuarter(dateRange) {
+    return parseQuarter(dateRange) || selectScheduleQuarter(this.meetings);
   }
 
   /**
@@ -192,7 +279,7 @@ class MeetingLoader {
      */
   renderMeetingsTable(container, options = {}) {
     const {
-      dateRange = 'Q3-2025',
+      dateRange,
       showCalendarLinks = true,
       _responsive = true
     } = options;
@@ -210,19 +297,11 @@ class MeetingLoader {
       return;
     }
 
-    // Get meetings based on dateRange parameter
-    let meetings;
-    if (dateRange === 'Q1-2026') {
-      meetings = this.getQ1Meetings();
-    } else if (dateRange === 'Q4-2025') {
-      meetings = this.getQ4Meetings();
-    } else {
-      meetings = this.getQ3Meetings(); // Default to Q3 for backward compatibility
-    }
-    const groupedMeetings = this.groupMeetingsByMonth(meetings);
+    const quarter = this.resolveQuarter(dateRange);
+    const groupedMeetings = this.groupMeetingsByMonth(this.getMeetingsForQuarter(quarter));
 
     // Generate table HTML
-    const tableHTML = this.generateTableHTML(groupedMeetings, showCalendarLinks, dateRange);
+    const tableHTML = this.generateTableHTML(groupedMeetings, showCalendarLinks, quarter);
 
     container.innerHTML = tableHTML;
   }
@@ -230,19 +309,14 @@ class MeetingLoader {
   /**
      * Generate the meeting table HTML
      */
-  generateTableHTML(groupedMeetings, showCalendarLinks, dateRange = 'Q3-2025') {
-    // Define months and names based on quarter
-    let months, monthNames;
-    if (dateRange === 'Q1-2026') {
-      months = ['2026-01', '2026-02', '2026-03'];
-      monthNames = ['January 2026', 'February 2026', 'March 2026'];
-    } else if (dateRange === 'Q4-2025') {
-      months = ['2025-10', '2025-11', '2025-12'];
-      monthNames = ['October 2025', 'November 2025', 'December 2025'];
-    } else {
-      months = ['2025-07', '2025-08', '2025-09'];
-      monthNames = ['July 2025', 'August 2025', 'September 2025'];
-    }
+  generateTableHTML(groupedMeetings, showCalendarLinks, quarter = selectScheduleQuarter(this.meetings)) {
+    // The quarter's three months, as YYYY-MM keys and display names
+    const { year } = quarter;
+    const firstMonth = (quarter.quarter - 1) * 3;
+    const months = [0, 1, 2].map(i => `${year}-${String(firstMonth + i + 1).padStart(2, '0')}`);
+    const monthNames = [0, 1, 2].map(i =>
+      new Date(year, firstMonth + i, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+    );
 
     let html = `
             <table class="meeting-table" style="width: 100%; border-collapse: collapse; font-family: var(--font-body); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm);">
@@ -331,32 +405,11 @@ class MeetingLoader {
   }
 
   /**
-     * Generate calendar download section
-     */
-  generateCalendarDownloadSection() {
-    return `
-            <div class="calendar-downloads">
-                <h4>Calendar Downloads</h4>
-                <p>
-                    <a href="data/calendar/2025-Q3-schedule.ics" class="btn btn-secondary" download>
-                        <i class="fas fa-calendar-download"></i> Download Complete Q3 2025 Schedule
-                    </a>
-                </p>
-                <p class="calendar-note">
-                    <small><i class="fas fa-info-circle"></i> 
-                    Click the <i class="fas fa-calendar-plus"></i> icon next to individual meetings to add them to your calendar.
-                    </small>
-                </p>
-            </div>
-        `;
-  }
-
-  /**
      * Render meeting list view (alternative to table)
      */
   renderMeetingsList(container, options = {}) {
     const {
-      _dateRange = 'Q3-2025',
+      dateRange,
       showDetails = true,
       groupByMonth = true
     } = options;
@@ -374,12 +427,12 @@ class MeetingLoader {
       return;
     }
 
-    const q3Meetings = this.getQ3Meetings();
+    const quarterMeetings = this.getMeetingsForQuarter(this.resolveQuarter(dateRange));
 
     let html = '<div class="meetings-list">';
 
     if (groupByMonth) {
-      const groupedMeetings = this.groupMeetingsByMonth(q3Meetings);
+      const groupedMeetings = this.groupMeetingsByMonth(quarterMeetings);
 
       Object.keys(groupedMeetings).sort().forEach(monthKey => {
         const monthData = groupedMeetings[monthKey];
@@ -393,7 +446,7 @@ class MeetingLoader {
                 `;
       });
     } else {
-      html += q3Meetings.map(meeting => this.renderMeetingCard(meeting, showDetails)).join('');
+      html += quarterMeetings.map(meeting => this.renderMeetingCard(meeting, showDetails)).join('');
     }
 
     html += '</div>';

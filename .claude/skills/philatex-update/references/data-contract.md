@@ -60,6 +60,7 @@ Existing `YYYY-QN` entries stay as they are. History is never rewritten into the
 - **Event time anchoring — the two formats differ (this was a real bug):**
   - **Individual files = UTC (`Z`):** `DTSTART` = `meetingStart`, `DTEND` = `meetingEnd`, +5h CDT→UTC (roll to next UTC day past midnight). Standard 7:30→9:00 PM = `…T003000Z`/`…T020000Z` next day. Picnic 6:00→8:30 PM = same-day `T230000Z` / next-day `T013000Z`. **NOT doorsOpen.**
   - **Quarterly file = local/floating (no `Z`):** `DTSTART` = `doorsOpen` (6:30 PM standard → `T183000`), `DTEND` = `meetingEnd` (`T210000`). Picnic anchors meetingStart `T180000`→`T203000`.
+  - **No confirmed end (start-only event, e.g. 2026-12-18 Holiday Party):** omit `time.meetingEnd` in meetings.json and omit `DTEND` (and `DURATION`) in both the individual and quarterly `.ics`; `DTSTART` is anchored as above. G5 enforces this.
 - **Cancelled — two shapes (G5 checks both):**
   - **`type: holiday`** (cancelled when the newsletter was published): `STATUS:CANCELLED`, `LOCATION:Meeting Cancelled`, a fixed 1-minute placeholder. Individual `…T183000Z`→`…T183100Z`; quarterly `…T183000`→`…T183100`. `DTSTAMP` is the edition's first day.
   - **Any other type with `cancelled: true`** (cancelled after publication, e.g. 2026-04-24 or an operator correction): keep the type and the real times, and set `STATUS:CANCELLED`. `DTSTAMP` may be the date of the change.

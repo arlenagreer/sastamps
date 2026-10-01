@@ -52,7 +52,8 @@ export const REMINDER = {
 export const CALENDAR = {
   DATE_RANGE: {
     MIN: '2024-01-01',
-    MAX: '2026-12-31'
+    // Through the end of next year, so the calendar never stops at a hard-coded date
+    MAX: `${new Date().getFullYear() + 1}-12-31`
   },
   VIEW_TYPES: {
     DEFAULT: 'default',
