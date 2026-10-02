@@ -420,6 +420,8 @@
         var searchIndex = null;
         var documents = {};
         var isLoading = false;
+        // A search submitted before the index finished loading.
+        var pendingSearch = null;
 
         var MS_PER_DAY = 24 * 60 * 60 * 1000;
         // Same rule as js/modules/meeting-loader.js (QUARTER_ADVANCE_DAYS):
@@ -436,6 +438,8 @@
             document.getElementById('searchInput').value = query;
             if (searchIndex) {
                 performSearch({ updateUrl: false });
+            } else {
+                pendingSearch = { updateUrl: false };
             }
         });
 
@@ -469,7 +473,12 @@
                 setSearchStatus(statusEl, '', '');
 
                 var query = new URLSearchParams(window.location.search).get('q');
-                if (query) {
+                if (pendingSearch) {
+                    // A search submitted while the index loaded wins over ?q=.
+                    var pending = pendingSearch;
+                    pendingSearch = null;
+                    performSearch(pending);
+                } else if (query) {
                     document.getElementById('searchInput').value = query;
                     performSearch({ updateUrl: false });
                 } else {
@@ -524,7 +533,10 @@
             }
 
             if (!searchIndex) {
-                setSearchStatus(statusEl, 'loading', 'Search is still loading. Please wait a moment...');
+                // Remember it: initializeSearch runs it as soon as the index
+                // is loaded (typed searches and quick chips alike).
+                pendingSearch = { updateUrl: updateUrl };
+                setSearchStatus(statusEl, 'loading', 'Search is still loading. Your search will run in a moment...');
                 initializeSearch();
                 return;
             }
@@ -662,18 +674,16 @@
             return posted ? nextKey : quarterKey(current);
         }
 
-        var QUARTER_WORDS = ['First', 'Second', 'Third', 'Fourth'];
-
         // Where a result lands. A meeting links to its card on meetings.html
-        // while that page shows its quarter; otherwise to the quarter's
-        // PHILATEX, whose calendar lists it.
+        // while that page shows its quarter; otherwise to the PHILATEX issue
+        // whose calendar lists it (a quarterly issue, or from 2027 a
+        // bimonthly one: the build matches the meeting's month to the issue).
         function resultLink(doc) {
             if (doc.type === 'meeting' && doc.quarter !== shownMeetingQuarter && doc.newsletterUrl) {
-                var parts = doc.quarter.split('-Q');
                 return {
                     href: doc.newsletterUrl,
                     pdf: true,
-                    note: 'Listed in the ' + QUARTER_WORDS[Number(parts[1]) - 1] + ' Quarter ' + parts[0] + ' PHILATEX (PDF)'
+                    note: 'Listed in the ' + (doc.newsletterLabel ? doc.newsletterLabel + ' ' : '') + 'PHILATEX (PDF)'
                 };
             }
             var href = doc.url || '#';

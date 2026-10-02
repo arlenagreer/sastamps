@@ -7,7 +7,8 @@
  * - a newsletter or archived issue links to its PDF;
  * - a meeting carries two links, chosen by search.html at view time: the
  *   card on meetings.html (#meeting-YYYY-MM-DD) while meetings.html shows
- *   that meeting's quarter, otherwise that quarter's PHILATEX PDF;
+ *   that meeting's quarter, otherwise the PDF of the PHILATEX issue (quarterly,
+ *   or bimonthly from 2027) whose calendar lists it;
  * - a glossary term links to glossary.html#term-<id>, a resource guide to
  *   resources.html#resource-<id>;
  * - a site page links to the page itself.
@@ -52,7 +53,10 @@ function decodeEntities(text) {
     return text.replace(/&(#x[0-9a-f]+|#[0-9]+|[a-z]+);/gi, (match, name) => {
         if (name[0] === '#') {
             const code = name[1] === 'x' || name[1] === 'X' ? parseInt(name.slice(2), 16) : parseInt(name.slice(1), 10);
-            return Number.isFinite(code) ? String.fromCodePoint(code) : match;
+            // An invalid code point (&#xD800;, &#99999999;) becomes U+FFFD
+            // rather than throwing and failing the build.
+            const valid = Number.isInteger(code) && code >= 0 && code <= 0x10FFFF && !(code >= 0xD800 && code <= 0xDFFF);
+            return valid ? String.fromCodePoint(code) : '\uFFFD';
         }
         const decoded = ENTITIES[name.toLowerCase()];
         return decoded === undefined ? match : decoded;
@@ -94,23 +98,70 @@ function quarterOfDate(isoDate) {
 }
 
 const QUARTER_NAMES = { First: 1, Second: 2, Third: 3, Fourth: 4 };
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'];
+
+/** The months (1-12) an archived edition covers: Q1-Q4 or bimonthly 01-06. */
+function archivedEditionMonths(edition) {
+    const q = /^Q([1-4])$/.exec(edition);
+    if (q) {
+        const start = (Number(q[1]) - 1) * 3 + 1;
+        return [start, start + 1, start + 2];
+    }
+    const b = /^0([1-6])$/.exec(edition);
+    if (b) {
+        const start = (Number(b[1]) - 1) * 2 + 1;
+        return [start, start + 1];
+    }
+    return [];
+}
+
+/** The months (1-12) a newsletters.json issue covers: by quarter, or by months (bimonthly, 2027 on). */
+function issueMonths(n) {
+    const q = QUARTER_NAMES[n.quarter];
+    if (q) {
+        const start = (q - 1) * 3 + 1;
+        return [start, start + 1, start + 2];
+    }
+    if (Array.isArray(n.months)) {
+        return n.months.map(m => MONTH_NAMES.indexOf(m) + 1).filter(m => m > 0);
+    }
+    return [];
+}
+
+/** "Fourth Quarter 2026" or "January/February 2027". */
+function issueLabel(n) {
+    if (QUARTER_NAMES[n.quarter]) {
+        return `${n.quarter} Quarter ${n.year}`;
+    }
+    if (Array.isArray(n.months) && n.months.length) {
+        return `${n.months.join('/')} ${n.year}`;
+    }
+    return n.title;
+}
+
+const monthKey = (year, month) => `${year}-${String(month).padStart(2, '0')}`;
 
 /**
- * Map "YYYY-Qn" -> the URL of that quarter's PHILATEX PDF, from the current
- * newsletters and the archive's quarterly issues.
+ * Map "YYYY-MM" -> { url, label } of the PHILATEX issue covering that month
+ * (whose calendar lists that month's meetings): quarterly or bimonthly
+ * issues from newsletters.json first, then the archive.
  */
-function quarterNewsletterMap(newsletters, archived) {
+function issueByMonthMap(newsletters, archived) {
     const map = new Map();
     for (const n of newsletters) {
-        const q = QUARTER_NAMES[n.quarter];
-        if (q && n.filePath) {
-            map.set(`${n.year}-Q${q}`, fileUrl(n.filePath));
+        if (!n.filePath) { continue; }
+        for (const m of issueMonths(n)) {
+            map.set(monthKey(n.year, m), { url: fileUrl(n.filePath), label: issueLabel(n) });
         }
     }
     for (const a of archived) {
-        const m = /^Q([1-4])$/.exec(a.edition);
-        if (m && a.status === 'available' && a.filePath && !map.has(`${a.year}-Q${m[1]}`)) {
-            map.set(`${a.year}-Q${m[1]}`, fileUrl(a.filePath));
+        if (a.status !== 'available' || !a.filePath) { continue; }
+        for (const m of archivedEditionMonths(a.edition)) {
+            const key = monthKey(a.year, m);
+            if (!map.has(key)) {
+                map.set(key, { url: fileUrl(a.filePath), label: `${a.editionLabel} ${a.year}` });
+            }
         }
     }
     return map;
@@ -150,8 +201,9 @@ function archivedDocument(entry) {
     };
 }
 
-function meetingDocument(meeting, newsletterByQuarter, builder) {
+function meetingDocument(meeting, issueByMonth, builder) {
     const { year, quarter } = quarterOfDate(meeting.date);
+    const issue = issueByMonth.get(meeting.date.slice(0, 7)) || null;
     return {
         id: `meeting-${meeting.id}`,
         type: 'meeting',
@@ -160,7 +212,10 @@ function meetingDocument(meeting, newsletterByQuarter, builder) {
         summary: meeting.description || meeting.topic || '',
         // meetings.html renders each card as <article id="meeting-YYYY-MM-DD">.
         url: `meetings.html#meeting-${encodeURIComponent(meeting.id)}`,
-        newsletterUrl: newsletterByQuarter.get(`${year}-Q${quarter}`) || null,
+        // The PHILATEX whose calendar lists this meeting (quarterly or bimonthly).
+        newsletterUrl: issue ? issue.url : null,
+        newsletterLabel: issue ? issue.label : null,
+        // The calendar quarter, which decides whether meetings.html shows it.
         quarter: `${year}-Q${quarter}`,
         date: meeting.date,
         tags: meeting.tags || [],
@@ -200,21 +255,34 @@ class SearchIndexBuilder {
     }
 
     /**
-     * Load every source into this.documents. A missing or broken source fails
-     * the build: a silently smaller index is how search lost the archive.
+     * Load every source into this.documents. Each source is loaded on its
+     * own: one that fails is logged and skipped, so a bad file cannot take
+     * search down with it (tests/search-index.test.js checks that every
+     * source is present).
      */
     async collect() {
         this.documents = [];
-        const newsletters = await this.readJSON('newsletters', 'newsletters.json');
-        const archived = await this.readJSON('newsletters', 'archived-newsletters.json');
-        this.loadNewsletters(newsletters.newsletters);
-        this.loadArchivedNewsletters(archived.archivedNewsletters);
-        const byQuarter = quarterNewsletterMap(newsletters.newsletters, archived.archivedNewsletters);
-        this.loadMeetings((await this.readJSON('meetings', 'meetings.json')).meetings, byQuarter);
-        this.loadResources((await this.readJSON('members', 'resources.json')).resources);
-        this.loadGlossary((await this.readJSON('glossary', 'glossary.json')).terms);
+        const newsletters = await this.tryLoad('newsletters', () => this.readJSON('newsletters', 'newsletters.json'));
+        const archived = await this.tryLoad('archived newsletters', () => this.readJSON('newsletters', 'archived-newsletters.json'));
+        const current = (newsletters && newsletters.newsletters) || [];
+        const archive = (archived && archived.archivedNewsletters) || [];
+        await this.tryLoad('newsletters', () => this.loadNewsletters(current));
+        await this.tryLoad('archived newsletters', () => this.loadArchivedNewsletters(archive));
+        const issueByMonth = issueByMonthMap(current, archive);
+        await this.tryLoad('meetings', async () => this.loadMeetings((await this.readJSON('meetings', 'meetings.json')).meetings, issueByMonth));
+        await this.tryLoad('resources', async () => this.loadResources((await this.readJSON('members', 'resources.json')).resources));
+        await this.tryLoad('glossary', async () => this.loadGlossary((await this.readJSON('glossary', 'glossary.json')).terms));
         await this.loadSitePages();
         return this.documents;
+    }
+
+    async tryLoad(what, fn) {
+        try {
+            return await fn();
+        } catch (error) {
+            console.warn(`⚠️ Search index: skipped ${what} (${error.message})`);
+            return null;
+        }
     }
 
     async readJSON(...parts) {
@@ -295,7 +363,13 @@ class SearchIndexBuilder {
 
     async loadSitePages() {
         for (const page of SITE_PAGES) {
-            const html = await fs.readFile(path.join(this.root, page.file), 'utf8');
+            let html;
+            try {
+                html = await fs.readFile(path.join(this.root, page.file), 'utf8');
+            } catch (error) {
+                console.warn(`⚠️ Search index: skipped page ${page.file} (${error.message})`);
+                continue;
+            }
             const { title, description, text } = extractPageText(html);
             this.documents.push({
                 id: `page-${page.file.replace(/\.html$/, '')}`,
@@ -430,6 +504,7 @@ class SearchIndexBuilder {
             if (doc.period) { out.period = doc.period; }
             if (doc.type === 'meeting') {
                 out.newsletterUrl = doc.newsletterUrl;
+                out.newsletterLabel = doc.newsletterLabel;
                 out.quarter = doc.quarter;
                 out.cancelled = doc.cancelled;
             }
@@ -481,6 +556,8 @@ module.exports = {
     extractPageText,
     archivedDocument,
     archivedIssueDate,
-    quarterNewsletterMap,
+    issueByMonthMap,
+    meetingDocument,
+    decodeEntities,
     fileUrl
 };
