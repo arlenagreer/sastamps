@@ -108,8 +108,21 @@ if (!fs.existsSync(SITE)) {
   // independent second opinion, so a gap in that rule still fails here.
   const forbidden = all.filter((f) => isPrivate(f) || /\.(php|db|sqlite3?|env|md|bak|log|sh|py|rb)$/i.test(f)
     || /^(scripts|js|node_modules|\.planning|\.claude|\.github)\//.test(f)
-    || (!f.includes('/') && f.endsWith('.html') && !isSitePage(f)) || /(^|\/)sw\.js$/.test(f));
+    || (!f.includes('/') && f.endsWith('.html') && !isSitePage(f)) || (/(^|\/)sw\.js$/.test(f) && f !== 'sw.js'));
   check(forbidden.length === 0, `_site contains files that must not be public: ${forbidden.slice(0, 8).join(', ')}`);
+
+  // /sw.js deploys only as the kill switch for the retired 2025 caching
+  // worker. A caching worker here would pin stale pages again, and a 404
+  // here would leave the old worker installed (browsers keep it on a 404).
+  console.log('▸ _site/sw.js is the service-worker kill switch');
+  const sw = existsExact(path.join(SITE, 'sw.js')) ? fs.readFileSync(path.join(SITE, 'sw.js'), 'utf8') : '';
+  const swCode = sw.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '');
+  check(sw.length > 0, '_site/sw.js missing: browsers holding the retired worker would keep serving stale pages');
+  check(/self\.registration\.unregister\(\)/.test(swCode), '_site/sw.js must unregister itself (kill switch)');
+  check(/self\.skipWaiting\(\)/.test(swCode), '_site/sw.js must skipWaiting() so it replaces the old worker at once');
+  check(/caches\.delete\(/.test(swCode), '_site/sw.js must delete the stale caches');
+  check(!/addEventListener\(\s*['"]fetch['"]/.test(swCode) && !/\bonfetch\b/.test(swCode) && !/cache\.(put|add|addAll)\(/.test(swCode),
+    '_site/sw.js must not handle fetches or write caches');
 
   console.log('▸ every local reference in _site resolves');
   const missing = [];
