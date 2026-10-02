@@ -5,7 +5,7 @@
 
 import { debounce } from '../utils/performance.js';
 import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
-import { parseLocalDate } from '../utils/dates.js';
+import { parseLocalDate, isUpcomingDate } from '../utils/dates.js';
 import { fetchJSON } from '../utils/fetch-json.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { createLogger } from '../utils/logger.js';
@@ -296,7 +296,8 @@ function initializeMeetingFilters(container) {
         show = false;
       }
 
-      if (showUpcomingOnly && meetingDate < now) {
+      // A meeting stays upcoming for the whole of its own day
+      if (showUpcomingOnly && !isUpcomingDate(meeting.dataset.date, now)) {
         show = false;
       }
 

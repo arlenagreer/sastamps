@@ -25,3 +25,18 @@ export function parseLocalDate(value) {
   }
   return new Date(value);
 }
+
+/**
+ * Whether an event dated 'YYYY-MM-DD' is still upcoming at `now`.
+ * Event dates are calendar days, so a meeting stays upcoming for the whole
+ * of its own local day and becomes past only once that day has ended.
+ * (new Date('YYYY-MM-DD') is UTC midnight, which in US time zones made a
+ * meeting count as past from the previous evening.)
+ * @param {string} date - Event date, 'YYYY-MM-DD'
+ * @param {Date} now - Current time
+ * @returns {boolean}
+ */
+export function isUpcomingDate(date, now = new Date()) {
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return parseLocalDate(date) >= startOfToday;
+}

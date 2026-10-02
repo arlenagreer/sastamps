@@ -108,6 +108,7 @@ async function loadGlossarySearch(container) {
     // Search button click
     addEventListenerWithCleanup(searchButton, 'click', () => {
       const query = searchInput.value.trim();
+      clearTimeout(searchTimeout);
       if (query) {
         performSearch(query, resultsContainer);
       }
@@ -130,6 +131,7 @@ async function loadGlossarySearch(container) {
       if (e.key === 'Enter') {
         e.preventDefault();
         const query = searchInput.value.trim();
+        clearTimeout(searchTimeout);
         if (query) {
           performSearch(query, resultsContainer);
         }

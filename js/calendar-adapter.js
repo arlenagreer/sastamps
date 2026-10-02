@@ -6,24 +6,9 @@
 import { escapeHTML } from './utils/safe-dom.js';
 import { createLogger } from './utils/logger.js';
 import { fetchJSON } from './utils/fetch-json.js';
-import { parseLocalDate } from './utils/dates.js';
+import { parseLocalDate, isUpcomingDate } from './utils/dates.js';
 
 const logger = createLogger('CalendarAdapter');
-
-/**
- * Whether an event dated 'YYYY-MM-DD' is still upcoming at `now`.
- * Event dates are calendar days, so a meeting stays upcoming for the whole
- * of its own local day and becomes past only once that day has ended.
- * (new Date('YYYY-MM-DD') is UTC midnight, which in US time zones made a
- * meeting count as past from the previous evening.)
- * @param {string} date - Event date, 'YYYY-MM-DD'
- * @param {Date} now - Current time
- * @returns {boolean}
- */
-export function isUpcomingDate(date, now = new Date()) {
-  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  return parseLocalDate(date) >= startOfToday;
-}
 
 export class CalendarAdapter {
   constructor() {
@@ -130,7 +115,11 @@ export class CalendarAdapter {
      * @returns {string} Formatted date string (YYYY-MM-DD)
      */
   formatDateForCalendar(date) {
-    return date.toISOString().split('T')[0];
+    // Local calendar day. toISOString() converts to UTC, which moves a
+    // local-midnight date back a day for viewers east of UTC.
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${date.getFullYear()}-${month}-${day}`;
   }
 
   /**
