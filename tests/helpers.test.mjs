@@ -1,12 +1,12 @@
 /**
  * js/utils/helpers.js: the pure helpers (no DOM). validateEmail and
- * validatePhone gate the contact form client-side.
+ * isPlausiblePhone gate the contact form client-side.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 globalThis.window = { location: { hostname: 'example.org', protocol: 'https:', search: '', href: 'https://example.org/' } };
-const { validateEmail, validatePhone, deepClone, parseDate } = await import('../js/utils/helpers.js');
+const { validateEmail, isPlausiblePhone, deepClone, parseDate } = await import('../js/utils/helpers.js');
 
 test('validateEmail', () => {
   for (const e of ['a@b.co', 'first.last+tag@example.org']) {
@@ -17,12 +17,18 @@ test('validateEmail', () => {
   }
 });
 
-test('validatePhone: US formats', () => {
-  for (const p of ['210-555-0100', '(210) 555-0100', '210.555.0100', '2105550100']) {
-    assert.equal(validatePhone(p), true, p);
+test('isPlausiblePhone: US, international and extensions', () => {
+  for (const p of ['210-555-0100', '(210) 555-0100', '210.555.0100', '2105550100', '555-0100',
+    '+1 210 555 0123', '+44 20 7946 0958', '+49 (0)30 1234567', '+61 2/9876 5432',
+    '210-555-0100 x2', '210-555-0123 ext. 4', '210 555 0123 extension 12', '210.555.0123 #3', '  210-555-0100  ']) {
+    assert.equal(isPlausiblePhone(p), true, p);
   }
-  for (const p of ['', '555-0100', '210-555-010', 'phone', '210-555-0100 x2']) {
-    assert.equal(validatePhone(p), false, p);
+});
+
+test('isPlausiblePhone: junk, too short, too long', () => {
+  for (const p of ['', '   ', 'phone', 'abc', 'call me maybe', '12', '555-01', '+', '210-555-0100 ext', '210-555-0100 ext. 1234567',
+    '1234567890123456', '210-555-0100; DROP', '++1 210 555 0100', '210-555-0100+', null, undefined, 2105550100]) {
+    assert.equal(isPlausiblePhone(p), false, String(p));
   }
 });
 

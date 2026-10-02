@@ -9,10 +9,10 @@
  *
  * Browsers re-check /sw.js on every navigation. This replacement installs
  * at once and then:
- *   1. deletes this origin's caches (the site keeps none of its own),
+ *   1. deletes the retired worker's caches (every name starting 'sapa-'),
  *   2. unregisters itself, and
- *   3. if it removed a cache, re-navigates every open tab so each one loads a
- *      fresh page from the network.
+ *   3. if it removed a cache, re-navigates the tabs the old worker controlled
+ *      (the ones showing stale pages) so each loads a fresh page.
  * It has no fetch handler, so it never answers a request itself. Re-navigation
  * only happens when a stale cache existed, so it cannot cause a reload loop.
  *
@@ -28,7 +28,7 @@ self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
     let removed = 0;
     try {
-      const keys = await caches.keys();
+      const keys = (await caches.keys()).filter((key) => key.startsWith('sapa-'));
       const results = await Promise.all(keys.map((key) => caches.delete(key)));
       removed = results.filter(Boolean).length;
     } catch (_error) {
@@ -38,13 +38,9 @@ self.addEventListener('activate', (event) => {
     await self.registration.unregister();
 
     if (removed > 0) {
-      const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
-      await Promise.all(windows.map((client) => {
-        // navigate() is allowed only for a tab this worker controls. Any other
-        // tab was not being served from the stale cache.
-        if (!('navigate' in client)) { return null; }
-        return client.navigate(client.url).catch(() => null);
-      }));
+      // Controlled tabs only: these were being served from the stale cache.
+      const windows = await self.clients.matchAll({ type: 'window' });
+      await Promise.all(windows.map((client) => client.navigate(client.url).catch(() => null)));
     }
   })());
 });

@@ -6,7 +6,7 @@
 import { debounce } from '../utils/performance.js';
 import { safeQuerySelector } from '../utils/safe-dom.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
-import { validateEmail } from '../utils/helpers.js';
+import { validateEmail, isPlausiblePhone } from '../utils/helpers.js';
 import { createLogger } from '../utils/logger.js';
 import {
   ERROR_MESSAGES,
@@ -18,21 +18,6 @@ const logger = createLogger('ContactPage');
 
 const RELAY_TIMEOUT_MS = 30000;
 const PHONE_INVALID = 'Please enter a phone number using digits, spaces, dashes or a leading +, for example (210) 555-0123 or +44 20 7946 0958.';
-
-/**
- * The phone number is optional and only read by a person, so accept what
- * people actually type: US or international, with +, spaces, dots, dashes,
- * brackets and an extension ("ext. 4", "x12", "#3"). 7 to 15 digits, the
- * longest a phone number can be (E.164). Anything else is likely a typo.
- * @param {string} value
- * @returns {boolean}
- */
-function isPlausiblePhone(value) {
-  const main = value.replace(/\s*(?:ext\.?|extension|x|#)\s*\d{1,6}$/i, '');
-  if (!/^\+?[\d\s().\-/]+$/.test(main)) {return false;}
-  const digits = main.replace(/\D/g, '').length;
-  return digits >= 7 && digits <= 15;
-}
 
 const RELAY_UNCONFIRMED = "We couldn't confirm your message was sent (the connection timed out). It may still arrive, so please wait a few minutes before sending it again, or email us at loz33@hotmail.com.";
 
@@ -94,6 +79,7 @@ function validateField(event) {
 
   // Skip validation if field is empty (unless required)
   if (!value && !field.required) {
+    clearFormErrorWhenFixed(field.form);
     return true;
   }
 
@@ -241,9 +227,16 @@ async function handleFormSubmission(event) {
   }
 
   if (!allValid) {
-    showFormMessage(ERROR_MESSAGES.VALIDATION_FAILED, `${CSS_CLASSES.ERROR} validation-summary`);
+    // Take the visitor to the first field to fix (its own error is right
+    // under it); the summary stays beside the button.
     const firstInvalid = form.querySelector('.form-control.error');
-    if (firstInvalid) {firstInvalid.focus({ preventScroll: true });}
+    showFormMessage(ERROR_MESSAGES.VALIDATION_FAILED, `${CSS_CLASSES.ERROR} validation-summary`, { scroll: !firstInvalid });
+    if (firstInvalid) {
+      firstInvalid.focus({ preventScroll: true });
+      if (typeof firstInvalid.scrollIntoView === 'function') {
+        firstInvalid.scrollIntoView({ block: 'center' });
+      }
+    }
     return;
   }
 
@@ -312,7 +305,7 @@ async function handleFormSubmission(event) {
   }
 }
 
-function showFormMessage(message, type) {
+function showFormMessage(message, type, { scroll = true } = {}) {
   // Remove existing message
   const existingMessage = document.querySelector('.form-message');
   if (existingMessage) {
@@ -335,7 +328,7 @@ function showFormMessage(message, type) {
   } else {
     form.appendChild(messageElement);
   }
-  if (typeof messageElement.scrollIntoView === 'function') {
+  if (scroll && typeof messageElement.scrollIntoView === 'function') {
     messageElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
 }

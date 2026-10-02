@@ -21,7 +21,8 @@ function load({ cacheKeys = [], windows = [] } = {}) {
     skipWaiting: () => { calls.skipWaiting++; return Promise.resolve(); },
     registration: { unregister: async () => { calls.unregister++; return true; } },
     clients: {
-      matchAll: async (opts) => { calls.matchAll = opts; return windows.map((url) => ({ url, navigate: async (u) => { calls.navigated.push(u); } })); }
+      // Like the real API: without includeUncontrolled, only tabs this worker controls.
+      matchAll: async (opts) => { calls.matchAll = opts; return windows.filter((w) => opts.includeUncontrolled || w.controlled).map(({ url }) => ({ url, navigate: async (u) => { calls.navigated.push(u); } })); }
     }
   };
   const caches = {
@@ -45,17 +46,25 @@ test('sw.js installs at once and has no fetch handler', async () => {
   assert.equal(sw.calls.skipWaiting, 1);
 });
 
-test('sw.js deletes the stale caches, unregisters and re-navigates open tabs', async () => {
-  const sw = load({ cacheKeys: ['sapa-cache-v1', 'sapa-cache-v0'], windows: ['https://www.sastamps.org/index.html', 'https://www.sastamps.org/meetings.html'] });
+test('sw.js deletes only sapa- caches, unregisters and re-navigates the tabs it controlled', async () => {
+  const sw = load({
+    cacheKeys: ['sapa-cache-v1', 'sapa-cache-v0', 'other-cache'],
+    windows: [
+      { url: 'https://www.sastamps.org/index.html', controlled: true },
+      { url: 'https://www.sastamps.org/meetings.html', controlled: true },
+      { url: 'https://www.sastamps.org/about.html', controlled: false }
+    ]
+  });
   await sw.fire('activate');
   assert.deepEqual(sw.calls.deleted.sort(), ['sapa-cache-v0', 'sapa-cache-v1']);
-  assert.equal(sw.store.size, 0);
+  assert.deepEqual([...sw.store], ['other-cache']);
   assert.equal(sw.calls.unregister, 1);
+  assert.equal(sw.calls.matchAll.includeUncontrolled, undefined);
   assert.deepEqual(sw.calls.navigated, ['https://www.sastamps.org/index.html', 'https://www.sastamps.org/meetings.html']);
 });
 
 test('sw.js does not reload tabs when there was no stale cache (no reload loop)', async () => {
-  const sw = load({ cacheKeys: [], windows: ['https://www.sastamps.org/'] });
+  const sw = load({ cacheKeys: ['other-cache'], windows: [{ url: 'https://www.sastamps.org/', controlled: true }] });
   await sw.fire('activate');
   assert.equal(sw.calls.unregister, 1);
   assert.deepEqual(sw.calls.navigated, []);

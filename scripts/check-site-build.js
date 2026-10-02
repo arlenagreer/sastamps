@@ -151,6 +151,22 @@ if (!fs.existsSync(SITE)) {
     }
   }
 
+  // And every page's icon tags: a declared type must be the file's real
+  // type, and an apple-touch-icon must be a PNG (iOS ignores WebP there).
+  for (const file of walk(SITE).filter((f) => /\.html?$/.test(f))) {
+    const html = fs.readFileSync(file, 'utf8');
+    for (const m of html.matchAll(/<link\b[^>]*\brel=["'](?:shortcut )?(icon|apple-touch-icon)["'][^>]*>/gi)) {
+      const href = (m[0].match(/\bhref=["']([^"']+)["']/i) || [])[1];
+      const type = (m[0].match(/\btype=["']([^"']+)["']/i) || [])[1];
+      const abs = href && !SKIP_REF.test(href) ? resolveRef(href, file) : null;
+      if (!abs || !fileExact(abs)) continue; // the reference scan below reports it
+      const real = magic(fs.readFileSync(abs));
+      const where = `${path.relative(SITE, file)}: <link rel="${m[1]}" href="${href}">`;
+      if (type) check(real === type, `${where} declares ${type} but the file is ${real}`);
+      if (m[1].toLowerCase() === 'apple-touch-icon') check(real === 'image/png', `${where} is ${real}; want a PNG`);
+    }
+  }
+
   console.log('▸ every local reference in _site resolves');
   const missing = [];
   for (const file of walk(SITE).filter((f) => /\.html?$/.test(f))) {
