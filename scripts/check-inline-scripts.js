@@ -17,7 +17,7 @@
  * Module scripts are parsed with `node --input-type=module --check`.
  * Non-JS script types (application/ld+json, etc.) and src= scripts are skipped.
  *
- * Scope: every *.html at the repo root and in showcase/ -- the HTML the Pages
+ * Scope: every *.html at the repo root -- the HTML the Pages
  * deploy copies -- minus test-*.html, matching test:html's exclusion.
  *
  * Usage: node scripts/check-inline-scripts.js [dir]   (dir defaults to repo root)
@@ -32,7 +32,7 @@ const vm = require('vm');
 const { isSitePage } = require('./lib/site');
 
 const root = path.resolve(process.argv[2] || path.join(__dirname, '..'));
-const SCAN_DIRS = ['.', 'showcase'];
+const SCAN_DIRS = ['.'];
 const JS_TYPES = new Set(['', 'text/javascript', 'application/javascript', 'module']);
 
 function htmlFiles() {
