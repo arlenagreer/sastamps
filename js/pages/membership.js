@@ -47,7 +47,10 @@ function initMobileMenu() {
   if (menuToggle && navMenu) {
     // Close menu when clicking outside
     addEventListenerWithCleanup(document, 'click', (event) => {
-      if (!navMenu.contains(event.target) && !menuToggle.contains(event.target)) {
+      // A tap on the menu button (label) is not "outside": the label toggles
+      // the checkbox itself, and unchecking here first made it re-open.
+      if (!navMenu.contains(event.target) && !menuToggle.contains(event.target) &&
+          !(event.target instanceof Element && event.target.closest('.menu-toggle'))) {
         menuToggle.checked = false;
       }
     });
@@ -56,6 +59,7 @@ function initMobileMenu() {
     addEventListenerWithCleanup(document, 'keydown', (event) => {
       if (event.key === 'Escape' && menuToggle.checked) {
         menuToggle.checked = false;
+        menuToggle.focus(); // the panel's links just became unfocusable
       }
     });
   }

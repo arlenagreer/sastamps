@@ -325,10 +325,55 @@ footer,
    .nav-menu li, .nav-menu a:active, .nav-menu a:hover, body.menu-open, .nav-icon)
    defined in critical.css - mobile navigation core styles */
 
-@media (width <= 768px) {
+@media (width <= 1260px) {
+    /* Show the menu button on phones. critical.css says the same, but this
+       file loads after it and its base `.menu-toggle { display: none }` has
+       equal specificity, so without this rule the button stays hidden (it
+       did from 2026-01-03 to 2026-10-02: no header navigation on phones). */
+    .menu-toggle {
+        display: block;
+
+        /* Above the slide-in menu (z-index 60), so the same button closes it. */
+        position: relative;
+        z-index: 70;
+    }
+
+    /* Keyboard: the checkbox stays focusable (visually hidden, not
+       display:none), Space toggles the menu, and the button shows focus. */
+    .menu-toggle-checkbox {
+        display: block;
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        opacity: 0;
+    }
+
+    .menu-toggle-checkbox:focus-visible + .menu-toggle {
+        outline: 3px solid var(--accent);
+        outline-offset: 2px;
+    }
+
+    /* The panel scrolls on short screens (10 links are taller than an
+       iPhone SE), its first link clears the button, and its links can't
+       be tabbed to while it is closed. */
+    .nav-menu {
+        /* The visible viewport: critical.css ends on calc(var(--vh) * 100),
+           but --vh is only set on 2 pages, so it fell back to 100vh, which
+           runs under mobile browsers' toolbars. */
+        height: 100vh;
+        height: 100dvh;
+        overflow-y: auto;
+        padding-top: 4.5rem;
+        visibility: hidden;
+    }
+
     /* CSS-only menu toggle using checkbox - extension */
     .menu-toggle-checkbox:checked ~ .nav-menu {
         right: 0;
+        visibility: visible;
     }
 
     /* Extended mobile link styling - enhancements over critical.css base */
@@ -372,6 +417,18 @@ footer,
     }
 }
 
+
+/* Current page in the desktop header (phones style it inside the menu). */
+@media (width >= 1261px) {
+    .nav-menu a[aria-current="page"],
+    .nav-menu a[aria-current="page"] .nav-icon {
+        color: var(--primary);
+    }
+
+    .nav-menu a[aria-current="page"] {
+        font-weight: 600;
+    }
+}
 
 /* ===== FOOTER STYLES ===== */
 footer {
@@ -4309,36 +4366,6 @@ tr:hover {
     color: var(--primary-light);
 }
 
-.page-resources nav li.active a {
-    color: var(--primary);
-}
-
-@media (width <= 1280px) {
-    .page-resources nav li {
-        margin-left: 1rem;
-    }
-
-    .page-resources nav a {
-        padding: 0.25rem;
-        font-size: 0.95rem;
-    }
-
-    .page-resources .nav-icon {
-        font-size: 1rem;
-        margin-right: 6px;
-    }
-}
-
-@media (width <= 1024px) {
-    .page-resources nav li {
-        margin-left: 0.75rem;
-    }
-
-    .page-resources nav a {
-        font-size: 0.9rem;
-    }
-}
-
 .page-resources .hero {
     background-color: var(--primary);
     color: white;
@@ -4358,29 +4385,6 @@ tr:hover {
     font-size: 1.25rem;
     margin: 0;
     opacity: 0.9;
-}
-
-@media (width <= 768px) {
-    .page-resources nav ul {
-        flex-direction: column;
-        position: fixed;
-        top: 0;
-        right: -100%;
-        background: white;
-        height: 100vh;
-        width: 300px;
-        padding: 2rem;
-        transition: right 0.3s ease;
-        box-shadow: var(--shadow-lg);
-    }
-
-    .page-resources nav ul.active {
-        right: 0;
-    }
-
-    .page-resources nav li {
-        margin: 0 0 1rem;
-    }
 }
 
 .page-resources .category-grid {
