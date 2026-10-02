@@ -149,7 +149,7 @@ function initMobileMenu() {
       // it as "outside" unchecked the box and the label re-checked it, so the
       // menu could never be closed from the button.
       if (!navMenu.contains(event.target) && !menuToggle.contains(event.target) &&
-          !event.target.closest('.menu-toggle')) {
+          !(event.target instanceof Element && event.target.closest('.menu-toggle'))) {
         menuToggle.checked = false;
       }
     });
@@ -158,6 +158,7 @@ function initMobileMenu() {
     addEventListenerWithCleanup(document, 'keydown', (event) => {
       if (event.key === 'Escape' && menuToggle.checked) {
         menuToggle.checked = false;
+        menuToggle.focus(); // the panel's links just became unfocusable
       }
     });
   }
