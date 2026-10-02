@@ -2289,6 +2289,248 @@ tr:hover {
 }
 
 
+/* Meeting days on the meetings-page calendar (marked by meetings.js via
+   onCreateDateEls). A meeting day is filled navy; a cancelled Friday is
+   struck through on a pale red tint, so the two differ by more than colour. */
+.vc-date.sapa-day-meeting [data-vc-date-btn] {
+    background-color: var(--primary);
+    color: var(--white);
+    font-weight: 700;
+}
+
+.vc-date.sapa-day-meeting [data-vc-date-btn]:hover {
+    background-color: var(--primary-light);
+}
+
+.vc-date.sapa-day-meeting.sapa-day-past [data-vc-date-btn] {
+    background-color: #d4e3ee;
+    color: var(--primary-dark);
+}
+
+.vc-date.sapa-day-cancelled [data-vc-date-btn] {
+    background-color: #fdeaea;
+    color: #922b21;
+    text-decoration: line-through;
+    font-weight: 700;
+}
+
+.vc-date.sapa-day-meeting [data-vc-date-btn]:focus-visible,
+.vc-date.sapa-day-cancelled [data-vc-date-btn]:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.calendar-legend {
+    list-style: none;
+    margin: 0 0 var(--space-md);
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-sm) var(--space-lg);
+    font-size: 0.95rem;
+    color: var(--dark);
+}
+
+.calendar-legend li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.legend-swatch {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.legend-meeting {
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+.legend-cancelled {
+    background-color: #fdeaea;
+    color: #922b21;
+    text-decoration: line-through;
+}
+
+/* ===== MEETING SCHEDULE CARDS (meetings.html) ===== */
+.meeting-schedule-summary {
+    margin: 0 0 var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    background: #fdf6d8;
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius-sm);
+}
+
+.meeting-item {
+    background: var(--white);
+    border: 1px solid #d5dde0;
+    border-left: 4px solid var(--primary);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+    scroll-margin-top: 110px;
+}
+
+.meeting-item:focus {
+    outline: 3px solid var(--primary-light);
+    outline-offset: 2px;
+}
+
+.meeting-item .meeting-header {
+    margin-bottom: var(--space-sm);
+}
+
+.meeting-item h3 {
+    font-size: 1.3rem;
+    margin: 0 0 var(--space-xs);
+}
+
+.meeting-item .meeting-date {
+    color: var(--dark);
+    font-weight: 600;
+}
+
+.meeting-item.meeting-next {
+    border-left-color: var(--accent);
+    box-shadow: var(--shadow-md);
+}
+
+.meeting-item.meeting-past {
+    background: #f6f8f9;
+    border-left-color: #a9b4b8;
+}
+
+.meeting-item.meeting-cancelled {
+    background: #fdf5f5;
+    border-left-color: var(--danger);
+}
+
+.meeting-badges {
+    margin: 0 0 var(--space-xs);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+}
+
+.meeting-badge {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.badge-next {
+    background: var(--accent);
+    color: var(--dark);
+}
+
+.badge-past {
+    background: #dfe5e7;
+    color: #3d4749;
+}
+
+.badge-cancelled {
+    background: #fdeaea;
+    color: #922b21;
+}
+
+.meeting-agenda summary {
+    cursor: pointer;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+/* Card actions: a plain row of buttons, not the site footer band */
+.meeting-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+    padding-top: var(--space-sm);
+    border-top: 1px solid #e3e8ea;
+}
+
+.meeting-actions .btn-rsvp,
+.meeting-actions .btn-reminder,
+.meeting-actions .btn-calendar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.meeting-actions .btn-calendar {
+    background-color: var(--primary);
+    border: 2px solid var(--primary);
+    color: var(--white);
+}
+
+.meeting-actions .btn-calendar:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: var(--white);
+}
+
+.meeting-actions .btn-rsvp,
+.meeting-actions .btn-reminder {
+    background-color: var(--white);
+    border: 2px solid var(--primary);
+    color: var(--primary);
+}
+
+.meeting-actions .btn-rsvp:hover,
+.meeting-actions .btn-reminder:hover {
+    background-color: #e8f1f7;
+}
+
+.meeting-actions .btn-rsvp:disabled,
+.meeting-actions .btn-reminder:disabled {
+    cursor: default;
+    opacity: 0.75;
+}
+
+.meeting-actions :is(.btn-rsvp, .btn-reminder, .btn-calendar):focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.meetings-load-error {
+    padding: var(--space-lg);
+    text-align: center;
+    background: #fdf5f5;
+    border: 1px solid #f0c4c0;
+    border-radius: var(--radius-md);
+    color: var(--dark);
+}
+
+.meetings-load-error .btn {
+    min-height: 44px;
+}
+
 /* ===== MODAL STYLES ===== */
 
 
@@ -2345,11 +2587,35 @@ tr:hover {
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
-.modal-title {
+/* White on the navy header (critical.css colours every h2 navy, which left
+   the title at about 1.3:1 here). */
+.modal-header .modal-title {
     margin: 0;
     font-size: 1.5rem;
     font-family: var(--font-heading);
     font-weight: 700;
+    color: var(--white);
+    overflow-wrap: anywhere;
+}
+
+.past-notice {
+    margin: 0 0 var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--light);
+    border-radius: var(--radius-sm);
+    color: var(--dark);
+    font-weight: 600;
+}
+
+.modal-footer .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+}
+
+.modal-footer .modal-calendar-link[hidden] {
+    display: none;
 }
 
 .modal-close {
@@ -2741,7 +3007,7 @@ tr:hover {
         padding: var(--space-md);
     }
     
-    .modal-title {
+    .modal-header .modal-title {
         font-size: 1.3rem;
     }
     
@@ -2774,11 +3040,21 @@ tr:hover {
 }
 
 @media (width <= 480px) {
+    /* dvh: the visible height, so the footer is not under the browser's
+       toolbar on a phone. The resources section pads every .modal-overlay
+       0.5rem on phones, which pushed this full-screen dialog 7px off the
+       bottom; the meeting dialog takes the whole screen instead. */
+    #event-modal.modal-overlay {
+        padding: 0;
+    }
+
     .modal-container {
         width: 100vw;
         height: 100vh;
+        height: 100dvh;
         max-width: 100vw;
         max-height: 100vh;
+        max-height: 100dvh;
         border-radius: 0;
         margin: 0;
     }

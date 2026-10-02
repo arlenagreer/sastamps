@@ -3,7 +3,9 @@
  * Handles modal dialogs for event details and other content
  */
 
-import { escapeHTML } from './utils/safe-dom.js';
+import { escapeHTML, safeUrl } from './utils/safe-dom.js';
+import { isUpcomingDate } from './utils/dates.js';
+import { meetingCalendarUrl, hasTime } from './calendar-adapter.js';
 
 export class Modal {
   constructor() {
@@ -46,6 +48,7 @@ export class Modal {
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <a class="btn btn-primary modal-calendar-link" href="#" download hidden><i class="fas fa-calendar-plus" aria-hidden="true"></i> Add to Calendar</a>
                         <button type="button" class="btn btn-secondary modal-close-btn">Close</button>
                     </div>
                 </div>
@@ -154,6 +157,16 @@ export class Modal {
     // Build detailed content
     const content = this.buildMeetingContent(meeting);
     modalBody.innerHTML = content;
+
+    // Single-meeting .ics, for a meeting that is still to come
+    const calendarLink = this.modal.querySelector('.modal-calendar-link');
+    if (calendarLink) {
+      const upcoming = isUpcomingDate(meeting.date, new Date());
+      const url = upcoming ? safeUrl(meetingCalendarUrl(meeting), '') : '';
+      calendarLink.hidden = !url;
+      calendarLink.setAttribute('href', url || '#');
+      calendarLink.setAttribute('aria-label', url ? `Add to Calendar: ${meeting.title}` : 'Add to Calendar');
+    }
   }
 
   /**
@@ -172,11 +185,15 @@ export class Modal {
 
     const eventTypeClass = `event-type-${meeting.type}`;
     const cancelledClass = meeting.cancelled ? 'event-cancelled' : '';
+    const past = !meeting.cancelled && !isUpcomingDate(meeting.date, new Date());
+    // A cancelled Friday has no schedule, place, programme or contact to show.
+    const live = !meeting.cancelled;
 
     const content = `
             <div class="event-details ${escapeHTML(eventTypeClass)} ${cancelledClass}">
-                ${meeting.cancelled ? '<div class="cancelled-banner"><i class="fas fa-exclamation-triangle"></i> This event has been cancelled</div>' : ''}
-                
+                ${meeting.cancelled ? '<div class="cancelled-banner"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i> No meeting this Friday</div>' : ''}
+                ${past ? '<p class="past-notice">This meeting has already taken place.</p>' : ''}
+
                 <div class="event-meta">
                     <div class="event-date">
                         <i class="fas fa-calendar"></i>
@@ -188,14 +205,14 @@ export class Modal {
                     </div>
                 </div>
 
-                ${meeting.time ? this.buildTimeSection(meeting.time) : ''}
-                ${meeting.location ? this.buildLocationSection(meeting.location) : ''}
-                ${meeting.presenter ? this.buildPresenterSection(meeting.presenter) : ''}
+                ${live && meeting.time ? this.buildTimeSection(meeting.time) : ''}
+                ${live && meeting.location ? this.buildLocationSection(meeting.location) : ''}
+                ${live && meeting.presenter ? this.buildPresenterSection(meeting.presenter) : ''}
                 ${meeting.description ? this.buildDescriptionSection(meeting.description) : ''}
-                ${meeting.agenda ? this.buildAgendaSection(meeting.agenda) : ''}
-                ${meeting.specialNotes ? this.buildSpecialNotesSection(meeting.specialNotes) : ''}
-                ${meeting.requirements ? this.buildRequirementsSection(meeting.requirements) : ''}
-                ${meeting.contact ? this.buildContactSection(meeting.contact) : ''}
+                ${live && meeting.agenda ? this.buildAgendaSection(meeting.agenda) : ''}
+                ${live && meeting.specialNotes ? this.buildSpecialNotesSection(meeting.specialNotes) : ''}
+                ${live && meeting.requirements ? this.buildRequirementsSection(meeting.requirements) : ''}
+                ${live && meeting.contact ? this.buildContactSection(meeting.contact) : ''}
             </div>
         `;
 
@@ -212,9 +229,10 @@ export class Modal {
             <div class="detail-section">
                 <h3><i class="fas fa-clock"></i> Schedule</h3>
                 <div class="time-details">
-                    ${time.doorsOpen ? `<div class="time-item"><strong>Doors Open:</strong> ${escapeHTML(time.doorsOpen)}</div>` : ''}
-                    ${time.meetingStart ? `<div class="time-item"><strong>Meeting Start:</strong> ${escapeHTML(time.meetingStart)}</div>` : ''}
-                    ${time.meetingEnd ? `<div class="time-item"><strong>Meeting End:</strong> ${escapeHTML(time.meetingEnd)}</div>` : ''}
+                    ${hasTime(time.doorsOpen) && time.doorsOpen !== time.meetingStart ? `<div class="time-item"><strong>Doors Open:</strong> ${escapeHTML(time.doorsOpen)}</div>` : ''}
+                    ${hasTime(time.bogStart) ? `<div class="time-item"><strong>Board of Governors:</strong> ${escapeHTML(time.bogStart)}</div>` : ''}
+                    ${hasTime(time.meetingStart) ? `<div class="time-item"><strong>Meeting Start:</strong> ${escapeHTML(time.meetingStart)}</div>` : ''}
+                    ${hasTime(time.meetingEnd) ? `<div class="time-item"><strong>Meeting End:</strong> ${escapeHTML(time.meetingEnd)}</div>` : ''}
                 </div>
             </div>
         `;

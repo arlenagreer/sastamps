@@ -10,9 +10,44 @@ import { parseLocalDate, isUpcomingDate } from './utils/dates.js';
 
 const logger = createLogger('CalendarAdapter');
 
+/**
+ * The deployed single-meeting .ics for a meeting, or '' when there is none.
+ *
+ * Newsletter runs write one file per meeting to data/calendar/ named
+ * YYYY-MM-DD-meeting.ics, or YYYY-MM-DD-picnic.ics for the picnic
+ * (.claude/skills/philatex-update/references/data-contract.md section C).
+ * A cancelled meeting gets no link: there is nothing to attend. An explicit
+ * `calendarLink` in the data wins over the naming convention.
+ * @param {Object} meeting - meetings.json entry
+ * @returns {string} Page-relative URL, or ''
+ */
+export function meetingCalendarUrl(meeting) {
+  if (!meeting || meeting.cancelled) {
+    return '';
+  }
+  if (typeof meeting.calendarLink === 'string' && meeting.calendarLink) {
+    return meeting.calendarLink;
+  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(meeting.date || '')) {
+    return '';
+  }
+  const kind = meeting.type === 'picnic' ? 'picnic' : 'meeting';
+  return `data/calendar/${meeting.date}-${kind}.ics`;
+}
+
+/**
+ * A time value that is really there ("N/A" is how cancelled entries say none).
+ * @param {string} value
+ * @returns {boolean}
+ */
+export function hasTime(value) {
+  return typeof value === 'string' && value.trim() !== '' && value.trim().toUpperCase() !== 'N/A';
+}
+
 export class CalendarAdapter {
   constructor() {
     this.meetingsData = null;
+    this.loadError = null;
     this.eventTypeStyles = {
       'business': {
         color: '#1a5276',
@@ -42,16 +77,23 @@ export class CalendarAdapter {
   }
 
   /**
-   * Load meetings data from JSON file
+   * Load meetings data from JSON file.
+   * Resolves to the data, or to null when the load failed. A failure is kept
+   * in `loadError` so the page can say so: a calendar with no meetings behind
+   * it looks normal but silently does nothing when a day is clicked.
    */
   async loadMeetings() {
     try {
       // Same URL string as the meetings page list, so fetchJSON's memo
-      // serves both from one request.
+      // serves both from one request (a failed load is not memoised, so a
+      // retry fetches again).
       this.meetingsData = await fetchJSON('data/meetings/meetings.json');
+      this.loadError = null;
       return this.meetingsData;
     } catch (error) {
       logger.error('Error loading meetings:', error);
+      this.meetingsData = null;
+      this.loadError = error;
       return null;
     }
   }

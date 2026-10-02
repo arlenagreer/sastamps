@@ -19,11 +19,14 @@ import {
   FILTER_OPTIONS
 } from '../constants/index.js';
 import MeetingLoader, { meetingsInQuarter, selectScheduleQuarter } from '../modules/meeting-loader.js';
+import { meetingCalendarUrl, hasTime } from '../calendar-adapter.js';
 
 const logger = createLogger('MeetingsPage');
 
 // Export MeetingLoader for global access via SAPA_MEETINGS
 export { MeetingLoader };
+
+const LOAD_FAILED_TEXT = 'The meeting schedule could not be loaded. Check your connection and try again.';
 
 // Meetings-specific functionality
 async function initializeMeetingsPage() {
@@ -44,6 +47,75 @@ async function initializeMeetingsPage() {
 
   // RSVP functionality
   initializeRSVPSystem();
+}
+
+/**
+ * Re-run the schedule list and calendar after a failed meetings.json load.
+ */
+async function retryMeetingsLoad() {
+  const calendarContainer = safeQuerySelector('#calendar-container');
+  const meetingsList = safeQuerySelector('#meeting-schedule-container');
+  [calendarContainer, meetingsList].forEach(el => {
+    if (el) {
+      el.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Loading...</div>';
+    }
+  });
+  await initializeMeetingsCalendar();
+  if (meetingsList) {
+    await loadMeetingsList(meetingsList);
+  }
+  try {
+    initializeRSVPSystem();
+  } catch (error) {
+    logger.warn('RSVP state could not be restored:', error);
+  }
+}
+
+/**
+ * Replace a container's content with a visible error and a working retry button.
+ * @param {HTMLElement} container
+ * @param {string} message
+ */
+function renderLoadError(container, message) {
+  container.innerHTML = `
+        <div class="error-message meetings-load-error" role="alert">
+            <p>${escapeHTML(message)}</p>
+            <button type="button" class="btn btn-primary meetings-retry">
+                <i class="fas fa-redo" aria-hidden="true"></i> Try again
+            </button>
+        </div>
+    `;
+  const button = container.querySelector('.meetings-retry');
+  if (button) {
+    addEventListenerWithCleanup(button, 'click', () => {
+      retryMeetingsLoad();
+    });
+  }
+}
+
+/**
+ * Mark meeting days on a calendar date cell (vanilla-calendar-pro v3
+ * onCreateDateEls hook, called for every day cell it renders).
+ * @param {HTMLElement} dateEl - The cell, carrying data-vc-date
+ * @param {Object} adapter - CalendarAdapter with meetings loaded
+ */
+function markMeetingDate(dateEl, adapter) {
+  const date = dateEl?.dataset?.vcDate;
+  const meeting = date && adapter.getMeetingByDate(date);
+  if (!meeting) {
+    return;
+  }
+  dateEl.classList.add(meeting.cancelled ? 'sapa-day-cancelled' : 'sapa-day-meeting');
+  if (!isUpcomingDate(date, new Date())) {
+    dateEl.classList.add('sapa-day-past');
+  }
+  dateEl.dataset.sapaMeeting = meeting.cancelled ? 'cancelled' : 'meeting';
+
+  const button = dateEl.querySelector('[data-vc-date-btn]');
+  if (button) {
+    const what = meeting.cancelled ? `no meeting (${meeting.title})` : meeting.title;
+    button.setAttribute('aria-label', `${formatLongDate(date)}: ${what}. Show details`);
+  }
 }
 
 async function initializeMeetingsCalendar() {
@@ -70,9 +142,14 @@ async function initializeMeetingsCalendar() {
     // Initialize calendar with full meeting functionality
     // calendarAdapter is already an instance, not a function
     const adapter = calendarAdapter;
-    if (adapter && adapter.loadMeetings) {
-      await adapter.loadMeetings();
+    const data = await adapter.loadMeetings();
+    if (!data) {
+      // Without the data every day click would silently do nothing.
+      renderLoadError(calendarContainer, LOAD_FAILED_TEXT);
+      return;
     }
+
+    calendarContainer.innerHTML = '';
 
     // vanilla-calendar-pro v3 API (flat options; v2's settings/actions are ignored)
     const calendar = new Calendar(calendarContainer, {
@@ -82,6 +159,8 @@ async function initializeMeetingsCalendar() {
       selectionDatesMode: 'single',
       displayDateMin: CALENDAR.DATE_RANGE.MIN,
       displayDateMax: CALENDAR.DATE_RANGE.MAX,
+      // Show the meeting days: a class and a spoken label on each cell
+      onCreateDateEls: (_self, dateEl) => markMeetingDate(dateEl, adapter),
       onClickDate: (self, event) => {
         // Read the clicked cell's date rather than self.context.selectedDates:
         // re-clicking a date toggles it off (enableDateToggle), emptying the selection.
@@ -96,20 +175,29 @@ async function initializeMeetingsCalendar() {
     });
 
     calendar.init();
-
-    // Reminder system is already initialized via its constructor/singleton pattern
-
-    // Meetings calendar initialized successfully
+    renderCalendarLegend(calendarContainer);
 
   } catch (error) {
     logger.error('Failed to initialize meetings calendar:', error);
-    calendarContainer.innerHTML = `
-            <div class="error-message">
-                <p>${escapeHTML(ERROR_MESSAGES.CALENDAR_UNAVAILABLE)}</p>
-                <button onclick="location.reload()">Refresh Page</button>
-            </div>
-        `;
+    renderLoadError(calendarContainer, ERROR_MESSAGES.CALENDAR_UNAVAILABLE);
   }
+}
+
+// Key to the day markings, placed under the calendar.
+function renderCalendarLegend(calendarContainer) {
+  const existing = document.getElementById('calendar-legend');
+  if (existing) {
+    existing.remove();
+  }
+  const legend = document.createElement('ul');
+  legend.id = 'calendar-legend';
+  legend.className = 'calendar-legend';
+  legend.setAttribute('aria-label', 'Calendar key');
+  legend.innerHTML = `
+        <li><span class="legend-swatch legend-meeting" aria-hidden="true">8</span> Meeting day (select it for details)</li>
+        <li><span class="legend-swatch legend-cancelled" aria-hidden="true">8</span> No meeting that Friday</li>
+    `;
+  calendarContainer.insertAdjacentElement('afterend', legend);
 }
 
 /**
@@ -122,20 +210,21 @@ function formatMeetingTime(time) {
     return time;
   }
   if (time && typeof time === 'object') {
-    if (time.meetingStart === 'N/A' || !time.meetingStart) {
-      return 'N/A';
+    if (!hasTime(time.meetingStart)) {
+      return 'Time TBD';
     }
     const parts = [];
-    if (time.doorsOpen && time.doorsOpen !== 'N/A') {
+    if (hasTime(time.doorsOpen) && time.doorsOpen !== time.meetingStart) {
       parts.push(`Doors: ${time.doorsOpen}`);
     }
-    if (time.meetingStart) {
-      parts.push(`Meeting: ${time.meetingStart}`);
+    if (hasTime(time.bogStart)) {
+      parts.push(`BOG: ${time.bogStart}`);
     }
-    if (time.meetingEnd) {
+    parts.push(`Meeting: ${time.meetingStart}`);
+    if (hasTime(time.meetingEnd)) {
       parts.push(`End: ${time.meetingEnd}`);
     }
-    return parts.join(' | ') || 'Time TBD';
+    return parts.join(' | ');
   }
   return 'Time TBD';
 }
@@ -170,10 +259,85 @@ function formatMeetingLocation(location) {
   return 'Location TBD';
 }
 
+function formatLongDate(date) {
+  return parseLocalDate(date).toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
+
+function meetingBadges(cancelled, past, next) {
+  const badges = [];
+  if (next) {
+    badges.push('<span class="meeting-badge badge-next">Next meeting</span>');
+  }
+  if (cancelled) {
+    badges.push('<span class="meeting-badge badge-cancelled">No meeting</span>');
+  }
+  if (past) {
+    badges.push('<span class="meeting-badge badge-past">Past</span>');
+  }
+  return badges.length ? `<p class="meeting-badges">${badges.join(' ')}</p>` : '';
+}
+
+/**
+ * One meeting card.
+ * @param {Object} meeting
+ * @param {{past: boolean, next: boolean}} state
+ * @returns {string} HTML
+ */
+function renderMeetingCard(meeting, { past, next }) {
+  const cancelled = Boolean(meeting.cancelled);
+  const classes = ['meeting-item'];
+  if (cancelled) { classes.push('meeting-cancelled'); }
+  if (past) { classes.push('meeting-past'); }
+  if (next) { classes.push('meeting-next'); }
+
+  const agenda = Array.isArray(meeting.agenda) && meeting.agenda.length ? `
+                        <details class="meeting-agenda">
+                            <summary>Agenda</summary>
+                            <ul>
+                                ${meeting.agenda.map(item => `<li>${escapeHTML(typeof item === 'string' ? item : [item.time, item.item].filter(Boolean).join(' – '))}</li>`).join('')}
+                            </ul>
+                        </details>` : '';
+
+  // A cancelled Friday has no time or place to show.
+  const details = cancelled
+    ? `<p class="meeting-description">${escapeHTML(meeting.description || 'No meeting this Friday.')}</p>`
+    : `
+                    <p><strong>Time:</strong> ${escapeHTML(formatMeetingTime(meeting.time))}</p>
+                    <p><strong>Location:</strong> ${escapeHTML(formatMeetingLocation(meeting.location))}</p>
+                    ${meeting.description ? `<p class="meeting-description">${escapeHTML(meeting.description)}</p>` : ''}
+                    ${agenda}`;
+
+  // Past and cancelled meetings get no RSVP, reminder or calendar actions.
+  const calendarUrl = (past || cancelled) ? '' : safeUrl(meetingCalendarUrl(meeting), '');
+  const actions = (past || cancelled) ? '' : `
+                <div class="meeting-actions">
+                    <button type="button" class="btn-rsvp" data-meeting-id="${escapeHTML(meeting.id)}">RSVP</button>
+                    <button type="button" class="btn-reminder" data-meeting-id="${escapeHTML(meeting.id)}">Set Reminder</button>
+                    ${calendarUrl ? `<a href="${escapeHTML(calendarUrl)}" class="btn-calendar" download aria-label="Add to Calendar: ${escapeHTML(meeting.title)}, ${escapeHTML(formatLongDate(meeting.date))}"><i class="fas fa-calendar-plus" aria-hidden="true"></i> Add to Calendar</a>` : ''}
+                </div>`;
+
+  return `
+            <article id="meeting-${escapeHTML(meeting.id)}" class="${classes.join(' ')}" data-date="${escapeHTML(meeting.date)}" data-type="${escapeHTML(meeting.type || 'regular')}" tabindex="-1">
+                <div class="meeting-header">
+                    ${meetingBadges(cancelled, past, next)}
+                    <h3>${escapeHTML(meeting.title)}</h3>
+                    <time datetime="${escapeHTML(meeting.date)}" class="meeting-date">${escapeHTML(formatLongDate(meeting.date))}</time>
+                </div>
+                <div class="meeting-details">${details}
+                </div>${actions}
+            </article>
+        `;
+}
+
 async function loadMeetingsList(container) {
   try {
     const meetingsData = await fetchJSON('data/meetings/meetings.json');
-    
+
     // Show the current quarter (rolling over to the next one near quarter end,
     // once its schedule is posted). Shared with MeetingLoader so the rule lives
     // in one place and nothing needs editing when a quarter changes.
@@ -186,57 +350,56 @@ async function loadMeetingsList(container) {
       return;
     }
 
-    const html = meetings.map(meeting => {
-      const calendarUrl = safeUrl(meeting.calendarLink, '');
-      return `
-            <article class="meeting-item" data-date="${escapeHTML(meeting.date)}" data-type="${escapeHTML(meeting.type || 'regular')}">
-                <header class="meeting-header">
-                    <h3>${escapeHTML(meeting.title)}</h3>
-                    <time datetime="${escapeHTML(meeting.date)}" class="meeting-date">
-                        ${escapeHTML(new Date(`${meeting.date}T00:00:00`).toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  }))}
-                    </time>
-                </header>
+    // A meeting stays upcoming for the whole of its own local day.
+    const now = new Date();
+    const isPast = m => !isUpcomingDate(m.date, now);
+    const nextMeeting = meetings.find(m => !m.cancelled && !isPast(m));
+    const pastCount = meetings.filter(isPast).length;
 
-                <div class="meeting-details">
-                    <p><strong>Time:</strong> ${escapeHTML(formatMeetingTime(meeting.time))}</p>
-                    <p><strong>Location:</strong> ${escapeHTML(formatMeetingLocation(meeting.location))}</p>
-                    ${meeting.description ? `<p class="meeting-description">${escapeHTML(meeting.description)}</p>` : ''}
-                    ${meeting.agenda ? `
-                        <details class="meeting-agenda">
-                            <summary>Agenda</summary>
-                            <ul>
-                                ${meeting.agenda.map(item => `<li>${escapeHTML(typeof item === 'string' ? item : item.item || '')}</li>`).join('')}
-                            </ul>
-                        </details>
-                    ` : ''}
-                </div>
+    const summary = nextMeeting
+      ? `<p class="meeting-schedule-summary"><strong>Next meeting:</strong> <a href="#meeting-${escapeHTML(nextMeeting.id)}">${escapeHTML(formatLongDate(nextMeeting.date))}: ${escapeHTML(nextMeeting.title)}</a></p>`
+      : `<p class="meeting-schedule-summary">All Q${quarter.quarter} ${quarter.year} meetings have taken place. The next schedule has not been posted yet; please check back soon.</p>`;
 
-                <footer class="meeting-actions">
-                    <button class="btn-rsvp" data-meeting-id="${escapeHTML(meeting.id)}">RSVP</button>
-                    <button class="btn-reminder" data-meeting-id="${escapeHTML(meeting.id)}">Set Reminder</button>
-                    ${calendarUrl ? `<a href="${escapeHTML(calendarUrl)}" class="btn-calendar" aria-label="Add to Calendar: ${escapeHTML(meeting.title)}">Add to Calendar</a>` : ''}
-                </footer>
-            </article>
-        `;
-    }).join('');
+    container.innerHTML = summary + meetings.map(meeting => renderMeetingCard(meeting, {
+      past: isPast(meeting),
+      next: meeting === nextMeeting
+    })).join('');
 
-    container.innerHTML = html;
-    announceStatus(scheduleStatusRegion(), `${countSummary(meetings.length, meetings.length, 'meeting', 'meetings')} for Q${quarter.quarter} ${quarter.year}`);
+    const pastNote = pastCount ? `, ${pastCount} already past` : '';
+    announceStatus(scheduleStatusRegion(), `${countSummary(meetings.length, meetings.length, 'meeting', 'meetings')} for Q${quarter.quarter} ${quarter.year}${pastNote}`);
 
     // Add event listeners for RSVP and reminder buttons
     bindMeetingActions(container);
 
+    // A link such as meetings.html#meeting-2026-10-16 names a card that only
+    // exists now, so the browser's own jump on load found nothing.
+    scrollToHashedMeeting();
+
   } catch (error) {
     logger.error('Failed to load meetings list:', error);
-    container.innerHTML = `<p class="error-message">${escapeHTML(ERROR_MESSAGES.MEETING_LOAD_FAILED)}</p>`;
+    renderLoadError(container, LOAD_FAILED_TEXT);
     announceStatus(scheduleStatusRegion(), ERROR_MESSAGES.MEETING_LOAD_FAILED);
   }
 }
+
+function scrollToHashedMeeting() {
+  let id = '';
+  try {
+    id = decodeURIComponent((location.hash || '').slice(1));
+  } catch {
+    return;
+  }
+  if (!/^meeting-\d{4}-\d{2}-\d{2}$/.test(id)) {
+    return;
+  }
+  const card = document.getElementById(id);
+  if (card) {
+    card.scrollIntoView({ block: 'start' });
+    card.focus({ preventScroll: true });
+  }
+}
+
+addEventListenerWithCleanup(window, 'hashchange', scrollToHashedMeeting);
 
 // Short visually hidden role="status" line next to the schedule (meetings.html).
 // The schedule container itself is not a live region: it holds ~6k characters.
