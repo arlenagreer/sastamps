@@ -87,10 +87,6 @@ export const STORAGE_KEYS = {
 
 // API Endpoints
 export const API_ENDPOINTS = {
-  // Contact form relay (FormSubmit). GitHub Pages cannot run server code, so
-  // messages go through this third-party relay, which emails them on. The
-  // same address is the native-submit action in contact.html; keep them in step.
-  CONTACT_FORM: 'https://formsubmit.co/ajax/arlenagreer@gmail.com',
   CSRF_TOKEN: '/csrf-token.php',
   NETLIFY_CONTACT: '/.netlify/functions/contact-form',
   NEWSLETTER_ARCHIVE: '/api/newsletters',

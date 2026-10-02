@@ -11,7 +11,6 @@ import { createLogger } from '../utils/logger.js';
 import {
   ERROR_MESSAGES,
   SUCCESS_MESSAGES,
-  API_ENDPOINTS,
   CSS_CLASSES
 } from '../constants/index.js';
 
@@ -28,18 +27,26 @@ function initializeContactPage() {
   // Contact information
   initializeContactInfo();
 
-  // Back from a no-JavaScript submit: the relay redirects to ?sent=1.
-  if (contactForm && new URLSearchParams(window.location.search).get('sent') === '1') {
-    showFormMessage(SUCCESS_MESSAGES.FORM_SUBMITTED, CSS_CLASSES.SUCCESS);
+  // Back from the relay's redirect (#sent): the static notice is showing;
+  // drop the fragment so a reload or a shared link doesn't claim a send.
+  // (The class keeps it shown whether or not the browser re-evaluates :target.)
+  const sentNotice = document.getElementById('sent');
+  if (sentNotice && window.location.hash === '#sent' && window.history.replaceState) {
+    sentNotice.classList.add('is-shown');
+    window.history.replaceState(null, '', window.location.pathname + window.location.search);
   }
 }
 
 function initializeContactForm(form) {
+  // This script validates; the browser's own checks stay on for visitors
+  // without JavaScript (the attribute is not in the HTML for that reason).
+  form.noValidate = true;
+
   // Add real-time validation
-  const inputs = form.querySelectorAll('input, textarea');
+  const inputs = form.querySelectorAll('input:not([type="hidden"]):not([name="_honey"]), select, textarea');
   inputs.forEach(input => {
     addEventListenerWithCleanup(input, 'blur', validateField);
-    addEventListenerWithCleanup(input, 'input', debounce(validateField, 500));
+    addEventListenerWithCleanup(input, input.tagName === 'SELECT' ? 'change' : 'input', debounce(validateField, 500));
   });
 
   // Handle form submission
@@ -201,9 +208,12 @@ async function handleFormSubmission(event) {
     delete data._next;
     data._subject = `SAPA website: ${data.subject || 'Contact form'} (from ${data.name})`;
 
-    // Deliver through the email relay (see API_ENDPOINTS.CONTACT_FORM).
-    const response = await fetch(API_ENDPOINTS.CONTACT_FORM, {
+    // Deliver through the email relay: the AJAX form of the form's own
+    // action URL, so the recipient is set in one place (contact.html).
+    const relayUrl = form.action.replace('://formsubmit.co/', '://formsubmit.co/ajax/');
+    const response = await fetch(relayUrl, {
       method: 'POST',
+      signal: AbortSignal.timeout(20000),
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json'

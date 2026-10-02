@@ -78,6 +78,12 @@
 
     <link rel="stylesheet" href="css/font-loading.min.css">
     <script src="dist/js/font-loading.min.js"></script>
+    <style>
+        /* No-JS confirmation after the relay redirects back to #sent. */
+        .sent-notice { display: none; max-width: 800px; margin: 2rem auto 0; padding: 1rem 1.25rem;
+            border-radius: 8px; background: #e8f5e9; color: #1b5e20; border: 1px solid #a5d6a7; }
+        .sent-notice:target, .sent-notice.is-shown { display: block; }
+    </style>
 </head>
 <body>
     <!-- Skip to content link for accessibility -->
@@ -173,14 +179,21 @@
                 <div class="card" style="max-width: 800px; margin: 2rem auto 0;">
                     <div class="card-content">
                         <!-- Messages are delivered by the FormSubmit relay (GitHub Pages
-                             cannot run server code). With JavaScript, contact.js posts to
-                             its AJAX endpoint (js/constants API_ENDPOINTS.CONTACT_FORM);
-                             without it, this native POST goes to the same relay, which
-                             redirects back to ?sent=1. Keep the two addresses in step. -->
-                        <form id="contact-form" action="https://formsubmit.co/arlenagreer@gmail.com" method="POST" novalidate>
+                             cannot run server code). The form's action is the ONLY place
+                             the recipient is set: contact.js posts to the relay's AJAX
+                             form of this same URL. Without JavaScript the browser posts
+                             here directly (its own required/email checks apply), and the
+                             relay redirects back to #sent, which shows the notice below. -->
+                        <div id="sent" class="sent-notice" role="status">
+                            <i class="fas fa-check-circle"></i> Thank you! Your message has been sent. We'll get back to you soon.
+                        </div>
+                        <form id="contact-form" action="https://formsubmit.co/arlenagreer@gmail.com" method="POST">
                             <input type="hidden" name="_subject" value="SAPA website contact form">
                             <input type="hidden" name="_template" value="table">
-                            <input type="hidden" name="_next" value="https://www.sastamps.org/contact.html?sent=1">
+                            <input type="hidden" name="_next" value="https://www.sastamps.org/contact.html#sent">
+                            <!-- No captcha: the relay's captcha page needs JavaScript, which
+                                 would strand exactly the no-JS visitors this path serves. -->
+                            <input type="hidden" name="_captcha" value="false">
                             <!-- Spam trap: people never see or fill this; bots that do are dropped. -->
                             <input type="text" name="_honey" class="form-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
 
