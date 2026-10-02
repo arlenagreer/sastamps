@@ -10,7 +10,7 @@ const { execFileSync } = require('child_process');
 // source text), data/*.db, scripts/, js/ sources and docs.
 // sw.js deploys as a kill switch: it removes the retired 2025 caching worker
 // from browsers that still hold it (see the comment at the top of sw.js).
-const SITE_DIRS = ['css', 'dist', 'images', 'public', 'downloads', 'showcase', 'data'];
+const SITE_DIRS = ['css', 'dist', 'images', 'public', 'downloads', 'data'];
 // sitemap.xml is not here: the build generates it in _site/ (build-sitemap.js).
 const SITE_FILES = ['favicon.ico', 'site.webmanifest', 'robots.txt', 'sw.js'];
 
