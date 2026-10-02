@@ -23,8 +23,12 @@ jobs:
         node-version: '22'
         cache: 'npm'
         
+    # Nothing in this job drives a browser, so skip puppeteer's ~170 MB
+    # Chrome download. (ci.yml and scheduled-tests.yml need it for test:a11y.)
     - name: Install dependencies
       run: npm ci
+      env:
+        PUPPETEER_SKIP_DOWNLOAD: 'true'
       
     - name: Run quick tests
       run: npm run test:quick

@@ -7,6 +7,7 @@ import { safeQuerySelector, escapeHTML } from '../utils/safe-dom.js';
 import { fetchJSON } from '../utils/fetch-json.js';
 import { createLogger } from '../utils/logger.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
+import { announceStatus, countSummary } from '../utils/announce.js';
 
 const logger = createLogger('GlossaryPage');
 
@@ -508,11 +509,9 @@ async function performSearch(query, resultsContainer) {
 
     // Announce the outcome through the always-rendered status region: a live
     // region that is display:none while it fills is not reliably announced.
-    if (statusRegion) {
-      statusRegion.textContent = results.length === 0
-        ? `No results for "${query}"`
-        : `${results.length} result${results.length !== 1 ? 's' : ''} for "${query}"`;
-    }
+    announceStatus(statusRegion, results.length === 0
+      ? `No results for "${query}"`
+      : `${results.length} result${results.length !== 1 ? 's' : ''} for "${query}"`);
 
     // Bind click handlers for search result links
     resultsContainer.querySelectorAll('.search-result-link').forEach(link => {
@@ -532,9 +531,7 @@ async function performSearch(query, resultsContainer) {
     }
     resultsContainer.innerHTML = '<p class="error-message">Search temporarily unavailable. Please try again.</p>';
     resultsContainer.style.display = 'block';
-    if (statusRegion) {
-      statusRegion.textContent = 'Search temporarily unavailable. Please try again.';
-    }
+    announceStatus(statusRegion, 'Search temporarily unavailable. Please try again.');
   }
 }
 
@@ -593,6 +590,7 @@ function applyFilters() {
   const container = document.querySelector('#glossary-content-container');
   if (container) {
     renderGlossaryTerms(filteredTerms, container);
+    announceTermCount(filteredTerms.length);
   }
 }
 
@@ -603,7 +601,21 @@ function showAllTerms() {
   const container = document.querySelector('#glossary-content-container');
   if (container && window.glossaryTerms) {
     renderGlossaryTerms(window.glossaryTerms, container);
+    announceTermCount(window.glossaryTerms.length);
   }
+}
+
+/**
+ * Announce how many terms the list shows after a filter, sort, reset or
+ * search clear. The term list itself is not a live region (~4k characters).
+ * @param {number} shown - Terms now rendered
+ */
+function announceTermCount(shown) {
+  const total = window.glossaryTerms ? window.glossaryTerms.length : shown;
+  announceStatus(
+    document.getElementById('glossary-search-status'),
+    shown === 0 ? 'No terms found' : countSummary(shown, total, 'term', 'terms')
+  );
 }
 
 /**

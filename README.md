@@ -82,7 +82,7 @@ npm run test:quick      # Quick validation (HTML, CSS, JS)
 npm run test:html       # HTML validation
 npm run test:css        # CSS validation
 npm run test:js         # JavaScript linting
-npm run test:links      # Check for broken links
+npm run test:site-build # Build _site/ and check it, links included
 npm run test:a11y       # Accessibility testing
 npm run audit           # Performance and security audit
 

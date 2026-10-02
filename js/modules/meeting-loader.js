@@ -554,7 +554,7 @@ class MeetingLoader {
 
             .meeting-card.cancelled {
                 background-color: #f8f9fa;
-                border-left: 4px solid var(--medium, #7f8c8d);
+                border-left: 4px solid var(--medium, #5f6b6d);
                 opacity: 0.7;
             }
 
@@ -574,7 +574,7 @@ class MeetingLoader {
 
             .meeting-time {
                 font-size: 0.9rem;
-                color: var(--medium, #7f8c8d);
+                color: var(--medium, #5f6b6d);
                 margin-top: 0.25rem;
             }
 
@@ -585,7 +585,7 @@ class MeetingLoader {
             }
 
             .meeting-details {
-                color: var(--medium, #7f8c8d);
+                color: var(--medium, #5f6b6d);
                 font-style: italic;
                 margin-bottom: 0.5rem;
             }
@@ -646,12 +646,12 @@ class MeetingLoader {
 
             .calendar-note {
                 margin-top: 1rem;
-                color: var(--medium, #7f8c8d);
+                color: var(--medium, #5f6b6d);
             }
 
             .meeting-entry.cancelled {
                 opacity: 0.6;
-                color: var(--medium, #7f8c8d);
+                color: var(--medium, #5f6b6d);
             }
 
             .meeting-entry.special-program {
@@ -681,7 +681,7 @@ class MeetingLoader {
             .loading {
                 text-align: center;
                 padding: 3rem;
-                color: var(--medium, #7f8c8d);
+                color: var(--medium, #5f6b6d);
                 font-size: 1.1rem;
             }
 

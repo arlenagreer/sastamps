@@ -108,6 +108,14 @@
             text-align: center;
         }
 
+        /* The status region stays rendered (role="status" must exist before
+           its text changes to be announced); when idle it is empty and takes
+           no space. */
+        .search-status:empty {
+            margin: 0;
+            padding: 0;
+        }
+
         .search-status.loading {
             background-color: var(--light);
             color: var(--medium);
@@ -285,7 +293,7 @@
                         <button onclick="quickSearch('2025')">2025 Events</button>
                     </div>
 
-                    <div id="searchStatus"></div>
+                    <div id="searchStatus" class="search-status" role="status"></div>
                     <div id="searchResults"></div>
                 </div>
             </div>
@@ -356,35 +364,21 @@
             isLoading = true;
 
             const statusEl = document.getElementById('searchStatus');
-            statusEl.className = 'search-status loading';
-            statusEl.textContent = 'Loading search index...';
+            setSearchStatus(statusEl, 'loading', 'Loading search index...');
 
             try {
-                let indexData, docsData;
+                // The build writes the index to dist/data/ (build:search).
+                const [indexResponse, docsResponse] = await Promise.all([
+                    fetch('./dist/data/search-index.json'),
+                    fetch('./dist/data/search-documents.json')
+                ]);
 
-                // Check if embedded data is available
-                if (window.SEARCH_INDEX_DATA && window.SEARCH_DOCUMENTS_DATA) {
-                    // Use embedded data
-                    indexData = window.SEARCH_INDEX_DATA;
-                    docsData = window.SEARCH_DOCUMENTS_DATA;
-                } else {
-                    // Fall back to fetching
-                    const basePath = window.location.protocol === 'file:'
-                        ? window.location.href.substring(0, window.location.href.lastIndexOf('/'))
-                        : '.';
-
-                    const [indexResponse, docsResponse] = await Promise.all([
-                        fetch(basePath + '/dist/data/search-index.json'),
-                        fetch(basePath + '/dist/data/search-documents.json')
-                    ]);
-
-                    if (!indexResponse.ok || !docsResponse.ok) {
-                        throw new Error('Failed to load search data');
-                    }
-
-                    indexData = await indexResponse.json();
-                    docsData = await docsResponse.json();
+                if (!indexResponse.ok || !docsResponse.ok) {
+                    throw new Error('Failed to load search data');
                 }
+
+                const indexData = await indexResponse.json();
+                const docsData = await docsResponse.json();
 
                 // Initialize Lunr index
                 searchIndex = lunr.Index.load(indexData);
@@ -394,7 +388,7 @@
                     documents[doc.id] = doc;
                 });
 
-                statusEl.style.display = 'none';
+                setSearchStatus(statusEl, '', '');
 
                 // Focus on search input
                 document.getElementById('searchInput').focus();
@@ -409,10 +403,22 @@
 
             } catch (error) {
                 console.error('Search initialization error:', error);
-                statusEl.className = 'search-status error';
-                statusEl.textContent = 'Failed to load search index. Please try again later.';
+                setSearchStatus(statusEl, 'error', 'Failed to load search index. Please try again later.');
             } finally {
                 isLoading = false;
+            }
+        }
+
+        // Update the always-rendered status region. Clearing it first and
+        // refilling on the next task makes a repeated identical message
+        // (the same query searched twice) announce again.
+        var statusTimer = null;
+        function setSearchStatus(statusEl, state, text) {
+            clearTimeout(statusTimer);
+            statusEl.className = state ? 'search-status ' + state : 'search-status';
+            statusEl.textContent = '';
+            if (text) {
+                statusTimer = setTimeout(function () { statusEl.textContent = text; }, 50);
             }
         }
 
@@ -424,9 +430,7 @@
             const resultsEl = document.getElementById('searchResults');
 
             if (!searchIndex) {
-                statusEl.className = 'search-status error';
-                statusEl.textContent = 'Search index not loaded yet. Please wait...';
-                statusEl.style.display = 'block';
+                setSearchStatus(statusEl, 'error', 'Search index not loaded yet. Please wait...');
                 initializeSearch();
                 return;
             }
@@ -442,9 +446,7 @@
                 displayResults(query, results);
             } catch (error) {
                 console.error('Search error:', error);
-                statusEl.className = 'search-status error';
-                statusEl.textContent = 'Search error: ' + error.message;
-                statusEl.style.display = 'block';
+                setSearchStatus(statusEl, 'error', 'Search error: ' + error.message);
             }
         }
 
@@ -458,16 +460,12 @@
             const resultsEl = document.getElementById('searchResults');
 
             if (results.length === 0) {
-                statusEl.className = 'search-status no-results';
-                statusEl.textContent = `No results found for "${query}"`;
-                statusEl.style.display = 'block';
+                setSearchStatus(statusEl, 'no-results', `No results found for "${query}"`);
                 resultsEl.innerHTML = '';
                 return;
             }
 
-            statusEl.className = 'search-status success';
-            statusEl.textContent = `Found ${results.length} result${results.length === 1 ? '' : 's'} for "${query}"`;
-            statusEl.style.display = 'block';
+            setSearchStatus(statusEl, 'success', `Found ${results.length} result${results.length === 1 ? '' : 's'} for "${query}"`);
 
             resultsEl.innerHTML = results.map(result => {
                 const doc = documents[result.ref];

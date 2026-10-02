@@ -1,0 +1,7 @@
+{
+  "recurse": true,
+  "checkCss": true,
+  "verbosity": "error",
+  "concurrency": 50,
+  "timeout": 20000
+}

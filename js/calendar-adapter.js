@@ -19,11 +19,11 @@ export class CalendarAdapter {
         bgColor: '#e8f4f8'
       },
       'auction': {
-        color: '#d35400',
+        color: '#ba4a00', // --secondary; 4.68:1 on the #fdf2e8 tint below
         bgColor: '#fdf2e8'
       },
       'social': {
-        color: '#27ae60',
+        color: '#1a7a43', // 4.89:1 on the #e8f8f0 tint below (#27ae60 was 2.6:1)
         bgColor: '#e8f8f0'
       },
       'regular': {
