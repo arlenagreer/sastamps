@@ -89,7 +89,10 @@ a:hover {
 /* Links inside running text must not rely on colour alone (WCAG 1.4.1,
    axe link-in-text-block). Only unclassed links in prose inside <main>:
    nav, buttons (.btn, .button) and card links all carry a class. */
-main :is(p, blockquote, dd, figcaption) a:not([class]) {
+main p a:not([class]),
+main blockquote a:not([class]),
+main dd a:not([class]),
+main figcaption a:not([class]) {
     text-decoration: underline;
     text-underline-offset: 0.15em;
 }
@@ -3182,7 +3185,7 @@ tr:hover {
 
 .featured-badge {
     background: var(--accent);
-    color: #2c3e50; /* fixed: --dark flips to near-white in dark mode (1.31:1 on gold) */
+    color: #2c3e50; /* fixed value: dark text on gold in any theme (6.61:1) */
     padding: 0.25rem 0.5rem;
     border-radius: var(--radius-sm);
     font-size: 0.75rem;
@@ -3383,19 +3386,6 @@ tr:hover {
 
 [data-theme="dark"] .resource-item:hover {
     background: #2a2a2a;
-}
-
-/* Dark-mode contrast (WCAG AA). Light mode is unaffected by these. */
-[data-theme="dark"] .resource-meta {
-    color: var(--medium); /* was #666 on #1e1e1e (2.9:1); 9.36:1 */
-}
-
-[data-theme="dark"] :is(input, select, textarea) {
-    color: var(--dark); /* was UA black on #1a1a1a (1.2:1); 15.17:1 */
-}
-
-[data-theme="dark"] .resource-count {
-    color: var(--white); /* #1a1a1a on the light-blue dark --primary: 7.08:1 (white was 2.45:1) */
 }
 
 [data-theme="dark"] .tag {
@@ -4285,61 +4275,62 @@ tr:hover {
    Resources page (body.page-resources)
    Folded in from the inline <style class="critical-css"> block that used to sit
    in resources.html after the stylesheet links. Every selector is prefixed with
-   :where(.page-resources) so it matches only on that page while keeping the
-   specificity the inline rules had, and it sits at the end of this file so it
-   wins the same cascade ties the inline block (loaded after styles.css) won.
+   .page-resources so it matches only on that page. Plain selectors, not
+   the where/is pseudo-classes: the CSS build targets Safari 13 / Chrome 80, which drop
+   rules using them. The prefix adds one class of specificity, so the :hover
+   rules that used to beat these base rules are restated here as well.
    Rules that only repeated critical.css / styles.css were dropped.
    ========================================================================== */
-:where(.page-resources) h2 {
+.page-resources h2 {
     font-size: 2rem;
 }
 
-:where(.page-resources) .container {
+.page-resources .container {
     margin: 0 auto;
     max-width: var(--container-xl);
     padding: 0 1.5rem;
     width: 100%;
 }
 
-:where(.page-resources) .site-title a {
+.page-resources .site-title a {
     transition: color var(--transition-fast);
 }
 
-:where(.page-resources) .site-title a:hover {
+.page-resources .site-title a:hover {
     color: var(--primary-light);
 }
 
-:where(.page-resources) nav li.active a {
+.page-resources nav li.active a {
     color: var(--primary);
 }
 
 @media (width <= 1280px) {
-    :where(.page-resources) nav li {
+    .page-resources nav li {
         margin-left: 1rem;
     }
 
-    :where(.page-resources) nav a {
+    .page-resources nav a {
         padding: 0.25rem;
         font-size: 0.95rem;
     }
 
-    :where(.page-resources) .nav-icon {
+    .page-resources .nav-icon {
         font-size: 1rem;
         margin-right: 6px;
     }
 }
 
 @media (width <= 1024px) {
-    :where(.page-resources) nav li {
+    .page-resources nav li {
         margin-left: 0.75rem;
     }
 
-    :where(.page-resources) nav a {
+    .page-resources nav a {
         font-size: 0.9rem;
     }
 }
 
-:where(.page-resources) .hero {
+.page-resources .hero {
     background-color: var(--primary);
     color: white;
     padding: 3rem 0;
@@ -4347,21 +4338,21 @@ tr:hover {
     position: relative;
 }
 
-:where(.page-resources) .hero h1 {
+.page-resources .hero h1 {
     margin: 0 0 1rem;
     font-size: 2.5rem;
     font-weight: 700;
     color: white;
 }
 
-:where(.page-resources) .hero p {
+.page-resources .hero p {
     font-size: 1.25rem;
     margin: 0;
     opacity: 0.9;
 }
 
 @media (width <= 768px) {
-    :where(.page-resources) nav ul {
+    .page-resources nav ul {
         flex-direction: column;
         position: fixed;
         top: 0;
@@ -4374,23 +4365,23 @@ tr:hover {
         box-shadow: var(--shadow-lg);
     }
 
-    :where(.page-resources) nav ul.active {
+    .page-resources nav ul.active {
         right: 0;
     }
 
-    :where(.page-resources) nav li {
+    .page-resources nav li {
         margin: 0 0 1rem;
     }
 }
 
-:where(.page-resources) .category-grid {
+.page-resources .category-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
     margin: 2rem 0;
 }
 
-:where(.page-resources) .category-card {
+.page-resources .category-card {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     padding: 1.5rem;
@@ -4399,12 +4390,12 @@ tr:hover {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-:where(.page-resources) .category-card:hover {
+.page-resources .category-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgb(0, 0, 0, 0.15);
 }
 
-:where(.page-resources) .resource-item {
+.page-resources .resource-item {
     border: 1px solid #e0e0e0;
     border-radius: 6px;
     padding: 1rem;
@@ -4412,7 +4403,11 @@ tr:hover {
     background: #fafafa;
 }
 
-:where(.page-resources) .resource-meta {
+.page-resources .resource-item:hover {
+    background: white;
+}
+
+.page-resources .resource-meta {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
@@ -4421,7 +4416,7 @@ tr:hover {
     color: #666;
 }
 
-:where(.page-resources) .difficulty-badge {
+.page-resources .difficulty-badge {
     display: inline-block;
     padding: 0.25rem 0.5rem;
     border-radius: 12px;
@@ -4430,29 +4425,29 @@ tr:hover {
     text-transform: uppercase;
 }
 
-:where(.page-resources) .difficulty-beginner {
+.page-resources .difficulty-beginner {
     background: #e3f2fd;
     color: #1565c0; /* was #1976d2 (4.02:1); 5.03:1 */
 }
 
-:where(.page-resources) .difficulty-intermediate {
+.page-resources .difficulty-intermediate {
     background: #fff3e0;
     color: #a84300; /* was #f57c00 (2.46:1); 5.52:1 */
 }
 
-:where(.page-resources) .difficulty-advanced {
+.page-resources .difficulty-advanced {
     background: #fce4ec;
     color: #c2185b;
 }
 
-:where(.page-resources) .search-filters {
+.page-resources .search-filters {
     margin: 2rem 0;
     padding: 1.5rem;
     background: #f8f9fa;
     border-radius: 8px;
 }
 
-:where(.page-resources) .filter-group {
+.page-resources .filter-group {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
@@ -4460,37 +4455,37 @@ tr:hover {
 }
 
 /* Resource detail modal and bookmark feedback (rendered by js/pages/resources.js) */
-:where(.page-resources) .resource-modal-header {
+.page-resources .resource-modal-header {
     border-bottom: 1px solid var(--light);
     padding-bottom: 1rem;
     margin-bottom: 1.5rem;
 }
 
-:where(.page-resources) .resource-modal-meta {
+.page-resources .resource-modal-meta {
     display: flex;
     gap: 1rem;
     margin-top: 0.5rem;
     font-size: 0.875rem;
 }
 
-:where(.page-resources) .sections-list {
+.page-resources .sections-list {
     margin: 1.5rem 0;
 }
 
-:where(.page-resources) .section-item {
+.page-resources .section-item {
     padding: 1rem;
     border: 1px solid var(--light);
     border-radius: var(--radius-md);
     margin-bottom: 1rem;
 }
 
-:where(.page-resources) .section-item h3 {
+.page-resources .section-item h3 {
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
     color: var(--primary);
 }
 
-:where(.page-resources) .resource-modal-actions {
+.page-resources .resource-modal-actions {
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
@@ -4499,7 +4494,7 @@ tr:hover {
     border-top: 1px solid var(--light);
 }
 
-:where(.page-resources) .bookmark-feedback {
+.page-resources .bookmark-feedback {
     position: absolute;
     top: -30px;
     left: 50%;
@@ -4524,21 +4519,21 @@ tr:hover {
     }
 }
 
-:where(.page-resources) .btn-bookmark.bookmarked {
+.page-resources .btn-bookmark.bookmarked {
     background-color: var(--accent);
     color: var(--dark);
 }
 
-:where(.page-resources) .resource-actions {
+.page-resources .resource-actions {
     position: relative;
     display: flex;
     gap: 0.5rem;
     margin-top: 1rem;
 }
 
-:where(.page-resources) .btn-primary,
-:where(.page-resources) .btn-secondary,
-:where(.page-resources) .btn-outline {
+.page-resources .btn-primary,
+.page-resources .btn-secondary,
+.page-resources .btn-outline {
     padding: 0.5rem 1rem;
     border: none;
     border-radius: var(--radius-md);
@@ -4552,13 +4547,18 @@ tr:hover {
     gap: 0.5rem;
 }
 
-:where(.page-resources) .btn-secondary:hover {
+.page-resources .btn-secondary:hover {
     background-color: var(--accent);
     color: var(--dark);
 }
 
-:where(.page-resources) .btn-outline {
+.page-resources .btn-outline {
     background-color: transparent;
     border: 2px solid var(--primary);
     color: var(--primary);
+}
+
+.page-resources .btn-outline:hover {
+    background-color: var(--primary);
+    color: var(--white);
 }
