@@ -17,6 +17,8 @@ const path = require('path');
 const { spawnSync, execFileSync } = require('child_process');
 const { SITE_DIRS, SITE_FILES, isSitePage, sitePages, isPrivate, deployableFiles } = require('./lib/site');
 const { HOST, ORIGIN, EXCLUDE, pageUrl, isShallow } = require('./build-sitemap');
+const ics = require('./lib/ics');
+const { FEED_REL, FEED_NAME, feedSourceFiles } = require('./build-calendar');
 
 const REPO = path.resolve(__dirname, '..');
 const SITE = path.join(REPO, '_site');
@@ -71,7 +73,7 @@ function walk(dir, out = []) {
   return out;
 }
 
-const SKIP_REF = /^(https?:|\/\/|data:|mailto:|tel:|javascript:|#|\$\{)/i;
+const SKIP_REF = /^(https?:|webcal:|\/\/|data:|mailto:|tel:|javascript:|#|\$\{)/i;
 function resolveRef(ref, fromFile) {
   let clean = ref.split(/[?#]/)[0];
   try {
@@ -373,6 +375,128 @@ for (const p of sourceSitePages) {
   }
 }
 
+
+// The contact form (contact.html's action) and the JavaScript-only forms
+// (js/config/form-relay.js, used by the meeting RSVP) must mail the same
+// recipient through the same relay.
+console.log('▸ contact.html and js/config/form-relay.js name the same relay recipient');
+{
+  const contact = fs.readFileSync(path.join(REPO, 'contact.html'), 'utf8');
+  const action = (contact.match(/<form\b[^>]*\bid=["']contact-form["'][^>]*>/i) || [''])[0].match(/\baction=["']([^"']+)["']/i);
+  const relaySrc = fs.readFileSync(path.join(REPO, 'js/config/form-relay.js'), 'utf8');
+  const relay = relaySrc.match(/export const FORM_RELAY_URL = '([^']+)'/);
+  check(Boolean(action), 'contact.html: #contact-form has no action');
+  check(Boolean(relay), 'js/config/form-relay.js: FORM_RELAY_URL not found');
+  if (action && relay) {
+    const recipient = (u) => {
+      const url = new URL(u);
+      return `${url.host}${url.pathname.replace(/^\/ajax\//, '/').replace(/\/$/, '')}`.toLowerCase();
+    };
+    check(recipient(action[1]) === recipient(relay[1]),
+      `contact.html mails ${action[1]} but js/config/form-relay.js mails ${relay[1]}: they must match`);
+    check(/^https:\/\/formsubmit\.co\/[^/]+$/.test(relay[1]), `FORM_RELAY_URL is not a FormSubmit recipient URL: ${relay[1]}`);
+  }
+  const meetings = fs.readFileSync(path.join(REPO, 'meetings.html'), 'utf8');
+  const csp = (meetings.match(/http-equiv="Content-Security-Policy" content="([^"]*)"/) || [])[1] || '';
+  check(/connect-src[^;]*https:\/\/formsubmit\.co/.test(csp), 'meetings.html: CSP connect-src must allow https://formsubmit.co (the RSVP relay)');
+}
+
+// Reminders: every deployed .ics event that is not cancelled carries the two
+// VALARMs, a cancelled one carries none, and removing them gives back the
+// source file byte for byte (so check-ics.mjs's UID, DTSTART, DTEND and
+// SUMMARY are exactly what the skill wrote).
+console.log('▸ deployed .ics files carry reminders and are otherwise the source, byte for byte');
+if (fs.existsSync(SITE)) {
+  const files = walk(SITE).filter((f) => f.endsWith('.ics')).map((f) => path.relative(SITE, f).split(path.sep).join('/'))
+    .filter((rel) => rel !== FEED_REL);
+  let alarmed = 0;
+  let cancelled = 0;
+  check(files.length >= 50, `only ${files.length} .ics files in _site/ (want the meeting files)`);
+  for (const rel of files) {
+    const src = path.join(REPO, rel);
+    if (!fs.existsSync(src)) {
+      check(false, `_site/${rel} has no source file`);
+      continue;
+    }
+    const source = fs.readFileSync(src, 'utf8');
+    const deployed = fs.readFileSync(path.join(SITE, rel), 'utf8');
+    let cal;
+    try {
+      cal = ics.parseICS(deployed);
+    } catch (error) {
+      check(false, `_site/${rel} does not parse: ${error.message}`);
+      continue;
+    }
+    if (!/BEGIN:VALARM/i.test(source)) {
+      check(ics.stripAlarms(deployed) === source, `_site/${rel} differs from its source apart from the reminders`);
+    }
+    check(ics.detectEol(deployed) === ics.detectEol(source) && (deployed.includes('\r\n') || !deployed.includes('\r')),
+      `_site/${rel}: line endings differ from the source`);
+    const srcEvents = ics.events(ics.parseICS(source));
+    const events = ics.events(cal);
+    check(srcEvents.length === events.length, `_site/${rel}: ${events.length} events, source has ${srcEvents.length}`);
+    events.forEach((ev, i) => {
+      for (const name of ['UID', 'DTSTART', 'DTEND', 'SUMMARY']) {
+        check(ics.prop(ev, name) === ics.prop(srcEvents[i] || { props: [] }, name), `_site/${rel} event ${i + 1}: ${name} differs from the source`);
+      }
+      const alarms = ev.children.filter((c) => c.name === 'VALARM');
+      if (ics.isCancelled(ev)) {
+        cancelled++;
+        check(alarms.length === 0, `_site/${rel} event ${i + 1} is cancelled but has ${alarms.length} reminder(s)`);
+      } else {
+        alarmed++;
+        const triggers = alarms.map((a) => ics.prop(a, 'TRIGGER')).sort().join(',');
+        check(triggers === '-P1D,-PT2H' && alarms.every((a) => ics.prop(a, 'ACTION') === 'DISPLAY' && ics.prop(a, 'DESCRIPTION')),
+          `_site/${rel} event ${i + 1} (${ics.prop(ev, 'UID')}): reminders are [${triggers}], want DISPLAY at -P1D and -PT2H`);
+      }
+    });
+  }
+  check(alarmed > 0 && cancelled > 0, `expected both reminded (${alarmed}) and cancelled (${cancelled}) events`);
+
+  // The subscribe feed: one calendar, the same UIDs as the single-meeting
+  // files from 60 days ago onward (so subscribers' events update in place).
+  console.log(`▸ _site/${FEED_REL} is a valid subscribe feed`);
+  const feedPath = path.join(SITE, FEED_REL);
+  const feed = existsExact(feedPath) ? fs.readFileSync(feedPath, 'utf8') : '';
+  check(feed.length > 0, `_site/${FEED_REL} missing`);
+  if (feed) {
+    let cal = null;
+    try {
+      cal = ics.parseICS(feed);
+    } catch (error) {
+      check(false, `_site/${FEED_REL} does not parse: ${error.message}`);
+    }
+    check(!/(^|[^\r])\n/.test(feed), `_site/${FEED_REL}: every line must end in CRLF`);
+    check(feed.split('\r\n').every((l) => Buffer.byteLength(l, 'utf8') <= 75), `_site/${FEED_REL}: a line is longer than 75 octets (unfolded)`);
+    if (cal) {
+      check(ics.prop(cal, 'X-WR-CALNAME') === FEED_NAME, `feed X-WR-CALNAME is ${ics.prop(cal, 'X-WR-CALNAME')}`);
+      check(ics.prop(cal, 'X-WR-TIMEZONE') === 'America/Chicago', 'feed X-WR-TIMEZONE must be America/Chicago');
+      check(cal.props.some((p) => p.name === 'REFRESH-INTERVAL' && /VALUE=DURATION/i.test(p.params) && p.value === 'P1D'), 'feed needs REFRESH-INTERVAL;VALUE=DURATION:P1D');
+      check(ics.prop(cal, 'X-PUBLISHED-TTL') === 'P1D', 'feed needs X-PUBLISHED-TTL:P1D');
+      // Expected events, read from the SOURCE files independently of the build.
+      const want = feedSourceFiles(REPO).flatMap((f) => ics.events(ics.parseICS(fs.readFileSync(f, 'utf8'))));
+      const got = ics.events(cal);
+      check(want.length >= 5, `only ${want.length} meetings expected in the feed (window problem?)`);
+      check(JSON.stringify(got.map((e) => ics.prop(e, 'UID'))) === JSON.stringify(want.map((e) => ics.prop(e, 'UID'))),
+        `feed UIDs ${got.length} do not match the ${want.length} single-meeting files from 60 days ago onward`);
+      got.forEach((ev, i) => {
+        const src = want[i];
+        if (!src) return;
+        for (const name of ['DTSTART', 'DTEND', 'SUMMARY', 'STATUS']) {
+          check(ics.prop(ev, name) === ics.prop(src, name), `feed ${ics.prop(ev, 'UID')}: ${name} differs from its source file`);
+        }
+        const n = ev.children.filter((c) => c.name === 'VALARM').length;
+        check(n === (ics.isCancelled(ev) ? 0 : 2), `feed ${ics.prop(ev, 'UID')}: ${n} reminders`);
+      });
+    }
+  }
+
+  // The retired "Set Reminder" button (it threw setReminder is not a function).
+  console.log('▸ no "Set Reminder" button anywhere in _site');
+  const leftovers = walk(SITE).filter((f) => /\.(html|js)$/.test(f))
+    .filter((f) => /Set Reminder|btn-reminder/.test(fs.readFileSync(f, 'utf8')));
+  check(leftovers.length === 0, `"Set Reminder" still in: ${leftovers.map((f) => path.relative(SITE, f)).join(', ')}`);
+}
 
 console.log(`check-site-build: ${checks} checks, ${failures} failed`);
 process.exit(failures === 0 ? 0 : 1);

@@ -188,3 +188,6 @@ export const CONFIG = {
 Object.freeze(CONFIG);
 Object.freeze(ENV);
 Object.freeze(FEATURES);
+
+// The email relay for the site's forms (one place: js/config/form-relay.js)
+export { FORM_RELAY_URL, relayAjaxUrl, RELAY_TIMEOUT_MS } from './form-relay.js';
