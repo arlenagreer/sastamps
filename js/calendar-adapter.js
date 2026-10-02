@@ -6,8 +6,9 @@
 import { escapeHTML } from './utils/safe-dom.js';
 import { createLogger } from './utils/logger.js';
 import { fetchJSON } from './utils/fetch-json.js';
-import { parseLocalDate, isUpcomingDate } from './utils/dates.js';
-import { hasTime } from './utils/meeting-calendar.js';
+import { parseLocalDate } from './utils/dates.js';
+// Upcoming = still the meeting's date or later in San Antonio (Central time)
+import { hasTime, isClubUpcoming } from './utils/meeting-calendar.js';
 
 const logger = createLogger('CalendarAdapter');
 
@@ -250,7 +251,7 @@ export class CalendarAdapter {
   getUpcomingEvents(events, limit = 5) {
     const now = new Date();
     const upcoming = events
-      .filter(event => isUpcomingDate(event.date, now) && !event.cancelled)
+      .filter(event => isClubUpcoming(event.date, now) && !event.cancelled)
       .sort((a, b) => parseLocalDate(a.date) - parseLocalDate(b.date))
       .slice(0, limit);
 
@@ -297,7 +298,7 @@ export class CalendarAdapter {
       stats.byType[event.type] = (stats.byType[event.type] || 0) + 1;
 
       // Count upcoming
-      if (isUpcomingDate(event.date, now) && !event.cancelled) {
+      if (isClubUpcoming(event.date, now) && !event.cancelled) {
         stats.upcoming++;
       }
 

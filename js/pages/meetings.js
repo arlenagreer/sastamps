@@ -36,16 +36,36 @@ let calendarInstance = null;
 let calendarReady = false;
 let listReady = false;
 
+// One load at a time per section. A load in flight is shared, not repeated,
+// and each load carries a token: a load that a newer one has superseded
+// leaves the page alone, so a late failure cannot overwrite a newer success.
+const sectionLoads = { calendar: null, list: null };
+const sectionTokens = { calendar: 0, list: 0 };
+
+function loadSection(name) {
+  if (!sectionLoads[name]) {
+    const token = ++sectionTokens[name];
+    const run = name === 'calendar'
+      ? initializeMeetingsCalendar(token)
+      : loadMeetingsList(token);
+    sectionLoads[name] = run.finally(() => {
+      sectionLoads[name] = null;
+    });
+  }
+  return sectionLoads[name];
+}
+
+const isCurrent = (name, token) => token === sectionTokens[name];
+
+const CONTAINER_IDS = { calendar: 'calendar-container', list: 'meeting-schedule-container' };
+
 // Meetings-specific functionality
 async function initializeMeetingsPage() {
   // Calendar is essential for meetings page - always load
-  await initializeMeetingsCalendar();
+  await loadSection('calendar');
 
   // Meeting list/grid view
-  const meetingsList = safeQuerySelector('#meeting-schedule-container');
-  if (meetingsList) {
-    await loadMeetingsList(meetingsList);
-  }
+  await loadSection('list');
 
   // Meeting filters
   const filtersContainer = safeQuerySelector('#meeting-filters');
@@ -60,27 +80,32 @@ async function initializeMeetingsPage() {
 const LOADING_HTML = '<div class="loading"><i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Loading...</div>';
 
 /**
- * "Try again": rebuild whichever sections failed (never one that works),
- * then put focus somewhere sensible in the section the button was in.
- * @param {HTMLElement} origin - The container holding the clicked button
+ * "Try again": rebuild whichever sections failed (never one that works, and
+ * never one already loading), then put focus somewhere sensible in the
+ * section the button was in.
+ * @param {string} originName - 'calendar' or 'list'
  */
-async function retryFailedSections(origin) {
-  const calendarContainer = safeQuerySelector('#calendar-container');
-  const meetingsList = safeQuerySelector('#meeting-schedule-container');
+async function retryFailedSections(originName) {
+  const pending = [];
+  for (const name of ['calendar', 'list']) {
+    const ready = name === 'calendar' ? calendarReady : listReady;
+    if (ready) {
+      continue;
+    }
+    if (!sectionLoads[name]) {
+      const el = document.getElementById(CONTAINER_IDS[name]);
+      if (el) {
+        el.innerHTML = LOADING_HTML;
+      }
+    }
+    pending.push(name);
+  }
 
-  if (!calendarReady && calendarContainer) {
-    calendarContainer.innerHTML = LOADING_HTML;
-  }
-  if (!listReady && meetingsList) {
-    meetingsList.innerHTML = LOADING_HTML;
-  }
-
-  if (!calendarReady) {
-    await initializeMeetingsCalendar();
-  }
-  if (!listReady && meetingsList) {
-    await loadMeetingsList(meetingsList);
-    if (listReady) {
+  // Calendar first, then the list, as on page load (they share one fetch)
+  for (const name of pending) {
+    const wasReady = listReady;
+    await loadSection(name);
+    if (name === 'list' && listReady && !wasReady) {
       try {
         initializeRSVPSystem();
       } catch (error) {
@@ -90,6 +115,8 @@ async function retryFailedSections(origin) {
   }
 
   // Failed again: back to that section's retry button. Recovered: the section.
+  // Re-query: the calendar's destroy() replaces its container element.
+  const origin = document.getElementById(CONTAINER_IDS[originName]);
   const retry = origin?.querySelector('.meetings-retry');
   if (retry) {
     retry.focus();
@@ -100,12 +127,17 @@ async function retryFailedSections(origin) {
 }
 
 /**
- * Replace a container's content with a visible error and a working retry button.
+ * Replace a section's content with a visible error and a working retry button.
  * role="alert" announces the same text that is shown.
- * @param {HTMLElement} container
+ * @param {string} name - 'calendar' or 'list'
  * @param {string} message
  */
-function renderLoadError(container, message) {
+function renderLoadError(name, message) {
+  // Always the live element: the calendar's destroy() swaps it for a clone
+  const container = document.getElementById(CONTAINER_IDS[name]);
+  if (!container) {
+    return;
+  }
   container.innerHTML = `
         <div class="error-message meetings-load-error" role="alert">
             <p>${escapeHTML(message)}</p>
@@ -119,8 +151,14 @@ function renderLoadError(container, message) {
     // A plain listener: the button is thrown away with its markup, and the
     // listener with it (the cleanup registry would keep the detached node).
     button.addEventListener('click', () => {
+      if (button.disabled) {
+        return;
+      }
+      // Stays disabled until this section's load settles (a failure renders
+      // a fresh button; a success removes this one).
       button.disabled = true;
-      retryFailedSections(container);
+      button.setAttribute('aria-disabled', 'true');
+      retryFailedSections(name);
     });
   }
 }
@@ -152,6 +190,7 @@ function markMeetingDate(dateEl, adapter) {
 
 // v3 attaches its click handler to the container, so a second instance on
 // the same element would answer every click twice. Always tear down first.
+// destroy() replaces the container with a clone: re-query it afterwards.
 function destroyCalendar() {
   if (calendarInstance) {
     try {
@@ -164,9 +203,8 @@ function destroyCalendar() {
   calendarReady = false;
 }
 
-async function initializeMeetingsCalendar() {
-  const calendarContainer = safeQuerySelector('#calendar-container');
-  if (!calendarContainer) {
+async function initializeMeetingsCalendar(token) {
+  if (!document.getElementById(CONTAINER_IDS.calendar)) {
     logger.warn('Calendar container not found on meetings page');
     return;
   }
@@ -190,18 +228,25 @@ async function initializeMeetingsCalendar() {
     ({ modal } = modalModule);
   } catch (error) {
     logger.error('Failed to load the calendar code:', error);
-    renderLoadError(calendarContainer, CALENDAR_FAILED_TEXT);
+    if (isCurrent('calendar', token)) {
+      renderLoadError('calendar', CALENDAR_FAILED_TEXT);
+    }
     return;
   }
 
   const data = await adapter.loadMeetings();
+  if (!isCurrent('calendar', token)) {
+    return;
+  }
   if (!data) {
     // Without the data every day click would silently do nothing.
-    renderLoadError(calendarContainer, LOAD_FAILED_TEXT);
+    renderLoadError('calendar', LOAD_FAILED_TEXT);
     return;
   }
 
   try {
+    // Re-queried after destroyCalendar(), which swaps the element
+    const calendarContainer = document.getElementById(CONTAINER_IDS.calendar);
     calendarContainer.innerHTML = '';
 
     // vanilla-calendar-pro v3 API (flat options; v2's settings/actions are ignored)
@@ -227,17 +272,18 @@ async function initializeMeetingsCalendar() {
       }
     });
 
-    calendar.init();
+    // Held before init(), so a half-built calendar is still destroyed on failure
     calendarInstance = calendar;
+    calendar.init();
     calendarReady = true;
-    renderCalendarLegend(calendarContainer);
+    renderCalendarLegend(document.getElementById(CONTAINER_IDS.calendar));
 
   } catch (error) {
     // The calendar itself failed (not the data): only the calendar is
     // rebuilt on retry; the meeting list keeps working.
     logger.error('Failed to initialize meetings calendar:', error);
     destroyCalendar();
-    renderLoadError(calendarContainer, CALENDAR_FAILED_TEXT);
+    renderLoadError('calendar', CALENDAR_FAILED_TEXT);
   }
 }
 
@@ -383,9 +429,16 @@ function renderMeetingCard(meeting, { past, next }) {
         `;
 }
 
-async function loadMeetingsList(container) {
+async function loadMeetingsList(token) {
+  const container = document.getElementById(CONTAINER_IDS.list);
+  if (!container) {
+    return;
+  }
   try {
     const meetingsData = await fetchJSON('data/meetings/meetings.json');
+    if (!isCurrent('list', token)) {
+      return;
+    }
 
     // Show the current quarter (rolling over to the next one near quarter end,
     // once its schedule is posted). Shared with MeetingLoader so the rule lives
@@ -428,8 +481,11 @@ async function loadMeetingsList(container) {
 
   } catch (error) {
     logger.error('Failed to load meetings list:', error);
+    if (!isCurrent('list', token)) {
+      return;
+    }
     listReady = false;
-    renderLoadError(container, LOAD_FAILED_TEXT);
+    renderLoadError('list', LOAD_FAILED_TEXT);
     announceStatus(scheduleStatusRegion(), LOAD_FAILED_TEXT);
   }
 }
@@ -451,7 +507,9 @@ function scrollToHashedMeeting() {
   }
 }
 
-addEventListenerWithCleanup(window, 'hashchange', scrollToHashedMeeting);
+// Plain listener: the cleanup registry drops its listeners on beforeunload,
+// which would leave a page restored from the back/forward cache without it.
+window.addEventListener('hashchange', scrollToHashedMeeting);
 
 // Short visually hidden role="status" line next to the schedule (meetings.html).
 // The schedule container itself is not a live region: it holds ~6k characters.
@@ -575,7 +633,10 @@ function bindMeetingActions(container) {
   }
   container.dataset.meetingActionsBound = 'true';
 
-  addEventListenerWithCleanup(container, 'click', async (e) => {
+  // Plain listener, not addEventListenerWithCleanup: the cleanup registry
+  // removes its listeners on beforeunload, and a page restored from the
+  // back/forward cache would keep the bound flag but lose the listener.
+  container.addEventListener('click', async (e) => {
     const button = e.target.closest?.('.btn-rsvp, .btn-reminder');
     if (!button || !container.contains(button)) {
       return;

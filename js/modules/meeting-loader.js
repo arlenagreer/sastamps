@@ -6,7 +6,8 @@
 import { escapeHTML } from '../utils/safe-dom.js';
 import { createLogger } from '../utils/logger.js';
 import { fetchJSON } from '../utils/fetch-json.js';
-import { meetingCalendarUrl } from '../utils/meeting-calendar.js';
+import { meetingCalendarUrl, clubToday } from '../utils/meeting-calendar.js';
+import { parseLocalDate } from '../utils/dates.js';
 
 const logger = createLogger('MeetingLoader');
 
@@ -42,6 +43,16 @@ export function parseQuarter(value) {
   return match ? { year: Number(match[2]), quarter: Number(match[1]) } : null;
 }
 
+/**
+ * Local midnight of the club's current date (America/Chicago), so the quarter
+ * and its rollover follow San Antonio's calendar wherever the visitor is.
+ * @param {Date} now
+ * @returns {Date}
+ */
+function clubDay(now) {
+  return parseLocalDate(clubToday(now));
+}
+
 function quarterOf(date) {
   return { year: date.getFullYear(), quarter: Math.floor(date.getMonth() / 3) + 1 };
 }
@@ -57,9 +68,10 @@ function nextQuarter({ year, quarter }) {
  * @returns {{year: number, quarter: number}}
  */
 export function getDisplayQuarter(now = new Date()) {
-  const current = quarterOf(now);
+  const today = clubDay(now);
+  const current = quarterOf(today);
   const { end } = getQuarterBounds(current.year, current.quarter);
-  const daysUntilQuarterEnd = (end - now) / MS_PER_DAY;
+  const daysUntilQuarterEnd = (end - today) / MS_PER_DAY;
   return daysUntilQuarterEnd <= QUARTER_ADVANCE_DAYS ? nextQuarter(current) : current;
 }
 
@@ -90,7 +102,7 @@ export function meetingsInQuarter(meetings, quarter) {
  */
 export function selectScheduleQuarter(meetings, now = new Date()) {
   const display = getDisplayQuarter(now);
-  const current = quarterOf(now);
+  const current = quarterOf(clubDay(now));
   const rolledOver = display.year !== current.year || display.quarter !== current.quarter;
   if (rolledOver && meetingsInQuarter(meetings, display).length === 0) {
     return current;
