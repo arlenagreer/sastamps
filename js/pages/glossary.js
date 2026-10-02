@@ -8,6 +8,7 @@ import { fetchJSON } from '../utils/fetch-json.js';
 import { createLogger } from '../utils/logger.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { announceStatus, countSummary } from '../utils/announce.js';
+import { scrollBelowHeader, scrollBelowHeaderOnLoad } from '../utils/scroll-below-header.js';
 
 const logger = createLogger('GlossaryPage');
 
@@ -311,8 +312,8 @@ async function loadGlossaryContent(container) {
     // Links such as glossary.html#term-perforation (site search results) land
     // on the term once it exists; the browser's own fragment jump ran before
     // the async render.
-    openTermFromHash();
-    addEventListenerWithCleanup(window, 'hashchange', openTermFromHash);
+    openTermFromHash({ onLoad: true });
+    addEventListenerWithCleanup(window, 'hashchange', () => openTermFromHash());
 
   } catch (error) {
     logger.error('Failed to load glossary content:', error);
@@ -330,7 +331,7 @@ async function loadGlossaryContent(container) {
 /**
  * If the URL fragment names a term (#term-<id>), scroll to it and expand it.
  */
-function openTermFromHash() {
+function openTermFromHash({ onLoad = false } = {}) {
   const match = /^#term-(.+)$/.exec(window.location.hash || '');
   if (!match) {return;}
   let termId = match[1];
@@ -340,6 +341,11 @@ function openTermFromHash() {
     // keep the raw fragment
   }
   scrollToTerm(termId);
+  if (onLoad) {
+    // Re-measure once fonts and late layout settle.
+    scrollBelowHeaderOnLoad([...document.querySelectorAll('#glossary-content-container .glossary-term')]
+      .find(el => el.dataset.termId === termId) || null);
+  }
 }
 
 function byTermName(a, b) {
@@ -735,8 +741,8 @@ function jumpToLetter(letter) {
     target = card ? card.querySelector('.term-header') : null;
   }
   if (!target) {return false;}
-  // scroll-margin-top (styles.css) keeps the target clear of the sticky header.
-  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Measured against the sticky header at scroll time.
+  scrollBelowHeader(target);
   target.focus({ preventScroll: true });
   return true;
 }
@@ -755,7 +761,7 @@ function scrollToTerm(termId) {
     termElement = findCard();
   }
   if (termElement) {
-    termElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    scrollBelowHeader(termElement);
     setTermExpanded(termElement, true);
     termElement.querySelector('.term-header')?.focus({ preventScroll: true });
 

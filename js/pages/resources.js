@@ -5,6 +5,7 @@
 
 import { safeQuerySelector, escapeHTML, safeUrl, safeLocalStorageSet, safeLocalStorageRemove } from '../utils/safe-dom.js';
 import { renderMarkdown } from '../utils/markdown.js';
+import { scrollBelowHeader, scrollBelowHeaderOnLoad } from '../utils/scroll-below-header.js';
 import { fetchJSON } from '../utils/fetch-json.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { formatDate } from '../utils/helpers.js';
@@ -48,8 +49,8 @@ async function initializeResourcesPage() {
 
   // Links such as resources.html#resource-stamp-grading-guide (site search
   // results) land on the item once the list exists.
-  revealResourceFromHash();
-  addEventListenerWithCleanup(window, 'hashchange', revealResourceFromHash);
+  revealResourceFromHash({ onLoad: true });
+  addEventListenerWithCleanup(window, 'hashchange', () => revealResourceFromHash());
 }
 
 async function loadResourcesData() {
@@ -438,7 +439,7 @@ function updateBookmarksFilterButton() {
   button.textContent = `🔖 My Bookmarks (${count})`;
 }
 
-function revealResourceFromHash() {
+function revealResourceFromHash({ onLoad = false } = {}) {
   const match = /^#resource-(.+)$/.exec(window.location.hash || '');
   if (!match) {return;}
   const wanted = decodeURIComponentSafe(match[1]);
@@ -449,8 +450,13 @@ function revealResourceFromHash() {
     // Search or filters hide it: reset them so the linked resource is visible.
     resetView();
   }
-  // scroll-margin-top (styles.css) keeps it clear of the sticky header.
-  item.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Measured against the sticky header (and any other top-pinned bar) at
+  // scroll time; on load, re-measured once fonts and layout settle.
+  if (onLoad) {
+    scrollBelowHeaderOnLoad(item);
+  } else {
+    scrollBelowHeader(item);
+  }
   item.classList.add('highlighted');
   setTimeout(() => item.classList.remove('highlighted'), 2000);
 }
