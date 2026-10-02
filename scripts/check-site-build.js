@@ -150,13 +150,21 @@ if (!fs.existsSync(SITE)) {
   // file in _site/, as Pages would serve it. The host comes from CNAME, in
   // both its www and bare forms, with or without a scheme (//host/...).
   const bareHost = HOST.replace(/^www\./, '').replace(/\./g, '\\.');
-  const SAME_SITE = new RegExp(`(?:https?:)?//(?:www\\.)?${bareHost}(?![\\w.-])(/[^\\s"'<>)\\\\,]*)?`, 'gi');
+  // Groups: 1 userinfo (user@host: never acceptable), 2 port (ignored, so
+  // host:443/x is checked as /x), 3 path. The host must end at a path, a
+  // port or the URL's end, so www.sastamps.org@evil.example or
+  // sastamps.org.evil.example are not mistaken for this site.
+  const SAME_SITE = new RegExp(`(?:https?:)?//(?:([^/\\s"'<>@]+)@)?(?:www\\.)?${bareHost}(?::(\\d+))?(?![\\w.:@-])(/[^\\s"'<>)\\\\,]*)?`, 'gi');
   let sameSite = 0; // in pages only: the sanity floor below must not count sitemap/robots
   for (const file of walk(SITE).filter((f) => /\.(html?|css|webmanifest|xml|txt)$/.test(f))) {
     const text = fs.readFileSync(file, 'utf8');
     for (const m of text.matchAll(SAME_SITE)) {
       if (/\.html?$/.test(file)) sameSite++;
-      let rel = (m[1] || '/').split(/[?#]/)[0];
+      if (m[1] !== undefined) {
+        missing.push(`${path.relative(SITE, file)} -> ${m[0]} (userinfo in a same-site URL)`);
+        continue;
+      }
+      let rel = (m[3] || '/').split(/[?#]/)[0];
       try {
         rel = decodeURIComponent(rel);
       } catch {

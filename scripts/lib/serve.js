@@ -46,9 +46,16 @@ function serve(root) {
   });
   return new Promise((resolve, reject) => {
     server.once('error', reject);
-    server.listen(0, '127.0.0.1', () => resolve({
-      server, base: `http://127.0.0.1:${server.address().port}/`, requests
-    }));
+    server.listen(0, '127.0.0.1', () => {
+      // Listening: a later server error is not a start-up failure. Say so and
+      // stop with exit 2 (the harness broke), rather than swallow it.
+      server.off('error', reject);
+      server.on('error', (err) => {
+        console.error(`serve: the local _site/ server failed (${err.message})`);
+        process.exit(2);
+      });
+      resolve({ server, base: `http://127.0.0.1:${server.address().port}/`, requests });
+    });
   });
 }
 

@@ -14,20 +14,20 @@
  *
  * Exit: 0 pass; 1 fail (anything wrong with the built site or the page,
  * including a missing _site/search.html, a missing element or a timeout);
- * 2 only when the harness itself could not start (Chrome would not launch,
- * or the local server would not listen), which bin/ci reports as NOT
- * VERIFIED rather than FAILED.
+ * 2 only when the harness itself could not start or set up (puppeteer or
+ * lunr not installed, Chrome would not launch, the local server would not
+ * listen, a page or request interception could not be created), which
+ * bin/ci reports as NOT VERIFIED rather than FAILED.
  * Usage: node scripts/test-search-page.js [query]
  */
 const fs = require('fs');
 const path = require('path');
-const puppeteer = require('puppeteer');
 const { serve, chromeArgs } = require('./lib/serve');
 
 const REPO = path.resolve(__dirname, '..');
 const SITE = path.join(REPO, '_site');
 const QUERY = process.argv[2] || 'stamp';
-const LUNR = fs.readFileSync(require.resolve('lunr/lunr.min.js'), 'utf8');
+let LUNR; // loaded in main(), inside the harness guard
 
 let failures = 0;
 function check(cond, message) {
@@ -44,9 +44,12 @@ async function main() {
   }
   let browser;
   try {
+    // Missing modules are the harness's problem, not the site's: exit 2.
+    const puppeteer = require('puppeteer');
+    LUNR = fs.readFileSync(require.resolve('lunr/lunr.min.js'), 'utf8');
     browser = await puppeteer.launch({ headless: true, args: chromeArgs() });
   } catch (err) {
-    console.error(`test-search-page: could not launch headless Chrome (${err.message.split('\n')[0]}).`);
+    console.error(`test-search-page: could not start headless Chrome (${err.message.split('\n')[0]}).`);
     return 2;
   }
   let server;
@@ -55,24 +58,44 @@ async function main() {
     ({ server, base } = await serve(SITE));
   } catch (err) {
     console.error(`test-search-page: could not start the local server (${err.message}).`);
-    await browser.close();
+    await closeQuietly(browser);
+    return 2;
+  }
+  let harness;
+  try {
+    harness = await preparePage(browser, base);
+  } catch (err) {
+    console.error(`test-search-page: could not set up the browser page (${err.message.split('\n')[0]}).`);
+    await closeQuietly(browser);
+    server.close();
     return 2;
   }
   try {
-    await testPage(browser, base);
+    await testPage(harness, base);
   } catch (err) {
     // Anything the page does wrong (an element that is not there, a wait
     // that times out) is a failure of the site, not of the harness.
     check(false, `the page test stopped: ${err.message.split('\n')[0]}`);
   } finally {
-    await browser.close();
+    // A teardown error after the checks ran must not change their verdict.
+    await closeQuietly(browser);
     server.close();
   }
   console.log(`test-search-page: ${failures} failure(s)`);
   return failures ? 1 : 0;
 }
 
-async function testPage(browser, base) {
+async function closeQuietly(browser) {
+  try {
+    await browser.close();
+  } catch (err) {
+    console.error(`test-search-page: closing Chrome failed (${err.message.split('\n')[0]}); ignored`);
+  }
+}
+
+// Harness setup: a page with request interception and listeners. A failure
+// here is the harness's, so main() maps it to exit 2.
+async function preparePage(browser, base) {
   const page = await browser.newPage();
   const LUNR_URL = /^https:\/\/unpkg\.com\/lunr@[^/]+\/lunr\.min\.js$/;
   // Other third-party requests (icon font, web fonts) are not under test:
@@ -107,6 +130,11 @@ async function testPage(browser, base) {
       req.abort('blockedbyclient');
     }
   });
+  return { page, errors, statuses };
+}
+
+// The page's behaviour: every failure here is the site's (exit 1).
+async function testPage({ page, errors, statuses }, base) {
 
   const started = Date.now();
   await page.goto(`${base}search.html`, { waitUntil: 'load' });

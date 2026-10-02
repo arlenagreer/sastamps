@@ -82,6 +82,19 @@ test('sitemap URLs: canonical www host, index as the bare origin', () => {
   assert.ok(EXCLUDE.has('404.html') && EXCLUDE.has('offline.html'));
 });
 
+test('PAGE_DATA names real files (a misspelled path would silently date nothing)', () => {
+  const { PAGE_DATA } = require('../scripts/build-sitemap');
+  const root = path.resolve(__dirname, '..');
+  for (const [page, files] of Object.entries(PAGE_DATA)) {
+    assert.ok(fs.existsSync(path.join(root, page)), page);
+    for (const f of files) {
+      assert.ok(fs.statSync(path.join(root, f), { throwIfNoEntry: false })?.isFile(), `${page}: ${f} does not exist`);
+    }
+  }
+  // archive.html renders js/pages/archive.js's data file, not newsletters.json.
+  assert.deepEqual(PAGE_DATA['archive.html'], ['data/newsletters/archived-newsletters.json']);
+});
+
 test('buildSitemap: dated by the page or its data file; no <lastmod> without history', () => {
   const { buildSitemap, PAGE_DATA } = require('../scripts/build-sitemap');
   const { execFileSync } = require('child_process');
