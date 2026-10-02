@@ -64,6 +64,15 @@
 
 
 /* Base Styles */
+
+/* Fragment targets (#sent, glossary letters, resource cards, any #anchor) and
+   scrollIntoView() land below the sticky header, not under it. The header is
+   about 5.9rem tall (94px at 16px, 83px at the phone's 14px root size), so a
+   rem value tracks it at every width, plus a little breathing room. */
+html {
+    scroll-padding-top: 6.5rem;
+}
+
 body {
     background-color: var(--white);
     color: var(--dark);
