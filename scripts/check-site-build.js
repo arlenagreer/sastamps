@@ -18,7 +18,7 @@ const { spawnSync, execFileSync } = require('child_process');
 const { SITE_DIRS, SITE_FILES, isSitePage, sitePages, isPrivate, deployableFiles } = require('./lib/site');
 const { HOST, ORIGIN, EXCLUDE, pageUrl, isShallow } = require('./build-sitemap');
 const ics = require('./lib/ics');
-const { FEED_REL, FEED_NAME, feedSourceFiles } = require('./build-calendar');
+const { FEED_REL, FEED_NAME, MANIFEST_REL, feedSourceFiles } = require('./build-calendar');
 
 const REPO = path.resolve(__dirname, '..');
 const SITE = path.join(REPO, '_site');
@@ -420,6 +420,19 @@ if (fs.existsSync(SITE)) {
     }
     const source = fs.readFileSync(src, 'utf8');
     const deployed = fs.readFileSync(path.join(SITE, rel), 'utf8');
+    // A source the strict parser rejects deploys unchanged (the build warns
+    // and goes on: reminders must never block a newsletter deploy).
+    let sourceOk = true;
+    try {
+      ics.parseICS(source);
+    } catch (error) {
+      sourceOk = false;
+      console.log(`  WARN ${rel} does not parse (${error.message}): deployed without reminders`);
+    }
+    if (!sourceOk) {
+      check(deployed === source, `_site/${rel} does not parse, so it must deploy unchanged`);
+      continue;
+    }
     let cal;
     try {
       cal = ics.parseICS(deployed);
@@ -473,12 +486,26 @@ if (fs.existsSync(SITE)) {
       check(ics.prop(cal, 'X-WR-TIMEZONE') === 'America/Chicago', 'feed X-WR-TIMEZONE must be America/Chicago');
       check(cal.props.some((p) => p.name === 'REFRESH-INTERVAL' && /VALUE=DURATION/i.test(p.params) && p.value === 'P1D'), 'feed needs REFRESH-INTERVAL;VALUE=DURATION:P1D');
       check(ics.prop(cal, 'X-PUBLISHED-TTL') === 'P1D', 'feed needs X-PUBLISHED-TTL:P1D');
-      // Expected events, read from the SOURCE files independently of the build.
-      const want = feedSourceFiles(REPO).flatMap((f) => ics.events(ics.parseICS(fs.readFileSync(f, 'utf8'))));
+      // Expected events: the SOURCE files from the start date the build used
+      // (dist/calendar-feed.json; recomputing it here could straddle a
+      // midnight), minus any file the build had to skip.
+      let manifest = {};
+      try {
+        manifest = JSON.parse(fs.readFileSync(path.join(REPO, MANIFEST_REL), 'utf8'));
+      } catch {
+        check(false, `${MANIFEST_REL} missing or not JSON (the build writes it)`);
+      }
+      check(/^\d{4}-\d{2}-\d{2}$/.test(manifest.feedStart || ''), `${MANIFEST_REL}: feedStart is ${manifest.feedStart}`);
+      const skipped = new Set(manifest.skipped || []);
+      const wantFiles = feedSourceFiles(REPO, manifest.feedStart || '9999')
+        .filter((f) => !skipped.has(path.relative(REPO, f).split(path.sep).join('/')));
+      const want = wantFiles.flatMap((f) => ics.events(ics.parseICS(fs.readFileSync(f, 'utf8'))));
       const got = ics.events(cal);
-      check(want.length >= 5, `only ${want.length} meetings expected in the feed (window problem?)`);
+      if (want.length < 5) {
+        console.log(`  WARN only ${want.length} meetings in the feed from ${manifest.feedStart} (is the next schedule posted?)`);
+      }
       check(JSON.stringify(got.map((e) => ics.prop(e, 'UID'))) === JSON.stringify(want.map((e) => ics.prop(e, 'UID'))),
-        `feed UIDs ${got.length} do not match the ${want.length} single-meeting files from 60 days ago onward`);
+        `feed UIDs ${got.length} do not match the ${want.length} single-meeting files from ${manifest.feedStart} onward`);
       got.forEach((ev, i) => {
         const src = want[i];
         if (!src) return;

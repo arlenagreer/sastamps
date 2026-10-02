@@ -95,7 +95,9 @@ export class Modal {
 
     // Escape key
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && this.isOpen) {
+      // Not while a dialog opened over this one (the RSVP form) is open:
+      // that Escape is the RSVP form's.
+      if (e.key === 'Escape' && this.isOpen && !e.defaultPrevented && !document.querySelector('dialog[open]')) {
         this.close();
       }
     });

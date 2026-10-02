@@ -75,6 +75,39 @@ test('parseICS rejects broken calendars', () => {
   assert.throws(() => ics.parseICS('BEGIN:VEVENT\nEND:VEVENT\n'), /VCALENDAR/);
 });
 
+test('build: a .ics that does not parse is skipped unchanged and left out of the feed; the build carries on', () => {
+  const fs = require('fs');
+  const os = require('os');
+  const path = require('path');
+  const { buildCalendars, MANIFEST_REL, FEED_REL } = require('../scripts/build-calendar');
+  const site = fs.mkdtempSync(path.join(os.tmpdir(), 'ics-build-'));
+  const dir = path.join(site, 'data/calendar');
+  fs.mkdirSync(dir, { recursive: true });
+  const good = calendar(event('STATUS:CONFIRMED'), '\n');
+  const broken = 'BEGIN:VCALENDAR\nBEGIN:VEVENT\nUID:broken@x\nEND:VCALENDAR\n';
+  fs.writeFileSync(path.join(dir, '2099-01-02-meeting.ics'), good);
+  fs.writeFileSync(path.join(dir, '2099-01-09-meeting.ics'), broken);
+  const warn = console.warn;
+  const warnings = [];
+  console.warn = (m) => warnings.push(m);
+  let result;
+  try {
+    result = buildCalendars(site, new Date('2099-01-01T18:00:00Z'), { root: site });
+  } finally {
+    console.warn = warn;
+  }
+  assert.deepEqual(result.skipped, ['data/calendar/2099-01-09-meeting.ics']);
+  assert.ok(warnings.some((w) => /2099-01-09-meeting\.ics does not parse/.test(w)));
+  assert.equal(fs.readFileSync(path.join(dir, '2099-01-09-meeting.ics'), 'utf8'), broken);
+  const feed = fs.readFileSync(path.join(site, FEED_REL), 'utf8');
+  assert.equal(ics.events(ics.parseICS(feed)).length, 1);
+  assert.ok(!feed.includes('broken@x'));
+  const manifest = JSON.parse(fs.readFileSync(path.join(site, MANIFEST_REL), 'utf8'));
+  assert.equal(manifest.feedStart, '2098-11-02');
+  assert.deepEqual(manifest.feedFiles, ['data/calendar/2099-01-02-meeting.ics']);
+  fs.rmSync(site, { recursive: true, force: true });
+});
+
 test('rawEvents returns each VEVENT block, LF-joined', () => {
   const blocks = ics.rawEvents(calendar([...event(), ...event()], '\r\n'));
   assert.equal(blocks.length, 2);

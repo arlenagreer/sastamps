@@ -2521,6 +2521,9 @@ tr:hover {
 .rsvp-dialog {
     width: min(32rem, calc(100% - 2rem));
     max-height: calc(100% - 2rem);
+
+    /* Centred in the viewport: the site's reset zeroes the UA's margin: auto */
+    margin: auto;
     padding: 0;
     border: none;
     border-radius: var(--radius-md);

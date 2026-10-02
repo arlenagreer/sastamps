@@ -8,6 +8,7 @@ import { safeQuerySelector } from '../utils/safe-dom.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { validateEmail, isPlausiblePhone } from '../utils/helpers.js';
 import { createLogger } from '../utils/logger.js';
+import { sendToRelay, CLUB_EMAIL } from '../config/form-relay.js';
 import {
   ERROR_MESSAGES,
   SUCCESS_MESSAGES,
@@ -16,10 +17,9 @@ import {
 
 const logger = createLogger('ContactPage');
 
-const RELAY_TIMEOUT_MS = 30000;
 const PHONE_INVALID = 'Please enter a phone number using digits, spaces, dashes or a leading +, for example (210) 555-0123 or +44 20 7946 0958.';
 
-const RELAY_UNCONFIRMED = "We couldn't confirm your message was sent (the connection timed out). It may still arrive, so please wait a few minutes before sending it again, or email us at loz33@hotmail.com.";
+const RELAY_UNCONFIRMED = `We couldn't confirm your message was sent (the connection timed out). It may still arrive, so please wait a few minutes before sending it again, or email us at ${CLUB_EMAIL}.`;
 
 // Contact-specific functionality
 function initializeContactPage() {
@@ -240,8 +240,6 @@ async function handleFormSubmission(event) {
     return;
   }
 
-  let timer;
-
   // Show loading state
   submitButton.disabled = true;
   submitButton.textContent = 'Sending...';
@@ -254,51 +252,28 @@ async function handleFormSubmission(event) {
     delete data._next;
     data._subject = `SAPA website: ${data.subject || 'Contact form'} (from ${data.name})`;
 
-    // Deliver through the email relay: the AJAX form of the form's own
-    // action URL, so the recipient is set in one place (contact.html).
-    const relay = new URL(form.action);
-    if (!relay.pathname.startsWith('/ajax/')) {
-      relay.pathname = `/ajax${relay.pathname}`;
-    }
-    // Manual timer, not AbortSignal.timeout (missing before Safari 16).
-    const controller = new AbortController();
-    timer = setTimeout(() => controller.abort(), RELAY_TIMEOUT_MS);
-    const response = await fetch(relay.href, {
-      method: 'POST',
-      signal: controller.signal,
-      // Form-encoded with only an Accept header: a CORS "simple" request, so
-      // the browser posts directly instead of first sending an OPTIONS
-      // preflight. A preflight to the relay once timed out live (2026-10-02)
-      // and the message was lost before it was ever sent.
-      headers: { Accept: 'application/json' },
-      body: new URLSearchParams(data)
-    });
+    // Deliver through the email relay (js/config/form-relay.js), to the
+    // recipient named in the form's own action.
+    const { outcome, message, error } = await sendToRelay(data, { relayUrl: form.action });
 
-    clearTimeout(timer); // the relay answered; don't abort while reading the body
-    const result = await response.json();
-
-    // FormSubmit answers {success: "true"|"false", message}; "false" includes
-    // the one-time "form needs activation" reply, which must not read as sent.
-    if (response.ok && String(result.success) === 'true') {
+    if (outcome === 'sent') {
       showFormMessage(SUCCESS_MESSAGES.FORM_SUBMITTED, CSS_CLASSES.SUCCESS);
       form.reset();
 
       // Clear validation states
       toValidate.forEach(field => clearFieldValidation(field));
-
     } else {
-      throw new Error(result.message || ERROR_MESSAGES.SUBMISSION_FAILED);
+      // 'unconfirmed' (timed out after sending): it may still arrive.
+      // 'failed' (relay said no, offline, refused, unreadable): it did not.
+      logger.error('Form submission failed:', outcome, message, error || '');
+      showFormMessage(outcome === 'unconfirmed' ? RELAY_UNCONFIRMED : ERROR_MESSAGES.SUBMISSION_FAILED, CSS_CLASSES.ERROR);
     }
 
   } catch (error) {
     logger.error('Form submission failed:', error);
-    // A timeout or a dropped connection means we don't know: the relay may
-    // already have delivered it. Only a relay reply we read is a definite no.
-    const unconfirmed = error && (error.name === 'AbortError' || error.name === 'TypeError');
-    showFormMessage(unconfirmed ? RELAY_UNCONFIRMED : ERROR_MESSAGES.SUBMISSION_FAILED, CSS_CLASSES.ERROR);
+    showFormMessage(ERROR_MESSAGES.SUBMISSION_FAILED, CSS_CLASSES.ERROR);
 
   } finally {
-    clearTimeout(timer);
     // Restore button state
     submitButton.disabled = false;
     submitButton.innerHTML = originalButtonHTML;

@@ -4,7 +4,7 @@
  */
 
 import { debounce } from '../utils/performance.js';
-import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
+import { safeQuerySelector, escapeHTML, safeUrl, safeLocalStorageRemove } from '../utils/safe-dom.js';
 import { parseLocalDate } from '../utils/dates.js';
 import { fetchJSON } from '../utils/fetch-json.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
@@ -74,11 +74,7 @@ async function initializeMeetingsPage() {
 
   // RSVPs used to be kept only in this browser (never reaching the club);
   // drop that stale record. RSVPs are now emailed (js/modules/rsvp-dialog.js).
-  try {
-    window.localStorage.removeItem('meeting_rsvps');
-  } catch {
-    // storage blocked: nothing to remove
-  }
+  safeLocalStorageRemove('meeting_rsvps');
 }
 
 const LOADING_HTML = '<div class="loading"><i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Loading...</div>';
@@ -608,13 +604,13 @@ let meetingsById = new Map();
 
 /**
  * After a confirmed send: every RSVP button for that meeting (its card and,
- * if open, the details dialog) says so, for this page view only.
- * @param {string} meetingId
+ * if open, the details dialog, which can show meetings of other quarters)
+ * says so, for this page view only.
+ * @param {Object} meeting
  */
-function markRsvpSent(meetingId) {
-  const meeting = meetingsById.get(meetingId);
+function markRsvpSent(meeting) {
   for (const button of document.querySelectorAll('.btn-rsvp[data-meeting-id], .modal-rsvp-btn[data-meeting-id]')) {
-    if (button.dataset.meetingId === meetingId && meeting) {
+    if (button.dataset.meetingId === meeting.id) {
       renderRsvpButton(button, meeting);
     }
   }

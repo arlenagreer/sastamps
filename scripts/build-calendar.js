@@ -11,7 +11,11 @@
  *    onward, taken from the deployed single-meeting files with the same UIDs,
  *    so a subscribed calendar updates its events instead of duplicating them.
  *
- * scripts/check-site-build.js checks both against the sources.
+ * Neither may ever block a deploy: a deployed .ics that does not parse is left
+ * exactly as it is (no reminders, not in the feed) with a warning, and the
+ * build carries on. The build records what it did in dist/calendar-feed.json
+ * (the feed's start date, its files, any skipped file), and
+ * scripts/check-site-build.js checks _site/ against that and the sources.
  */
 const fs = require('fs');
 const path = require('path');
@@ -23,6 +27,8 @@ const FEED_DAYS_BACK = 60;
 // One file per meeting (data-contract.md section C): YYYY-MM-DD-meeting.ics, or -picnic.ics.
 const MEETING_FILE = /^(\d{4}-\d{2}-\d{2})-(meeting|picnic)\.ics$/;
 const MEETING_DIR = 'data/calendar';
+// Not deployed: what the build did, for scripts/check-site-build.js.
+const MANIFEST_REL = 'dist/calendar-feed.json';
 
 function walk(dir, out = []) {
   if (!fs.existsSync(dir)) {
@@ -48,13 +54,16 @@ function feedStartDate(now = new Date()) {
   return start.toISOString().slice(0, 10);
 }
 
-/** The single-meeting files in a site (or repo) root that belong in the feed, sorted. */
-function feedSourceFiles(root, now = new Date()) {
+/**
+ * The single-meeting files in a site (or repo) root dated `start` or later, sorted.
+ * @param {string} root
+ * @param {string} start - 'YYYY-MM-DD'
+ */
+function feedSourceFiles(root, start) {
   const dir = path.join(root, MEETING_DIR);
   if (!fs.existsSync(dir)) {
     return [];
   }
-  const start = feedStartDate(now);
   return fs.readdirSync(dir)
     .filter((name) => {
       const m = MEETING_FILE.exec(name);
@@ -64,10 +73,15 @@ function feedSourceFiles(root, now = new Date()) {
     .map((name) => path.join(dir, name));
 }
 
-/** Add reminders to every .ics in _site/ (not the feed). Returns counts. */
+/**
+ * Add reminders to every .ics in _site/ (not the feed). A file that does not
+ * parse is skipped, unchanged, with a warning.
+ * @returns {{files: number, events: number, skipped: string[]}}
+ */
 function addSiteAlarms(site) {
   let files = 0;
   let events = 0;
+  const skipped = [];
   for (const file of walk(site).filter((f) => f.endsWith('.ics'))) {
     const rel = path.relative(site, file).split(path.sep).join('/');
     if (rel === FEED_REL) {
@@ -78,7 +92,9 @@ function addSiteAlarms(site) {
     try {
       result = addAlarms(before);
     } catch (error) {
-      throw new Error(`${rel}: ${error.message}`);
+      skipped.push(rel);
+      console.warn(`WARNING: ${rel} does not parse (${error.message}); deployed unchanged, with no reminders and not in the subscribe feed.`);
+      continue;
     }
     if (result.added > 0) {
       fs.writeFileSync(file, result.text);
@@ -86,11 +102,15 @@ function addSiteAlarms(site) {
       events += result.added;
     }
   }
-  return { files, events };
+  return { files, events, skipped };
 }
 
-/** Build the subscribe feed text from the (already alarmed) files in _site/. */
-function feedText(site, now = new Date()) {
+/**
+ * The subscribe feed text, from the (already reminded) single-meeting files
+ * in _site/ dated `start` or later, leaving out any in `skip`.
+ * @returns {{text: string, files: string[]}}
+ */
+function feedText(site, start, skip = []) {
   const CRLF = '\r\n';
   const lines = [
     'BEGIN:VCALENDAR',
@@ -105,7 +125,13 @@ function feedText(site, now = new Date()) {
     'REFRESH-INTERVAL;VALUE=DURATION:P1D',
     'X-PUBLISHED-TTL:P1D'
   ];
-  for (const file of feedSourceFiles(site, now)) {
+  const files = [];
+  for (const file of feedSourceFiles(site, start)) {
+    const rel = path.relative(site, file).split(path.sep).join('/');
+    if (skip.includes(rel)) {
+      continue;
+    }
+    files.push(rel);
     for (const block of rawEvents(fs.readFileSync(file, 'utf8'))) {
       // Unfold, then fold again with CRLF: the feed is ours, so it follows
       // RFC 5545 exactly (the source files use LF and do not fold).
@@ -113,18 +139,35 @@ function feedText(site, now = new Date()) {
     }
   }
   lines.push('END:VCALENDAR');
-  return lines.map((l) => foldLine(l, CRLF)).join(CRLF) + CRLF;
+  return { text: lines.map((l) => foldLine(l, CRLF)).join(CRLF) + CRLF, files };
 }
 
-function buildCalendars(site, now = new Date()) {
+/**
+ * Reminders, then the feed, then dist/calendar-feed.json. Never throws for
+ * calendar content: problems are warnings, and the deploy goes ahead.
+ */
+function buildCalendars(site, now = new Date(), { root = path.resolve(__dirname, '..') } = {}) {
   const alarms = addSiteAlarms(site);
-  const text = feedText(site, now);
-  parseICS(text); // never deploy a feed that does not parse
-  const out = path.join(site, FEED_REL);
-  fs.mkdirSync(path.dirname(out), { recursive: true });
-  fs.writeFileSync(out, text);
-  const count = (text.match(/^BEGIN:VEVENT\r$/gm) || []).length;
-  return { ...alarms, feed: FEED_REL, feedEvents: count, feedStart: feedStartDate(now) };
+  const start = feedStartDate(now);
+  const { text, files } = feedText(site, start, alarms.skipped);
+  let feedWritten = true;
+  try {
+    parseICS(text);
+  } catch (error) {
+    feedWritten = false;
+    console.warn(`WARNING: the subscribe feed did not parse (${error.message}); _site/${FEED_REL} was not written.`);
+  }
+  if (feedWritten) {
+    const out = path.join(site, FEED_REL);
+    fs.mkdirSync(path.dirname(out), { recursive: true });
+    fs.writeFileSync(out, text);
+  }
+  const count = feedWritten ? (text.match(/^BEGIN:VEVENT\r$/gm) || []).length : 0;
+  const manifest = { feedStart: start, feedFiles: feedWritten ? files : [], feedWritten, skipped: alarms.skipped };
+  const manifestPath = path.join(root, MANIFEST_REL);
+  fs.mkdirSync(path.dirname(manifestPath), { recursive: true });
+  fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+  return { ...alarms, feed: FEED_REL, feedEvents: count, feedStart: start, feedWritten };
 }
 
-module.exports = { FEED_REL, FEED_NAME, FEED_DAYS_BACK, MEETING_DIR, feedStartDate, feedSourceFiles, feedText, addSiteAlarms, buildCalendars };
+module.exports = { FEED_REL, FEED_NAME, FEED_DAYS_BACK, MEETING_DIR, MANIFEST_REL, feedStartDate, feedSourceFiles, feedText, addSiteAlarms, buildCalendars };

@@ -5,28 +5,27 @@
  * Nothing is stored: an RSVP counts as sent only when the relay confirms it,
  * and the "RSVP sent" state lasts for this page view only.
  *
- * The request is the contact form's (js/pages/contact.js): a form-encoded POST
- * with only an Accept header, which is a CORS "simple" request, so the browser
- * sends it directly with no OPTIONS preflight (a preflight once timed out live
- * and lost the message). A timeout or dropped connection is reported as
- * unconfirmed, never as sent and never as failed.
+ * Sending is the contact form's routine, sendToRelay (js/config/form-relay.js):
+ * a CORS simple request with no preflight, and three outcomes. Only a relay
+ * "success" counts as sent; a timeout after sending is "unconfirmed"; anything
+ * else (relay said no, offline, refused) is a definite failure.
  */
 
 import { escapeHTML } from '../utils/safe-dom.js';
 import { validateEmail } from '../utils/helpers.js';
 import { formatLongDate } from '../utils/meeting-calendar.js';
 import { createLogger } from '../utils/logger.js';
-import { relayAjaxUrl, RELAY_TIMEOUT_MS } from '../config/form-relay.js';
+import { sendToRelay, CLUB_EMAIL } from '../config/form-relay.js';
 
 const logger = createLogger('RSVP');
 
-const CLUB_EMAIL = 'loz33@hotmail.com';
 const MAX_GUESTS = 9;
 const NOTE_MAX = 500;
 
 export const RSVP_MESSAGES = {
   invalid: 'Please correct the errors above before sending.',
-  failed: `Sorry, your RSVP could not be sent. Please try again, or email ${CLUB_EMAIL}.`,
+  failed: `Sorry, your RSVP couldn't be sent. Please try again, or email ${CLUB_EMAIL}.`,
+  offline: `Your RSVP couldn't be sent: you appear to be offline. Please reconnect and try again, or email ${CLUB_EMAIL}.`,
   unconfirmed: `We couldn't confirm your RSVP was sent (the connection timed out). It may still arrive, so please wait a few minutes before sending it again, or email ${CLUB_EMAIL}.`
 };
 
@@ -100,25 +99,26 @@ function buildDialog() {
   form.addEventListener('submit', handleSubmit);
   el.querySelector('.rsvp-close').addEventListener('click', closeRsvpDialog);
   el.querySelector('.rsvp-cancel').addEventListener('click', closeRsvpDialog);
-  // Escape is handled here, not left to the browser, so it closes only this
-  // dialog (the meeting details dialog underneath listens on document) and
-  // focus goes back to the RSVP button.
-  el.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      event.stopPropagation();
-      closeRsvpDialog();
-    }
-  });
+  // Escape is handled by onDocumentKeydown (a capturing listener on document
+  // while this dialog is open), so it closes only this dialog wherever focus
+  // is, and the details dialog underneath never sees it. The browser's own
+  // cancel (e.g. Android back) is routed the same way.
   el.addEventListener('cancel', (event) => {
     event.preventDefault();
     closeRsvpDialog();
   });
-  // A click on the backdrop (outside the form box) closes, as for the details dialog.
+  // A click on the backdrop (outside the form box) closes, as for the details
+  // dialog, but only if the press began there too: dragging a text selection
+  // out of a field must not close the form.
+  let pressedOnBackdrop = false;
+  el.addEventListener('mousedown', (event) => {
+    pressedOnBackdrop = event.target === el;
+  });
   el.addEventListener('click', (event) => {
-    if (event.target === el) {
+    if (event.target === el && pressedOnBackdrop) {
       closeRsvpDialog();
     }
+    pressedOnBackdrop = false;
   });
   for (const id of ['rsvp-name', 'rsvp-email']) {
     const input = el.querySelector(`#${id}`);
@@ -138,11 +138,19 @@ function buildDialog() {
   return el;
 }
 
+function onDocumentKeydown(event) {
+  if (event.key === 'Escape' && dialog && dialog.open) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    closeRsvpDialog();
+  }
+}
+
 /**
  * Open the RSVP form for an upcoming meeting.
  * @param {Object} meeting - meetings.json entry
  * @param {HTMLElement} opener - the RSVP button; focus returns to it
- * @param {{onSent?: Function}} [options] - onSent(meetingId) after a confirmed send
+ * @param {{onSent?: Function}} [options] - onSent(meeting) after a confirmed send
  */
 export function openRsvpDialog(meeting, opener, { onSent } = {}) {
   if (!meeting || meeting.cancelled) {
@@ -166,6 +174,7 @@ export function openRsvpDialog(meeting, opener, { onSent } = {}) {
   } else {
     dialog.setAttribute('open', '');
   }
+  document.addEventListener('keydown', onDocumentKeydown, true);
   dialog.querySelector('#rsvp-name').focus();
 }
 
@@ -173,6 +182,7 @@ export function closeRsvpDialog() {
   if (!dialog || !dialog.open || sending) {
     return;
   }
+  document.removeEventListener('keydown', onDocumentKeydown, true);
   if (typeof dialog.close === 'function') {
     dialog.close();
   } else {
@@ -301,41 +311,27 @@ async function handleSubmit(event) {
   submit.textContent = 'Sending...';
   setResult('', '');
 
-  let timer;
   try {
-    // Manual timer, not AbortSignal.timeout (missing before Safari 16).
-    const controller = new AbortController();
-    timer = setTimeout(() => controller.abort(), RELAY_TIMEOUT_MS);
-    const response = await fetch(relayAjaxUrl(), {
-      method: 'POST',
-      signal: controller.signal,
-      // Only an Accept header and a URLSearchParams body: a CORS simple
-      // request, so there is no preflight to time out.
-      headers: { Accept: 'application/json' },
-      body: new URLSearchParams(data)
-    });
-    clearTimeout(timer); // the relay answered; don't abort while reading the body
-    const result = await response.json();
-
-    // {success: "true"|"false", message}; "false" includes the relay's
-    // one-time "needs activation" reply, which is not a delivered RSVP.
-    if (response.ok && String(result.success) === 'true') {
+    const { outcome, message, error } = await sendToRelay(data);
+    if (outcome === 'sent') {
       sentThisView.add(meeting.id);
       form.reset();
       dialog.querySelector('.rsvp-already').hidden = true;
       setResult(`Thank you, ${name}! Your RSVP for ${meeting.title} on ${longDate} has been sent to the club.`, 'success');
       if (typeof onSent === 'function') {
-        onSent(meeting.id);
+        onSent(meeting);
       }
     } else {
-      throw new Error(result && result.message ? result.message : 'The relay did not accept the RSVP');
+      logger.error('RSVP not sent:', outcome, message, error || '');
+      const text = outcome === 'unconfirmed' ? RSVP_MESSAGES.unconfirmed
+        : message === 'offline' ? RSVP_MESSAGES.offline : RSVP_MESSAGES.failed;
+      setResult(text, 'error');
     }
   } catch (error) {
+    // A bug here, not a network outcome: the RSVP was not sent.
     logger.error('RSVP send failed:', error);
-    const unconfirmed = error && (error.name === 'AbortError' || error.name === 'TypeError');
-    setResult(unconfirmed ? RSVP_MESSAGES.unconfirmed : RSVP_MESSAGES.failed, 'error');
+    setResult(RSVP_MESSAGES.failed, 'error');
   } finally {
-    clearTimeout(timer);
     sending = false;
     submit.disabled = false;
     cancel.disabled = false;
@@ -345,24 +341,34 @@ async function handleSubmit(event) {
 }
 
 /**
- * The label and look of an RSVP button for a meeting.
- * @param {HTMLElement} button
+ * What an RSVP button for a meeting says, for either renderer.
  * @param {Object} meeting - needs id, title, date
+ * @returns {{sent: boolean, label: string, html: string}}
  */
-export function renderRsvpButton(button, meeting) {
+export function rsvpButtonState(meeting) {
   const sent = isRsvpSent(meeting.id);
   const what = `${meeting.title}, ${formatLongDate(meeting.date)}`;
-  button.classList.toggle('rsvp-sent', sent);
-  button.innerHTML = sent
-    ? '<i class="fas fa-check" aria-hidden="true"></i> RSVP sent'
-    : 'RSVP';
-  button.setAttribute('aria-label', sent ? `RSVP sent for ${what}. Send another RSVP` : `RSVP for ${what}`);
+  return {
+    sent,
+    label: sent ? `RSVP sent for ${what}. Send another RSVP` : `RSVP for ${what}`,
+    html: sent ? '<i class="fas fa-check" aria-hidden="true"></i> RSVP sent' : 'RSVP'
+  };
+}
+
+/**
+ * Update an existing RSVP button (the details dialog's, or a card's after a send).
+ * @param {HTMLElement} button
+ * @param {Object} meeting
+ */
+export function renderRsvpButton(button, meeting) {
+  const state = rsvpButtonState(meeting);
+  button.classList.toggle('rsvp-sent', state.sent);
+  button.innerHTML = state.html;
+  button.setAttribute('aria-label', state.label);
 }
 
 /** Card markup for an RSVP button (rendered as a string with the card). */
 export function rsvpButtonHTML(meeting) {
-  const what = `${meeting.title}, ${formatLongDate(meeting.date)}`;
-  const sent = isRsvpSent(meeting.id);
-  const label = sent ? `RSVP sent for ${what}. Send another RSVP` : `RSVP for ${what}`;
-  return `<button type="button" class="btn-rsvp${sent ? ' rsvp-sent' : ''}" data-meeting-id="${escapeHTML(meeting.id)}" aria-haspopup="dialog" aria-label="${escapeHTML(label)}">${sent ? '<i class="fas fa-check" aria-hidden="true"></i> RSVP sent' : 'RSVP'}</button>`;
+  const state = rsvpButtonState(meeting);
+  return `<button type="button" class="btn-rsvp${state.sent ? ' rsvp-sent' : ''}" data-meeting-id="${escapeHTML(meeting.id)}" aria-haspopup="dialog" aria-label="${escapeHTML(state.label)}">${state.html}</button>`;
 }

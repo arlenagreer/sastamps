@@ -126,7 +126,8 @@ async function build() {
 
         console.log('\n8. Adding meeting reminders and writing the calendar feed...');
         const cal = buildCalendars(SITE);
-        console.log(`Reminders added to ${cal.events} event(s) in ${cal.files} .ics file(s); _site/${cal.feed}: ${cal.feedEvents} event(s) from ${cal.feedStart}`);
+        console.log(`Reminders added to ${cal.events} event(s) in ${cal.files} .ics file(s); _site/${cal.feed}: ${cal.feedEvents} event(s) from ${cal.feedStart}`
+            + (cal.skipped.length ? `; skipped (did not parse): ${cal.skipped.join(', ')}` : ''));
 
         console.log('\n9. Writing _site/sitemap.xml...');
         const mapped = buildSitemap(ROOT, SITE);
