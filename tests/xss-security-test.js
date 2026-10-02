@@ -44,8 +44,8 @@ const escapeCases = [
 for (const [input, expected] of escapeCases) {
   check(`escapeHTML(${JSON.stringify(input)})`, () => assert.equal(escapeHTML(input), expected));
 }
-for (const input of [undefined, null, 42, {}, ['<b>']]) {
-  check(`escapeHTML non-string ${JSON.stringify(input)} -> ''`, () => assert.equal(escapeHTML(input), ''));
+for (const input of [undefined, null, 42, 0, true, {}, ['<b>'], { toString: () => '<script>' }]) {
+  check(`escapeHTML non-string ${String(input)} -> ''`, () => assert.equal(escapeHTML(input), ''));
 }
 check('escaped value cannot break out of a quoted attribute', () => {
   const html = `<a data-x="${escapeHTML('"><script>alert(1)</script>')}" title='${escapeHTML("' onclick='x")}'>`;
@@ -143,12 +143,18 @@ const walk = (value, key) => {
     Object.entries(value).forEach(([k, v]) => walk(v, k));
   }
 };
-for (const file of ['data/newsletters/newsletters.json', 'data/meetings/meetings.json',
-  'data/members/resources.json', 'data/glossary/glossary.json']) {
-  walk(JSON.parse(fs.readFileSync(new URL(`../${file}`, import.meta.url), 'utf8')));
+// Every data file the site loads (data/**/*.json, except the JSON schemas).
+const dataDir = new URL('../data/', import.meta.url);
+const dataFiles = fs.readdirSync(dataDir, { recursive: true })
+  .filter((f) => f.endsWith('.json') && !f.startsWith('schemas'));
+for (const file of dataFiles) {
+  walk(JSON.parse(fs.readFileSync(new URL(file, dataDir), 'utf8')));
 }
 for (const [key, url] of urlish) {
   check(`data ${key}=${url} passes safeUrl unchanged`, () => assert.equal(safeUrl(url, ''), url));
 }
 
-check('data files carry URLs to check (walker sanity)', () => assert.ok(urlish.length > 0, 'no url-like fields found in the data files'));
+check('data files carry URLs to check (walker sanity)', () => {
+  assert.ok(dataFiles.includes('newsletters/archived-newsletters.json'), 'archived-newsletters.json not scanned');
+  assert.ok(urlish.length > 0, 'no url-like fields found in the data files');
+});
