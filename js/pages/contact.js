@@ -16,6 +16,9 @@ import {
 
 const logger = createLogger('ContactPage');
 
+const RELAY_TIMEOUT_MS = 30000;
+const RELAY_UNCONFIRMED = "We couldn't confirm your message was sent (the connection timed out). It may still arrive, so please wait a few minutes before sending it again, or email us at loz33@hotmail.com.";
+
 // Contact-specific functionality
 function initializeContactPage() {
   // Contact form
@@ -197,6 +200,13 @@ async function handleFormSubmission(event) {
     return;
   }
 
+  // A fresh attempt replaces any earlier "sent" notice.
+  const sentNotice = document.getElementById('sent');
+  if (sentNotice) {
+    sentNotice.classList.remove('is-shown');
+  }
+  let timer;
+
   // Show loading state
   submitButton.disabled = true;
   submitButton.textContent = 'Sending...';
@@ -210,10 +220,16 @@ async function handleFormSubmission(event) {
 
     // Deliver through the email relay: the AJAX form of the form's own
     // action URL, so the recipient is set in one place (contact.html).
-    const relayUrl = form.action.replace('://formsubmit.co/', '://formsubmit.co/ajax/');
-    const response = await fetch(relayUrl, {
+    const relay = new URL(form.action);
+    if (!relay.pathname.startsWith('/ajax/')) {
+      relay.pathname = `/ajax${relay.pathname}`;
+    }
+    // Manual timer, not AbortSignal.timeout (missing before Safari 16).
+    const controller = new AbortController();
+    timer = setTimeout(() => controller.abort(), RELAY_TIMEOUT_MS);
+    const response = await fetch(relay.href, {
       method: 'POST',
-      signal: AbortSignal.timeout(20000),
+      signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json'
@@ -238,9 +254,11 @@ async function handleFormSubmission(event) {
 
   } catch (error) {
     logger.error('Form submission failed:', error);
-    showFormMessage(ERROR_MESSAGES.SUBMISSION_FAILED, CSS_CLASSES.ERROR);
+    // A timeout means we don't know: the relay may still deliver it.
+    showFormMessage(error && error.name === 'AbortError' ? RELAY_UNCONFIRMED : ERROR_MESSAGES.SUBMISSION_FAILED, CSS_CLASSES.ERROR);
 
   } finally {
+    clearTimeout(timer);
     // Restore button state
     submitButton.disabled = false;
     submitButton.textContent = originalButtonText;
