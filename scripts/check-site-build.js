@@ -147,13 +147,15 @@ if (!fs.existsSync(SITE)) {
   // the manifest: og:image, JSON-LD, canonical, plain links. They are not
   // relative references, so the scan above skips them, but a dead one is just
   // as broken (a missing og:image served 404 for a year). Each must name a
-  // file in _site/, as Pages would serve it.
-  const SAME_SITE = /https?:\/\/(?:www\.)?sastamps\.org(\/[^\s"'<>)\\,]*)?/gi;
-  let sameSite = 0;
+  // file in _site/, as Pages would serve it. The host comes from CNAME, in
+  // both its www and bare forms, with or without a scheme (//host/...).
+  const bareHost = HOST.replace(/^www\./, '').replace(/\./g, '\\.');
+  const SAME_SITE = new RegExp(`(?:https?:)?//(?:www\\.)?${bareHost}(?![\\w.-])(/[^\\s"'<>)\\\\,]*)?`, 'gi');
+  let sameSite = 0; // in pages only: the sanity floor below must not count sitemap/robots
   for (const file of walk(SITE).filter((f) => /\.(html?|css|webmanifest|xml|txt)$/.test(f))) {
     const text = fs.readFileSync(file, 'utf8');
     for (const m of text.matchAll(SAME_SITE)) {
-      sameSite++;
+      if (/\.html?$/.test(file)) sameSite++;
       let rel = (m[1] || '/').split(/[?#]/)[0];
       try {
         rel = decodeURIComponent(rel);
@@ -162,10 +164,12 @@ if (!fs.existsSync(SITE)) {
         continue;
       }
       if (rel.endsWith('/')) rel += 'index.html';
-      if (!fileExact(path.join(SITE, rel))) missing.push(`${path.relative(SITE, file)} -> ${m[0]}`);
+      const abs = path.join(SITE, rel);
+      // Like the relative scan: a directory resolves through its index.html.
+      if (!fileExact(abs) && !fileExact(path.join(abs, 'index.html'))) missing.push(`${path.relative(SITE, file)} -> ${m[0]}`);
     }
   }
-  check(sameSite >= 10, `only ${sameSite} absolute same-site URLs found (parser problem?)`);
+  check(sameSite >= 10, `only ${sameSite} absolute same-site URLs found in the pages (parser problem?)`);
   check(missing.length === 0, `${missing.length} unresolved reference(s): ${missing.slice(0, 8).join(' ; ')}`);
 
   console.log('▸ built assets');

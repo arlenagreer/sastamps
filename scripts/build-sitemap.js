@@ -28,9 +28,11 @@ const PAGE_DATA = {
   'index.html': ['data/meetings/meetings.json', 'data/newsletters/newsletters.json'],
   'meetings.html': ['data/meetings/meetings.json'],
   'newsletter.html': ['data/newsletters/newsletters.json'],
-  'archive.html': ['data/newsletters/newsletters.json'],
+  'archive.html': ['data/newsletters/archived-newsletters.json'], // js/pages/archive.js
   'glossary.html': ['data/glossary/glossary.json'],
-  'resources.html': ['data/members/resources.json']
+  'resources.html': ['data/members/resources.json'],
+  // The search index (scripts/build-search-index.js) is built from these.
+  'search.html': ['data/meetings/meetings.json', 'data/newsletters/newsletters.json', 'data/glossary/glossary.json', 'data/members/resources.json']
 };
 
 const pageUrl = (page) => ORIGIN + (page === 'index.html' ? '' : page);
