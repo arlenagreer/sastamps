@@ -4,8 +4,7 @@
  */
 
 import { escapeHTML, safeUrl } from './utils/safe-dom.js';
-import { isUpcomingDate } from './utils/dates.js';
-import { meetingCalendarUrl, hasTime } from './calendar-adapter.js';
+import { meetingCalendarUrl, hasTime, isClubUpcoming, formatLongDate } from './utils/meeting-calendar.js';
 
 export class Modal {
   constructor() {
@@ -161,7 +160,7 @@ export class Modal {
     // Single-meeting .ics, for a meeting that is still to come
     const calendarLink = this.modal.querySelector('.modal-calendar-link');
     if (calendarLink) {
-      const upcoming = isUpcomingDate(meeting.date, new Date());
+      const upcoming = isClubUpcoming(meeting.date);
       const url = upcoming ? safeUrl(meetingCalendarUrl(meeting), '') : '';
       calendarLink.hidden = !url;
       calendarLink.setAttribute('href', url || '#');
@@ -175,17 +174,11 @@ export class Modal {
      * @returns {string} HTML content
      */
   buildMeetingContent(meeting) {
-    const eventDate = new Date(`${meeting.date}T00:00:00`);
-    const formattedDate = eventDate.toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    const formattedDate = formatLongDate(meeting.date);
 
     const eventTypeClass = `event-type-${meeting.type}`;
     const cancelledClass = meeting.cancelled ? 'event-cancelled' : '';
-    const past = !meeting.cancelled && !isUpcomingDate(meeting.date, new Date());
+    const past = !meeting.cancelled && !isClubUpcoming(meeting.date);
     // A cancelled Friday has no schedule, place, programme or contact to show.
     const live = !meeting.cancelled;
 

@@ -2454,8 +2454,10 @@ tr:hover {
     color: var(--primary);
 }
 
-/* Card actions: a plain row of buttons, not the site footer band */
-.meeting-actions {
+/* Card actions on the meetings-page cards: a plain row of buttons, not the
+   site footer band. Scoped to .meeting-item so MeetingLoader's own
+   .meeting-actions blocks keep their styles. */
+.meeting-item > .meeting-actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-sm);
@@ -2464,9 +2466,9 @@ tr:hover {
     border-top: 1px solid #e3e8ea;
 }
 
-.meeting-actions .btn-rsvp,
-.meeting-actions .btn-reminder,
-.meeting-actions .btn-calendar {
+.meeting-item > .meeting-actions .btn-rsvp,
+.meeting-item > .meeting-actions .btn-reminder,
+.meeting-item > .meeting-actions .btn-calendar {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -2483,37 +2485,37 @@ tr:hover {
     transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
-.meeting-actions .btn-calendar {
+.meeting-item > .meeting-actions .btn-calendar {
     background-color: var(--primary);
     border: 2px solid var(--primary);
     color: var(--white);
 }
 
-.meeting-actions .btn-calendar:hover {
+.meeting-item > .meeting-actions .btn-calendar:hover {
     background-color: var(--primary-dark);
     border-color: var(--primary-dark);
     color: var(--white);
 }
 
-.meeting-actions .btn-rsvp,
-.meeting-actions .btn-reminder {
+.meeting-item > .meeting-actions .btn-rsvp,
+.meeting-item > .meeting-actions .btn-reminder {
     background-color: var(--white);
     border: 2px solid var(--primary);
     color: var(--primary);
 }
 
-.meeting-actions .btn-rsvp:hover,
-.meeting-actions .btn-reminder:hover {
+.meeting-item > .meeting-actions .btn-rsvp:hover,
+.meeting-item > .meeting-actions .btn-reminder:hover {
     background-color: #e8f1f7;
 }
 
-.meeting-actions .btn-rsvp:disabled,
-.meeting-actions .btn-reminder:disabled {
+.meeting-item > .meeting-actions .btn-rsvp:disabled,
+.meeting-item > .meeting-actions .btn-reminder:disabled {
     cursor: default;
     opacity: 0.75;
 }
 
-.meeting-actions :is(.btn-rsvp, .btn-reminder, .btn-calendar):focus-visible {
+.meeting-item > .meeting-actions :is(.btn-rsvp, .btn-reminder, .btn-calendar):focus-visible {
     outline: 3px solid var(--accent);
     outline-offset: 2px;
 }

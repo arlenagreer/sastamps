@@ -6,6 +6,7 @@
 import { escapeHTML } from '../utils/safe-dom.js';
 import { createLogger } from '../utils/logger.js';
 import { fetchJSON } from '../utils/fetch-json.js';
+import { meetingCalendarUrl } from '../utils/meeting-calendar.js';
 
 const logger = createLogger('MeetingLoader');
 
@@ -263,11 +264,8 @@ class MeetingLoader {
      * Generate calendar download link
      */
   generateCalendarLink(meeting) {
-    // Use the existing .ics files if they match the pattern
-    const dateStr = meeting.date; // YYYY-MM-DD format
-    const calendarFile = `data/calendar/${dateStr}-meeting.ics`;
-
-    return calendarFile;
+    // One naming rule for the whole site (picnics use -picnic.ics)
+    return meetingCalendarUrl(meeting);
   }
 
   /**
@@ -492,7 +490,7 @@ class MeetingLoader {
                         </div>
                     ` : ''}
                 </div>
-                ${!meeting.cancelled ? `
+                ${calendarLink ? `
                     <div class="meeting-actions">
                         <a href="${escapeHTML(calendarLink)}" class="btn btn-sm btn-outline" download>
                             <i class="fas fa-calendar-plus"></i> Add to Calendar

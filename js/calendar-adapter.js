@@ -7,42 +7,9 @@ import { escapeHTML } from './utils/safe-dom.js';
 import { createLogger } from './utils/logger.js';
 import { fetchJSON } from './utils/fetch-json.js';
 import { parseLocalDate, isUpcomingDate } from './utils/dates.js';
+import { hasTime } from './utils/meeting-calendar.js';
 
 const logger = createLogger('CalendarAdapter');
-
-/**
- * The deployed single-meeting .ics for a meeting, or '' when there is none.
- *
- * Newsletter runs write one file per meeting to data/calendar/ named
- * YYYY-MM-DD-meeting.ics, or YYYY-MM-DD-picnic.ics for the picnic
- * (.claude/skills/philatex-update/references/data-contract.md section C).
- * A cancelled meeting gets no link: there is nothing to attend. An explicit
- * `calendarLink` in the data wins over the naming convention.
- * @param {Object} meeting - meetings.json entry
- * @returns {string} Page-relative URL, or ''
- */
-export function meetingCalendarUrl(meeting) {
-  if (!meeting || meeting.cancelled) {
-    return '';
-  }
-  if (typeof meeting.calendarLink === 'string' && meeting.calendarLink) {
-    return meeting.calendarLink;
-  }
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(meeting.date || '')) {
-    return '';
-  }
-  const kind = meeting.type === 'picnic' ? 'picnic' : 'meeting';
-  return `data/calendar/${meeting.date}-${kind}.ics`;
-}
-
-/**
- * A time value that is really there ("N/A" is how cancelled entries say none).
- * @param {string} value
- * @returns {boolean}
- */
-export function hasTime(value) {
-  return typeof value === 'string' && value.trim() !== '' && value.trim().toUpperCase() !== 'N/A';
-}
 
 export class CalendarAdapter {
   constructor() {
@@ -214,10 +181,11 @@ export class CalendarAdapter {
       `${escapeHTML(meeting.location.name)}<br>${escapeHTML(meeting.location.address?.street || '')}` :
       'Location TBD';
 
-    const timeInfo = meeting.time ? `
+    // A cancelled entry's times are "N/A": show no schedule for it
+    const timeInfo = meeting.time && hasTime(meeting.time.meetingStart) ? `
             <strong>Schedule:</strong><br>
-            Doors: ${escapeHTML(meeting.time.doorsOpen)}<br>
-            Meeting: ${escapeHTML(meeting.time.meetingStart)}${meeting.time.meetingEnd ? ` - ${escapeHTML(meeting.time.meetingEnd)}` : ''}
+            ${hasTime(meeting.time.doorsOpen) ? `Doors: ${escapeHTML(meeting.time.doorsOpen)}<br>` : ''}
+            Meeting: ${escapeHTML(meeting.time.meetingStart)}${hasTime(meeting.time.meetingEnd) ? ` - ${escapeHTML(meeting.time.meetingEnd)}` : ''}
         ` : '';
 
     const presenter = meeting.presenter ?

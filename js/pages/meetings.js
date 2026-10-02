@@ -5,7 +5,7 @@
 
 import { debounce } from '../utils/performance.js';
 import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
-import { parseLocalDate, isUpcomingDate } from '../utils/dates.js';
+import { parseLocalDate } from '../utils/dates.js';
 import { fetchJSON } from '../utils/fetch-json.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { createLogger } from '../utils/logger.js';
@@ -13,20 +13,28 @@ import { announceStatus, countSummary } from '../utils/announce.js';
 import {
   TIMING,
   CALENDAR,
-  ERROR_MESSAGES,
   SUCCESS_MESSAGES,
   STORAGE_KEYS,
   FILTER_OPTIONS
 } from '../constants/index.js';
 import MeetingLoader, { meetingsInQuarter, selectScheduleQuarter } from '../modules/meeting-loader.js';
-import { meetingCalendarUrl, hasTime } from '../calendar-adapter.js';
+import { meetingCalendarUrl, hasTime, formatLongDate, isClubUpcoming } from '../utils/meeting-calendar.js';
 
 const logger = createLogger('MeetingsPage');
 
 // Export MeetingLoader for global access via SAPA_MEETINGS
 export { MeetingLoader };
 
-const LOAD_FAILED_TEXT = 'The meeting schedule could not be loaded. Check your connection and try again.';
+// Visible and announced text for the two ways the page can fail. Each sits
+// next to a "Try again" button, so each says that is what to do.
+const LOAD_FAILED_TEXT = 'The meeting schedule could not be loaded. Check your connection, then select Try again.';
+const CALENDAR_FAILED_TEXT = 'The calendar view could not be shown. Select Try again, or use the meeting list above.';
+
+// The live vanilla-calendar-pro instance, and which sections rendered.
+// A retry rebuilds only the sections that failed.
+let calendarInstance = null;
+let calendarReady = false;
+let listReady = false;
 
 // Meetings-specific functionality
 async function initializeMeetingsPage() {
@@ -49,30 +57,51 @@ async function initializeMeetingsPage() {
   initializeRSVPSystem();
 }
 
+const LOADING_HTML = '<div class="loading"><i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Loading...</div>';
+
 /**
- * Re-run the schedule list and calendar after a failed meetings.json load.
+ * "Try again": rebuild whichever sections failed (never one that works),
+ * then put focus somewhere sensible in the section the button was in.
+ * @param {HTMLElement} origin - The container holding the clicked button
  */
-async function retryMeetingsLoad() {
+async function retryFailedSections(origin) {
   const calendarContainer = safeQuerySelector('#calendar-container');
   const meetingsList = safeQuerySelector('#meeting-schedule-container');
-  [calendarContainer, meetingsList].forEach(el => {
-    if (el) {
-      el.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Loading...</div>';
-    }
-  });
-  await initializeMeetingsCalendar();
-  if (meetingsList) {
-    await loadMeetingsList(meetingsList);
+
+  if (!calendarReady && calendarContainer) {
+    calendarContainer.innerHTML = LOADING_HTML;
   }
-  try {
-    initializeRSVPSystem();
-  } catch (error) {
-    logger.warn('RSVP state could not be restored:', error);
+  if (!listReady && meetingsList) {
+    meetingsList.innerHTML = LOADING_HTML;
+  }
+
+  if (!calendarReady) {
+    await initializeMeetingsCalendar();
+  }
+  if (!listReady && meetingsList) {
+    await loadMeetingsList(meetingsList);
+    if (listReady) {
+      try {
+        initializeRSVPSystem();
+      } catch (error) {
+        logger.warn('RSVP state could not be restored:', error);
+      }
+    }
+  }
+
+  // Failed again: back to that section's retry button. Recovered: the section.
+  const retry = origin?.querySelector('.meetings-retry');
+  if (retry) {
+    retry.focus();
+  } else if (origin) {
+    origin.setAttribute('tabindex', '-1');
+    origin.focus();
   }
 }
 
 /**
  * Replace a container's content with a visible error and a working retry button.
+ * role="alert" announces the same text that is shown.
  * @param {HTMLElement} container
  * @param {string} message
  */
@@ -87,8 +116,11 @@ function renderLoadError(container, message) {
     `;
   const button = container.querySelector('.meetings-retry');
   if (button) {
-    addEventListenerWithCleanup(button, 'click', () => {
-      retryMeetingsLoad();
+    // A plain listener: the button is thrown away with its markup, and the
+    // listener with it (the cleanup registry would keep the detached node).
+    button.addEventListener('click', () => {
+      button.disabled = true;
+      retryFailedSections(container);
     });
   }
 }
@@ -106,7 +138,7 @@ function markMeetingDate(dateEl, adapter) {
     return;
   }
   dateEl.classList.add(meeting.cancelled ? 'sapa-day-cancelled' : 'sapa-day-meeting');
-  if (!isUpcomingDate(date, new Date())) {
+  if (!isClubUpcoming(date)) {
     dateEl.classList.add('sapa-day-past');
   }
   dateEl.dataset.sapaMeeting = meeting.cancelled ? 'cancelled' : 'meeting';
@@ -118,6 +150,20 @@ function markMeetingDate(dateEl, adapter) {
   }
 }
 
+// v3 attaches its click handler to the container, so a second instance on
+// the same element would answer every click twice. Always tear down first.
+function destroyCalendar() {
+  if (calendarInstance) {
+    try {
+      calendarInstance.destroy();
+    } catch (error) {
+      logger.warn('Calendar destroy failed:', error);
+    }
+    calendarInstance = null;
+  }
+  calendarReady = false;
+}
+
 async function initializeMeetingsCalendar() {
   const calendarContainer = safeQuerySelector('#calendar-container');
   if (!calendarContainer) {
@@ -125,30 +171,37 @@ async function initializeMeetingsCalendar() {
     return;
   }
 
+  destroyCalendar();
+
+  let adapter;
+  let Calendar;
+  let modal;
   try {
     // Import calendar dependencies
-    const [
-      { Calendar },
-      { calendarAdapter },
-      { modal },
-      { reminderSystem: _reminderSystem }
-    ] = await Promise.all([
+    const [calendarModule, adapterModule, modalModule] = await Promise.all([
       import('vanilla-calendar-pro'),
       import('../calendar-adapter.js'),
       import('../modal.js'),
       import('../reminder-system.js')
     ]);
-
-    // Initialize calendar with full meeting functionality
+    ({ Calendar } = calendarModule);
     // calendarAdapter is already an instance, not a function
-    const adapter = calendarAdapter;
-    const data = await adapter.loadMeetings();
-    if (!data) {
-      // Without the data every day click would silently do nothing.
-      renderLoadError(calendarContainer, LOAD_FAILED_TEXT);
-      return;
-    }
+    adapter = adapterModule.calendarAdapter;
+    ({ modal } = modalModule);
+  } catch (error) {
+    logger.error('Failed to load the calendar code:', error);
+    renderLoadError(calendarContainer, CALENDAR_FAILED_TEXT);
+    return;
+  }
 
+  const data = await adapter.loadMeetings();
+  if (!data) {
+    // Without the data every day click would silently do nothing.
+    renderLoadError(calendarContainer, LOAD_FAILED_TEXT);
+    return;
+  }
+
+  try {
     calendarContainer.innerHTML = '';
 
     // vanilla-calendar-pro v3 API (flat options; v2's settings/actions are ignored)
@@ -175,11 +228,16 @@ async function initializeMeetingsCalendar() {
     });
 
     calendar.init();
+    calendarInstance = calendar;
+    calendarReady = true;
     renderCalendarLegend(calendarContainer);
 
   } catch (error) {
+    // The calendar itself failed (not the data): only the calendar is
+    // rebuilt on retry; the meeting list keeps working.
     logger.error('Failed to initialize meetings calendar:', error);
-    renderLoadError(calendarContainer, ERROR_MESSAGES.CALENDAR_UNAVAILABLE);
+    destroyCalendar();
+    renderLoadError(calendarContainer, CALENDAR_FAILED_TEXT);
   }
 }
 
@@ -257,15 +315,6 @@ function formatMeetingLocation(location) {
     return parts.join(', ') || 'Location TBD';
   }
   return 'Location TBD';
-}
-
-function formatLongDate(date) {
-  return parseLocalDate(date).toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
 }
 
 function meetingBadges(cancelled, past, next) {
@@ -350,9 +399,10 @@ async function loadMeetingsList(container) {
       return;
     }
 
-    // A meeting stays upcoming for the whole of its own local day.
+    // A meeting stays upcoming through the whole of its own date in
+    // San Antonio (Central time), wherever the visitor is.
     const now = new Date();
-    const isPast = m => !isUpcomingDate(m.date, now);
+    const isPast = m => !isClubUpcoming(m.date, now);
     const nextMeeting = meetings.find(m => !m.cancelled && !isPast(m));
     const pastCount = meetings.filter(isPast).length;
 
@@ -370,6 +420,7 @@ async function loadMeetingsList(container) {
 
     // Add event listeners for RSVP and reminder buttons
     bindMeetingActions(container);
+    listReady = true;
 
     // A link such as meetings.html#meeting-2026-10-16 names a card that only
     // exists now, so the browser's own jump on load found nothing.
@@ -377,8 +428,9 @@ async function loadMeetingsList(container) {
 
   } catch (error) {
     logger.error('Failed to load meetings list:', error);
+    listReady = false;
     renderLoadError(container, LOAD_FAILED_TEXT);
-    announceStatus(scheduleStatusRegion(), ERROR_MESSAGES.MEETING_LOAD_FAILED);
+    announceStatus(scheduleStatusRegion(), LOAD_FAILED_TEXT);
   }
 }
 
@@ -469,8 +521,8 @@ function initializeMeetingFilters(container) {
         show = false;
       }
 
-      // A meeting stays upcoming for the whole of its own day
-      if (showUpcomingOnly && !isUpcomingDate(meeting.dataset.date, now)) {
+      // A meeting stays upcoming through its whole Central-time date
+      if (showUpcomingOnly && !isClubUpcoming(meeting.dataset.date, now)) {
         show = false;
       }
 
@@ -516,30 +568,34 @@ function handleRSVP(meetingId, button) {
 }
 
 function bindMeetingActions(container) {
-  // RSVP buttons
-  const rsvpButtons = container.querySelectorAll('.btn-rsvp');
-  rsvpButtons.forEach(button => {
-    addEventListenerWithCleanup(button, 'click', (e) => {
-      const {meetingId} = e.target.dataset;
+  // One delegated listener on the container, which outlives every re-render
+  // of the cards inside it.
+  if (container.dataset.meetingActionsBound === 'true') {
+    return;
+  }
+  container.dataset.meetingActionsBound = 'true';
+
+  addEventListenerWithCleanup(container, 'click', async (e) => {
+    const button = e.target.closest?.('.btn-rsvp, .btn-reminder');
+    if (!button || !container.contains(button)) {
+      return;
+    }
+    const { meetingId } = button.dataset;
+
+    if (button.classList.contains('btn-rsvp')) {
       handleRSVP(meetingId, button);
-    });
-  });
+      return;
+    }
 
-  // Reminder buttons
-  const reminderButtons = container.querySelectorAll('.btn-reminder');
-  reminderButtons.forEach(button => {
-    addEventListenerWithCleanup(button, 'click', async (e) => {
-      const {meetingId} = e.target.dataset;
-      const { reminderSystem } = await import('../reminder-system.js');
-      reminderSystem.setReminder(meetingId);
+    const { reminderSystem } = await import('../reminder-system.js');
+    reminderSystem.setReminder(meetingId);
 
-      button.textContent = 'Reminder Set!';
-      button.disabled = true;
-      setTimeout(() => {
-        button.textContent = 'Set Reminder';
-        button.disabled = false;
-      }, TIMING.NOTIFICATION_SHORT);
-    });
+    button.textContent = 'Reminder Set!';
+    button.disabled = true;
+    setTimeout(() => {
+      button.textContent = 'Set Reminder';
+      button.disabled = false;
+    }, TIMING.NOTIFICATION_SHORT);
   });
 }
 
