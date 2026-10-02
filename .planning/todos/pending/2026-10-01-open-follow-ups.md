@@ -50,3 +50,36 @@ New open items and decisions are listed under "Still open" in that file. Owner d
 - showcase visibility;
 - contact recipient and a server-side handler (Google Task, Oct 8);
 - error monitoring endpoint.
+
+## Update (2026-10-02, end of session)
+
+Owner decisions, now resolved:
+
+- **RSVP and Set Reminder:** made real at no cost (#186). RSVPs email the
+  club through the FormSubmit relay; "Set Reminder" is replaced by
+  calendar alarms in every deployed `.ics` and a subscribe feed at
+  `/calendar/sapa-meetings.ics`. Verified live with one real RSVP.
+- **Showcase:** removed (#183).
+- **Live-site monitoring (PR #182):** deferred by the owner until
+  2026-11-01. A Google Task is set; the PR stays open and unreviewed until
+  then.
+- **About page:** the fabricated past-president quote was removed (#187).
+- **Archive page:** now states the club was founded in 1896 (#185).
+
+Waiting on the club:
+
+- **Jim Durham** will bring the membership application corrections (dues,
+  treasurer, Dora Roberts' contact details, APS chapter #53 vs #388,
+  schedule) to the BOG meeting on 2026-10-02. He will also confirm the
+  Secretary's name and email and which address the site should use as the
+  club contact (the site labels `loz33@hotmail.com` as Secretary, but the
+  Q4 2026 issue lists Rick Cross).
+- **Lea Senghaas** was asked for the missing archive issues (2024 Q1,
+  2025 Q1, 2008 Jan/Feb).
+- **Bourse no-fee policy:** confirmation is due at the same meeting
+  (separate todo).
+
+The owner has a Google Task due 2026-10-08 for a server-side contact
+handler. Contact and RSVP mail currently go to the owner's Gmail.
+
+SEO work is tracked in `2026-10-02-search-engine-optimization.md`.
