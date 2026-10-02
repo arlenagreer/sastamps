@@ -195,16 +195,19 @@ async function handleFormSubmission(event) {
     }
   });
 
+  // A fresh attempt replaces any earlier "sent" notice (inline style so it
+  // also wins over a :target the browser may still be matching).
+  const sentNotice = document.getElementById('sent');
+  if (sentNotice) {
+    sentNotice.classList.remove('is-shown');
+    sentNotice.style.display = 'none';
+  }
+
   if (!allValid) {
     showFormMessage(ERROR_MESSAGES.VALIDATION_FAILED, CSS_CLASSES.ERROR);
     return;
   }
 
-  // A fresh attempt replaces any earlier "sent" notice.
-  const sentNotice = document.getElementById('sent');
-  if (sentNotice) {
-    sentNotice.classList.remove('is-shown');
-  }
   let timer;
 
   // Show loading state
@@ -214,7 +217,8 @@ async function handleFormSubmission(event) {
   try {
     // Collect form data (includes the relay's hidden _subject/_template/_honey
     // fields; _next only matters for the no-JavaScript submit).
-    const data = Object.fromEntries(new FormData(form).entries());
+    const data = {};
+    new FormData(form).forEach((value, key) => { data[key] = value; });
     delete data._next;
     data._subject = `SAPA website: ${data.subject || 'Contact form'} (from ${data.name})`;
 
@@ -237,6 +241,7 @@ async function handleFormSubmission(event) {
       body: JSON.stringify(data)
     });
 
+    clearTimeout(timer); // the relay answered; don't abort while reading the body
     const result = await response.json();
 
     // FormSubmit answers {success: "true"|"false", message}; "false" includes
@@ -254,8 +259,10 @@ async function handleFormSubmission(event) {
 
   } catch (error) {
     logger.error('Form submission failed:', error);
-    // A timeout means we don't know: the relay may still deliver it.
-    showFormMessage(error && error.name === 'AbortError' ? RELAY_UNCONFIRMED : ERROR_MESSAGES.SUBMISSION_FAILED, CSS_CLASSES.ERROR);
+    // A timeout or a dropped connection means we don't know: the relay may
+    // already have delivered it. Only a relay reply we read is a definite no.
+    const unconfirmed = error && (error.name === 'AbortError' || error.name === 'TypeError');
+    showFormMessage(unconfirmed ? RELAY_UNCONFIRMED : ERROR_MESSAGES.SUBMISSION_FAILED, CSS_CLASSES.ERROR);
 
   } finally {
     clearTimeout(timer);
