@@ -52,6 +52,9 @@
     </script>
 </head>
 <body class="page-resources">
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to content</a>
+
     <!-- Header -->
     <header>
         <div class="container header-container">
@@ -112,7 +115,10 @@
                         <option value="advanced">Advanced</option>
                     </select>
 
-                    <button id="clear-filters" class="btn-secondary">Clear Filters</button>
+                    <button type="button" id="bookmarks-filter" class="btn-outline btn-bookmarks-filter" aria-pressed="false" hidden>🔖 My Bookmarks (0)</button>
+                    <span id="bookmark-status" class="bookmark-status" role="status"></span>
+
+                    <button type="button" id="clear-filters" class="btn-secondary">Clear Filters</button>
                 </div>
             </div>
         </section>
@@ -120,6 +126,16 @@
         <!-- Resources Content -->
         <section class="resources-content">
             <div class="container">
+                <!-- Shown by js/pages/resources.js when nothing matches the search, filters or bookmarks view -->
+                <p id="resources-empty" class="resources-empty" hidden></p>
+
+                <noscript>
+                    <div class="resources-noscript">
+                        <h2>JavaScript is needed for the guides</h2>
+                        <p>The guides, search and bookmarks on this page need JavaScript, which is turned off or blocked in your browser. The quick links and external resources below still work. For help, email <a href="mailto:loz33@hotmail.com">loz33@hotmail.com</a>.</p>
+                    </div>
+                </noscript>
+
                 <!-- Featured Resources -->
                 <div id="featured-resources" class="featured-section">
                     <h2>Featured Resources</h2>
@@ -164,7 +180,7 @@
                         <div class="link-card">
                             <h3>💰 Scott Catalog</h3>
                             <p>Standard catalog for stamp values and identification</p>
-                            <a href="https://www.scottonline.com" target="_blank" rel="noopener" class="btn-primary">View Catalog</a>
+                            <a href="https://www.scottstamp.com/store?c=catalogues" target="_blank" rel="noopener" class="btn-primary">View Catalog</a>
                         </div>
 
                         <div class="link-card">
@@ -184,14 +200,15 @@
                             <ul>
                                 <li><a href="https://stamps.org" target="_blank" rel="noopener">American Philatelic Society</a></li>
                                 <li><a href="https://www.americanstampdealer.com" target="_blank" rel="noopener">American Stamp Dealers Association</a></li>
-                                <li><a href="https://www.uspcs.org" target="_blank" rel="noopener">United States Postal Service</a></li>
+                                <li><a href="https://www.uspcs.org" target="_blank" rel="noopener">U.S. Philatelic Classics Society</a></li>
+                                <li><a href="https://www.usps.com/" target="_blank" rel="noopener">United States Postal Service</a></li>
                             </ul>
                         </div>
 
                         <div class="external-category">
                             <h3>Catalogs &amp; References</h3>
                             <ul>
-                                <li><a href="https://www.scottonline.com" target="_blank" rel="noopener">Scott Catalog Online</a></li>
+                                <li><a href="https://www.scottstamp.com/" target="_blank" rel="noopener">Scott Catalogue (Scott Stamp LLC)</a></li>
                                 <li><a href="https://www.michel.de" target="_blank" rel="noopener">Michel Catalog</a></li>
                                 <li><a href="https://www.colnect.com" target="_blank" rel="noopener">Colnect Database</a></li>
                             </ul>

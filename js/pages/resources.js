@@ -3,8 +3,9 @@
  * Only includes functionality needed for the resources page
  */
 
-import { debounce } from '../utils/performance.js';
-import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
+import { safeQuerySelector, escapeHTML, safeUrl, safeLocalStorageSet, safeLocalStorageRemove } from '../utils/safe-dom.js';
+import { renderMarkdown } from '../utils/markdown.js';
+import { scrollBelowHeader, scrollBelowHeaderOnLoad } from '../utils/scroll-below-header.js';
 import { fetchJSON } from '../utils/fetch-json.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { formatDate } from '../utils/helpers.js';
@@ -13,46 +14,113 @@ import { announceStatus, countSummary } from '../utils/announce.js';
 
 const logger = createLogger('ResourcesPage');
 
+const RESOURCES_URL = 'data/members/resources.json';
+
+// What the visitor has asked to see. Search, both filters and "My bookmarks"
+// combine: a resource is shown only when it passes all of them.
+const viewState = {
+  query: '',
+  category: '',
+  difficulty: '',
+  bookmarksOnly: false
+};
+
+let allResources = [];
+
 // Resources-specific functionality
 async function initializeResourcesPage() {
-  // Initializing resources page
-
-  // Load resources data
   const resourcesData = await loadResourcesData();
   if (!resourcesData) {
     logger.error('Failed to load resources data');
     return;
   }
 
-  // Resources data loaded successfully
+  allResources = resourcesData.resources || [];
 
-  // Initialize featured resources
-  displayFeaturedResources(resourcesData.resources);
+  displayFeaturedResources(allResources);
+  displayCategorizedResources(allResources, resourcesData.categories || []);
+  displayAllResources(allResources);
 
-  // Initialize categorized view
-  displayCategorizedResources(resourcesData.resources, resourcesData.categories);
+  initializeResourceSearch();
+  initializeResourceFilters();
 
-  // Initialize all resources list
-  displayAllResources(resourcesData.resources);
-
-  // Initialize search and filters
-  initializeResourceSearch(resourcesData.resources);
-  initializeResourceFilters(resourcesData.resources, resourcesData.categories);
-
-  // Update bookmark states
   updateBookmarkStates();
+  applyView();
+
+  // Links such as resources.html#resource-stamp-grading-guide (site search
+  // results) land on the item once the list exists.
+  revealResourceFromHash({ onLoad: true });
+  addEventListenerWithCleanup(window, 'hashchange', () => revealResourceFromHash());
 }
 
 async function loadResourcesData() {
   try {
-    const data = await fetchJSON('data/members/resources.json');
-    // Resources data loaded successfully
-    return data;
+    return await fetchJSON(RESOURCES_URL);
   } catch (error) {
     logger.error('Failed to load resources data:', error);
     showResourcesError('Unable to load resources. Please try again later.');
     return null;
   }
+}
+
+/* ------------------------------------------------------------------------
+ * Bookmarks. localStorage can be missing or throw (private windows, blocked
+ * site data). Bookmarks then live in memory for this visit, and the visitor is
+ * told they will not be kept, instead of the button silently failing.
+ * --------------------------------------------------------------------- */
+const BOOKMARK_KEY = 'resource_bookmarks';
+let memoryBookmarks = null;
+let bookmarkStorageWorks = true;
+
+function useMemoryBookmarks(list = []) {
+  bookmarkStorageWorks = false;
+  memoryBookmarks = [...list];
+}
+
+function readBookmarks() {
+  if (memoryBookmarks) {
+    return [...memoryBookmarks];
+  }
+
+  // Storage that throws on access is "blocked": keep bookmarks for this visit.
+  let raw;
+  try {
+    raw = window.localStorage.getItem(BOOKMARK_KEY);
+  } catch (error) {
+    logger.warn('Bookmark storage is blocked:', error);
+    useMemoryBookmarks();
+    return [];
+  }
+  if (raw === null) {return [];}
+
+  // Unreadable data is corrupt, not blocked: reset the key and carry on.
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return parsed.filter(id => typeof id === 'string');
+    }
+  } catch {
+    // fall through to the reset
+  }
+  logger.warn('Resetting unreadable bookmark data');
+  safeLocalStorageRemove(BOOKMARK_KEY);
+  return [];
+}
+
+function writeBookmarks(list) {
+  if (memoryBookmarks || !safeLocalStorageSet(BOOKMARK_KEY, list)) {
+    useMemoryBookmarks(list);
+  }
+}
+
+/* ------------------------------------------------------------------------
+ * Rendering
+ * --------------------------------------------------------------------- */
+// Each Bookmark button is followed by a persistent, inline status line: a
+// live region that exists before its text changes is reliably announced.
+function bookmarkButton(resourceId, extraClass = '') {
+  return `<button type="button" class="btn-outline btn-bookmark${extraClass}" data-resource-id="${escapeHTML(resourceId)}" aria-pressed="false">🔖 Bookmark</button>
+                <span class="bookmark-feedback" role="status"></span>`;
 }
 
 function displayFeaturedResources(resources) {
@@ -93,17 +161,15 @@ function displayFeaturedResources(resources) {
             </div>
 
             <div class="resource-actions">
-                <button class="btn-primary btn-read-resource" data-resource-id="${escapeHTML(resource.id)}">
+                <button type="button" class="btn-primary btn-read-resource" data-resource-id="${escapeHTML(resource.id)}">
                     📖 Read Guide
                 </button>
                 ${resource.sections && resource.sections.length > 0 ? `
-                    <button class="btn-secondary btn-view-sections" data-resource-id="${escapeHTML(resource.id)}">
+                    <button type="button" class="btn-secondary btn-view-sections" data-resource-id="${escapeHTML(resource.id)}">
                         📋 View Sections
                     </button>
                 ` : ''}
-                <button class="btn-outline btn-bookmark" data-resource-id="${escapeHTML(resource.id)}" aria-label="Bookmark resource">
-                    🔖
-                </button>
+                ${bookmarkButton(resource.id)}
             </div>
         </div>
     `).join('');
@@ -129,8 +195,8 @@ function displayCategorizedResources(resources, categories) {
 
                 <div class="category-resources">
                     ${categoryResources.slice(0, 3).map(resource => `
-                        <div class="resource-preview">
-                            <h4><a href="#" class="resource-link" data-resource-id="${escapeHTML(resource.id)}">${escapeHTML(resource.title)}</a></h4>
+                        <div class="resource-preview" data-id="${escapeHTML(resource.id)}">
+                            <h4><a href="#resource-${escapeHTML(resource.id)}" class="resource-link" data-resource-id="${escapeHTML(resource.id)}">${escapeHTML(resource.title)}</a></h4>
                             <p class="resource-preview-summary">${escapeHTML(resource.summary.substring(0, 100))}...</p>
                             <div class="resource-preview-meta">
                                 <span class="difficulty-badge difficulty-${escapeHTML(resource.difficulty)}">${escapeHTML(resource.difficulty)}</span>
@@ -140,7 +206,7 @@ function displayCategorizedResources(resources, categories) {
                     `).join('')}
 
                     ${categoryResources.length > 3 ? `
-                        <button class="btn-outline btn-view-all-category" data-category="${escapeHTML(category.id)}">
+                        <button type="button" class="btn-outline btn-view-all-category" data-category="${escapeHTML(category.id)}">
                             View All ${categoryResources.length} Resources
                         </button>
                     ` : ''}
@@ -158,9 +224,9 @@ function displayAllResources(resources) {
   if (!container) {return;}
 
   const html = resources.map(resource => `
-        <div class="resource-item" data-id="${escapeHTML(resource.id)}" data-category="${escapeHTML(resource.category)}" data-difficulty="${escapeHTML(resource.difficulty)}">
+        <div class="resource-item" id="resource-${escapeHTML(resource.id)}" data-id="${escapeHTML(resource.id)}" data-category="${escapeHTML(resource.category)}" data-difficulty="${escapeHTML(resource.difficulty)}">
             <div class="resource-item-header">
-                <h3><a href="#" class="resource-link" data-resource-id="${escapeHTML(resource.id)}">${escapeHTML(resource.title)}</a></h3>
+                <h3><a href="#resource-${escapeHTML(resource.id)}" class="resource-link" data-resource-id="${escapeHTML(resource.id)}">${escapeHTML(resource.title)}</a></h3>
                 <div class="resource-badges">
                     <span class="difficulty-badge difficulty-${escapeHTML(resource.difficulty)}">${escapeHTML(resource.difficulty)}</span>
                     ${resource.featured ? '<span class="featured-badge">⭐ Featured</span>' : ''}
@@ -177,93 +243,106 @@ function displayAllResources(resources) {
             </div>
 
             <div class="resource-actions">
-                <button class="btn-primary btn-read-resource" data-resource-id="${escapeHTML(resource.id)}">
-                    Read Guide
+                <button type="button" class="btn-primary btn-read-resource" data-resource-id="${escapeHTML(resource.id)}">
+                    📖 Read Guide
                 </button>
-                <button class="btn-outline btn-bookmark" data-resource-id="${escapeHTML(resource.id)}" aria-label="Bookmark resource">
-                    🔖 Bookmark
-                </button>
+                ${resource.sections && resource.sections.length > 0 ? `
+                    <button type="button" class="btn-secondary btn-view-sections" data-resource-id="${escapeHTML(resource.id)}">
+                        📋 View Sections
+                    </button>
+                ` : ''}
+                ${bookmarkButton(resource.id)}
             </div>
         </div>
     `).join('');
 
   container.innerHTML = html;
   bindResourceActions(container);
-  announceResourceCount();
 }
 
-// Short visually hidden role="status" line above the "All Resources" list
-// (resources.html). The lists themselves are not live regions.
-function announceResourceCount() {
-  const items = document.querySelectorAll('#resources-container .resource-item');
-  const shown = [...items].filter(item => item.style.display !== 'none').length;
-  announceStatus(safeQuerySelector('#resources-status'), countSummary(shown, items.length, 'resource', 'resources'));
+/* ------------------------------------------------------------------------
+ * Search, filters and the bookmarks view
+ * --------------------------------------------------------------------- */
+// Pending debounced search. Anything that resets the view cancels it, so a
+// query typed just before Clear Filters cannot come back 300ms later.
+let pendingSearch = null;
+
+function cancelPendingSearch() {
+  clearTimeout(pendingSearch);
+  pendingSearch = null;
 }
 
-function initializeResourceSearch(resources) {
+function initializeResourceSearch() {
   const searchInput = safeQuerySelector('#resource-search');
   if (!searchInput) {return;}
 
-  const performSearch = debounce((query) => {
-    if (!query.trim()) {
-      showAllResources();
-      return;
-    }
-
-    const results = searchResources(resources, query);
-    filterResourcesDisplay(results);
-
-  }, 300);
-
   addEventListenerWithCleanup(searchInput, 'input', (e) => {
-    performSearch(e.target.value);
+    const query = e.target.value;
+    cancelPendingSearch();
+    pendingSearch = setTimeout(() => {
+      pendingSearch = null;
+      viewState.query = query;
+      applyView();
+    }, 300);
   });
 }
 
-function initializeResourceFilters(resources, _categories) {
+/**
+ * Reset search, filters and the bookmarks view (Clear Filters, a #resource-
+ * link to a hidden item, "View All" in a category).
+ * @param {{category?: string}} [keep] - A category to apply after the reset
+ */
+function resetView({ category = '' } = {}) {
+  cancelPendingSearch();
+  const searchInput = safeQuerySelector('#resource-search');
   const categoryFilter = safeQuerySelector('#category-filter');
   const difficultyFilter = safeQuerySelector('#difficulty-filter');
+  if (searchInput) {searchInput.value = '';}
+  if (categoryFilter) {categoryFilter.value = category;}
+  if (difficultyFilter) {difficultyFilter.value = '';}
+  viewState.query = '';
+  viewState.category = category;
+  viewState.difficulty = '';
+  viewState.bookmarksOnly = false;
+  applyView();
+}
+
+function initializeResourceFilters() {
+  const categoryFilter = safeQuerySelector('#category-filter');
+  const difficultyFilter = safeQuerySelector('#difficulty-filter');
+  const bookmarksFilter = safeQuerySelector('#bookmarks-filter');
   const clearButton = safeQuerySelector('#clear-filters');
 
-  const applyFilters = debounce(() => {
-    const selectedCategory = categoryFilter?.value || '';
-    const selectedDifficulty = difficultyFilter?.value || '';
-
-    let filteredResources = resources;
-
-    if (selectedCategory) {
-      filteredResources = filteredResources.filter(r => r.category === selectedCategory);
-    }
-
-    if (selectedDifficulty) {
-      filteredResources = filteredResources.filter(r => r.difficulty === selectedDifficulty);
-    }
-
-    filterResourcesDisplay(filteredResources);
-  }, 300);
-
   if (categoryFilter) {
-    addEventListenerWithCleanup(categoryFilter, 'change', applyFilters);
+    addEventListenerWithCleanup(categoryFilter, 'change', () => {
+      viewState.category = categoryFilter.value;
+      applyView();
+    });
   }
 
   if (difficultyFilter) {
-    addEventListenerWithCleanup(difficultyFilter, 'change', applyFilters);
+    addEventListenerWithCleanup(difficultyFilter, 'change', () => {
+      viewState.difficulty = difficultyFilter.value;
+      applyView();
+    });
+  }
+
+  if (bookmarksFilter) {
+    bookmarksFilter.hidden = false;
+    addEventListenerWithCleanup(bookmarksFilter, 'click', () => {
+      viewState.bookmarksOnly = !viewState.bookmarksOnly;
+      applyView();
+    });
   }
 
   if (clearButton) {
-    addEventListenerWithCleanup(clearButton, 'click', () => {
-      if (categoryFilter) {categoryFilter.value = '';}
-      if (difficultyFilter) {difficultyFilter.value = '';}
-      const searchInput = safeQuerySelector('#resource-search');
-      if (searchInput) {searchInput.value = '';}
-
-      showAllResources();
-    });
+    addEventListenerWithCleanup(clearButton, 'click', () => resetView());
   }
 }
 
 function searchResources(resources, query) {
-  const searchTerms = query.toLowerCase().split(' ');
+  const searchTerms = query.toLowerCase().split(/\s+/).filter(Boolean);
+  if (searchTerms.length === 0) {return resources;}
 
   return resources.filter(resource => {
     const searchText = [
@@ -280,55 +359,134 @@ function searchResources(resources, query) {
   });
 }
 
-function filterResourcesDisplay(filteredResources) {
-  const allItems = document.querySelectorAll('.resource-item, .resource-card');
+function matchingResources() {
+  let results = searchResources(allResources, viewState.query);
+  if (viewState.category) {
+    results = results.filter(r => r.category === viewState.category);
+  }
+  if (viewState.difficulty) {
+    results = results.filter(r => r.difficulty === viewState.difficulty);
+  }
+  if (viewState.bookmarksOnly) {
+    const bookmarks = readBookmarks();
+    results = results.filter(r => bookmarks.includes(r.id));
+  }
+  return results;
+}
 
-  allItems.forEach(item => {
-    const resourceId = item.dataset.id;
-    const isMatch = filteredResources.some(resource => resource.id === resourceId);
-    item.style.display = isMatch ? 'block' : 'none';
+/**
+ * Show exactly the resources that pass the search, both filters and the
+ * bookmarks view; hide sections left empty and say so when nothing matches.
+ */
+function applyView() {
+  const matches = matchingResources();
+  const ids = new Set(matches.map(r => r.id));
+
+  document.querySelectorAll('.resource-item, .resource-card').forEach(item => {
+    item.style.display = ids.has(item.dataset.id) ? '' : 'none';
   });
 
-  // Update category cards
-  const categoryCards = document.querySelectorAll('.category-card');
-  categoryCards.forEach(card => {
+  // A category card shows when ANY resource in that category matches (not
+  // only the up-to-3 previews it renders); each preview follows its resource.
+  document.querySelectorAll('.category-card').forEach(card => {
     const categoryId = card.dataset.category;
-    const categoryResources = filteredResources.filter(r => r.category === categoryId);
-    card.style.display = categoryResources.length > 0 ? 'block' : 'none';
+    const anyMatch = matches.some(r => r.category === categoryId);
+    card.querySelectorAll('.resource-preview').forEach(preview => {
+      preview.style.display = ids.has(preview.dataset.id) ? '' : 'none';
+    });
+    card.style.display = anyMatch ? '' : 'none';
   });
 
-  announceResourceCount();
+  const featuredSection = safeQuerySelector('#featured-resources');
+  if (featuredSection && featuredSection.querySelector('.resource-card')) {
+    featuredSection.hidden = ![...featuredSection.querySelectorAll('.resource-card')].some(c => c.style.display !== 'none');
+  }
+  const categorySection = safeQuerySelector('#categorized-resources');
+  if (categorySection) {
+    categorySection.hidden = ![...categorySection.querySelectorAll('.category-card')].some(c => c.style.display !== 'none');
+  }
+
+  const emptyMessage = safeQuerySelector('#resources-empty');
+  if (emptyMessage) {
+    if (matches.length > 0) {
+      emptyMessage.hidden = true;
+      emptyMessage.textContent = '';
+    } else {
+      emptyMessage.hidden = false;
+      const noBookmarks = viewState.bookmarksOnly && readBookmarks().length === 0;
+      emptyMessage.textContent = noBookmarks
+        ? 'You have not bookmarked any resources yet. Use a resource\'s Bookmark button to save it here.'
+        : 'No resources match your search and filters. Try different words, or choose Clear Filters.';
+    }
+  }
+
+  updateBookmarksFilterButton();
+
+  const items = document.querySelectorAll('#resources-container .resource-item');
+  const shown = [...items].filter(item => item.style.display !== 'none').length;
+  announceStatus(
+    safeQuerySelector('#resources-status'),
+    shown === 0 ? 'No resources match' : countSummary(shown, items.length, 'resource', 'resources')
+  );
 }
 
-function showAllResources() {
-  const allItems = document.querySelectorAll('.resource-item, .resource-card, .category-card');
-  allItems.forEach(item => {
-    item.style.display = 'block';
-  });
-
-  announceResourceCount();
+function updateBookmarksFilterButton() {
+  const button = safeQuerySelector('#bookmarks-filter');
+  if (!button) {return;}
+  const count = readBookmarks().filter(id => allResources.some(r => r.id === id)).length;
+  button.setAttribute('aria-pressed', String(viewState.bookmarksOnly));
+  button.classList.toggle('active', viewState.bookmarksOnly);
+  button.textContent = `🔖 My Bookmarks (${count})`;
 }
 
+function revealResourceFromHash({ onLoad = false } = {}) {
+  const match = /^#resource-(.+)$/.exec(window.location.hash || '');
+  if (!match) {return;}
+  const wanted = decodeURIComponentSafe(match[1]);
+  const item = [...document.querySelectorAll('#resources-container .resource-item')]
+    .find(el => el.dataset.id === wanted);
+  if (!item) {return;}
+  if (item.style.display === 'none') {
+    // Search or filters hide it: reset them so the linked resource is visible.
+    resetView();
+  }
+  // Measured against the sticky header (and any other top-pinned bar) at
+  // scroll time; on load, re-measured once fonts and layout settle.
+  if (onLoad) {
+    scrollBelowHeaderOnLoad(item);
+  } else {
+    scrollBelowHeader(item);
+  }
+  item.classList.add('highlighted');
+  setTimeout(() => item.classList.remove('highlighted'), 2000);
+}
+
+function decodeURIComponentSafe(value) {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
+/* ------------------------------------------------------------------------
+ * Actions
+ * --------------------------------------------------------------------- */
 function bindResourceActions(container) {
-  // Read resource buttons
-  const readButtons = container.querySelectorAll('.btn-read-resource, .resource-link');
-
-  readButtons.forEach(button => {
+  container.querySelectorAll('.btn-read-resource, .resource-link').forEach(button => {
     addEventListenerWithCleanup(button, 'click', (e) => {
       e.preventDefault();
       const btn = e.currentTarget;
       const {resourceId} = btn.dataset;
       if (resourceId) {
-        openResourceModal(resourceId);
+        openResourceModal(resourceId, btn);
       } else {
         logger.error('No resourceId found on button:', btn);
       }
     });
   });
 
-  // Bookmark buttons
-  const bookmarkButtons = container.querySelectorAll('.btn-bookmark');
-  bookmarkButtons.forEach(button => {
+  container.querySelectorAll('.btn-bookmark').forEach(button => {
     addEventListenerWithCleanup(button, 'click', (e) => {
       e.preventDefault();
       const btn = e.currentTarget;
@@ -339,41 +497,34 @@ function bindResourceActions(container) {
     });
   });
 
-  // View sections buttons
-  const sectionsButtons = container.querySelectorAll('.btn-view-sections');
-  sectionsButtons.forEach(button => {
+  container.querySelectorAll('.btn-view-sections').forEach(button => {
     addEventListenerWithCleanup(button, 'click', (e) => {
       e.preventDefault();
       const btn = e.currentTarget;
       const {resourceId} = btn.dataset;
       if (resourceId) {
-        showResourceSections(resourceId);
+        showResourceSections(resourceId, btn);
       }
     });
   });
 }
 
 function bindCategoryActions(container) {
-  // Category resource links
-  const resourceLinks = container.querySelectorAll('.resource-link');
-  resourceLinks.forEach(link => {
+  container.querySelectorAll('.resource-link').forEach(link => {
     addEventListenerWithCleanup(link, 'click', (e) => {
       e.preventDefault();
       const btn = e.currentTarget;
       const {resourceId} = btn.dataset;
       if (resourceId) {
-        openResourceModal(resourceId);
+        openResourceModal(resourceId, btn);
       }
     });
   });
 
-  // View all category buttons
-  const viewAllButtons = container.querySelectorAll('.btn-view-all-category');
-  viewAllButtons.forEach(button => {
+  container.querySelectorAll('.btn-view-all-category').forEach(button => {
     addEventListenerWithCleanup(button, 'click', (e) => {
       e.preventDefault();
-      const btn = e.currentTarget;
-      const categoryId = btn.dataset.category;
+      const categoryId = e.currentTarget.dataset.category;
       if (categoryId) {
         filterByCategory(categoryId);
       }
@@ -381,21 +532,182 @@ function bindCategoryActions(container) {
   });
 }
 
-async function openResourceModal(resourceId) {
-  try {
-    const resourcesData = await fetchJSON('data/members/resources.json');
-    const resource = resourcesData.resources.find(r => r.id === resourceId);
+/* ------------------------------------------------------------------------
+ * Guide dialog: a native modal <dialog> (role dialog, aria-modal, the page
+ * behind is inert). Focus moves to the title, Tab stays inside, Escape and
+ * both Close buttons close it, and focus returns to the control that opened
+ * it. Its layout lives in styles.css (no inline !important styles).
+ *
+ * Listeners are plain addEventListener calls on the dialog and its children:
+ * they go away with the element, so closed dialogs are not retained by the
+ * page-wide cleanup registry.
+ * --------------------------------------------------------------------- */
+let activeDialog = null;
+let dialogCounter = 0;
 
-    if (!resource) {
-      logger.error('Resource not found:', resourceId);
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+function isVisible(el) {
+  return !!(el && el.isConnected && el.getClientRects().length > 0);
+}
+
+function openDialog(innerHTML, titleId, returnFocus) {
+  if (activeDialog) {
+    closeDialog({ restoreFocus: false });
+  }
+
+  const dialog = document.createElement('dialog');
+  dialog.className = 'resource-dialog';
+  dialog.setAttribute('aria-labelledby', titleId);
+  dialog.setAttribute('aria-modal', 'true');
+  dialog.innerHTML = `<div class="resource-dialog-inner">${innerHTML}</div>`;
+  document.body.appendChild(dialog);
+  document.body.classList.add('resource-dialog-open');
+
+  activeDialog = { dialog, returnFocus, bookmarksChanged: false };
+
+  if (typeof dialog.showModal === 'function') {
+    dialog.showModal();
+  } else {
+    dialog.setAttribute('open', '');
+    dialog.setAttribute('role', 'dialog');
+  }
+
+  const title = document.getElementById(titleId);
+
+  // Native Escape fires "cancel": close through our path so focus returns.
+  dialog.addEventListener('cancel', (e) => {
+    e.preventDefault();
+    closeDialog();
+  });
+
+  dialog.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeDialog();
       return;
     }
+    if (e.key !== 'Tab') {return;}
+    const focusable = [...dialog.querySelectorAll(FOCUSABLE)].filter(el => isVisible(el) || el === document.activeElement);
+    if (focusable.length === 0) {return;}
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const current = document.activeElement;
+    if (e.shiftKey && (current === first || current === title || !dialog.contains(current))) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && (current === last || !dialog.contains(current))) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
 
-    // Create modal content
-    const modalContent = `
+  // A click on the backdrop lands on the <dialog> element itself.
+  dialog.addEventListener('click', (e) => {
+    if (e.target === dialog || e.target.closest('[data-dialog-close]')) {
+      closeDialog();
+      return;
+    }
+    if (e.target.closest('[data-dialog-print]')) {
+      window.print();
+    }
+  });
+
+  if (title) {
+    title.focus();
+  }
+  return dialog;
+}
+
+function closeDialog({ restoreFocus = true } = {}) {
+  if (!activeDialog) {return;}
+  const { dialog, returnFocus, bookmarksChanged } = activeDialog;
+  activeDialog = null;
+  if (typeof dialog.close === 'function' && dialog.open) {
+    dialog.close();
+  }
+  dialog.remove();
+  document.body.classList.remove('resource-dialog-open');
+
+  // A bookmark removed inside the dialog while "My Bookmarks" is on: the list
+  // behind it is now out of date.
+  if (bookmarksChanged && viewState.bookmarksOnly) {
+    applyView();
+  }
+
+  if (!restoreFocus) {return;}
+  if (isVisible(returnFocus)) {
+    returnFocus.focus();
+  } else {
+    // The trigger was hidden by the view change: go somewhere sensible.
+    const fallback = safeQuerySelector('#bookmarks-filter');
+    if (isVisible(fallback)) {fallback.focus();}
+  }
+}
+
+/*
+ * Printing. A modal dialog lives in the browser's top layer, where it is
+ * positioned against the viewport and does not flow across pages. While
+ * printing, re-open it non-modally so the print stylesheet can lay the whole
+ * guide out in the page; restore the modal afterwards.
+ */
+let printing = null;
+
+function preparePrint() {
+  if (!activeDialog || printing) {return;}
+  const { dialog } = activeDialog;
+  if (typeof dialog.show !== 'function' || !dialog.matches(':modal')) {return;}
+  printing = { dialog, focus: document.activeElement };
+  dialog.close();
+  dialog.show();
+}
+
+function restoreAfterPrint() {
+  if (!printing) {return;}
+  const { dialog, focus } = printing;
+  printing = null;
+  if (activeDialog && activeDialog.dialog === dialog && dialog.isConnected) {
+    dialog.close();
+    dialog.showModal();
+    if (focus && dialog.contains(focus)) {focus.focus();}
+  }
+}
+
+window.addEventListener('beforeprint', preparePrint);
+window.addEventListener('afterprint', restoreAfterPrint);
+
+function dialogHeader(titleId, title) {
+  return `
+        <div class="resource-dialog-bar">
+            <h2 id="${escapeHTML(titleId)}" class="resource-dialog-title" tabindex="-1">${escapeHTML(title)}</h2>
+            <button type="button" class="resource-dialog-close" data-dialog-close aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>`;
+}
+
+async function openResourceModal(resourceId, returnFocus = document.activeElement) {
+  let resource;
+  try {
+    const resourcesData = await fetchJSON(RESOURCES_URL);
+    resource = resourcesData.resources.find(r => r.id === resourceId);
+  } catch (error) {
+    logger.error('Failed to load resource:', error);
+    alert('Unable to load resource content. Please try again.');
+    return;
+  }
+
+  if (!resource) {
+    logger.error('Resource not found:', resourceId);
+    return;
+  }
+
+  // Ids come from a counter, never from the data.
+  const titleId = `resource-dialog-title-${++dialogCounter}`;
+  const modalContent = `
+            ${dialogHeader(titleId, resource.title)}
             <div class="resource-modal">
                 <div class="resource-modal-header">
-                    <h2>${escapeHTML(resource.title)}</h2>
                     <div class="resource-modal-meta">
                         <span class="difficulty-badge difficulty-${escapeHTML(resource.difficulty)}">${escapeHTML(resource.difficulty)}</span>
                         ${resource.estimatedReadTime ? `<span class="read-time">📖 ${escapeHTML(String(resource.estimatedReadTime))} min read</span>` : ''}
@@ -404,7 +716,7 @@ async function openResourceModal(resourceId) {
                 </div>
 
                 <div class="resource-modal-content">
-                    ${formatResourceContent(resource.content)}
+                    ${renderMarkdown(resource.content, resource.title)}
 
                     ${resource.externalLinks && resource.externalLinks.length > 0 ? `
                         <div class="external-links-section">
@@ -414,9 +726,7 @@ async function openResourceModal(resourceId) {
     const linkUrl = safeUrl(link.url, '');
     return `
                                     <li>
-                                        ${linkUrl ? `<a href="${escapeHTML(linkUrl)}" target="_blank" rel="noopener">
-                                            ${escapeHTML(link.title)}
-                                        </a>` : escapeHTML(link.title)}
+                                        ${linkUrl ? `<a href="${escapeHTML(linkUrl)}" target="_blank" rel="noopener">${escapeHTML(link.title)}</a>` : escapeHTML(link.title)}
                                         ${link.description ? `<span class="link-description">${escapeHTML(link.description)}</span>` : ''}
                                     </li>
                                 `;
@@ -427,159 +737,54 @@ async function openResourceModal(resourceId) {
                 </div>
 
                 <div class="resource-modal-actions">
-                    <button class="btn-outline btn-bookmark-modal" data-resource-id="${escapeHTML(resource.id)}">
-                        🔖 Bookmark
-                    </button>
-                    <button class="btn-secondary btn-print" onclick="window.print()">
+                    ${bookmarkButton(resource.id, ' btn-bookmark-modal')}
+                    <button type="button" class="btn-secondary btn-print" data-dialog-print>
                         🖨️ Print
                     </button>
-                    <button class="btn-primary btn-close-modal">
+                    <button type="button" class="btn-primary btn-close-modal" data-dialog-close>
                         Close
                     </button>
                 </div>
             </div>
         `;
 
-    // Show the modal
-    showModal(modalContent);
+  const dialog = openDialog(modalContent, titleId, returnFocus);
 
-    // Set initial bookmark state for modal button
-    const bookmarks = JSON.parse(localStorage.getItem('resource_bookmarks') || '[]');
-    const isBookmarked = bookmarks.includes(resourceId);
-    const modalBookmarkButton = document.querySelector('.btn-bookmark-modal');
-    if (modalBookmarkButton) {
-      if (isBookmarked) {
-        modalBookmarkButton.textContent = '🔖 Bookmarked';
-        modalBookmarkButton.setAttribute('aria-label', 'Remove bookmark');
-        modalBookmarkButton.classList.add('bookmarked');
-      } else {
-        modalBookmarkButton.textContent = '🔖 Bookmark';
-        modalBookmarkButton.setAttribute('aria-label', 'Bookmark resource');
-        modalBookmarkButton.classList.remove('bookmarked');
-      }
-    }
-
-  } catch (error) {
-    logger.error('Failed to load resource:', error);
-    alert('Unable to load resource content. Please try again.');
-  }
-}
-
-function showModal(content) {
-  // Create modal element
-  const modal = document.createElement('div');
-  modal.className = 'modal-overlay modal-open';
-  modal.innerHTML = `
-        <div class="modal-content">
-            ${content}
-        </div>
-    `;
-
-  document.body.appendChild(modal);
-  document.body.style.overflow = 'hidden';
-
-  // Force visible with inline styles to override any CSS conflicts
-  modal.style.cssText = `
-        display: flex !important;
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        background-color: rgba(0, 0, 0, 0.8) !important;
-        z-index: 99999 !important;
-        justify-content: center !important;
-        align-items: center !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        pointer-events: auto !important;
-    `;
-
-  // Style the modal content
-  const modalContent = modal.querySelector('.modal-content');
-  if (modalContent) {
-    modalContent.style.cssText = `
-            background-color: white !important;
-            padding: 2rem !important;
-            border-radius: 8px !important;
-            max-width: 90vw !important;
-            max-height: 90vh !important;
-            overflow: auto !important;
-            position: relative !important;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25) !important;
-            transform: none !important;
-            visibility: visible !important;
-            display: block !important;
-        `;
-  }
-
-  // Close modal handlers
-  const closeButton = modal.querySelector('.btn-close-modal');
-  if (closeButton) {
-    addEventListenerWithCleanup(closeButton, 'click', () => {
-      closeModal(modal);
-    });
-  }
-
-  // Bookmark button handler for modal
-  const modalBookmarkButton = modal.querySelector('.btn-bookmark-modal');
+  const modalBookmarkButton = dialog.querySelector('.btn-bookmark-modal');
   if (modalBookmarkButton) {
-    addEventListenerWithCleanup(modalBookmarkButton, 'click', (e) => {
+    setBookmarkButtonState(modalBookmarkButton, readBookmarks().includes(resource.id));
+    modalBookmarkButton.addEventListener('click', (e) => {
       e.preventDefault();
-      const btn = e.currentTarget;
-      const {resourceId} = btn.dataset;
-      if (resourceId) {
-        toggleBookmark(resourceId, btn);
-        // Update the bookmark state on the main page too
-        updateBookmarkStates();
-      }
+      toggleBookmark(resource.id, e.currentTarget);
     });
   }
-
-  // Close on overlay click
-  addEventListenerWithCleanup(modal, 'click', (e) => {
-    if (e.target === modal) {
-      closeModal(modal);
-    }
-  });
-
-  // Close on escape key
-  const handleEscape = (e) => {
-    if (e.key === 'Escape') {
-      closeModal(modal);
-      document.removeEventListener('keydown', handleEscape);
-    }
-  };
-  document.addEventListener('keydown', handleEscape);
 }
 
-function closeModal(modal) {
-  modal.remove();
-  document.body.style.overflow = '';
-}
-
-async function showResourceSections(resourceId) {
+async function showResourceSections(resourceId, returnFocus = document.activeElement) {
+  let resource;
   try {
-    const resourcesData = await fetchJSON('data/members/resources.json');
-    const resource = resourcesData.resources.find(r => r.id === resourceId);
+    const resourcesData = await fetchJSON(RESOURCES_URL);
+    resource = resourcesData.resources.find(r => r.id === resourceId);
+  } catch (error) {
+    logger.error('Failed to load resource sections:', error);
+    alert('Unable to load sections. Please try again.');
+    return;
+  }
 
-    if (!resource || !resource.sections) {
-      logger.error('Resource sections not found:', resourceId);
-      return;
-    }
+  if (!resource || !resource.sections) {
+    logger.error('Resource sections not found:', resourceId);
+    return;
+  }
 
-    // Create sections modal content
-    const modalContent = `
-            <div class="resource-sections-modal">
-                <div class="resource-modal-header">
-                    <h2>${escapeHTML(resource.title)} - Sections</h2>
-                    <p class="sections-count">${resource.sections.length} sections available</p>
-                </div>
+  const titleId = `resource-sections-title-${++dialogCounter}`;
+  const sections = [...resource.sections].sort((a, b) => a.order - b.order);
+  const modalContent = `
+            ${dialogHeader(titleId, `${resource.title}: Sections`)}
+            <div class="resource-sections-modal resource-modal">
+                <p class="sections-count">${sections.length} sections available</p>
 
                 <div class="sections-list">
-                    ${resource.sections.sort((a, b) => a.order - b.order).map(section => `
+                    ${sections.map(section => `
                         <div class="section-item">
                             <h3>${escapeHTML(String(section.order))}. ${escapeHTML(section.title)}</h3>
                             <p>${escapeHTML(section.content)}</p>
@@ -588,111 +793,105 @@ async function showResourceSections(resourceId) {
                 </div>
 
                 <div class="resource-modal-actions">
-                    <button class="btn-primary btn-read-full" data-resource-id="${escapeHTML(resource.id)}">
+                    <button type="button" class="btn-primary btn-read-full">
                         📖 Read Full Guide
                     </button>
-                    <button class="btn-secondary btn-close-modal">
+                    <button type="button" class="btn-secondary btn-close-modal" data-dialog-close>
                         Close
                     </button>
                 </div>
             </div>
         `;
 
-    // Show the modal
-    showModal(modalContent);
+  const dialog = openDialog(modalContent, titleId, returnFocus);
 
-    // Add event listener for read full guide button
-    const readFullButton = document.querySelector('.btn-read-full');
-    if (readFullButton) {
-      addEventListenerWithCleanup(readFullButton, 'click', () => {
-        const currentModal = document.querySelector('.modal-overlay');
-        if (currentModal) {
-          closeModal(currentModal);
-        }
-        openResourceModal(resourceId);
-      });
-    }
-
-  } catch (error) {
-    logger.error('Failed to load resource sections:', error);
-    alert('Unable to load sections. Please try again.');
+  const readFullButton = dialog.querySelector('.btn-read-full');
+  if (readFullButton) {
+    readFullButton.addEventListener('click', () => {
+      closeDialog({ restoreFocus: false });
+      openResourceModal(resourceId, returnFocus);
+    });
   }
+}
+
+function setBookmarkButtonState(button, isBookmarked) {
+  button.textContent = isBookmarked ? '🔖 Bookmarked' : '🔖 Bookmark';
+  button.setAttribute('aria-pressed', String(isBookmarked));
+  button.classList.toggle('bookmarked', isBookmarked);
 }
 
 function updateBookmarkStates() {
-  const bookmarks = JSON.parse(localStorage.getItem('resource_bookmarks') || '[]');
-  const bookmarkButtons = document.querySelectorAll('.btn-bookmark');
-
-  bookmarkButtons.forEach(button => {
-    const {resourceId} = button.dataset;
-    if (bookmarks.includes(resourceId)) {
-      button.textContent = '🔖 Bookmarked';
-      button.setAttribute('aria-label', 'Remove bookmark');
-      button.classList.add('bookmarked');
-    } else {
-      button.textContent = '🔖';
-      button.setAttribute('aria-label', 'Bookmark resource');
-      button.classList.remove('bookmarked');
-    }
+  const bookmarks = readBookmarks();
+  document.querySelectorAll('.btn-bookmark').forEach(button => {
+    setBookmarkButtonState(button, bookmarks.includes(button.dataset.resourceId));
   });
+  updateBookmarksFilterButton();
+}
+
+// Show a message in a persistent role="status" element for its full time.
+const feedbackTimers = new WeakMap();
+function showFeedback(region, message, duration) {
+  if (!region) {return;}
+  clearTimeout(feedbackTimers.get(region));
+  region.textContent = message;
+  feedbackTimers.set(region, setTimeout(() => { region.textContent = ''; }, duration));
 }
 
 function toggleBookmark(resourceId, button) {
-  const bookmarks = JSON.parse(localStorage.getItem('resource_bookmarks') || '[]');
-  const isBookmarked = bookmarks.includes(resourceId);
+  const bookmarks = readBookmarks();
+  const wasBookmarked = bookmarks.includes(resourceId);
+  const next = wasBookmarked ? bookmarks.filter(id => id !== resourceId) : [...bookmarks, resourceId];
+  writeBookmarks(next);
 
-  if (isBookmarked) {
-    const index = bookmarks.indexOf(resourceId);
-    bookmarks.splice(index, 1);
-    button.textContent = '🔖';
-    button.setAttribute('aria-label', 'Bookmark resource');
-    button.classList.remove('bookmarked');
-  } else {
-    bookmarks.push(resourceId);
-    button.textContent = '🔖 Bookmarked';
-    button.setAttribute('aria-label', 'Remove bookmark');
-    button.classList.add('bookmarked');
+  updateBookmarkStates();
+  setBookmarkButtonState(button, !wasBookmarked);
+
+  let message = wasBookmarked ? 'Bookmark removed' : 'Resource bookmarked';
+  if (!bookmarkStorageWorks) {
+    message += ' for this visit only (this browser is not saving site data)';
+  }
+  const duration = bookmarkStorageWorks ? 3000 : 6000;
+
+  const inDialog = !!button.closest('dialog');
+  if (inDialog) {
+    if (activeDialog) {activeDialog.bookmarksChanged = true;}
+    showFeedback(button.parentNode.querySelector('.bookmark-feedback'), message, duration);
+    updateBookmarksFilterButton();
+    return;
   }
 
-  localStorage.setItem('resource_bookmarks', JSON.stringify(bookmarks));
+  if (!viewState.bookmarksOnly) {
+    showFeedback(button.parentNode.querySelector('.bookmark-feedback'), message, duration);
+    updateBookmarksFilterButton();
+    return;
+  }
 
-  // Show feedback
-  const feedback = document.createElement('div');
-  feedback.className = 'bookmark-feedback';
-  feedback.textContent = isBookmarked ? 'Bookmark removed' : 'Resource bookmarked';
-  button.parentNode.appendChild(feedback);
-
-  setTimeout(() => {
-    feedback.remove();
-  }, 2000);
+  // "My Bookmarks" is on and this card may now leave the view. Note where
+  // focus should go BEFORE the card disappears, then say what happened next
+  // to that place (a status region outside the hidden card).
+  const card = button.closest('.resource-item, .resource-card');
+  const sameList = card ? [...card.parentNode.querySelectorAll(':scope > .resource-item, :scope > .resource-card')] : [];
+  const after = sameList.slice(sameList.indexOf(card) + 1);
+  applyView();
+  if (isVisible(button)) {
+    showFeedback(button.parentNode.querySelector('.bookmark-feedback'), message, duration);
+    return;
+  }
+  const nextButton = after.map(el => el.querySelector('.btn-bookmark')).find(isVisible);
+  const target = nextButton || safeQuerySelector('#bookmarks-filter');
+  if (isVisible(target)) {target.focus();}
+  showFeedback(safeQuerySelector('#bookmark-status'), message, duration);
 }
 
 function filterByCategory(categoryId) {
-  const categoryFilter = safeQuerySelector('#category-filter');
-  if (categoryFilter) {
-    categoryFilter.value = categoryId;
-    categoryFilter.dispatchEvent(new Event('change'));
-  }
+  // "View All" means every resource in the category: clear the search,
+  // difficulty and bookmarks view, then apply the category.
+  resetView({ category: categoryId });
 
-  // Scroll to all resources section
   const allResourcesSection = safeQuerySelector('#all-resources');
   if (allResourcesSection) {
     allResourcesSection.scrollIntoView({ behavior: 'smooth' });
   }
-}
-
-function formatResourceContent(content) {
-  // Escape HTML first to prevent XSS, then apply markdown-like formatting
-  const escaped = escapeHTML(content);
-  return escaped
-    .replace(/\n## (.*?)\n/g, '<h3>$1</h3>')
-    .replace(/\n### (.*?)\n/g, '<h4>$1</h4>')
-    .replace(/\n\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\n- (.*?)(?=\n|$)/g, '<li>$1</li>')
-    .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
-    .replace(/\n\n/g, '</p><p>')
-    .replace(/^/, '<p>')
-    .replace(/$/, '</p>');
 }
 
 function formatResourceType(type) {
@@ -724,9 +923,13 @@ function showResourcesError(message) {
             <div class="error-message">
                 <h3>Unable to Load Resources</h3>
                 <p>${escapeHTML(message)}</p>
-                <button onclick="location.reload()" class="btn-secondary">Refresh Page</button>
+                <button type="button" class="btn-secondary btn-reload">Refresh Page</button>
             </div>
         `;
+    const reload = container.querySelector('.btn-reload');
+    if (reload) {
+      addEventListenerWithCleanup(reload, 'click', () => window.location.reload());
+    }
   }
 }
 
