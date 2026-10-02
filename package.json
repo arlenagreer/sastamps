@@ -28,7 +28,7 @@
     "audit:security": "npm audit",
     "test:font-loading": "node scripts/test-font-loading.js",
     "test:search-page": "node scripts/test-search-page.js",
-    "test:unit": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test --test-reporter=spec 'tests/*.test.*'",
+    "test:unit": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test --test-reporter=spec 'tests/*.test.*' tests/xss-security-test.js",
     "test:quick": "npm run test:html && npm run test:inline-js && npm run test:js && npm run test:css",
     "validate:data": "node scripts/validate-data.js",
     "pretest": "mkdir -p reports",

@@ -1,8 +1,9 @@
 /**
  * XSS security checks for js/utils/safe-dom.js: escapeHTML and safeUrl.
  *
- * Run from the repository root:  node tests/xss-security-test.js
- * Exits 0 when every assertion holds, 1 otherwise.
+ * Runs under node:test as part of npm run test:unit (and bin/ci). On its own,
+ * from the repository root:  node --test tests/xss-security-test.js
+ * Each check is its own test; any failing assertion fails the run.
  *
  * Contract under test:
  * - escapeHTML(text): non-string -> ''; otherwise & < > " ' become
@@ -16,6 +17,7 @@
  *   Unicode whitespace (NBSP, BOM, ...) at the ends only.
  */
 
+import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
@@ -24,17 +26,8 @@ globalThis.window = globalThis.window || { location: { hostname: 'example.org', 
 
 const { escapeHTML, safeUrl, firstSafeUrl } = await import('../js/utils/safe-dom.js');
 
-let passed = 0;
-let failed = 0;
-function check(name, fn) {
-  try {
-    fn();
-    passed++;
-  } catch (error) {
-    failed++;
-    console.error(`FAIL ${name}\n  ${error.message}`);
-  }
-}
+// Each check is a node:test test, reported (and failed) individually.
+const check = (name, fn) => test(name, fn);
 
 // ── escapeHTML ──────────────────────────────────────────────────────────────
 const escapeCases = [
@@ -158,5 +151,4 @@ for (const [key, url] of urlish) {
   check(`data ${key}=${url} passes safeUrl unchanged`, () => assert.equal(safeUrl(url, ''), url));
 }
 
-console.log(`${passed + failed} checks, ${passed} passed, ${failed} failed (data URLs: ${urlish.length})`);
-process.exit(failed === 0 ? 0 : 1);
+check('data files carry URLs to check (walker sanity)', () => assert.ok(urlish.length > 0, 'no url-like fields found in the data files'));
