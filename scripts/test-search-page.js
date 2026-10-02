@@ -138,10 +138,15 @@ async function testPage({ page, errors, statuses }, base) {
 
   const started = Date.now();
   await page.goto(`${base}search.html`, { waitUntil: 'load' });
-  // Ready when the "Loading search index..." status is hidden (or errored).
+  // Ready when the status region leaves its "loading" state: it is cleared
+  // (class "search-status", no text) once the index loads, or set to
+  // "error". The region is never hidden: it is a role="status" live region
+  // and must stay rendered to be announced. initializeSearch() runs on
+  // DOMContentLoaded and sets "loading" synchronously, so by the "load" event
+  // it has either been set or already been cleared.
   await page.waitForFunction(() => {
     const s = document.getElementById('searchStatus');
-    return s && (s.style.display === 'none' || s.classList.contains('error'));
+    return s && !s.classList.contains('loading');
   }, { timeout: 20000 });
   const readyMs = Date.now() - started;
 
