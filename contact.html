@@ -67,9 +67,9 @@
     <link rel="stylesheet" href="css/styles.min.css">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="dist/images/favicon.webp">
-    <link rel="icon" type="image/png" sizes="16x16" href="dist/images/favicon.webp">
-    <link rel="apple-touch-icon" sizes="180x180" href="dist/images/favicon.webp">
+    <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
+    <link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
+    <link rel="apple-touch-icon" href="images/favicon-192.png">
     <link rel="manifest" href="site.webmanifest">
 
     <!-- Canonical URL -->
@@ -200,20 +200,20 @@
                             <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
                                 <div class="form-group">
                                     <label for="name" class="form-label">Full Name <span style="color: var(--danger);">*</span></label>
-                                    <input type="text" id="name" name="name" class="form-control" required>
+                                    <input type="text" id="name" name="name" class="form-control" autocomplete="name" required>
                                     <div class="error-message" id="name-error"></div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="email" class="form-label">Email Address <span style="color: var(--danger);">*</span></label>
-                                    <input type="email" id="email" name="email" class="form-control" required>
+                                    <input type="email" id="email" name="email" class="form-control" autocomplete="email" required>
                                     <div class="error-message" id="email-error"></div>
                                 </div>
                             </div>
 
                             <div class="form-group" style="margin-bottom: 1rem;">
                                 <label for="phone" class="form-label">Phone Number (Optional)</label>
-                                <input type="tel" id="phone" name="phone" class="form-control" placeholder="(210) 555-0123">
+                                <input type="tel" id="phone" name="phone" class="form-control" autocomplete="tel" placeholder="(210) 555-0123">
                                 <div class="error-message" id="phone-error"></div>
                             </div>
 
