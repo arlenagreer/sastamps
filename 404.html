@@ -151,6 +151,9 @@
     </style>
 </head>
 <body>
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to content</a>
+
     <!-- Header -->
     <header>
         <div class="container header-container">
@@ -178,7 +181,7 @@
     </header>
 
     <!-- Main Content -->
-    <main id="main-content">
+    <main id="main-content" tabindex="-1">
         <!-- 404 Error Section -->
         <section class="error-404">
             <div class="container">
@@ -282,15 +285,5 @@
     <!-- Scripts -->
     <script src="/dist/js/script.min.js" defer></script>
 
-    <!-- 404 Tracking -->
-    <script>
-        // Track 404 errors in Google Analytics
-        if (typeof gtag !== 'undefined') {
-            gtag('event', 'exception', {
-                'description': '404 - ' + window.location.pathname,
-                'fatal': false
-            });
-        }
-    </script>
 </body>
 </html>

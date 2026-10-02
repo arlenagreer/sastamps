@@ -10,12 +10,12 @@ const logger = createLogger('ServiceWorker');
 /**
  * Retire any service worker previously registered for this origin.
  *
- * The site deliberately does NOT register a service worker. The sw.js kept in
- * the repo is cache-first with a fixed cache name ('sapa-cache-v1') and
- * precaches every main page, so a visitor who ever installed it would keep
- * seeing stale pages after each quarterly content update. sw.js is not
- * deployed; this one-time cleanup unregisters any worker a browser may still
- * hold and deletes its 'sapa-' caches. Harmless (a no-op) when none exist.
+ * The site deliberately does NOT register a service worker. From 2025-09-27
+ * to 2025-11-18 it deployed a cache-first one ('sapa-cache-v1') that pinned
+ * stale pages. The root sw.js is now a kill switch that removes that worker
+ * from any browser that re-checks /sw.js. This in-page cleanup is a second
+ * path: it unregisters any worker this page can see and deletes its 'sapa-'
+ * caches. Harmless (a no-op) when none exist.
  * @returns {Promise<number>} Number of registrations removed
  */
 export async function retireServiceWorkers() {

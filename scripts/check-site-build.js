@@ -108,8 +108,64 @@ if (!fs.existsSync(SITE)) {
   // independent second opinion, so a gap in that rule still fails here.
   const forbidden = all.filter((f) => isPrivate(f) || /\.(php|db|sqlite3?|env|md|bak|log|sh|py|rb)$/i.test(f)
     || /^(scripts|js|node_modules|\.planning|\.claude|\.github)\//.test(f)
-    || (!f.includes('/') && f.endsWith('.html') && !isSitePage(f)) || /(^|\/)sw\.js$/.test(f));
+    || (!f.includes('/') && f.endsWith('.html') && !isSitePage(f)) || (/(^|\/)sw\.js$/.test(f) && f !== 'sw.js'));
   check(forbidden.length === 0, `_site contains files that must not be public: ${forbidden.slice(0, 8).join(', ')}`);
+
+  // /sw.js deploys only as the kill switch for the retired 2025 caching
+  // worker. A caching worker here would pin stale pages again, and a 404
+  // here would leave the old worker installed (browsers keep it on a 404).
+  console.log('▸ _site/sw.js is the service-worker kill switch');
+  const sw = existsExact(path.join(SITE, 'sw.js')) ? fs.readFileSync(path.join(SITE, 'sw.js'), 'utf8') : '';
+  const swCode = sw.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '');
+  check(sw.length > 0, '_site/sw.js missing: browsers holding the retired worker would keep serving stale pages');
+  check(/self\.registration\.unregister\(\)/.test(swCode), '_site/sw.js must unregister itself (kill switch)');
+  check(/self\.skipWaiting\(\)/.test(swCode), '_site/sw.js must skipWaiting() so it replaces the old worker at once');
+  check(/caches\.delete\(/.test(swCode), '_site/sw.js must delete the stale caches');
+  check(!/addEventListener\(\s*['"]fetch['"]/.test(swCode) && !/\bonfetch\b/.test(swCode) && !/cache\.(put|add|addAll)\(/.test(swCode),
+    '_site/sw.js must not handle fetches or write caches');
+
+  // Icons must be what they claim. favicon.ico was once a 202 KB WebP, and
+  // the manifest called it a 192 and 512 px x-icon.
+  console.log('▸ favicon.ico and the manifest icons are real files of their declared type');
+  const magic = (buf) => (buf.subarray(0, 4).equals(Buffer.from([0, 0, 1, 0])) ? 'image/x-icon'
+    : buf.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) ? 'image/png'
+      : buf.subarray(0, 4).toString() === 'RIFF' && buf.subarray(8, 12).toString() === 'WEBP' ? 'image/webp' : 'unknown');
+  const pngSize = (buf) => `${buf.readUInt32BE(16)}x${buf.readUInt32BE(20)}`;
+  const ico = existsExact(path.join(SITE, 'favicon.ico')) ? fs.readFileSync(path.join(SITE, 'favicon.ico')) : Buffer.alloc(0);
+  check(magic(ico) === 'image/x-icon', `_site/favicon.ico is ${magic(ico)}, not an ICO`);
+  check(ico.length < 50000, `_site/favicon.ico is ${ico.length} bytes; every visit downloads it`);
+  let manifest = {};
+  try {
+    manifest = JSON.parse(fs.readFileSync(path.join(SITE, 'site.webmanifest'), 'utf8'));
+  } catch {
+    check(false, '_site/site.webmanifest is not valid JSON');
+  }
+  check(Array.isArray(manifest.icons) && manifest.icons.length > 0, 'site.webmanifest lists no icons');
+  for (const icon of manifest.icons || []) {
+    const abs = path.join(SITE, icon.src.replace(/^\//, ''));
+    if (!fileExact(abs)) { check(false, `site.webmanifest icon ${icon.src} missing`); continue; }
+    const buf = fs.readFileSync(abs);
+    check(magic(buf) === icon.type, `site.webmanifest icon ${icon.src} is ${magic(buf)}, declared ${icon.type}`);
+    if (magic(buf) === 'image/png') {
+      check(pngSize(buf) === icon.sizes, `site.webmanifest icon ${icon.src} is ${pngSize(buf)}, declared ${icon.sizes}`);
+    }
+  }
+
+  // And every page's icon tags: a declared type must be the file's real
+  // type, and an apple-touch-icon must be a PNG (iOS ignores WebP there).
+  for (const file of walk(SITE).filter((f) => /\.html?$/.test(f))) {
+    const html = fs.readFileSync(file, 'utf8');
+    for (const m of html.matchAll(/<link\b[^>]*\brel=["'](?:shortcut )?(icon|apple-touch-icon)["'][^>]*>/gi)) {
+      const href = (m[0].match(/\bhref=["']([^"']+)["']/i) || [])[1];
+      const type = (m[0].match(/\btype=["']([^"']+)["']/i) || [])[1];
+      const abs = href && !SKIP_REF.test(href) ? resolveRef(href, file) : null;
+      if (!abs || !fileExact(abs)) continue; // the reference scan below reports it
+      const real = magic(fs.readFileSync(abs));
+      const where = `${path.relative(SITE, file)}: <link rel="${m[1]}" href="${href}">`;
+      if (type) check(real === type, `${where} declares ${type} but the file is ${real}`);
+      if (m[1].toLowerCase() === 'apple-touch-icon') check(real === 'image/png', `${where} is ${real}; want a PNG`);
+    }
+  }
 
   console.log('▸ every local reference in _site resolves');
   const missing = [];

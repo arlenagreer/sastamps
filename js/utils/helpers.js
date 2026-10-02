@@ -59,13 +59,20 @@ export function validateEmail(email) {
 }
 
 /**
- * Validate phone number (US format)
- * @param {string} phone - Phone number to validate
- * @returns {boolean} Whether phone number is valid
+ * Is this a plausible phone number? The contact form's phone field is
+ * optional and read by a person, so this accepts what people actually type:
+ * US or international, with +, spaces, dots, dashes, brackets, a slash and
+ * an extension ("ext. 4", "x12", "#3"). 7 to 15 digits, the longest a phone
+ * number can be (E.164). Anything else is likely a typo.
+ * @param {string} value - Phone number as typed
+ * @returns {boolean} Whether it looks like a phone number
  */
-export function validatePhone(phone) {
-  const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-  return phoneRegex.test(phone);
+export function isPlausiblePhone(value) {
+  if (typeof value !== 'string') {return false;}
+  const main = value.trim().replace(/\s*(?:ext\.?|extension|x|#)\s*\d{1,6}$/i, '');
+  if (!/^\+?[\d\s().\-/]+$/.test(main)) {return false;}
+  const digits = main.replace(/\D/g, '').length;
+  return digits >= 7 && digits <= 15;
 }
 
 // Note: For HTML sanitization, use escapeHTML from '../utils/safe-dom.js'

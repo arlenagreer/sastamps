@@ -124,12 +124,25 @@ export const SECURITY_CONFIG = {
 
 /**
  * Logging configuration
+ *
+ * Remote error reporting is OFF, and there is no endpoint. The site is static
+ * (GitHub Pages) with no backend: the old '/api/logs' target answered 405, so
+ * every report was dropped and each attempt put a console error in front of
+ * the visitor.
+ *
+ * To report errors later, stand up an endpoint that accepts a JSON POST, then
+ * set `remoteEndpoint` to its URL and `enableRemote` to true. The logger then
+ * sends ERROR and FATAL entries there (production only). A cross-origin
+ * endpoint must also be added to the CSP connect-src, and must accept the
+ * request's CORS preflight. Uncaught errors (window 'error' and
+ * 'unhandledrejection') are not captured today; wire them to the logger when
+ * an endpoint exists.
  */
 export const LOGGING_CONFIG = {
   level: ENV.isDevelopment ? 'debug' : 'error',
   enableConsole: true,
-  enableRemote: ENV.isProduction,
-  remoteEndpoint: '/api/logs'
+  enableRemote: false,
+  remoteEndpoint: ''
 };
 
 /**

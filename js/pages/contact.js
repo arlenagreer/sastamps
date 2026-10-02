@@ -6,7 +6,7 @@
 import { debounce } from '../utils/performance.js';
 import { safeQuerySelector } from '../utils/safe-dom.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
-import { validateEmail, validatePhone } from '../utils/helpers.js';
+import { validateEmail, isPlausiblePhone } from '../utils/helpers.js';
 import { createLogger } from '../utils/logger.js';
 import {
   ERROR_MESSAGES,
@@ -17,6 +17,8 @@ import {
 const logger = createLogger('ContactPage');
 
 const RELAY_TIMEOUT_MS = 30000;
+const PHONE_INVALID = 'Please enter a phone number using digits, spaces, dashes or a leading +, for example (210) 555-0123 or +44 20 7946 0958.';
+
 const RELAY_UNCONFIRMED = "We couldn't confirm your message was sent (the connection timed out). It may still arrive, so please wait a few minutes before sending it again, or email us at loz33@hotmail.com.";
 
 // Contact-specific functionality
@@ -37,6 +39,11 @@ function initializeContactPage() {
   if (sentNotice && window.location.hash === '#sent' && window.history.replaceState) {
     sentNotice.classList.add('is-shown');
     window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    // Dropping the fragment cancels the browser's own scroll to it, so
+    // scroll here (html's scroll-padding-top keeps it below the header).
+    if (typeof sentNotice.scrollIntoView === 'function') {
+      sentNotice.scrollIntoView({ block: 'start' });
+    }
   }
 }
 
@@ -72,6 +79,7 @@ function validateField(event) {
 
   // Skip validation if field is empty (unless required)
   if (!value && !field.required) {
+    clearFormErrorWhenFixed(field.form);
     return true;
   }
 
@@ -97,9 +105,9 @@ function validateField(event) {
     break;
 
   case 'phone':
-    if (value && !validatePhone(value)) {
+    if (value && !isPlausiblePhone(value)) {
       isValid = false;
-      errorMessage = 'Please enter a valid phone number (XXX) XXX-XXXX';
+      errorMessage = PHONE_INVALID;
     }
     break;
 
@@ -134,7 +142,16 @@ function validateField(event) {
     showFieldSuccess(field);
   }
 
+  clearFormErrorWhenFixed(field.form);
   return isValid;
+}
+
+// The form-level "Please correct the errors above" goes away as soon as no
+// field shows an error, instead of lingering until the next submit.
+function clearFormErrorWhenFixed(form) {
+  if (!form || form.querySelector('.form-control.error')) {return;}
+  const stale = form.querySelector('.form-message.validation-summary');
+  if (stale) {stale.remove();}
 }
 
 function clearFieldValidation(field) {
@@ -183,13 +200,19 @@ async function handleFormSubmission(event) {
 
   const form = event.target;
   const submitButton = form.querySelector('button[type="submit"]');
-  const originalButtonText = submitButton.textContent;
+  // The button holds an icon as well as its label: keep the markup, not just
+  // the text, so the icon comes back after a send.
+  const originalButtonHTML = submitButton.innerHTML;
 
-  // Validate all fields
+  // Validate all fields: the required ones, plus the optional phone when
+  // filled in, so a number the page calls invalid is never sent anyway.
   const fields = form.querySelectorAll('input[required], select[required], textarea[required]');
+  const phoneField = form.querySelector('#phone');
+  const toValidate = [...fields];
+  if (phoneField && phoneField.value.trim()) {toValidate.push(phoneField);}
   let allValid = true;
 
-  fields.forEach(field => {
+  toValidate.forEach(field => {
     if (!validateField({ target: field })) {
       allValid = false;
     }
@@ -204,7 +227,16 @@ async function handleFormSubmission(event) {
   }
 
   if (!allValid) {
-    showFormMessage(ERROR_MESSAGES.VALIDATION_FAILED, CSS_CLASSES.ERROR);
+    // Take the visitor to the first field to fix (its own error is right
+    // under it); the summary stays beside the button.
+    const firstInvalid = form.querySelector('.form-control.error');
+    showFormMessage(ERROR_MESSAGES.VALIDATION_FAILED, `${CSS_CLASSES.ERROR} validation-summary`, { scroll: !firstInvalid });
+    if (firstInvalid) {
+      firstInvalid.focus({ preventScroll: true });
+      if (typeof firstInvalid.scrollIntoView === 'function') {
+        firstInvalid.scrollIntoView({ block: 'center' });
+      }
+    }
     return;
   }
 
@@ -252,7 +284,7 @@ async function handleFormSubmission(event) {
       form.reset();
 
       // Clear validation states
-      fields.forEach(field => clearFieldValidation(field));
+      toValidate.forEach(field => clearFieldValidation(field));
 
     } else {
       throw new Error(result.message || ERROR_MESSAGES.SUBMISSION_FAILED);
@@ -269,11 +301,11 @@ async function handleFormSubmission(event) {
     clearTimeout(timer);
     // Restore button state
     submitButton.disabled = false;
-    submitButton.textContent = originalButtonText;
+    submitButton.innerHTML = originalButtonHTML;
   }
 }
 
-function showFormMessage(message, type) {
+function showFormMessage(message, type, { scroll = true } = {}) {
   // Remove existing message
   const existingMessage = document.querySelector('.form-message');
   if (existingMessage) {
@@ -296,7 +328,7 @@ function showFormMessage(message, type) {
   } else {
     form.appendChild(messageElement);
   }
-  if (typeof messageElement.scrollIntoView === 'function') {
+  if (scroll && typeof messageElement.scrollIntoView === 'function') {
     messageElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
 }
