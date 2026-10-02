@@ -4,7 +4,9 @@
  */
 
 import { debounce } from '../utils/performance.js';
-import { safeQuerySelector, escapeHTML } from '../utils/safe-dom.js';
+import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
+import { parseLocalDate, isUpcomingDate } from '../utils/dates.js';
+import { fetchJSON } from '../utils/fetch-json.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { createLogger } from '../utils/logger.js';
 import {
@@ -169,7 +171,7 @@ function formatMeetingLocation(location) {
 
 async function loadMeetingsList(container) {
   try {
-    const { default: meetingsData } = await import('../../data/meetings/meetings.json');
+    const meetingsData = await fetchJSON('data/meetings/meetings.json');
     
     // Show the current quarter (rolling over to the next one near quarter end,
     // once its schedule is posted). Shared with MeetingLoader so the rule lives
@@ -182,7 +184,9 @@ async function loadMeetingsList(container) {
       return;
     }
 
-    const html = meetings.map(meeting => `
+    const html = meetings.map(meeting => {
+      const calendarUrl = safeUrl(meeting.calendarLink, '');
+      return `
             <article class="meeting-item" data-date="${escapeHTML(meeting.date)}" data-type="${escapeHTML(meeting.type || 'regular')}">
                 <header class="meeting-header">
                     <h3>${escapeHTML(meeting.title)}</h3>
@@ -213,10 +217,11 @@ async function loadMeetingsList(container) {
                 <footer class="meeting-actions">
                     <button class="btn-rsvp" data-meeting-id="${escapeHTML(meeting.id)}">RSVP</button>
                     <button class="btn-reminder" data-meeting-id="${escapeHTML(meeting.id)}">Set Reminder</button>
-                    ${meeting.calendarLink ? `<a href="${escapeHTML(meeting.calendarLink)}" class="btn-calendar">Add to Calendar</a>` : ''}
+                    ${calendarUrl ? `<a href="${escapeHTML(calendarUrl)}" class="btn-calendar" aria-label="Add to Calendar: ${escapeHTML(meeting.title)}">Add to Calendar</a>` : ''}
                 </footer>
             </article>
-        `).join('');
+        `;
+    }).join('');
 
     container.innerHTML = html;
 
@@ -278,7 +283,7 @@ function initializeMeetingFilters(container) {
     const now = new Date();
 
     meetings.forEach(meeting => {
-      const meetingDate = new Date(meeting.dataset.date);
+      const meetingDate = parseLocalDate(meeting.dataset.date);
       const meetingType = meeting.dataset.type;
 
       let show = true;
@@ -291,7 +296,8 @@ function initializeMeetingFilters(container) {
         show = false;
       }
 
-      if (showUpcomingOnly && meetingDate < now) {
+      // A meeting stays upcoming for the whole of its own day
+      if (showUpcomingOnly && !isUpcomingDate(meeting.dataset.date, now)) {
         show = false;
       }
 

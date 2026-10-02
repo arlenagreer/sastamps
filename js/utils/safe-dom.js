@@ -84,19 +84,92 @@ export function safeLocalStorageRemove(key) {
   }
 }
 
+const HTML_ESCAPES = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  '\'': '&#39;'
+};
+
 /**
- * Escape HTML special characters to prevent XSS
+ * Escape HTML special characters to prevent XSS.
+ *
+ * Escapes & < > " and ', so the result is safe both as element text and
+ * inside a quoted attribute value (href="...", data-id='...'). The previous
+ * implementation serialised a text node through a <div>, which leaves quotes
+ * untouched and therefore allowed a value to break out of an attribute.
+ * Non-string input still returns '' (unchanged contract).
+ *
  * @param {string} text - Text to escape
- * @returns {string} Escaped text safe for HTML insertion
+ * @returns {string} Escaped text safe for HTML text and quoted attributes
  */
 export function escapeHTML(text) {
   if (typeof text !== 'string') {
     return '';
   }
 
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
+  return text.replace(/[&<>"']/g, ch => HTML_ESCAPES[ch]);
+}
+
+const SAFE_URL_SCHEMES = ['http:', 'https:', 'mailto:', 'tel:', 'sms:', 'webcal:'];
+
+/**
+ * Return a URL that is safe to place in an href/src attribute, or a fallback.
+ *
+ * Relative URLs (path, ./, ../, ?query, #fragment, //host) and absolute
+ * http(s), mailto, tel, sms and webcal URLs pass through. Anything else --
+ * javascript:, data:, vbscript:, or any other scheme -- yields the fallback.
+ * The result is NOT HTML-escaped; wrap it in escapeHTML() when interpolating
+ * into markup.
+ *
+ * Scheme detection mirrors the WHATWG URL parser: leading/trailing C0 control
+ * characters, spaces and other Unicode whitespace (NBSP, BOM, ...) are
+ * trimmed, and ASCII tab, LF and CR are removed anywhere ("java\tscript:" is
+ * javascript:). Nothing else is removed, so an
+ * ordinary file name with a space before a colon ("Philatex Q1: 2025.pdf")
+ * has no scheme and stays a relative path.
+ *
+ * @param {string} url - Candidate URL (typically from JSON data)
+ * @param {string} fallback - Value to return when the URL is rejected
+ * @returns {string} The URL (outer whitespace/controls trimmed) or the fallback
+ */
+export function safeUrl(url, fallback = '#') {
+  if (typeof url !== 'string') {
+    return fallback;
+  }
+  // Ends only: C0 controls and space (what the URL parser strips) plus the
+  // Unicode whitespace String#trim removes (NBSP, BOM, line separators...),
+  // which hand-edited JSON picks up and which would otherwise survive into
+  // the href.
+  const trimmed = url.replace(/^[\u0000-\u0020\s]+|[\u0000-\u0020\s]+$/g, '');
+  if (trimmed === '') {
+    return fallback;
+  }
+  const normalised = trimmed.replace(/[\t\n\r]/g, '');
+  const scheme = /^([a-zA-Z][a-zA-Z0-9+.-]*):/.exec(normalised);
+  if (!scheme) {
+    return trimmed;
+  }
+  return SAFE_URL_SCHEMES.includes(`${scheme[1].toLowerCase()}:`) ? trimmed : fallback;
+}
+
+/**
+ * Like safeUrl, but returns '' when there is no usable URL (missing, empty,
+ * or rejected), so callers can omit a link entirely instead of rendering a
+ * dead href="#".
+ *
+ * @param {...*} candidates - Values to try in order (e.g. filePath, pdfUrl)
+ * @returns {string} The first acceptable URL, or ''
+ */
+export function firstSafeUrl(...candidates) {
+  for (const candidate of candidates) {
+    const url = safeUrl(candidate, '');
+    if (url) {
+      return url;
+    }
+  }
+  return '';
 }
 
 /**

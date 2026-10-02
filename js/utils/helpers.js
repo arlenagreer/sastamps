@@ -4,6 +4,7 @@
  */
 
 import { createLogger } from './logger.js';
+import { parseLocalDate } from './dates.js';
 
 const logger = createLogger('Helpers');
 
@@ -14,7 +15,9 @@ const logger = createLogger('Helpers');
  * @returns {string} Formatted date string
  */
 export function formatDate(date, options = {}) {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  // 'YYYY-MM-DD' is a local calendar day (new Date() would read it as UTC and
+  // show the previous day in US time zones); full ISO datetimes parse as before.
+  const dateObj = typeof date === 'string' ? parseLocalDate(date) : date;
 
   if (!(dateObj instanceof Date) || isNaN(dateObj)) {
     return 'Invalid Date';

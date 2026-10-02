@@ -6,6 +6,8 @@
 // Core utilities (will be tree-shaken if not used)
 import { debounce } from '../utils/performance.js';
 import { safeQuerySelector, escapeHTML } from '../utils/safe-dom.js';
+import { normaliseNewsletter } from '../modules/newsletter-normalise.js';
+import { fetchJSON } from '../utils/fetch-json.js';
 import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('HomePage');
@@ -77,7 +79,7 @@ function initializeHomeFunctionality() {
 function initializeCountdownTimer(element) {
   const updateCountdown = debounce(async () => {
     try {
-      const { default: meetingsData } = await import('../../data/meetings/meetings.json');
+      const meetingsData = await fetchJSON('data/meetings/meetings.json');
       const nextMeeting = findNextMeeting(meetingsData.meetings);
 
       if (nextMeeting) {
@@ -138,14 +140,14 @@ function formatCountdown(time) {
 async function loadQuickStats(container) {
   try {
     const [meetingsData, newslettersData] = await Promise.all([
-      import('../../data/meetings/meetings.json'),
-      import('../../data/newsletters/newsletters.json')
+      fetchJSON('data/meetings/meetings.json'),
+      fetchJSON('data/newsletters/newsletters.json')
     ]);
 
     const stats = {
-      totalMeetings: meetingsData.default.meetings.length,
-      totalNewsletters: newslettersData.default.newsletters.length,
-      nextMeeting: findNextMeeting(meetingsData.default.meetings)
+      totalMeetings: meetingsData.meetings.length,
+      totalNewsletters: newslettersData.newsletters.length,
+      nextMeeting: findNextMeeting(meetingsData.meetings)
     };
 
     container.innerHTML = `
@@ -172,18 +174,22 @@ async function loadQuickStats(container) {
 
 async function loadRecentNewsletters(container) {
   try {
-    const { default: newslettersData } = await import('../../data/newsletters/newsletters.json');
+    const newslettersData = await fetchJSON('data/newsletters/newsletters.json');
     const recentNewsletters = newslettersData.newsletters
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .map(normaliseNewsletter)
+      .sort((a, b) => b.dateValue - a.dateValue)
       .slice(0, 3);
 
-    const html = recentNewsletters.map(newsletter => `
+    const html = recentNewsletters.map(newsletter => {
+      const title = escapeHTML(newsletter.title);
+      return `
             <div class="newsletter-preview-item">
-                <h4><a href="${escapeHTML(newsletter.pdfUrl)}" target="_blank" rel="noopener">${escapeHTML(newsletter.title)}</a></h4>
-                <p class="newsletter-date">${escapeHTML(new Date(newsletter.date).toLocaleDateString())}</p>
+                <h4>${newsletter.pdfUrl ? `<a href="${escapeHTML(newsletter.pdfUrl)}" target="_blank" rel="noopener">${title}</a>` : title}</h4>
+                <p class="newsletter-date">${escapeHTML(newsletter.dateValue.toLocaleDateString())}</p>
                 <p class="newsletter-summary">${escapeHTML(newsletter.summary || 'Latest newsletter from SAPA')}</p>
             </div>
-        `).join('');
+        `;
+    }).join('');
 
     container.innerHTML = `
             <h3>Recent Newsletters</h3>

@@ -5,7 +5,10 @@
  * Implements efficient lazy loading for components using Intersection Observer
  */
 
-import { LAZY_LOADING, TIMING, CSS_CLASSES } from './constants/index.js';
+import { LAZY_LOADING, TIMING } from './constants/index.js';
+import { createLogger } from './utils/logger.js';
+
+const logger = createLogger('LazyLoader');
 
 class LazyLoader {
   constructor(options = {}) {
@@ -34,7 +37,7 @@ class LazyLoader {
       );
     } else {
       // Fallback for older browsers - load everything immediately
-      console.warn('IntersectionObserver not supported, loading all components immediately');
+      logger.warn('IntersectionObserver not supported, loading all components immediately');
     }
   }
 
@@ -99,7 +102,7 @@ class LazyLoader {
      * @param {Object} config - Component configuration
      */
   async loadComponent(element, config) {
-    if (config.loading || config.loaded) return;
+    if (config.loading || config.loaded) { return; }
 
     config.loading = true;
     element.classList.add(this.options.loadingClass);
@@ -369,10 +372,10 @@ class CalendarLazyLoader extends LazyLoader {
 
   /**
      * Get calendar error content
-     * @param {Error} error - The error that occurred
+     * @param {Error} _error - The error that occurred (unused; kept for API symmetry)
      * @returns {string} Error HTML
      */
-  static getCalendarError(error) {
+  static getCalendarError(_error) {
     return `
             <div>
                 <h4 style="margin-bottom: 0.5rem;">

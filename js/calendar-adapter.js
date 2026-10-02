@@ -5,6 +5,8 @@
 
 import { escapeHTML } from './utils/safe-dom.js';
 import { createLogger } from './utils/logger.js';
+import { fetchJSON } from './utils/fetch-json.js';
+import { parseLocalDate, isUpcomingDate } from './utils/dates.js';
 
 const logger = createLogger('CalendarAdapter');
 
@@ -44,11 +46,9 @@ export class CalendarAdapter {
    */
   async loadMeetings() {
     try {
-      const response = await fetch('data/meetings/meetings.json');
-      if (!response.ok) {
-        throw new Error(`Failed to load meetings: ${response.status}`);
-      }
-      this.meetingsData = await response.json();
+      // Same URL string as the meetings page list, so fetchJSON's memo
+      // serves both from one request.
+      this.meetingsData = await fetchJSON('data/meetings/meetings.json');
       return this.meetingsData;
     } catch (error) {
       logger.error('Error loading meetings:', error);
@@ -85,7 +85,7 @@ export class CalendarAdapter {
      * @returns {Object} Calendar event object
      */
   convertMeetingToEvent(meeting) {
-    const eventDate = new Date(meeting.date + 'T00:00:00');
+    const eventDate = parseLocalDate(meeting.date);
     const styleConfig = this.eventTypeStyles[meeting.type] || this.eventTypeStyles['regular'];
 
     return {
@@ -115,7 +115,11 @@ export class CalendarAdapter {
      * @returns {string} Formatted date string (YYYY-MM-DD)
      */
   formatDateForCalendar(date) {
-    return date.toISOString().split('T')[0];
+    // Local calendar day. toISOString() converts to UTC, which moves a
+    // local-midnight date back a day for viewers east of UTC.
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${date.getFullYear()}-${month}-${day}`;
   }
 
   /**
@@ -185,7 +189,7 @@ export class CalendarAdapter {
                 ${cancelledNote}
                 <h4>${escapeHTML(meeting.title)}</h4>
                 <div class="meeting-details">
-                    <strong>Date:</strong> ${escapeHTML(this.formatDisplayDate(new Date(meeting.date + 'T00:00:00')))}<br>
+                    <strong>Date:</strong> ${escapeHTML(this.formatDisplayDate(parseLocalDate(meeting.date)))}<br>
                     ${timeInfo}
                     <br><strong>Location:</strong><br>
                     ${location}
@@ -222,7 +226,7 @@ export class CalendarAdapter {
      */
   getEventsForMonth(events, year, month) {
     return events.filter(event => {
-      const eventDate = new Date(event.date);
+      const eventDate = parseLocalDate(event.date);
       return eventDate.getFullYear() === year && eventDate.getMonth() === month;
     });
   }
@@ -236,11 +240,8 @@ export class CalendarAdapter {
   getUpcomingEvents(events, limit = 5) {
     const now = new Date();
     const upcoming = events
-      .filter(event => {
-        const eventDate = new Date(event.date);
-        return eventDate >= now && !event.cancelled;
-      })
-      .sort((a, b) => new Date(a.date) - new Date(b.date))
+      .filter(event => isUpcomingDate(event.date, now) && !event.cancelled)
+      .sort((a, b) => parseLocalDate(a.date) - parseLocalDate(b.date))
       .slice(0, limit);
 
     return upcoming;
@@ -286,7 +287,7 @@ export class CalendarAdapter {
       stats.byType[event.type] = (stats.byType[event.type] || 0) + 1;
 
       // Count upcoming
-      if (new Date(event.date) >= now && !event.cancelled) {
+      if (isUpcomingDate(event.date, now) && !event.cancelled) {
         stats.upcoming++;
       }
 

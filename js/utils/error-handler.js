@@ -3,7 +3,7 @@
  * Provides consistent error handling patterns across the application
  */
 
-import { ERROR_MESSAGES, ANALYTICS_EVENTS as _ANALYTICS_EVENTS } from '../constants/index.js';
+import { ERROR_MESSAGES } from '../constants/index.js';
 import { createLogger } from './logger.js';
 
 const logger = createLogger('ErrorHandler');
@@ -44,7 +44,6 @@ export function withErrorHandling(fn, options = {}) {
     onError = null,
     fallbackValue = null,
     logError = true,
-    trackError = true,
     errorMessage = ERROR_MESSAGES.GENERIC
   } = options;
 
@@ -54,14 +53,6 @@ export function withErrorHandling(fn, options = {}) {
     } catch (error) {
       if (logError) {
         logger.error(`Error in ${fn.name || 'anonymous function'}:`, error);
-      }
-
-      if (trackError && typeof gtag === 'function') {
-        gtag('event', 'exception', {
-          description: error.message,
-          fatal: false,
-          error_type: error.type || ErrorTypes.UNKNOWN
-        });
       }
 
       if (onError) {

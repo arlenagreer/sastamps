@@ -3,14 +3,16 @@
  * Handles loading and rendering newsletter data from JSON
  */
 
-import { escapeHTML } from '../utils/safe-dom.js';
+import { escapeHTML, safeUrl } from '../utils/safe-dom.js';
 import { createLogger } from '../utils/logger.js';
+import { fetchJSON } from '../utils/fetch-json.js';
+import { parseLocalDate } from '../utils/dates.js';
 
 const logger = createLogger('NewsletterLoader');
 
 class NewsletterLoader {
   constructor(options = {}) {
-    this.dataUrl = options.dataUrl || './data/newsletters/newsletters.json';
+    this.dataUrl = options.dataUrl || 'data/newsletters/newsletters.json';
     this.newsletters = [];
     this.metadata = {};
     this.isLoaded = false;
@@ -35,12 +37,7 @@ class NewsletterLoader {
     try {
       // Loading newsletter data
 
-      const response = await fetch(this.dataUrl);
-      if (!response.ok) {
-        throw new Error(`Failed to load newsletter data: ${response.statusText}`);
-      }
-
-      const data = await response.json();
+      const data = await fetchJSON(this.dataUrl);
 
       this.newsletters = data.newsletters || [];
       this.metadata = data.metadata || {};
@@ -229,20 +226,20 @@ class NewsletterLoader {
                         <label for="year-filter">Year:</label>
                         <select id="year-filter" class="filter-select">
                             <option value="">All Years</option>
-                            ${years.map(year => `<option value="${year}">${year}</option>`).join('')}
+                            ${years.map(year => `<option value="${escapeHTML(String(year))}">${escapeHTML(String(year))}</option>`).join('')}
                         </select>
                     </div>
                     <div class="filter-group">
                         <label for="quarter-filter">Quarter:</label>
                         <select id="quarter-filter" class="filter-select">
                             <option value="">All Quarters</option>
-                            ${quarters.map(quarter => `<option value="${quarter}">${quarter}</option>`).join('')}
+                            ${quarters.map(quarter => `<option value="${escapeHTML(String(quarter))}">${escapeHTML(String(quarter))}</option>`).join('')}
                         </select>
                     </div>
                     <div class="filter-group">
                         <label for="tags-filter">Tags:</label>
                         <select id="tags-filter" class="filter-select" multiple>
-                            ${tags.map(tag => `<option value="${tag}">${this.formatLabel(tag)}</option>`).join('')}
+                            ${tags.map(tag => `<option value="${escapeHTML(tag)}">${escapeHTML(this.formatLabel(tag))}</option>`).join('')}
                         </select>
                     </div>
                 </div>
@@ -265,7 +262,7 @@ class NewsletterLoader {
 
     return years.map(year => `
             <div class="archive-year-section">
-                <h2 class="archive-year-header">${year} Newsletter Archive</h2>
+                <h2 class="archive-year-header">${escapeHTML(String(year))} Newsletter Archive</h2>
                 <div class="archive-grid">
                     ${groupedNewsletters[year].map(newsletter => this.renderNewsletterCard(newsletter)).join('')}
                 </div>
@@ -294,7 +291,7 @@ class NewsletterLoader {
      * Render individual newsletter card
      */
   renderNewsletterCard(newsletter) {
-    const publishDate = new Date(newsletter.publishDate).toLocaleDateString('en-US', {
+    const publishDate = parseLocalDate(newsletter.publishDate).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -303,6 +300,7 @@ class NewsletterLoader {
     const featuredArticles = newsletter.featuredArticles || [];
     const highlights = newsletter.highlights || [];
     const tags = newsletter.tags || [];
+    const pdfUrl = safeUrl(newsletter.filePath, '');
 
     return `
             <div class="archive-item" data-year="${escapeHTML(String(newsletter.year))}" data-quarter="${escapeHTML(newsletter.quarter)}">
@@ -350,9 +348,9 @@ class NewsletterLoader {
                         ${newsletter.fileSize ? `<span class="meta-item"><i class="fas fa-download"></i> ${escapeHTML(newsletter.fileSize)}</span>` : ''}
                     </div>
 
-                    <a href="${escapeHTML(newsletter.filePath)}" class="btn btn-primary" target="_blank" rel="noopener">
-                        <i class="fas fa-file-pdf"></i> Download PDF
-                    </a>
+                    ${pdfUrl ? `<a href="${escapeHTML(pdfUrl)}" class="btn btn-primary" target="_blank" rel="noopener" aria-label="Download PDF: ${escapeHTML(newsletter.title || `${newsletter.quarter} Quarter ${newsletter.year} Philatex`)} (opens in a new tab)">
+                        <i class="fas fa-file-pdf" aria-hidden="true"></i> Download PDF
+                    </a>` : ''}
                 </div>
             </div>
         `;
@@ -425,7 +423,7 @@ class NewsletterLoader {
     const years = Object.keys(grouped).sort((a, b) => b - a);
     const html = years.map(year => `
             <div class="archive-year-section">
-                <h2 class="archive-year-header">${year} Newsletter Archive</h2>
+                <h2 class="archive-year-header">${escapeHTML(String(year))} Newsletter Archive</h2>
                 <div class="archive-grid">
                     ${grouped[year].map(newsletter => this.renderNewsletterCard(newsletter)).join('')}
                 </div>

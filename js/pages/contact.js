@@ -12,7 +12,6 @@ import {
   ERROR_MESSAGES,
   SUCCESS_MESSAGES,
   API_ENDPOINTS,
-  ANALYTICS_EVENTS,
   CSS_CLASSES
 } from '../constants/index.js';
 
@@ -24,12 +23,6 @@ function initializeContactPage() {
   const contactForm = safeQuerySelector('#contact-form');
   if (contactForm) {
     initializeContactForm(contactForm);
-  }
-
-  // Meeting location map
-  const mapContainer = safeQuerySelector('#meeting-location-map');
-  if (mapContainer) {
-    initializeLocationMap(mapContainer);
   }
 
   // Contact information
@@ -228,13 +221,6 @@ async function handleFormSubmission(event) {
       // Clear validation states
       fields.forEach(field => clearFieldValidation(field));
 
-      // Track successful submission
-      if (typeof gtag === 'function') {
-        gtag('event', ANALYTICS_EVENTS.CONTACT_FORM_SUBMIT, {
-          success: true
-        });
-      }
-
     } else {
       throw new Error(result.message || ERROR_MESSAGES.SUBMISSION_FAILED);
     }
@@ -242,14 +228,6 @@ async function handleFormSubmission(event) {
   } catch (error) {
     logger.error('Form submission failed:', error);
     showFormMessage(ERROR_MESSAGES.SUBMISSION_FAILED, CSS_CLASSES.ERROR);
-
-    // Track failed submission
-    if (typeof gtag === 'function') {
-      gtag('event', ANALYTICS_EVENTS.CONTACT_FORM_SUBMIT, {
-        success: false,
-        error: error.message
-      });
-    }
 
   } finally {
     // Restore button state
@@ -291,76 +269,6 @@ async function getCSRFToken() {
   } catch (error) {
     logger.warn('Failed to get CSRF token:', error);
     return null;
-  }
-}
-
-function initializeLocationMap(container) {
-  // Static map implementation
-  container.innerHTML = `
-        <div class="map-container">
-            <div class="map-placeholder">
-                <h4>Meeting Location</h4>
-                <address>
-                    <strong>San Antonio Public Library</strong><br>
-                    Central Branch - Conference Room B<br>
-                    600 Soledad Street<br>
-                    San Antonio, TX 78205
-                </address>
-                <div class="map-actions">
-                    <a href="https://www.google.com/maps/search/?api=1&query=San+Antonio+Public+Library+Central+Branch" 
-                       target="_blank" class="btn-secondary">
-                        📍 Open in Google Maps
-                    </a>
-                    <button class="btn-secondary" onclick="copyAddress()">
-                        📋 Copy Address
-                    </button>
-                </div>
-            </div>
-        </div>
-    `;
-
-  // Add copy address functionality
-  window.copyAddress = function() {
-    const address = 'San Antonio Public Library, Central Branch - Conference Room B, 600 Soledad Street, San Antonio, TX 78205';
-
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(address).then(() => {
-        showCopyConfirmation();
-      }).catch(err => {
-        logger.error('Failed to copy address:', err);
-        fallbackCopyAddress(address);
-      });
-    } else {
-      fallbackCopyAddress(address);
-    }
-  };
-
-  function showCopyConfirmation() {
-    const button = container.querySelector('button[onclick="copyAddress()"]');
-    const originalText = button.textContent;
-    button.textContent = '✅ Copied!';
-    setTimeout(() => {
-      button.textContent = originalText;
-    }, 2000);
-  }
-
-  function fallbackCopyAddress(text) {
-    const textArea = document.createElement('textarea');
-    textArea.value = text;
-    textArea.style.position = 'fixed';
-    textArea.style.opacity = '0';
-    document.body.appendChild(textArea);
-    textArea.select();
-
-    try {
-      document.execCommand('copy');
-      showCopyConfirmation();
-    } catch (err) {
-      logger.error('Fallback copy failed:', err);
-      alert('Please manually copy the address from above.');
-    }
-
-    document.body.removeChild(textArea);
   }
 }
 

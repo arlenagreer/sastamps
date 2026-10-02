@@ -8,9 +8,7 @@ import {
   REMINDER,
   TIMING,
   STORAGE_KEYS,
-  CSS_CLASSES,
-  ERROR_MESSAGES,
-  SUCCESS_MESSAGES
+  CSS_CLASSES
 } from './constants/index.js';
 import { createLogger } from './utils/logger.js';
 
@@ -104,7 +102,7 @@ export class ReminderSystem {
      * @param {Array} meetings - Array of meeting objects
      */
   setReminders(meetings) {
-    if (!this.settings.enabled) return;
+    if (!this.settings.enabled) { return; }
 
     // Clear existing timers
     this.clearAllReminders();
@@ -113,9 +111,9 @@ export class ReminderSystem {
     const reminders = [];
 
     meetings.forEach(meeting => {
-      if (meeting.cancelled) return;
+      if (meeting.cancelled) { return; }
 
-      const meetingDate = new Date(meeting.date + 'T00:00:00');
+      const meetingDate = new Date(`${meeting.date}T00:00:00`);
 
       // Parse meeting time
       if (meeting.time && meeting.time.meetingStart) {
@@ -123,14 +121,14 @@ export class ReminderSystem {
         const [hours, minutes] = time.split(':').map(Number);
 
         let hour24 = hours;
-        if (period === 'PM' && hours !== 12) hour24 += 12;
-        if (period === 'AM' && hours === 12) hour24 = 0;
+        if (period === 'PM' && hours !== 12) { hour24 += 12; }
+        if (period === 'AM' && hours === 12) { hour24 = 0; }
 
         meetingDate.setHours(hour24, minutes, 0, 0);
       }
 
       // Skip past meetings
-      if (meetingDate <= now) return;
+      if (meetingDate <= now) { return; }
 
       this.settings.reminderTimes.forEach(reminderTime => {
         const reminderDate = new Date(meetingDate.getTime() - (reminderTime.minutes * 60000));
@@ -141,8 +139,8 @@ export class ReminderSystem {
             id: reminderId,
             meetingId: meeting.id,
             meetingTitle: meeting.title,
-            meetingDate: meetingDate,
-            reminderDate: reminderDate,
+            meetingDate,
+            reminderDate,
             reminderLabel: reminderTime.label,
             reminderMinutes: reminderTime.minutes
           });
@@ -184,7 +182,7 @@ export class ReminderSystem {
      * Schedule reminder timers
      */
   scheduleReminders() {
-    if (!this.settings.enabled) return;
+    if (!this.settings.enabled) { return; }
 
     this.clearAllReminders();
     const reminders = this.loadReminders();
@@ -234,7 +232,7 @@ export class ReminderSystem {
      * Check for due reminders (backup check)
      */
   checkDueReminders() {
-    if (!this.settings.enabled) return;
+    if (!this.settings.enabled) { return; }
 
     const reminders = this.loadReminders();
     const now = new Date();
@@ -294,7 +292,7 @@ export class ReminderSystem {
      * @param {string} formattedTime - Formatted time string
      */
   showBrowserNotification(reminder, formattedDate, formattedTime) {
-    const notification = new Notification(`SAPA Meeting Reminder`, {
+    const notification = new Notification('SAPA Meeting Reminder', {
       body: `${reminder.meetingTitle}\n${formattedDate} at ${formattedTime}`,
       icon: '/favicon.ico',
       badge: '/favicon.ico',
@@ -318,7 +316,7 @@ export class ReminderSystem {
   showInPageNotification(options) {
     // Remove existing notification
     const existing = document.getElementById('reminder-notification');
-    if (existing) existing.remove();
+    if (existing) { existing.remove(); }
 
     // Create notification element
     const notification = document.createElement('div');
@@ -398,7 +396,7 @@ export class ReminderSystem {
     }
 
     const container = document.getElementById('reminder-settings-container');
-    if (!container) return;
+    if (!container) { return; }
 
     container.innerHTML = `
             <div class="reminder-settings">
@@ -424,7 +422,7 @@ export class ReminderSystem {
                             <strong>Reminder Times:</strong>
                             ${this.settings.reminderTimes.map(time => `
                                 <div class="reminder-time-item">
-                                    <span>${time.label}</span>
+                                    <span>${escapeHTML(String(time.label ?? ''))}</span>
                                 </div>
                             `).join('')}
                         </div>

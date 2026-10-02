@@ -5,6 +5,7 @@
 
 import { escapeHTML } from '../utils/safe-dom.js';
 import { createLogger } from '../utils/logger.js';
+import { fetchJSON } from '../utils/fetch-json.js';
 
 const logger = createLogger('MeetingLoader');
 
@@ -98,7 +99,7 @@ export function selectScheduleQuarter(meetings, now = new Date()) {
 
 class MeetingLoader {
   constructor(options = {}) {
-    this.dataUrl = options.dataUrl || './data/meetings/meetings.json';
+    this.dataUrl = options.dataUrl || 'data/meetings/meetings.json';
     this.meetings = [];
     this.metadata = {};
     this.isLoaded = false;
@@ -123,12 +124,7 @@ class MeetingLoader {
     try {
       // Loading meeting data
 
-      const response = await fetch(this.dataUrl);
-      if (!response.ok) {
-        throw new Error(`Failed to load meeting data: ${response.statusText}`);
-      }
-
-      const data = await response.json();
+      const data = await fetchJSON(this.dataUrl);
 
       this.meetings = data.meetings || [];
       this.metadata = data.metadata || {};
@@ -322,7 +318,7 @@ class MeetingLoader {
             <table class="meeting-table" style="width: 100%; border-collapse: collapse; font-family: var(--font-body); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm);">
                 <thead>
                     <tr style="background-color: var(--primary); color: white; text-align: center;">
-                        ${monthNames.map(month => `<th style="padding: 1rem; font-size: 1.1rem; background-color: var(--primary-dark); color: var(--accent); font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.3); width: 33.33%; text-align: center;">${month}</th>`).join('')}
+                        ${monthNames.map(month => `<th style="padding: 1rem; font-size: 1.1rem; background-color: var(--primary-dark); color: var(--accent); font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.3); width: 33.33%; text-align: center;">${escapeHTML(month)}</th>`).join('')}
                     </tr>
                 </thead>
                 <tbody>
@@ -438,7 +434,7 @@ class MeetingLoader {
         const monthData = groupedMeetings[monthKey];
         html += `
                     <div class="month-section">
-                        <h3 class="month-header">${monthData.name}</h3>
+                        <h3 class="month-header">${escapeHTML(monthData.name)}</h3>
                         <div class="month-meetings">
                             ${monthData.meetings.map(meeting => this.renderMeetingCard(meeting, showDetails)).join('')}
                         </div>
