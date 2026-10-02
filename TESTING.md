@@ -132,6 +132,51 @@ npm run audit:security
 ```
 Checks npm dependencies for known vulnerabilities.
 
+## Live Site Smoke Check
+
+```bash
+npm run smoke:live                                  # https://www.sastamps.org
+npm run smoke:live -- --base _site                  # a local build (after npm run build)
+npm run smoke:live -- --json reports/live-smoke.json
+```
+Every other check here tests the build. This one tests what a visitor gets
+from the deployed site, because the contact form delivered nothing for about
+15 months and the phone menu was hidden for about 9 without anyone noticing.
+`scripts/live-smoke.js` runs the key UAT journeys (`docs/uat/inventory.md`,
+J1-J8) in headless Chrome at 375x812 (touch) and 1440x900, with a
+cache-buster on every request, and checks outcomes:
+- Every sitemap page answers 200 with no page errors and no failing request to
+  the site, and has no horizontal scroll. On a phone the menu button is shown,
+  opens the menu, and a link in it navigates; on desktop every nav link shows.
+- The contact form posts to formsubmit.co and the relay answers. **No message
+  is sent** unless `--send-contact` is given, which submits one message
+  labelled "[SAPA live-smoke]" and expects the on-screen success message.
+- The next meeting (from the live `meetings.json`, by the club's Central-time
+  day) is listed and marked next; its "Add to Calendar" `.ics` downloads as
+  `text/calendar` with a matching DTSTART date; clicking that day on the
+  calendar opens its details.
+- Searches for "auction" and "2009" find results, and the first result
+  resolves (200); for a link to a spot on a page, the element exists after load.
+- The newest issue in `newsletters.json` downloads as `application/pdf` and
+  `archive.html` links it.
+- A glossary `#term-<id>` link lands with the term on screen and open; a
+  resource guide opens and renders without raw Markdown.
+- `/sw.js` is the kill switch (it unregisters and has no fetch handler).
+
+It prints PASS/FAIL/WARN lines and writes a JSON report. It exits 1 on any
+FAIL, 2 when it could not run at all (Chrome would not start), and 0
+otherwise. Warnings never fail: they say when the last posted meeting, or the
+last show in the TSDA table, is 21 days away or less, so next quarter's
+schedule needs posting.
+
+`.github/workflows/live-smoke.yml` runs it about two minutes after every
+deploy (when "CI Testing Pipeline" succeeds on a push to main), weekly on
+Monday morning, and on demand. It retries twice (60 s, then 120 s later)
+before calling a failure. A failure opens an issue labelled `live-smoke`,
+assigned to the repo owner (or comments on the open one); the next passing
+run closes it. The manual run's `send_contact` input sends one real contact
+message, with no retry.
+
 ## Configuration Files
 
 - `.htmlvalidate.json` - HTML validation rules
