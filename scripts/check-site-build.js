@@ -124,6 +124,33 @@ if (!fs.existsSync(SITE)) {
   check(!/addEventListener\(\s*['"]fetch['"]/.test(swCode) && !/\bonfetch\b/.test(swCode) && !/cache\.(put|add|addAll)\(/.test(swCode),
     '_site/sw.js must not handle fetches or write caches');
 
+  // Icons must be what they claim. favicon.ico was once a 202 KB WebP, and
+  // the manifest called it a 192 and 512 px x-icon.
+  console.log('▸ favicon.ico and the manifest icons are real files of their declared type');
+  const magic = (buf) => (buf.subarray(0, 4).equals(Buffer.from([0, 0, 1, 0])) ? 'image/x-icon'
+    : buf.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) ? 'image/png'
+      : buf.subarray(0, 4).toString() === 'RIFF' && buf.subarray(8, 12).toString() === 'WEBP' ? 'image/webp' : 'unknown');
+  const pngSize = (buf) => `${buf.readUInt32BE(16)}x${buf.readUInt32BE(20)}`;
+  const ico = existsExact(path.join(SITE, 'favicon.ico')) ? fs.readFileSync(path.join(SITE, 'favicon.ico')) : Buffer.alloc(0);
+  check(magic(ico) === 'image/x-icon', `_site/favicon.ico is ${magic(ico)}, not an ICO`);
+  check(ico.length < 50000, `_site/favicon.ico is ${ico.length} bytes; every visit downloads it`);
+  let manifest = {};
+  try {
+    manifest = JSON.parse(fs.readFileSync(path.join(SITE, 'site.webmanifest'), 'utf8'));
+  } catch {
+    check(false, '_site/site.webmanifest is not valid JSON');
+  }
+  check(Array.isArray(manifest.icons) && manifest.icons.length > 0, 'site.webmanifest lists no icons');
+  for (const icon of manifest.icons || []) {
+    const abs = path.join(SITE, icon.src.replace(/^\//, ''));
+    if (!fileExact(abs)) { check(false, `site.webmanifest icon ${icon.src} missing`); continue; }
+    const buf = fs.readFileSync(abs);
+    check(magic(buf) === icon.type, `site.webmanifest icon ${icon.src} is ${magic(buf)}, declared ${icon.type}`);
+    if (magic(buf) === 'image/png') {
+      check(pngSize(buf) === icon.sizes, `site.webmanifest icon ${icon.src} is ${pngSize(buf)}, declared ${icon.sizes}`);
+    }
+  }
+
   console.log('▸ every local reference in _site resolves');
   const missing = [];
   for (const file of walk(SITE).filter((f) => /\.html?$/.test(f))) {
