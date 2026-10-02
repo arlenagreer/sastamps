@@ -326,6 +326,18 @@ footer,
    defined in critical.css - mobile navigation core styles */
 
 @media (width <= 768px) {
+    /* Show the menu button on phones. critical.css says the same, but this
+       file loads after it and its base `.menu-toggle { display: none }` has
+       equal specificity, so without this rule the button stays hidden (it
+       did from 2026-01-03 to 2026-10-02: no header navigation on phones). */
+    .menu-toggle {
+        display: block;
+
+        /* Above the slide-in menu (z-index 60), so the same button closes it. */
+        position: relative;
+        z-index: 70;
+    }
+
     /* CSS-only menu toggle using checkbox - extension */
     .menu-toggle-checkbox:checked ~ .nav-menu {
         right: 0;

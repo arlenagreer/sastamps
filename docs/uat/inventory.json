@@ -1,0 +1,1972 @@
+{
+  "generated": "2026-10-01",
+  "source": "origin/main @ cb25e31",
+  "site": "https://www.sastamps.org",
+  "personas": {
+    "PM": "Prospective member",
+    "CM": "Current member",
+    "DL": "Dealer at the bourse",
+    "NR": "Newsletter reader",
+    "CC": "Someone contacting the club",
+    "AS": "Returning archive searcher"
+  },
+  "rows": [
+    {
+      "id": "G-01",
+      "page": "global",
+      "element": "Skip-to-content link (a.skip-link -> #main-content)",
+      "goal": "Keyboard user jumps past the navigation.",
+      "outcome_check": "First Tab from page load focuses the link; Enter moves focus into main content (next Tab lands inside <main>).",
+      "personas": [
+        "PM",
+        "CM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "every page header"
+    },
+    {
+      "id": "G-02",
+      "page": "global",
+      "element": "Site title link (header) -> index.html",
+      "goal": "Return to the home page from anywhere.",
+      "outcome_check": "Click from every page loads index.html (200).",
+      "personas": [
+        "PM",
+        "CM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "every page header"
+    },
+    {
+      "id": "G-03",
+      "page": "global",
+      "element": "Hamburger menu (CSS-only #menu-toggle-checkbox) at phone width",
+      "goal": "Open the menu on a phone and reach every page.",
+      "outcome_check": "At 375px the toggle opens/closes, all 10 links are visible and tappable without horizontal scroll; Escape/outside tap closes it (JS close only exists on about/archive/membership/404 via initMobileMenu / script.js).",
+      "personas": [
+        "PM",
+        "CM",
+        "DL",
+        "NR",
+        "CC",
+        "AS"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "index.html nav; js/pages/about.js initMobileMenu"
+    },
+    {
+      "id": "G-04",
+      "page": "global",
+      "element": "Primary nav: Home, About, Meetings, Newsletter, Archive, Membership, Resources, Glossary, Contact, Search",
+      "goal": "Move between sections.",
+      "outcome_check": "Each of the 10 links loads the right page with 200 and the current page is indicated; same set on every page (glossary.html uses its own .nav-link markup, 404.html uses absolute paths).",
+      "personas": [
+        "PM",
+        "CM",
+        "DL",
+        "NR",
+        "CC",
+        "AS"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "crawl: 10 sitemap pages all 200"
+    },
+    {
+      "id": "G-05",
+      "page": "global",
+      "element": "Footer quick links (set differs per page: index lacks Archive/Search, about says \"Newsletter Archive\")",
+      "goal": "Find a section from the footer.",
+      "outcome_check": "Every footer link resolves (200) and the set is consistent enough that no page lacks a route to Archive/Search.",
+      "personas": [
+        "PM",
+        "CM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "footer of each page"
+    },
+    {
+      "id": "G-06",
+      "page": "global",
+      "element": "Footer mailto:loz33@hotmail.com (club secretary; also on meetings, contact, glossary, archive)",
+      "goal": "Email the club directly.",
+      "outcome_check": "Clicking opens a mail draft to loz33@hotmail.com; a test email sent there gets a human reply from the club (mailbox is live and read).",
+      "personas": [
+        "PM",
+        "CC",
+        "DL"
+      ],
+      "risk": "high",
+      "status": "verify",
+      "evidence": "every page footer"
+    },
+    {
+      "id": "G-07",
+      "page": "global",
+      "element": "Footer Facebook link (facebook.com/groups/305765941949570, new tab)",
+      "goal": "Join or view the club Facebook group.",
+      "outcome_check": "Opens the SAPA group (not an error or another group) in a new tab; group is active and admits join requests.",
+      "personas": [
+        "PM",
+        "CM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "crawl: 200"
+    },
+    {
+      "id": "G-08",
+      "page": "global",
+      "element": "Google Fonts (Merriweather, Open Sans) + dist/js/font-loading.min.js (localStorage flag)",
+      "goal": "Readable, on-brand text.",
+      "outcome_check": "Text renders in the web fonts; with storage blocked and with fonts.googleapis.com blocked the page still renders readable fallback text (covered by test:font-loading).",
+      "personas": [
+        "PM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "js/font-loading.js"
+    },
+    {
+      "id": "G-09",
+      "page": "global",
+      "element": "Font Awesome 6.4.0 (cdnjs) icons that carry meaning (calendar-plus, gavel, PDF, times-circle)",
+      "goal": "Understand icon-labelled content.",
+      "outcome_check": "Icons render; with cdnjs blocked no instruction becomes meaningless (meetings.html text tells users to \"click the calendar-plus icons\").",
+      "personas": [
+        "PM",
+        "CM"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "crawl: cdnjs 200"
+    },
+    {
+      "id": "G-10",
+      "page": "global",
+      "element": "Retired service worker cleanup (retireServiceWorkers in about/archive/membership bundles + script.js; inline in glossary.html)",
+      "goal": "A returning visitor sees this quarter's content, not a cached copy.",
+      "outcome_check": "In a browser that still holds the old sapa-cache-v1 worker, visiting the HOME page alone shows current content. Note: home/meetings/newsletter/contact/resources/search bundles do not call the cleanup, so a home-only visitor may keep stale pages until they open about/archive/membership/glossary/404.",
+      "personas": [
+        "CM",
+        "NR"
+      ],
+      "risk": "medium",
+      "status": "suspect",
+      "evidence": "js/utils/service-worker.js; grep retireServiceWorkers js/pages"
+    },
+    {
+      "id": "G-11",
+      "page": "global",
+      "element": "Web app manifest (site.webmanifest) and favicons",
+      "goal": "Add the site to a phone home screen with the club icon.",
+      "outcome_check": "Add-to-Home-Screen shows the SAPA icon and name; manifest icons (favicon.ico declared 192/512 image/x-icon) load.",
+      "personas": [
+        "CM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "crawl: manifest 200"
+    },
+    {
+      "id": "G-12",
+      "page": "global",
+      "element": "Client error reporting (logger.logToRemote POSTs errors to /api/logs on https)",
+      "goal": "Operators learn when a page breaks for visitors.",
+      "outcome_check": "A forced JS error reaches someone. Today /api/logs returns 404 on GitHub Pages, so every reported error is dropped: no one learns of a broken feature (the same failure class that hid the contact form).",
+      "personas": [
+        "CC"
+      ],
+      "risk": "high",
+      "status": "finding",
+      "evidence": "js/config/index.js LOGGING_CONFIG; GET /api/logs -> 404"
+    },
+    {
+      "id": "G-13",
+      "page": "global",
+      "element": "Custom 404 page for unknown URLs",
+      "goal": "Recover from a bad or old link.",
+      "outcome_check": "Unknown URL returns HTTP 404 with the custom page (verified: /nonexistent-page, /q4_update.html -> 404, 11944 bytes); its links work (see E-rows).",
+      "personas": [
+        "PM",
+        "AS"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "probe"
+    },
+    {
+      "id": "G-14",
+      "page": "global",
+      "element": "JSON-LD structured data (index, about, resources) and canonical links",
+      "goal": "Search engines show the right club name, logo and URL.",
+      "outcome_check": "Rich-results test parses without error; logo URL (dist/images/favicon.png) returns 200; canonicals point at www.sastamps.org.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "index.html JSON-LD"
+    },
+    {
+      "id": "G-15",
+      "page": "global",
+      "element": "sitemap.xml (10 URLs) and robots.txt",
+      "goal": "Search engines find every public page.",
+      "outcome_check": "sitemap lists all 10 site pages (404/offline/showcase deliberately absent) and every entry returns 200.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "crawl: sitemap 10 URLs, all 200"
+    },
+    {
+      "id": "H-01",
+      "page": "index.html",
+      "element": "Hero \"SAPA PHILATEX - Fourth Quarter 2026\" Download PDF (public/SAPA-PHILATEX-Fourth-Quarter-2026.pdf, new tab)",
+      "goal": "Read the newest newsletter.",
+      "outcome_check": "Opens the Q4 2026 issue (masthead says Fourth Quarter 2026, Oct 1 2026) in a new tab on desktop and phone.",
+      "personas": [
+        "NR",
+        "CM"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "crawl: PDF 200"
+    },
+    {
+      "id": "H-02",
+      "page": "index.html",
+      "element": "\"Learn More About SAPA\" button -> about.html",
+      "goal": "Learn about the club.",
+      "outcome_check": "Loads about.html.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "index.html"
+    },
+    {
+      "id": "H-03",
+      "page": "index.html",
+      "element": "Static \"Upcoming Meetings\" Q4 2026 table (13 cells, hand-written HTML)",
+      "goal": "See what happens on which Friday this quarter.",
+      "outcome_check": "Every cell (date, type, program, NO MEETING holidays, Dec 18 party at 6:00 PM) matches data/meetings/meetings.json and the Q4 PDF calendar; every date is a Friday. The table is not generated from data, so it can drift silently.",
+      "personas": [
+        "PM",
+        "CM",
+        "DL"
+      ],
+      "risk": "high",
+      "status": "verify",
+      "evidence": "index.html #meeting-schedule"
+    },
+    {
+      "id": "H-04",
+      "page": "index.html",
+      "element": "Times line: Doors 6:30, BOG 7:15, Meetings 7:30",
+      "goal": "Know when to arrive.",
+      "outcome_check": "Matches meetings.json time fields and the .ics events (the Q4 .ics DTSTART is 18:30, i.e. doors-open, not the 7:30 start).",
+      "personas": [
+        "PM",
+        "DL"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "index.html; public/sapa-q4-2026-meetings.ics"
+    },
+    {
+      "id": "H-05",
+      "page": "index.html",
+      "element": "\"Download Complete Q4 2026 Schedule\" (public/sapa-q4-2026-meetings.ics, download attr)",
+      "goal": "Put the whole quarter in my calendar.",
+      "outcome_check": "Imports into Apple Calendar (macOS + iOS), Google Calendar and Outlook as 13 events with the right local date/time per meetings.json; holiday \"no meeting\" entries are clearly labelled; times are floating (no TZID) so check a device set to another time zone.",
+      "personas": [
+        "PM",
+        "CM",
+        "DL"
+      ],
+      "risk": "high",
+      "status": "verify",
+      "evidence": "served as text/calendar 200; 13 VEVENTs"
+    },
+    {
+      "id": "H-06",
+      "page": "index.html",
+      "element": "\"View Individual Meeting Downloads\" button -> meetings.html",
+      "goal": "Add just one meeting to my calendar.",
+      "outcome_check": "On meetings.html the visitor finds a per-meeting calendar download. FAILS by code: no meetings.json record has calendarLink, so meetings.js never renders \"Add to Calendar\"; the 89 data/calendar/*.ics files are deployed but linked from nowhere.",
+      "personas": [
+        "PM",
+        "CM",
+        "DL"
+      ],
+      "risk": "high",
+      "status": "finding",
+      "evidence": "js/pages/meetings.js:209; meetings.json calendarLink count = 0"
+    },
+    {
+      "id": "H-07",
+      "page": "index.html",
+      "element": "\"Latest Issue Highlights\" static list",
+      "goal": "Decide whether to read the issue.",
+      "outcome_check": "Every bullet appears in the Q4 2026 PDF (names, dates, $20 Blue-Chip minimum).",
+      "personas": [
+        "NR"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "index.html newsletter section"
+    },
+    {
+      "id": "H-08",
+      "page": "index.html",
+      "element": "\"Read Latest Issue\" button -> Q4 2026 PDF",
+      "goal": "Read the newest newsletter.",
+      "outcome_check": "Opens the Q4 2026 PDF.",
+      "personas": [
+        "NR"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "crawl: 200"
+    },
+    {
+      "id": "H-09",
+      "page": "index.html",
+      "element": "\"Subscribe Today\" card: \"Join SAPA\" -> membership.html",
+      "goal": "Get the newsletter by joining.",
+      "outcome_check": "Loads membership.html.",
+      "personas": [
+        "NR",
+        "PM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "index.html"
+    },
+    {
+      "id": "H-10",
+      "page": "index.html",
+      "element": "\"Subscribe Today\" card: \"Learn More\" -> newsletter.html#subscribe",
+      "goal": "Learn how to subscribe to PHILATEX.",
+      "outcome_check": "Lands on subscription information. FAILS: newsletter.html has no #subscribe target and no subscription mechanism or instructions exist anywhere on the site.",
+      "personas": [
+        "NR",
+        "PM"
+      ],
+      "risk": "medium",
+      "status": "finding",
+      "evidence": "grep id=\"subscribe\" *.html = none"
+    },
+    {
+      "id": "H-11",
+      "page": "index.html",
+      "element": "Newsletter editor mailto:jsdurham4@gmail.com",
+      "goal": "Contact the newsletter editor.",
+      "outcome_check": "Opens a draft to the editor; a test message gets a reply (mailbox is live; Jim Durham is still editor).",
+      "personas": [
+        "NR",
+        "CC"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "index.html; newsletter.html; archive.html"
+    },
+    {
+      "id": "H-12",
+      "page": "index.html",
+      "element": "\"Club News & Announcements\" cards (Oct 9 program, Blue-Chip auction, ...)",
+      "goal": "Know what is coming up.",
+      "outcome_check": "Dates, times and rules match meetings.json and the PDF; nothing in the past is presented as upcoming.",
+      "personas": [
+        "CM",
+        "PM",
+        "DL"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "index.html announcements section"
+    },
+    {
+      "id": "H-13",
+      "page": "index.html",
+      "element": "CTA cards: \"Join SAPA Today\", \"Meeting Schedule\" (#meeting-schedule), \"Get in Touch\", \"Read PHILATEX\"",
+      "goal": "Take the next step.",
+      "outcome_check": "Each loads the right page; \"Meeting Schedule\" scrolls to the schedule section.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "index.html"
+    },
+    {
+      "id": "A-01",
+      "page": "about.html",
+      "element": "History timeline and mission text",
+      "goal": "Learn the club's history.",
+      "outcome_check": "Facts are consistent across the site. Today about.html says PHILATEX was renamed in 1975 while newsletter.html says it has been published since 1954.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "low",
+      "status": "finding",
+      "evidence": "about.html vs newsletter.html"
+    },
+    {
+      "id": "A-02",
+      "page": "about.html",
+      "element": "\"Membership Information\" and \"Contact Us\" buttons",
+      "goal": "Move on to join or ask.",
+      "outcome_check": "Both load their pages.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "about.html"
+    },
+    {
+      "id": "M-01",
+      "page": "meetings.html",
+      "element": "Location & Times block (address, Building 1, doors/BOG/start)",
+      "goal": "Know where and when to go.",
+      "outcome_check": "Address, building and times match meetings.json location and the map pin; a first-time visitor can find Building 1.",
+      "personas": [
+        "PM",
+        "DL"
+      ],
+      "risk": "high",
+      "status": "verify",
+      "evidence": "meetings.html static"
+    },
+    {
+      "id": "M-02",
+      "page": "meetings.html",
+      "element": "\"Meeting Types\" block (1st Friday BOG, 2nd Friday Auction, other Fridays Bourse/Programs)",
+      "goal": "Predict what a given Friday holds.",
+      "outcome_check": "Pattern agrees with the current quarter. Q4 2026 breaks it (Oct 9, the 2nd Friday, is a stamp program; the auction is Oct 16), so the page must not mislead.",
+      "personas": [
+        "PM",
+        "CM",
+        "DL"
+      ],
+      "risk": "medium",
+      "status": "suspect",
+      "evidence": "meetings.html vs meetings.json"
+    },
+    {
+      "id": "M-03",
+      "page": "meetings.html",
+      "element": "Meeting schedule list (#meeting-schedule-container, JS from data/meetings/meetings.json, current quarter)",
+      "goal": "See this quarter's meetings in detail.",
+      "outcome_check": "Shows the 13 Q4 2026 meetings with correct weekday, date, time, location and description; rolls to the next quarter only once its data exists; empty-quarter message is correct.",
+      "personas": [
+        "PM",
+        "CM",
+        "DL"
+      ],
+      "risk": "high",
+      "status": "verify",
+      "evidence": "js/pages/meetings.js loadMeetingsList"
+    },
+    {
+      "id": "M-04",
+      "page": "meetings.html",
+      "element": "Status line #meeting-schedule-status (role=status)",
+      "goal": "Screen-reader user hears how many meetings loaded.",
+      "outcome_check": "Announces \"13 meetings for Q4 2026\" once.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "meetings.js announceStatus"
+    },
+    {
+      "id": "M-05",
+      "page": "meetings.html",
+      "element": "Per-meeting Agenda <details> (when agenda data exists)",
+      "goal": "See the agenda.",
+      "outcome_check": "Expands/collapses with mouse, keyboard and touch.",
+      "personas": [
+        "CM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "meetings.js"
+    },
+    {
+      "id": "M-06",
+      "page": "meetings.html",
+      "element": "RSVP button (.btn-rsvp)",
+      "goal": "Tell the club I am coming.",
+      "outcome_check": "Someone at the club learns of the RSVP. KNOWN: localStorage only. Also: un-RSVP then reload shows \"RSVP Confirmed\" again (handleRSVP stores false, initializeRSVPSystem treats every key as confirmed), and with storage blocked initializeRSVPSystem throws (unguarded localStorage).",
+      "personas": [
+        "PM",
+        "CM"
+      ],
+      "risk": "high",
+      "status": "known",
+      "evidence": "meetings.js:333-424"
+    },
+    {
+      "id": "M-07",
+      "page": "meetings.html",
+      "element": "Set Reminder button (.btn-reminder)",
+      "goal": "Get reminded before the meeting.",
+      "outcome_check": "A reminder actually reaches me. KNOWN as localStorage-only; worse by code: the handler calls reminderSystem.setReminder(), which does not exist (only setReminders), so the click throws and the button never even changes (also in the live bundle).",
+      "personas": [
+        "CM",
+        "PM"
+      ],
+      "risk": "high",
+      "status": "known",
+      "evidence": "meetings.js:370; js/reminder-system.js; live meetings.min.js"
+    },
+    {
+      "id": "M-08",
+      "page": "meetings.html",
+      "element": "Per-meeting \"Add to Calendar\" link (.btn-calendar)",
+      "goal": "Add one meeting to my calendar.",
+      "outcome_check": "Never rendered: meetings.json has no calendarLink on any of 79 records.",
+      "personas": [
+        "PM",
+        "CM",
+        "DL"
+      ],
+      "risk": "high",
+      "status": "finding",
+      "evidence": "meetings.js:209"
+    },
+    {
+      "id": "M-09",
+      "page": "meetings.html",
+      "element": "Calendar (vanilla-calendar-pro v3, #calendar-container): month navigation",
+      "goal": "Browse months to find meeting days.",
+      "outcome_check": "Prev/next arrows reach Oct-Dec 2026; range is 2024-01-01 to end of next year; works by touch at 375px.",
+      "personas": [
+        "PM",
+        "CM"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "meetings.js initializeMeetingsCalendar"
+    },
+    {
+      "id": "M-10",
+      "page": "meetings.html",
+      "element": "Calendar: which days have meetings",
+      "goal": "See at a glance which Fridays have meetings.",
+      "outcome_check": "Meeting days are visibly marked. Suspect: the calendar is created with no popups/markers (the type colours in calendar-adapter.js are only used by calendar-component.js, which no page loads), so every day may look the same.",
+      "personas": [
+        "PM",
+        "CM",
+        "DL"
+      ],
+      "risk": "high",
+      "status": "suspect",
+      "evidence": "meetings.js Calendar options; js/calendar-adapter.js"
+    },
+    {
+      "id": "M-11",
+      "page": "meetings.html",
+      "element": "Calendar day click -> meeting modal (#event-modal)",
+      "goal": "See that meeting's details.",
+      "outcome_check": "Clicking Oct 9 2026 opens a modal with \"Expertising Philatelics\", 7:30 PM, location; a holiday shows \"No meeting\"; a non-meeting day does nothing confusing; re-click of the same day still opens it.",
+      "personas": [
+        "PM",
+        "CM",
+        "DL"
+      ],
+      "risk": "high",
+      "status": "verify",
+      "evidence": "meetings.js onClickDate; js/modal.js"
+    },
+    {
+      "id": "M-12",
+      "page": "meetings.html",
+      "element": "Modal close (X, Close button, overlay click, Escape), focus trap and focus return",
+      "goal": "Close the details and continue.",
+      "outcome_check": "Every close route works on desktop and phone; focus returns to the clicked day; body scroll restored.",
+      "personas": [
+        "PM",
+        "CM"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "js/modal.js bindEvents"
+    },
+    {
+      "id": "M-13",
+      "page": "meetings.html",
+      "element": "Modal contact links (mailto / tel from meeting contact)",
+      "goal": "Ask about this meeting.",
+      "outcome_check": "Links open mail/phone with the right address/number.",
+      "personas": [
+        "PM",
+        "CC"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "js/modal.js:234-239"
+    },
+    {
+      "id": "M-14",
+      "page": "meetings.html",
+      "element": "\"Download Complete Q4 2026 Schedule\" .ics (same file as H-05)",
+      "goal": "Put the quarter in my calendar.",
+      "outcome_check": "Same outcome check as H-05.",
+      "personas": [
+        "PM",
+        "CM",
+        "DL"
+      ],
+      "risk": "high",
+      "status": "verify",
+      "evidence": "meetings.html"
+    },
+    {
+      "id": "M-15",
+      "page": "meetings.html",
+      "element": "Instruction text \"Click the calendar-plus icons above for individual meetings\"",
+      "goal": "Find per-meeting downloads.",
+      "outcome_check": "The icons exist. FAILS: no such icons are rendered anywhere (same root cause as M-08).",
+      "personas": [
+        "PM",
+        "CM"
+      ],
+      "risk": "high",
+      "status": "finding",
+      "evidence": "meetings.html:203"
+    },
+    {
+      "id": "M-16",
+      "page": "meetings.html",
+      "element": "Google Maps iframe (maps.google.com ... output=embed)",
+      "goal": "Get directions to the church.",
+      "outcome_check": "Map loads (CSP frame-src allows it), pin is MacArthur Park Lutheran Church, 2903 Nacogdoches Rd; on a phone \"View larger map\"/directions opens Maps.",
+      "personas": [
+        "PM",
+        "DL"
+      ],
+      "risk": "high",
+      "status": "verify",
+      "evidence": "crawl: 200"
+    },
+    {
+      "id": "M-17",
+      "page": "meetings.html",
+      "element": "TSDA stamp shows table (static, Q4 2026)",
+      "goal": "Plan which shows to attend or exhibit at.",
+      "outcome_check": "Dates/venues/hours are correct and no past show is listed as upcoming.",
+      "personas": [
+        "DL",
+        "CM"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "meetings.html"
+    },
+    {
+      "id": "M-18",
+      "page": "meetings.html",
+      "element": "JavaScript disabled: <noscript> message",
+      "goal": "Still find meeting dates without JS.",
+      "outcome_check": "Static location/times/types and the .ics link remain; the schedule list and calendar are replaced by a message with a working mailto.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "meetings.html:173"
+    },
+    {
+      "id": "M-19",
+      "page": "meetings.html",
+      "element": "Error state: \"Refresh Page\" button when calendar fails",
+      "goal": "Recover from a failure.",
+      "outcome_check": "Shown only on failure; reload works.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "meetings.js:109"
+    },
+    {
+      "id": "N-01",
+      "page": "newsletter.html",
+      "element": "Breadcrumb (#breadcrumb-nav, js/modules/breadcrumb.js)",
+      "goal": "Know where I am, go back up.",
+      "outcome_check": "Renders Home > Newsletters with working links.",
+      "personas": [
+        "NR"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "newsletter.html"
+    },
+    {
+      "id": "N-02",
+      "page": "newsletter.html",
+      "element": "Current issue \"Download PDF\" (Q4 2026, new tab)",
+      "goal": "Read the newest issue.",
+      "outcome_check": "Opens the Q4 2026 PDF.",
+      "personas": [
+        "NR",
+        "CM"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "crawl: 200"
+    },
+    {
+      "id": "N-03",
+      "page": "newsletter.html",
+      "element": "\"View Archive\" -> archive.html",
+      "goal": "Find older issues.",
+      "outcome_check": "Loads archive.html.",
+      "personas": [
+        "NR",
+        "AS"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "newsletter.html"
+    },
+    {
+      "id": "N-04",
+      "page": "newsletter.html",
+      "element": "\"In This Issue\" static list",
+      "goal": "Preview the issue.",
+      "outcome_check": "Every item appears in the Q4 2026 PDF.",
+      "personas": [
+        "NR"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "newsletter.html"
+    },
+    {
+      "id": "N-05",
+      "page": "newsletter.html",
+      "element": "Contributing: mailto editor jsdurham4@gmail.com",
+      "goal": "Submit an article.",
+      "outcome_check": "Same as H-11.",
+      "personas": [
+        "NR",
+        "CM"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "newsletter.html"
+    },
+    {
+      "id": "N-06",
+      "page": "newsletter.html",
+      "element": "Publication details (quarterly, dates, deadlines)",
+      "goal": "Know when the next issue comes.",
+      "outcome_check": "Consistent with the issue itself (Q4 2026 announces a bimonthly schedule from January 2027).",
+      "personas": [
+        "NR"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "newsletter.html"
+    },
+    {
+      "id": "AR-01",
+      "page": "archive.html",
+      "element": "Static Download PDF buttons for 2025 Q2 - 2026 Q3 (6 links)",
+      "goal": "Open a recent back issue.",
+      "outcome_check": "Each opens the right issue; \"SAPA PHILATEX Second Quarter 2025.pdf\" has spaces in its href (200 when encoded) and must open in every browser.",
+      "personas": [
+        "AS",
+        "NR"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "crawl + probe: all 200"
+    },
+    {
+      "id": "AR-02",
+      "page": "archive.html",
+      "element": "JS-rendered 2008-2024 archive (#archived-newsletters from data/newsletters/archived-newsletters.json)",
+      "goal": "Find an old issue by year.",
+      "outcome_check": "Year sections render newest first; each of the 98 available links opens the issue its label names (all 98 return application/pdf 200); the 1 unavailable (2012 Jul/Aug) shows \"Not Available\".",
+      "personas": [
+        "AS"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "js/pages/archive.js; probe 98/98 200"
+    },
+    {
+      "id": "AR-03",
+      "page": "archive.html",
+      "element": "Coverage gaps between the two lists",
+      "goal": "Every issue that exists is listed.",
+      "outcome_check": "Confirm whether 2024 Q1 and 2025 Q1 exist: neither list mentions them (not even as \"Not Available\").",
+      "personas": [
+        "AS"
+      ],
+      "risk": "medium",
+      "status": "suspect",
+      "evidence": "archived-newsletters.json years; archive.html static list"
+    },
+    {
+      "id": "AR-04",
+      "page": "archive.html",
+      "element": "JavaScript disabled: <noscript> \"enable JavaScript to view the full archive (2008-2024)\"",
+      "goal": "Reach old issues without JS.",
+      "outcome_check": "2008-2024 issues are unreachable without JS; message is shown.",
+      "personas": [
+        "AS"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "archive.html:471"
+    },
+    {
+      "id": "AR-05",
+      "page": "archive.html",
+      "element": "\"Contact Newsletter Editor\" mailto",
+      "goal": "Ask for a missing issue.",
+      "outcome_check": "Same as H-11.",
+      "personas": [
+        "AS"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "archive.html"
+    },
+    {
+      "id": "MB-01",
+      "page": "membership.html",
+      "element": "\"Download Membership Application\" (downloads/SAPA_membership_application.pdf, 2.2 MB)",
+      "goal": "Join the club and pay dues.",
+      "outcome_check": "PDF opens in Safari/iOS, Chrome, Acrobat (pdftotext reports a stream syntax error; it is a 2-page scan with no text layer) and its instructions are current: page 2 tells applicants to pay \"Dora Roberts\" at a home address, names \"Fred (our Treasurer)\", a bimonthly newsletter and a Saturday Boursette, with a 2007 map. Confirm every name/address/amount with the club.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "high",
+      "status": "suspect",
+      "evidence": "pdfinfo/pdftotext; rendered pages"
+    },
+    {
+      "id": "MB-02",
+      "page": "membership.html",
+      "element": "Benefits and \"Special Opportunities\" claims (mentorship, members-only quarterly auctions, library, Scott catalogs)",
+      "goal": "Know what I get for joining.",
+      "outcome_check": "Each claim is still true (auctions are listed monthly in Q4 data).",
+      "personas": [
+        "PM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "membership.html"
+    },
+    {
+      "id": "MB-03",
+      "page": "membership.html",
+      "element": "\"Contact us\" -> contact.html; \"meeting\" -> index.html#meeting-schedule",
+      "goal": "Ask first or visit first.",
+      "outcome_check": "Both land on the right place.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "membership.html"
+    },
+    {
+      "id": "MB-04",
+      "page": "membership.html",
+      "element": "Dues and how to pay (not on the page; only in the PDF)",
+      "goal": "Know the cost before downloading.",
+      "outcome_check": "Visitor can learn dues without opening a 2.2 MB scan.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "membership.html has no $ amounts"
+    },
+    {
+      "id": "RS-01",
+      "page": "resources.html",
+      "element": "Featured resources grid (#featured-resources-grid)",
+      "goal": "Start with the best guide.",
+      "outcome_check": "Renders the 1 featured resource with working buttons.",
+      "personas": [
+        "PM",
+        "CM"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "js/pages/resources.js; resources.json 3 resources"
+    },
+    {
+      "id": "RS-02",
+      "page": "resources.html",
+      "element": "Browse by Category (#categories-container): title links (.resource-link) and \"View all\" (.btn-view-all-category)",
+      "goal": "Browse by topic.",
+      "outcome_check": "Title opens the guide modal; \"View all\" sets the category filter and scrolls to the list.",
+      "personas": [
+        "PM",
+        "CM"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "resources.js bindCategoryActions"
+    },
+    {
+      "id": "RS-03",
+      "page": "resources.html",
+      "element": "All resources list (#resources-container)",
+      "goal": "See every guide.",
+      "outcome_check": "Lists all 3 resources.",
+      "personas": [
+        "PM",
+        "CM"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "resources.js displayAllResources"
+    },
+    {
+      "id": "RS-04",
+      "page": "resources.html",
+      "element": "Resource search box (#resource-search)",
+      "goal": "Find a guide by keyword.",
+      "outcome_check": "Typing \"grading\" leaves only the grading guide; #resources-status announces the count.",
+      "personas": [
+        "PM",
+        "CM"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "resources.js initializeResourceSearch"
+    },
+    {
+      "id": "RS-05",
+      "page": "resources.html",
+      "element": "Category and difficulty selects (#category-filter, #difficulty-filter)",
+      "goal": "Narrow by topic/level.",
+      "outcome_check": "Each option filters correctly; \"Valuation\", \"Reference\" and \"Advanced\" match no resource, so an empty state must be clear.",
+      "personas": [
+        "PM",
+        "CM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "resources.html options vs resources.json"
+    },
+    {
+      "id": "RS-06",
+      "page": "resources.html",
+      "element": "\"Clear Filters\" (#clear-filters)",
+      "goal": "Reset the view.",
+      "outcome_check": "Search and both selects reset and all resources return.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "resources.js:254"
+    },
+    {
+      "id": "RS-07",
+      "page": "resources.html",
+      "element": "\"Read Guide\" (.btn-read-resource) -> resource modal with content and external links",
+      "goal": "Read a guide.",
+      "outcome_check": "Modal shows the full guide; links inside open in a new tab and resolve.",
+      "personas": [
+        "PM",
+        "CM"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "resources.js openResourceModal"
+    },
+    {
+      "id": "RS-08",
+      "page": "resources.html",
+      "element": "\"View Sections\" (.btn-view-sections) -> sections modal and \"Read full\" (.btn-read-full)",
+      "goal": "Jump to part of a guide.",
+      "outcome_check": "Sections list opens; \"Read full\" swaps to the full guide.",
+      "personas": [
+        "CM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "resources.js showResourceSections"
+    },
+    {
+      "id": "RS-09",
+      "page": "resources.html",
+      "element": "Bookmark buttons (.btn-bookmark, .btn-bookmark-modal; localStorage resource_bookmarks)",
+      "goal": "Save a guide to come back to.",
+      "outcome_check": "A bookmarked guide is findable later. No view lists bookmarks (only the button label changes), and with storage blocked toggleBookmark throws (unguarded localStorage).",
+      "personas": [
+        "CM"
+      ],
+      "risk": "medium",
+      "status": "finding",
+      "evidence": "resources.js:622-660"
+    },
+    {
+      "id": "RS-10",
+      "page": "resources.html",
+      "element": "Print button in modal (window.print)",
+      "goal": "Print a guide for the club table.",
+      "outcome_check": "Printout contains the guide text, not just the page behind the modal.",
+      "personas": [
+        "CM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "resources.js:433"
+    },
+    {
+      "id": "RS-11",
+      "page": "resources.html",
+      "element": "Modal close (button, overlay, Escape)",
+      "goal": "Close the guide.",
+      "outcome_check": "All three close it; focus returns.",
+      "personas": [
+        "PM",
+        "CM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "resources.js showModal"
+    },
+    {
+      "id": "RS-12",
+      "page": "resources.html",
+      "element": "Quick tools: \"View Glossary\", \"Browse Catalog\" (colnect), \"View Catalog\" (scottonline.com), \"Contact Us\"",
+      "goal": "Reach catalog tools.",
+      "outcome_check": "Each opens the intended site. scottonline.com did not answer curl (timeout x3); check in a browser.",
+      "personas": [
+        "CM",
+        "PM"
+      ],
+      "risk": "medium",
+      "status": "suspect",
+      "evidence": "probe: scottonline 000"
+    },
+    {
+      "id": "RS-13",
+      "page": "resources.html",
+      "element": "External organisation/news links (APS, ASDA, \"United States Postal Service\", Scott, Michel, Colnect, Linn's, APS News, Postal News)",
+      "goal": "Visit the named organisation.",
+      "outcome_check": "Each label matches its destination. \"United States Postal Service\" links to uspcs.org, the U.S. Philatelic Classics Society.",
+      "personas": [
+        "PM",
+        "CM"
+      ],
+      "risk": "medium",
+      "status": "finding",
+      "evidence": "resources.html"
+    },
+    {
+      "id": "RS-14",
+      "page": "resources.html",
+      "element": "JavaScript disabled",
+      "goal": "See guides without JS.",
+      "outcome_check": "Guides are entirely JS-rendered; confirm the page says so rather than showing empty sections.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "resources.html has no <noscript>"
+    },
+    {
+      "id": "RS-15",
+      "page": "resources.html",
+      "element": "Error state \"Refresh Page\"",
+      "goal": "Recover from a load failure.",
+      "outcome_check": "Shown only on failure.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "resources.js:720"
+    },
+    {
+      "id": "GL-01",
+      "page": "glossary.html",
+      "element": "Loader script that injects dist/js/glossary.min.js; fallback panel",
+      "goal": "Glossary loads.",
+      "outcome_check": "Terms render. If the script fails, the fallback panel says \"Development Mode ... requires a web server\", which is wrong wording for a public visitor.",
+      "personas": [
+        "PM",
+        "CM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "glossary.html:293-370"
+    },
+    {
+      "id": "GL-02",
+      "page": "glossary.html",
+      "element": "Glossary search (#glossary-search-input, search button, Enter) and result links (.search-result-link)",
+      "goal": "Look up a term.",
+      "outcome_check": "\"perf\" finds Perforation; clicking the result scrolls to and expands the term card; status region announces counts.",
+      "personas": [
+        "PM",
+        "CM"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "js/pages/glossary.js"
+    },
+    {
+      "id": "GL-03",
+      "page": "glossary.html",
+      "element": "Clear search button (#glossary-clear-button)",
+      "goal": "Reset the search.",
+      "outcome_check": "Visible and clickable when text is present. KNOWN: may be covered by the suggestions dropdown.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "low",
+      "status": "known",
+      "evidence": "glossary.js:119"
+    },
+    {
+      "id": "GL-04",
+      "page": "glossary.html",
+      "element": "Category / difficulty / sort selects and Reset (#filter-reset)",
+      "goal": "Narrow or reorder terms.",
+      "outcome_check": "Each option changes the list correctly; Reset restores all 5 terms alphabetically.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "glossary.js loadGlossaryFilters"
+    },
+    {
+      "id": "GL-05",
+      "page": "glossary.html",
+      "element": "A-Z jump buttons (26 .alphabet-btn)",
+      "goal": "Jump to a letter.",
+      "outcome_check": "Letters with terms (F, M, P, W) scroll there; the other 22 letters give a clear \"no terms\" response rather than nothing.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "medium",
+      "status": "suspect",
+      "evidence": "glossary.js jumpToLetter"
+    },
+    {
+      "id": "GL-06",
+      "page": "glossary.html",
+      "element": "Term card expand/collapse (click delegation on #glossary-content-container)",
+      "goal": "Read a definition.",
+      "outcome_check": "Expands/collapses by mouse, keyboard and touch.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "glossary.js:350"
+    },
+    {
+      "id": "GL-07",
+      "page": "glossary.html",
+      "element": "Related-term links (a.related-term -> #term-<id>)",
+      "goal": "Follow a related concept.",
+      "outcome_check": "Each lands on that term. FAILS: all 18 related ids across the 5 terms (philatelist, never-hinged, imperforate, cachet, ...) are not in glossary.json, so every link goes nowhere.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "medium",
+      "status": "finding",
+      "evidence": "data/glossary/glossary.json"
+    },
+    {
+      "id": "GL-08",
+      "page": "glossary.html",
+      "element": "Content volume",
+      "goal": "Find the term I need.",
+      "outcome_check": "KNOWN: only 5 terms.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "medium",
+      "status": "known",
+      "evidence": "glossary.json"
+    },
+    {
+      "id": "GL-09",
+      "page": "glossary.html",
+      "element": "Stats panel (#total-terms, #total-categories, #total-references)",
+      "goal": "See glossary size.",
+      "outcome_check": "Numbers replace \"Loading...\" and match the data.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "glossary.js loadGlossaryStats"
+    },
+    {
+      "id": "GL-10",
+      "page": "glossary.html",
+      "element": "\"Suggest a term\" mailto loz33",
+      "goal": "Propose a term.",
+      "outcome_check": "Same as G-06.",
+      "personas": [
+        "CM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "glossary.html"
+    },
+    {
+      "id": "C-01",
+      "page": "contact.html",
+      "element": "Contact form, JS path (fetch POST to the FormSubmit AJAX endpoint for the form action address)",
+      "goal": "Send the club a question and get an answer.",
+      "outcome_check": "A real submission produces an email in the recipient's inbox within minutes with name, email (as reply-to), phone, topic and message, subject \"SAPA website: <topic> (from <name>)\"; a reply reaches the sender. The recipient is arlenagreer@gmail.com (webmaster), not the club: confirm the club actually learns of each message.",
+      "personas": [
+        "CC",
+        "PM",
+        "DL"
+      ],
+      "risk": "high",
+      "status": "verify",
+      "evidence": "js/pages/contact.js handleFormSubmission; contact.html action"
+    },
+    {
+      "id": "C-02",
+      "page": "contact.html",
+      "element": "Contact form, no-JS path (native POST, _next -> contact.html#sent)",
+      "goal": "Same, with JavaScript off.",
+      "outcome_check": "Email arrives as in C-01; visitor returns to the \"Thank you\" notice; a later reload does not show it again.",
+      "personas": [
+        "CC"
+      ],
+      "risk": "high",
+      "status": "verify",
+      "evidence": "contact.html hidden fields"
+    },
+    {
+      "id": "C-03",
+      "page": "contact.html",
+      "element": "Relay refusal path (FormSubmit success:\"false\", e.g. activation pending)",
+      "goal": "Know when my message did NOT go.",
+      "outcome_check": "An error message, never the success message, is shown whenever the relay does not confirm.",
+      "personas": [
+        "CC"
+      ],
+      "risk": "high",
+      "status": "verify",
+      "evidence": "contact.js:243-255"
+    },
+    {
+      "id": "C-04",
+      "page": "contact.html",
+      "element": "Field validation (name >= 2, email, optional phone, topic select, message 10-1000) with inline errors (role=alert)",
+      "goal": "Fix mistakes before sending.",
+      "outcome_check": "Real-world inputs pass: +1 210 ..., (210)555-0123, international numbers, short names, apostrophes; errors are announced and clear when fixed.",
+      "personas": [
+        "CC"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "contact.js validateField; js/utils/helpers.js"
+    },
+    {
+      "id": "C-05",
+      "page": "contact.html",
+      "element": "Character counter under the message",
+      "goal": "Know how much I can write.",
+      "outcome_check": "Counts down from 1000 and warns under 50.",
+      "personas": [
+        "CC"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "contact.js initializeCharacterCounter"
+    },
+    {
+      "id": "C-06",
+      "page": "contact.html",
+      "element": "Honeypot field _honey (hidden)",
+      "goal": "Real people are never treated as spam.",
+      "outcome_check": "Browser autofill (Chrome, Safari, 1Password) never fills it; a real submission is delivered.",
+      "personas": [
+        "CC"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "contact.html:198"
+    },
+    {
+      "id": "C-07",
+      "page": "contact.html",
+      "element": "Slow/failed network: 30 s timeout and \"couldn't confirm\" message",
+      "goal": "Know what happened on a bad connection.",
+      "outcome_check": "On Slow 3G the button shows \"Sending...\" and is disabled; after 30 s the unconfirmed message appears; no duplicate send on retry within the wait.",
+      "personas": [
+        "CC"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "contact.js RELAY_TIMEOUT_MS"
+    },
+    {
+      "id": "C-08",
+      "page": "contact.html",
+      "element": "Submit button state (disabled while sending, restored after)",
+      "goal": "Avoid double sends.",
+      "outcome_check": "Double-click sends one email.",
+      "personas": [
+        "CC"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "contact.js"
+    },
+    {
+      "id": "C-09",
+      "page": "contact.html",
+      "element": "\"#sent\" notice and history.replaceState",
+      "goal": "See that my no-JS message went.",
+      "outcome_check": "Shown after relay redirect; a shared/reloaded URL does not claim a send.",
+      "personas": [
+        "CC"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "contact.js:33-40"
+    },
+    {
+      "id": "C-10",
+      "page": "contact.html",
+      "element": "mailto:loz33@hotmail.com contact link",
+      "goal": "Email instead of the form.",
+      "outcome_check": "Same as G-06.",
+      "personas": [
+        "CC"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "contact.html"
+    },
+    {
+      "id": "C-11",
+      "page": "contact.html",
+      "element": "Google Maps iframe",
+      "goal": "Find the venue.",
+      "outcome_check": "Same as M-16.",
+      "personas": [
+        "PM",
+        "CC"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "contact.html"
+    },
+    {
+      "id": "C-12",
+      "page": "contact.html",
+      "element": "Relay address visible in page source",
+      "goal": "n/a",
+      "outcome_check": "KNOWN: FormSubmit relay address is visible in the source.",
+      "personas": [
+        "CC"
+      ],
+      "risk": "low",
+      "status": "known",
+      "evidence": "contact.html action"
+    },
+    {
+      "id": "C-13",
+      "page": "contact.html",
+      "element": "Anti-framing script (hides page when framed)",
+      "goal": "Page is not clickjacked.",
+      "outcome_check": "Page renders normally top-level; when framed it hides and breaks out.",
+      "personas": [
+        "CC"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "contact.html inline script"
+    },
+    {
+      "id": "S-01",
+      "page": "search.html",
+      "element": "Search box (#searchInput) + Enter + search button (inline performSearch; lunr 2.3.9 from unpkg with SRI; dist/data/search-index.json 298 KB + search-documents.json, 94 docs)",
+      "goal": "Find anything on the site.",
+      "outcome_check": "\"Fourth Quarter 2026\" and \"philatex\" return the newest newsletter first; \"auction\" returns this quarter's auctions; status region reports counts.",
+      "personas": [
+        "NR",
+        "AS",
+        "CM",
+        "PM"
+      ],
+      "risk": "high",
+      "status": "verify",
+      "evidence": "search.html inline script; live index 200"
+    },
+    {
+      "id": "S-02",
+      "page": "search.html",
+      "element": "Quick-search chips (5 buttons, inline onclick: stamp collecting, meeting, newsletter, beginner, \"2025 Events\")",
+      "goal": "One-tap common searches.",
+      "outcome_check": "Each returns relevant results. \"2025 Events\" is stale: the index holds only 2026 meetings.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "medium",
+      "status": "suspect",
+      "evidence": "search.html; search-documents.json"
+    },
+    {
+      "id": "S-03",
+      "page": "search.html",
+      "element": "Result links (doc.url: /newsletter.html#2026-Q4, /meetings.html#2026-10-09, /resources.html#<id>, /glossary.html#<id>)",
+      "goal": "Open the thing I found.",
+      "outcome_check": "The link lands on that item. FAILS: none of the 94 fragment ids exist on the target pages; newsletter results land on a page showing only the current issue, and past-quarter meetings are not on meetings.html at all.",
+      "personas": [
+        "NR",
+        "AS",
+        "CM"
+      ],
+      "risk": "high",
+      "status": "finding",
+      "evidence": "live search-documents.json urls; page ids"
+    },
+    {
+      "id": "S-04",
+      "page": "search.html",
+      "element": "?q= URL parameter and pushState",
+      "goal": "Share or bookmark a search; Back works.",
+      "outcome_check": "search.html?q=auction runs on load; Back steps through searches.",
+      "personas": [
+        "AS"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "search.html inline"
+    },
+    {
+      "id": "S-05",
+      "page": "search.html",
+      "element": "Index coverage",
+      "goal": "Find an old issue or article by topic.",
+      "outcome_check": "Search reaches the 98 archive issues (2008-2024) and newsletter contents. Today it indexes only 7 newsletters (titles/summaries), 79 meetings, 5 terms, 3 resources.",
+      "personas": [
+        "AS"
+      ],
+      "risk": "medium",
+      "status": "finding",
+      "evidence": "search-documents.json type counts"
+    },
+    {
+      "id": "S-06",
+      "page": "search.html",
+      "element": "Third-party dependency: unpkg.com lunr",
+      "goal": "Search works on any network.",
+      "outcome_check": "With unpkg blocked or slow, a clear error shows instead of a dead page.",
+      "personas": [
+        "AS"
+      ],
+      "risk": "medium",
+      "status": "verify",
+      "evidence": "search.html:344"
+    },
+    {
+      "id": "S-07",
+      "page": "search.html",
+      "element": "Lunr query syntax (e.g. \"C:\", \"stamp~\", \"+\")",
+      "goal": "Odd input doesn't break search.",
+      "outcome_check": "Shows a friendly message, not \"Search error: QueryParseError ...\".",
+      "personas": [
+        "AS"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "search.html performSearch"
+    },
+    {
+      "id": "S-08",
+      "page": "search.html",
+      "element": "JavaScript disabled",
+      "goal": "Search without JS.",
+      "outcome_check": "Page says search needs JavaScript (no <noscript> today).",
+      "personas": [
+        "AS"
+      ],
+      "risk": "medium",
+      "status": "suspect",
+      "evidence": "search.html has no <noscript>"
+    },
+    {
+      "id": "E-01",
+      "page": "404.html",
+      "element": "\"Go to Homepage\", \"Search Site\" and 4 suggestion cards (absolute paths)",
+      "goal": "Recover from a bad link.",
+      "outcome_check": "Each loads its page from a deep 404 URL (e.g. /a/b/c).",
+      "personas": [
+        "PM",
+        "AS"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "404.html"
+    },
+    {
+      "id": "E-02",
+      "page": "404.html",
+      "element": "gtag 404 tracking (inline)",
+      "goal": "Operators learn of broken links.",
+      "outcome_check": "No Google Analytics is loaded anywhere, so 404s are never reported.",
+      "personas": [
+        "AS"
+      ],
+      "risk": "low",
+      "status": "finding",
+      "evidence": "404.html inline script"
+    },
+    {
+      "id": "O-01",
+      "page": "offline.html",
+      "element": "Offline page \"Try Again\" and online listener",
+      "goal": "Retry when back online.",
+      "outcome_check": "Orphan: deployed (200) but linked from nowhere since the service worker was retired; confirm it is harmless.",
+      "personas": [
+        "CM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "probe 200"
+    },
+    {
+      "id": "SC-01",
+      "page": "showcase/",
+      "element": "Design showcase (index meta-refresh -> 1.html; 5 pages Prev/Next; 5 PNG mockups ~1.7-2 MB)",
+      "goal": "n/a (internal design review).",
+      "outcome_check": "Deployed (all 200) but unlinked; confirm it should be public; Prev/Next work.",
+      "personas": [
+        "PM"
+      ],
+      "risk": "low",
+      "status": "verify",
+      "evidence": "probe: all 200"
+    },
+    {
+      "id": "DC-01",
+      "page": "data/calendar/",
+      "element": "89 per-meeting and per-quarter .ics files (2025-04-04 .. 2026-12-25)",
+      "goal": "Per-meeting calendar import.",
+      "outcome_check": "Deployed (sample 200) but no page links them (see H-06/M-08). Past-quarter public/sapa-q1..q3-2026 and q4-2025 .ics are also unlinked.",
+      "personas": [
+        "CM"
+      ],
+      "risk": "medium",
+      "status": "finding",
+      "evidence": "grep data/calendar *.html = none"
+    }
+  ],
+  "dead_code": [
+    {
+      "file": "js/pages/home.js",
+      "handlers": "initializeHomeCalendar (#calendar-preview), initializeCountdownTimer (#meeting-countdown), loadQuickStats (#quick-stats), loadRecentNewsletters (#newsletter-preview) and their meetings.json/newsletters.json fetches",
+      "why": "none of the 4 ids exist in index.html; home.min.js (104 KB) runs nothing"
+    },
+    {
+      "file": "js/pages/meetings.js",
+      "handlers": "initializeMeetingFilters (#meeting-filters: year/type selects, \"Upcoming only\", Clear Filters); window.handleRSVP global",
+      "why": "#meeting-filters not in meetings.html; buttons call the module-local handleRSVP"
+    },
+    {
+      "file": "js/pages/newsletter.js",
+      "handlers": "loadNewslettersList (#newsletters-container), initializeNewsletterSearch (#newsletter-search), initializeNewsletterFilters (#newsletter-filters), .btn-download handler",
+      "why": "none of the 3 ids exist; only the breadcrumb import does anything"
+    },
+    {
+      "file": "js/pages/search.js + js/modules/search-engine.js",
+      "handlers": "whole bundle: #search-interface, #search-filters, #search-results, #results-container, suggestions, date filters, its own lunr/unpkg loader and fetches",
+      "why": "containers absent; the live search is the inline script in search.html"
+    },
+    {
+      "file": "js/pages/contact.js",
+      "handlers": "initializeContactInfo click-to-copy ([data-copy])",
+      "why": "no [data-copy] element on any page"
+    },
+    {
+      "file": "contact.html inline script",
+      "handlers": "accordion (.accordion-header)",
+      "why": "no .accordion-header element"
+    },
+    {
+      "file": "js/script.js (loaded by membership.html, 404.html)",
+      "handlers": "setupEventCountdown (#event-countdown), setupFormValidation + setupContactForm (#contact-form, PHP endpoint, csrf-token.php fetch), setupAccordion, setupImageGallery (.gallery-image/.lightbox), setupThemeToggle (.theme-toggle), setupDynamicContentBoundaries (calendar/newsletter containers)",
+      "why": "none of those elements exist on the two pages that load it; the PHP endpoints 404 in production"
+    },
+    {
+      "file": "js/reminder-system.js",
+      "handlers": "settings panel (#reminder-settings-container), browser notifications, sound, setReminders()",
+      "why": "container absent; nothing calls setReminders; meetings.js calls a non-existent setReminder()"
+    },
+    {
+      "file": "js/calendar-component.js, js/modules/meeting-loader.js (class), newsletter-loader.js, pagination.js, template-engine.js, data-loader.js, modules/index.js, core-bundle.js, utils/api-client.js, utils/error-handler.js, utils/global-error-handler.js, utils/theme.js, utils/loading-states.js",
+      "handlers": "components, loaders and handlers (pagination buttons, newsletter filter apply/clear, error banners, theme listener)",
+      "why": "not executed on any deployed page (only reachable behind containers that do not exist, or not imported by any page entry)"
+    },
+    {
+      "file": "404.html inline script",
+      "handlers": "gtag(\"event\",\"exception\") 404 tracking",
+      "why": "gtag is never defined"
+    }
+  ],
+  "handler_network_xref": [
+    {
+      "call": "fetch data/meetings/meetings.json",
+      "where": "meetings.js loadMeetingsList; calendar-adapter.js loadMeetings",
+      "rows": "M-03, M-11"
+    },
+    {
+      "call": "fetch data/newsletters/archived-newsletters.json",
+      "where": "archive.js renderArchivedNewsletters",
+      "rows": "AR-02"
+    },
+    {
+      "call": "fetch data/members/resources.json",
+      "where": "resources.js (load, modal, sections)",
+      "rows": "RS-01..RS-08"
+    },
+    {
+      "call": "fetch data/glossary/glossary.json",
+      "where": "glossary.js loadGlossaryTerms",
+      "rows": "GL-02..GL-09"
+    },
+    {
+      "call": "fetch dist/data/search-index.json + search-documents.json",
+      "where": "search.html inline initializeSearch",
+      "rows": "S-01"
+    },
+    {
+      "call": "script https://unpkg.com/lunr@2.3.9",
+      "where": "search.html",
+      "rows": "S-01, S-06"
+    },
+    {
+      "call": "script-injected dist/js/glossary.min.js",
+      "where": "glossary.html inline loader",
+      "rows": "GL-01"
+    },
+    {
+      "call": "fetch POST https://formsubmit.co/ajax/...",
+      "where": "contact.js handleFormSubmission",
+      "rows": "C-01, C-03, C-07"
+    },
+    {
+      "call": "form POST https://formsubmit.co/... (no JS)",
+      "where": "contact.html",
+      "rows": "C-02"
+    },
+    {
+      "call": "fetch POST /api/logs",
+      "where": "utils/logger.js logToRemote (all bundles)",
+      "rows": "G-12"
+    },
+    {
+      "call": "iframe maps.google.com",
+      "where": "meetings.html, contact.html",
+      "rows": "M-16, C-11"
+    },
+    {
+      "call": "stylesheets fonts.googleapis.com, cdnjs font-awesome 6.4.0, css/vendor/vanilla-calendar.min.css",
+      "where": "all pages / meetings.html",
+      "rows": "G-08, G-09, M-09"
+    },
+    {
+      "call": "fetch data/newsletters/newsletters.json",
+      "where": "home.js, newsletter.js only",
+      "rows": "DEAD (not fetched by any live code; feeds the search build only)"
+    },
+    {
+      "call": "fetch search-index via search-engine.js",
+      "where": "search.js",
+      "rows": "DEAD"
+    },
+    {
+      "call": "fetch csrf-token.php / contact-handler.php",
+      "where": "script.js, utils/api-client.js",
+      "rows": "DEAD (404 in production)"
+    },
+    {
+      "call": "click .btn-rsvp / .btn-reminder",
+      "where": "meetings.js bindMeetingActions",
+      "rows": "M-06, M-07"
+    },
+    {
+      "call": "Calendar onClickDate; modal close/overlay/Escape/Tab",
+      "where": "meetings.js; modal.js",
+      "rows": "M-11, M-12"
+    },
+    {
+      "call": "input/change/click on #resource-search, #category-filter, #difficulty-filter, #clear-filters",
+      "where": "resources.js",
+      "rows": "RS-04..RS-06"
+    },
+    {
+      "call": "click .btn-read-resource, .resource-link, .btn-view-sections, .btn-read-full, .btn-view-all-category",
+      "where": "resources.js",
+      "rows": "RS-02, RS-07, RS-08"
+    },
+    {
+      "call": "click .btn-bookmark, .btn-bookmark-modal; onclick window.print; modal close/overlay/keydown",
+      "where": "resources.js",
+      "rows": "RS-09..RS-11"
+    },
+    {
+      "call": "input/click/keypress glossary search, clear; change filters; click reset, .alphabet-btn, term cards, .search-result-link",
+      "where": "glossary.js",
+      "rows": "GL-02..GL-07"
+    },
+    {
+      "call": "blur/input/change on contact fields; submit #contact-form; input counter",
+      "where": "contact.js",
+      "rows": "C-01, C-04, C-05, C-08"
+    },
+    {
+      "call": "keypress #searchInput; onclick performSearch / quickSearch",
+      "where": "search.html inline",
+      "rows": "S-01, S-02"
+    },
+    {
+      "call": "document click/keydown menu close",
+      "where": "about.js, archive.js, membership.js (script.js on membership/404)",
+      "rows": "G-03"
+    },
+    {
+      "call": "a[href^=\"#\"] smooth scroll",
+      "where": "script.js on membership.html, 404.html",
+      "rows": "MB-03 (in-page anchors)"
+    },
+    {
+      "call": "window \"online\" reload",
+      "where": "offline.html",
+      "rows": "O-01"
+    },
+    {
+      "call": "beforeunload cleanup listeners",
+      "where": "event-cleanup.js, home.js, script.js",
+      "rows": "internal (no user outcome)"
+    }
+  ],
+  "known_issues": [
+    {
+      "issue": "RSVP and Set Reminder buttons on meetings are localStorage-only; the club is never told",
+      "rows": "M-06, M-07 (M-07 is worse: the click throws)"
+    },
+    {
+      "issue": "Glossary has only 5 terms",
+      "rows": "GL-08"
+    },
+    {
+      "issue": "Glossary search clear button may be covered by the suggestions dropdown",
+      "rows": "GL-03"
+    },
+    {
+      "issue": "Calendar picnic colour #f39c12 on #fef9e7, about 2.08:1",
+      "rows": "M-10 (that colour lives in calendar-adapter.js, used only by calendar-component.js, which no page loads; confirm where it shows)"
+    },
+    {
+      "issue": "FormSubmit relay address visible in page source",
+      "rows": "C-12"
+    }
+  ],
+  "journeys": [
+    {
+      "id": "J1",
+      "title": "Prospective member on a phone (375px) wants to attend this Friday's meeting",
+      "personas": [
+        "PM"
+      ],
+      "steps": [
+        "Open https://www.sastamps.org/ on a 375px viewport; scroll to Upcoming Meetings.",
+        "Identify the next Friday (e.g. Oct 2 2026, BOG; Show & Tell) and the times (doors 6:30, meeting 7:30).",
+        "Tap \"View Individual Meeting Downloads\", try to add just that meeting to the phone calendar.",
+        "Fall back to \"Download Complete Q4 2026 Schedule\"; import it on iOS and Android.",
+        "Open the map on meetings.html, start directions to 2903 Nacogdoches Rd, Building 1.",
+        "Go to Membership, open the application PDF on the phone."
+      ],
+      "expected": "The calendar shows the right Friday at the right local time; directions reach the church; the PDF opens and its payment instructions are current. Expect failure at step 3 (H-06/M-08/M-15)."
+    },
+    {
+      "id": "J2",
+      "title": "Someone contacting the club (desktop 1440, then phone, then JS off)",
+      "personas": [
+        "CC"
+      ],
+      "steps": [
+        "Open contact.html, fill name, email, phone, topic, a 50-character message; submit.",
+        "Repeat on a 375px phone and again with JavaScript disabled (native POST, #sent notice).",
+        "Repeat on Slow 3G (C-07).",
+        "Check the recipient inbox and reply to each message.",
+        "Also send a plain email to loz33@hotmail.com from the footer link."
+      ],
+      "expected": "Every submission arrives once with all fields and the sender as reply-to; the reply reaches the sender; a club officer (not only the webmaster) learns of each message; the mailbox answers."
+    },
+    {
+      "id": "J3",
+      "title": "Current member checks the next auction and plans to attend",
+      "personas": [
+        "CM"
+      ],
+      "steps": [
+        "Open meetings.html; find the Oct 16 2026 auction in the schedule list.",
+        "Click RSVP, reload, un-RSVP, reload (M-06).",
+        "Click Set Reminder (M-07).",
+        "In the calendar, navigate to October 2026 and click the 16th (M-10, M-11); close the modal with Escape.",
+        "Add the auction to a calendar."
+      ],
+      "expected": "Member can see auction rules/times and add it to a calendar; RSVP/reminder behaviour is recorded against the known issue (no one at the club is told; reminder click throws)."
+    },
+    {
+      "id": "J4",
+      "title": "Newsletter reader wants the newest PHILATEX and to subscribe",
+      "personas": [
+        "NR"
+      ],
+      "steps": [
+        "From the home hero, open the Q4 2026 PDF.",
+        "Compare the home \"Latest Issue Highlights\" and newsletter.html \"In This Issue\" with the PDF.",
+        "Click \"Subscribe Today\" > \"Learn More\" (H-10).",
+        "Email the editor from newsletter.html."
+      ],
+      "expected": "The PDF is Q4 2026; the summaries match; the reader learns how to receive future issues (expect failure: no #subscribe target); the editor replies."
+    },
+    {
+      "id": "J5",
+      "title": "Returning archive searcher looks for a 2009 issue and a topic",
+      "personas": [
+        "AS"
+      ],
+      "steps": [
+        "search.html: search \"Expertising\", \"Fourth Quarter 2026\", \"2009\", \"auction\".",
+        "Click the first newsletter and meeting results (S-03).",
+        "archive.html: open 2009 January/February; check the masthead date.",
+        "Repeat archive with JavaScript disabled (AR-04)."
+      ],
+      "expected": "Newest issue ranks first; result links land on the item (expect failure); the 2009 issue opens and is the right one; JS-off visitors are told how to get old issues."
+    },
+    {
+      "id": "J6",
+      "title": "Dealer planning to bring stock to the bourse",
+      "personas": [
+        "DL"
+      ],
+      "steps": [
+        "Find the bourse Fridays (Oct 23, Nov 20) on home and meetings pages.",
+        "Confirm doors-open time and building; open the map.",
+        "Check the TSDA shows table on meetings.html.",
+        "Use the contact form to ask about table space (topic \"Event Information\")."
+      ],
+      "expected": "Dates and times agree across home, meetings list, calendar modal and .ics; the question reaches someone who answers (the club has said there is no dealer-table fee, provisionally until the Oct 2 meeting; nothing on the site should state one)."
+    },
+    {
+      "id": "J7",
+      "title": "New collector learning terms and techniques",
+      "personas": [
+        "PM"
+      ],
+      "steps": [
+        "resources.html: search \"grading\", open the guide, bookmark it, reload, look for the bookmark.",
+        "Follow the Scott and Colnect links; check the \"United States Postal Service\" link destination.",
+        "glossary.html: search \"perf\", open Perforation, click a related term, use the A-Z buttons, clear the search."
+      ],
+      "expected": "Guide opens and the bookmark is findable later (expect failure); external labels match destinations (USPS link is mislabelled); related terms land on definitions (expect failure: all 18 dead)."
+    },
+    {
+      "id": "J8",
+      "title": "Visitor arriving from an old link or with a stale cached copy",
+      "personas": [
+        "AS",
+        "CM"
+      ],
+      "steps": [
+        "Open /q4_update.html and /some/old/path: confirm the 404 page and its links.",
+        "In a profile that has the old sapa-cache-v1 service worker, open only the home page and check the quarter shown (G-10)."
+      ],
+      "expected": "Custom 404 with working recovery links; the home page shows Q4 2026 content without needing to visit another page first."
+    }
+  ],
+  "conditions": [
+    {
+      "condition": "Desktop 1440x900",
+      "applies_to": "All 12 deployed pages + showcase",
+      "note": "Baseline for every row."
+    },
+    {
+      "condition": "Phone 375x812 (touch)",
+      "applies_to": "All pages; focus on G-03 menu, H-03 table, M-09..M-12 calendar/modal, M-16 map, RS-07 modal, contact form",
+      "note": "No horizontal scroll; tap targets >= 24px; modal fits and scrolls; iOS PDF and .ics hand-off."
+    },
+    {
+      "condition": "JavaScript disabled",
+      "applies_to": "meetings (M-18), archive (AR-04), resources (RS-14), glossary (GL-01 fallback/noscript), search (S-08), contact no-JS path (C-02), home static content",
+      "note": "Content that only JS renders must be replaced by a useful message, never a silent blank."
+    },
+    {
+      "condition": "Slow network (DevTools Slow 3G / 400 kbps, 400 ms RTT)",
+      "applies_to": "contact (C-07 30 s timeout), search (298 KB index + unpkg), meetings calendar, archive JSON, resources/glossary JSON, PDFs",
+      "note": "Loading states visible; no false success; no double submit."
+    },
+    {
+      "condition": "WebKit / Safari engine",
+      "applies_to": "All pages, esp. contact (AbortController, fetch JSON), meetings (date parsing of YYYY-MM-DDT00:00:00, calendar), .ics import on iOS, PDF with spaces in name, download attribute",
+      "note": "Playwright WebKit is NOT installed on this machine (~/Library/Caches/ms-playwright has chromium-1234 only): run `npx playwright install webkit` or test in real Safari/iOS."
+    },
+    {
+      "condition": "Storage blocked (cookies/site data blocked, private mode)",
+      "applies_to": "meetings RSVP (M-06) and reminder, resources bookmarks (RS-09), font-loading (G-08), error-boundary log",
+      "note": "Unguarded localStorage calls (meetings.js initializeRSVPSystem, resources.js bookmarks) must not break the page."
+    }
+  ],
+  "not_found": [
+    {
+      "item": "Broken internal link targets (HTML pages, PDFs, .ics, images, CSS, JS, JSON)",
+      "result": "none: 151 internal URLs reached from the sitemap and every internal link, all 200; plus 98/98 archive PDFs 200"
+    },
+    {
+      "item": "sw.js",
+      "result": "404 by design (retired, not deployed)"
+    },
+    {
+      "item": "q4_update.html, test-xss-fix.html, contact-handler.php, csrf-token.php",
+      "result": "404 by design (excluded from the build); nothing links to them"
+    },
+    {
+      "item": "/api/logs",
+      "result": "404: target of every client error report (G-12)"
+    },
+    {
+      "item": "Fragment targets",
+      "result": "newsletter.html#subscribe (H-10); 18 glossary related-term anchors (GL-07); all 94 search-result fragments (S-03)"
+    },
+    {
+      "item": "External",
+      "result": "www.scottonline.com did not answer curl (timeout x3; verify in a browser). All other external links 200 (stamps.org fails only Python's CA bundle; curl 200). fonts.googleapis.com / fonts.gstatic.com bare origins are preconnect hints, not links."
+    }
+  ]
+}
