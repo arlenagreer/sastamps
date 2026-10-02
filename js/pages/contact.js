@@ -234,11 +234,12 @@ async function handleFormSubmission(event) {
     const response = await fetch(relay.href, {
       method: 'POST',
       signal: controller.signal,
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json'
-      },
-      body: JSON.stringify(data)
+      // Form-encoded with only an Accept header: a CORS "simple" request, so
+      // the browser posts directly instead of first sending an OPTIONS
+      // preflight. A preflight to the relay once timed out live (2026-10-02)
+      // and the message was lost before it was ever sent.
+      headers: { Accept: 'application/json' },
+      body: new URLSearchParams(data)
     });
 
     clearTimeout(timer); // the relay answered; don't abort while reading the body
@@ -285,15 +286,18 @@ function showFormMessage(message, type) {
   messageElement.textContent = message;
   messageElement.setAttribute('role', 'alert');
 
-  // Insert at top of form
+  // Show it beside the Send button, where the visitor is looking, and bring
+  // it into view: at the top of the form it was off-screen on phones, so a
+  // send looked like nothing happened. It stays until the next attempt.
   const form = document.querySelector('#contact-form');
-  form.insertBefore(messageElement, form.firstChild);
-
-  // Auto-remove success messages
-  if (type === 'success') {
-    setTimeout(() => {
-      messageElement.remove();
-    }, 10000);
+  const submitGroup = form.querySelector('#submit-btn')?.closest('.form-group');
+  if (submitGroup) {
+    submitGroup.insertAdjacentElement('afterend', messageElement);
+  } else {
+    form.appendChild(messageElement);
+  }
+  if (typeof messageElement.scrollIntoView === 'function') {
+    messageElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
 }
 
