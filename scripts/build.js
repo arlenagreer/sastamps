@@ -17,6 +17,7 @@ const path = require('path');
 const { SITE_DIRS, SITE_FILES, sitePages, isPrivate, deployableFiles } = require('./lib/site');
 const { STYLESHEETS } = require('./build-css');
 const { buildSitemap, ORIGIN } = require('./build-sitemap');
+const { buildCalendars } = require('./build-calendar');
 
 const VERSION = '1.0.0';
 const ROOT = path.resolve(__dirname, '..');
@@ -123,7 +124,12 @@ async function build() {
         console.log('\n7. Assembling _site/...');
         await assembleSite();
 
-        console.log('\n8. Writing _site/sitemap.xml...');
+        console.log('\n8. Adding meeting reminders and writing the calendar feed...');
+        const cal = buildCalendars(SITE);
+        console.log(`Reminders added to ${cal.events} event(s) in ${cal.files} .ics file(s); _site/${cal.feed}: ${cal.feedEvents} event(s) from ${cal.feedStart}`
+            + (cal.skipped.length ? `; skipped (did not parse): ${cal.skipped.join(', ')}` : ''));
+
+        console.log('\n9. Writing _site/sitemap.xml...');
         const mapped = buildSitemap(ROOT, SITE);
         console.log(`Wrote _site/sitemap.xml: ${mapped.length} pages on ${ORIGIN}`);
 

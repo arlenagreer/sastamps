@@ -12,6 +12,12 @@ export class Modal {
     this.isOpen = false;
     this.focusableElements = null;
     this.previousFocus = null;
+    this.currentMeeting = null;
+    // Set by the meetings page: onRsvp(meeting, button) opens its RSVP form,
+    // renderRsvpButton(button, meeting) labels the button. Without them the
+    // dialog shows no RSVP button.
+    this.onRsvp = null;
+    this.renderRsvpButton = null;
     this.init();
   }
 
@@ -47,6 +53,7 @@ export class Modal {
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary modal-rsvp-btn" aria-haspopup="dialog" hidden>RSVP</button>
                         <a class="btn btn-primary modal-calendar-link" href="#" download hidden><i class="fas fa-calendar-plus" aria-hidden="true"></i> Add to Calendar</a>
                         <button type="button" class="btn btn-secondary modal-close-btn">Close</button>
                     </div>
@@ -69,6 +76,16 @@ export class Modal {
       button.addEventListener('click', () => this.close());
     });
 
+    // RSVP (an upcoming meeting, on a page that handles it)
+    const rsvpButton = this.modal.querySelector('.modal-rsvp-btn');
+    if (rsvpButton) {
+      rsvpButton.addEventListener('click', () => {
+        if (this.currentMeeting && typeof this.onRsvp === 'function') {
+          this.onRsvp(this.currentMeeting, rsvpButton);
+        }
+      });
+    }
+
     // Overlay click
     this.modal.addEventListener('click', (e) => {
       if (e.target === this.modal) {
@@ -78,7 +95,9 @@ export class Modal {
 
     // Escape key
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && this.isOpen) {
+      // Not while a dialog opened over this one (the RSVP form) is open:
+      // that Escape is the RSVP form's.
+      if (e.key === 'Escape' && this.isOpen && !e.defaultPrevented && !document.querySelector('dialog[open]')) {
         this.close();
       }
     });
@@ -152,6 +171,18 @@ export class Modal {
     const modalBody = this.modal.querySelector('#modal-body');
 
     modalTitle.textContent = meeting.title;
+    this.currentMeeting = meeting;
+
+    // RSVP only for a meeting still to come, and only where a form exists
+    const rsvpButton = this.modal.querySelector('.modal-rsvp-btn');
+    if (rsvpButton) {
+      const canRsvp = typeof this.onRsvp === 'function' && !meeting.cancelled && isClubUpcoming(meeting.date);
+      rsvpButton.hidden = !canRsvp;
+      rsvpButton.dataset.meetingId = canRsvp ? meeting.id : '';
+      if (canRsvp && typeof this.renderRsvpButton === 'function') {
+        this.renderRsvpButton(rsvpButton, meeting);
+      }
+    }
 
     // Build detailed content
     const content = this.buildMeetingContent(meeting);

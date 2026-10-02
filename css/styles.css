@@ -2467,7 +2467,6 @@ tr:hover {
 }
 
 .meeting-item > .meeting-actions .btn-rsvp,
-.meeting-item > .meeting-actions .btn-reminder,
 .meeting-item > .meeting-actions .btn-calendar {
     display: inline-flex;
     align-items: center;
@@ -2497,27 +2496,187 @@ tr:hover {
     color: var(--white);
 }
 
-.meeting-item > .meeting-actions .btn-rsvp,
-.meeting-item > .meeting-actions .btn-reminder {
+.meeting-item > .meeting-actions .btn-rsvp {
     background-color: var(--white);
     border: 2px solid var(--primary);
     color: var(--primary);
 }
 
-.meeting-item > .meeting-actions .btn-rsvp:hover,
-.meeting-item > .meeting-actions .btn-reminder:hover {
+.meeting-item > .meeting-actions .btn-rsvp:hover {
     background-color: #e8f1f7;
 }
 
-.meeting-item > .meeting-actions .btn-rsvp:disabled,
-.meeting-item > .meeting-actions .btn-reminder:disabled {
-    cursor: default;
-    opacity: 0.75;
+/* After a confirmed send (this page view only). Green on white: 5.1:1. */
+.meeting-item > .meeting-actions .btn-rsvp.rsvp-sent {
+    border-color: #1e7b45;
+    color: #1e7b45;
 }
 
-.meeting-item > .meeting-actions :is(.btn-rsvp, .btn-reminder, .btn-calendar):focus-visible {
+.meeting-item > .meeting-actions :is(.btn-rsvp, .btn-calendar):focus-visible {
     outline: 3px solid var(--accent);
     outline-offset: 2px;
+}
+
+/* ===== MEETING RSVP DIALOG (js/modules/rsvp-dialog.js) ===== */
+.rsvp-dialog {
+    width: min(32rem, calc(100% - 2rem));
+    max-height: calc(100% - 2rem);
+
+    /* Centred in the viewport: the site's reset zeroes the UA's margin: auto */
+    margin: auto;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--white);
+    color: var(--dark);
+    box-shadow: var(--shadow-lg);
+    overflow: auto;
+}
+
+.rsvp-dialog::backdrop {
+    background: rgb(0, 0, 0, 0.55);
+}
+
+.rsvp-form {
+    padding: var(--space-md) var(--space-lg) var(--space-lg);
+}
+
+.rsvp-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+}
+
+.rsvp-title {
+    margin: 0;
+    color: var(--primary);
+    font-size: 1.5rem;
+}
+
+.rsvp-close {
+    min-width: 44px;
+    min-height: 44px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: none;
+    color: var(--dark);
+    font-size: 1.75rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.rsvp-close:hover {
+    background: var(--light);
+}
+
+.rsvp-meeting {
+    margin: 0.25rem 0 0.5rem;
+    font-weight: 600;
+}
+
+.rsvp-help,
+.rsvp-already {
+    margin: 0 0 var(--space-sm);
+    font-size: 0.95rem;
+}
+
+.rsvp-field {
+    margin-bottom: var(--space-sm);
+}
+
+.rsvp-field label {
+    margin-bottom: 0.25rem;
+}
+
+.rsvp-field textarea {
+    min-height: 4.5rem;
+}
+
+.rsvp-field .rsvp-invalid {
+    border-color: #b03a2e;
+}
+
+.rsvp-error {
+    margin: 0.25rem 0 0;
+    color: #b03a2e;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.rsvp-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.rsvp-actions .btn {
+    min-height: 44px;
+}
+
+.rsvp-dialog :is(button, input, select, textarea):focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.rsvp-result {
+    margin: var(--space-sm) 0 0;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+}
+
+.rsvp-result-success {
+    border: 1px solid #a5d6a7;
+    background: #e8f5e9;
+    color: #1b5e20;
+}
+
+.rsvp-result-error {
+    border: 1px solid #f0c4c0;
+    background: #fdf5f5;
+    color: #8e2b20;
+}
+
+/* ===== CALENDAR SUBSCRIBE (meetings.html, index.html) ===== */
+.calendar-subscribe {
+    margin-top: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    border: 1px solid #d5e3ec;
+    border-radius: var(--radius-md);
+    background: var(--white);
+    text-align: left;
+}
+
+.calendar-subscribe h3,
+.calendar-subscribe h4 {
+    margin: 0 0 0.5rem;
+    color: var(--primary);
+}
+
+.calendar-subscribe p {
+    margin: 0 0 0.75rem;
+}
+
+.calendar-subscribe-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin: 0 0 0.75rem;
+    padding: 0;
+    list-style: none;
+}
+
+.calendar-subscribe-links .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+}
+
+.calendar-subscribe-url {
+    overflow-wrap: anywhere;
 }
 
 .meetings-load-error {
@@ -2616,7 +2775,7 @@ tr:hover {
     min-height: 44px;
 }
 
-.modal-footer .modal-calendar-link[hidden] {
+.modal-footer :is(.modal-calendar-link, .modal-rsvp-btn)[hidden] {
     display: none;
 }
 
@@ -2668,6 +2827,7 @@ tr:hover {
     padding: var(--space-md) var(--space-lg);
     border-top: 1px solid var(--light);
     display: flex;
+    flex-wrap: wrap;
     justify-content: flex-end;
     gap: var(--space-sm);
     background: var(--light);

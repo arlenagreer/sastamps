@@ -4,7 +4,7 @@
  */
 
 import { debounce } from '../utils/performance.js';
-import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
+import { safeQuerySelector, escapeHTML, safeUrl, safeLocalStorageRemove } from '../utils/safe-dom.js';
 import { parseLocalDate } from '../utils/dates.js';
 import { fetchJSON } from '../utils/fetch-json.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
@@ -13,12 +13,11 @@ import { announceStatus, countSummary } from '../utils/announce.js';
 import {
   TIMING,
   CALENDAR,
-  SUCCESS_MESSAGES,
-  STORAGE_KEYS,
   FILTER_OPTIONS
 } from '../constants/index.js';
 import MeetingLoader, { meetingsInQuarter, selectScheduleQuarter } from '../modules/meeting-loader.js';
 import { meetingCalendarUrl, hasTime, formatLongDate, isClubUpcoming } from '../utils/meeting-calendar.js';
+import { openRsvpDialog, renderRsvpButton, rsvpButtonHTML } from '../modules/rsvp-dialog.js';
 
 const logger = createLogger('MeetingsPage');
 
@@ -73,8 +72,9 @@ async function initializeMeetingsPage() {
     initializeMeetingFilters(filtersContainer);
   }
 
-  // RSVP functionality
-  initializeRSVPSystem();
+  // RSVPs used to be kept only in this browser (never reaching the club);
+  // drop that stale record. RSVPs are now emailed (js/modules/rsvp-dialog.js).
+  safeLocalStorageRemove('meeting_rsvps');
 }
 
 const LOADING_HTML = '<div class="loading"><i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Loading...</div>';
@@ -103,15 +103,7 @@ async function retryFailedSections(originName) {
 
   // Calendar first, then the list, as on page load (they share one fetch)
   for (const name of pending) {
-    const wasReady = listReady;
     await loadSection(name);
-    if (name === 'list' && listReady && !wasReady) {
-      try {
-        initializeRSVPSystem();
-      } catch (error) {
-        logger.warn('RSVP state could not be restored:', error);
-      }
-    }
   }
 
   // Failed again: back to that section's retry button. Recovered: the section.
@@ -219,13 +211,16 @@ async function initializeMeetingsCalendar(token) {
     const [calendarModule, adapterModule, modalModule] = await Promise.all([
       import('vanilla-calendar-pro'),
       import('../calendar-adapter.js'),
-      import('../modal.js'),
-      import('../reminder-system.js')
+      import('../modal.js')
     ]);
     ({ Calendar } = calendarModule);
     // calendarAdapter is already an instance, not a function
     adapter = adapterModule.calendarAdapter;
     ({ modal } = modalModule);
+    // The details dialog offers RSVP for an upcoming meeting, through the
+    // same form as the cards.
+    modal.onRsvp = (meeting, button) => openRsvpDialog(meeting, button, { onSent: markRsvpSent });
+    modal.renderRsvpButton = renderRsvpButton;
   } catch (error) {
     logger.error('Failed to load the calendar code:', error);
     if (isCurrent('calendar', token)) {
@@ -407,12 +402,12 @@ function renderMeetingCard(meeting, { past, next }) {
                     ${meeting.description ? `<p class="meeting-description">${escapeHTML(meeting.description)}</p>` : ''}
                     ${agenda}`;
 
-  // Past and cancelled meetings get no RSVP, reminder or calendar actions.
+  // Past and cancelled meetings get no RSVP or calendar actions. Reminders
+  // come with the calendar: every meeting .ics carries them (scripts/build-calendar.js).
   const calendarUrl = (past || cancelled) ? '' : safeUrl(meetingCalendarUrl(meeting), '');
   const actions = (past || cancelled) ? '' : `
                 <div class="meeting-actions">
-                    <button type="button" class="btn-rsvp" data-meeting-id="${escapeHTML(meeting.id)}">RSVP</button>
-                    <button type="button" class="btn-reminder" data-meeting-id="${escapeHTML(meeting.id)}">Set Reminder</button>
+                    ${rsvpButtonHTML(meeting)}
                     ${calendarUrl ? `<a href="${escapeHTML(calendarUrl)}" class="btn-calendar" download aria-label="Add to Calendar: ${escapeHTML(meeting.title)}, ${escapeHTML(formatLongDate(meeting.date))}"><i class="fas fa-calendar-plus" aria-hidden="true"></i> Add to Calendar</a>` : ''}
                 </div>`;
 
@@ -463,6 +458,7 @@ async function loadMeetingsList(token) {
       ? `<p class="meeting-schedule-summary"><strong>Next meeting:</strong> <a href="#meeting-${escapeHTML(nextMeeting.id)}">${escapeHTML(formatLongDate(nextMeeting.date))}: ${escapeHTML(nextMeeting.title)}</a></p>`
       : `<p class="meeting-schedule-summary">All Q${quarter.quarter} ${quarter.year} meetings have taken place. The next schedule has not been posted yet; please check back soon.</p>`;
 
+    meetingsById = new Map(meetings.map(m => [m.id, m]));
     container.innerHTML = summary + meetings.map(meeting => renderMeetingCard(meeting, {
       past: isPast(meeting),
       next: meeting === nextMeeting
@@ -471,7 +467,7 @@ async function loadMeetingsList(token) {
     const pastNote = pastCount ? `, ${pastCount} already past` : '';
     announceStatus(scheduleStatusRegion(), `${countSummary(meetings.length, meetings.length, 'meeting', 'meetings')} for Q${quarter.quarter} ${quarter.year}${pastNote}`);
 
-    // Add event listeners for RSVP and reminder buttons
+    // RSVP buttons
     bindMeetingActions(container);
     listReady = true;
 
@@ -603,25 +599,20 @@ function initializeMeetingFilters(container) {
   });
 }
 
-function handleRSVP(meetingId, button) {
-  // Toggle RSVP status
-  const isRSVPd = button.classList.contains('rsvp-active');
+// The meetings on the cards, by id (set by loadMeetingsList).
+let meetingsById = new Map();
 
-  if (isRSVPd) {
-    button.classList.remove('rsvp-active');
-    button.textContent = 'RSVP';
-  } else {
-    button.classList.add('rsvp-active');
-    button.textContent = 'RSVP\'d';
-  }
-
-  // Store RSVP status in localStorage
-  try {
-    const rsvps = JSON.parse(localStorage.getItem('meeting_rsvps') || '{}');
-    rsvps[meetingId] = !isRSVPd;
-    localStorage.setItem('meeting_rsvps', JSON.stringify(rsvps));
-  } catch (error) {
-    logger.warn('Failed to save RSVP status:', error);
+/**
+ * After a confirmed send: every RSVP button for that meeting (its card and,
+ * if open, the details dialog, which can show meetings of other quarters)
+ * says so, for this page view only.
+ * @param {Object} meeting
+ */
+function markRsvpSent(meeting) {
+  for (const button of document.querySelectorAll('.btn-rsvp[data-meeting-id], .modal-rsvp-btn[data-meeting-id]')) {
+    if (button.dataset.meetingId === meeting.id) {
+      renderRsvpButton(button, meeting);
+    }
   }
 }
 
@@ -636,70 +627,18 @@ function bindMeetingActions(container) {
   // Plain listener, not addEventListenerWithCleanup: the cleanup registry
   // removes its listeners on beforeunload, and a page restored from the
   // back/forward cache would keep the bound flag but lose the listener.
-  container.addEventListener('click', async (e) => {
-    const button = e.target.closest?.('.btn-rsvp, .btn-reminder');
+  container.addEventListener('click', (e) => {
+    const button = e.target.closest?.('.btn-rsvp');
     if (!button || !container.contains(button)) {
       return;
     }
-    const { meetingId } = button.dataset;
-
-    if (button.classList.contains('btn-rsvp')) {
-      handleRSVP(meetingId, button);
+    const meeting = meetingsById.get(button.dataset.meetingId);
+    // Only upcoming meetings have the button; check again in case the page
+    // stayed open past the meeting.
+    if (!meeting || meeting.cancelled || !isClubUpcoming(meeting.date)) {
       return;
     }
-
-    const { reminderSystem } = await import('../reminder-system.js');
-    reminderSystem.setReminder(meetingId);
-
-    button.textContent = 'Reminder Set!';
-    button.disabled = true;
-    setTimeout(() => {
-      button.textContent = 'Set Reminder';
-      button.disabled = false;
-    }, TIMING.NOTIFICATION_SHORT);
-  });
-}
-
-function initializeRSVPSystem() {
-  // RSVP system using localStorage for now
-  window.handleRSVP = function(meetingId, button) {
-    const rsvps = JSON.parse(localStorage.getItem(STORAGE_KEYS.MEETING_RSVPS) || '{}');
-    const hasRSVPed = rsvps[meetingId];
-
-    if (hasRSVPed) {
-      delete rsvps[meetingId];
-      button.textContent = 'RSVP';
-      button.classList.remove('rsvp-confirmed');
-    } else {
-      rsvps[meetingId] = {
-        timestamp: new Date().toISOString(),
-        attendeeCount: 1
-      };
-      button.textContent = 'RSVP Confirmed';
-      button.classList.add('rsvp-confirmed');
-    }
-
-    localStorage.setItem(STORAGE_KEYS.MEETING_RSVPS, JSON.stringify(rsvps));
-
-    // Show confirmation
-    const confirmation = document.createElement('div');
-    confirmation.className = 'rsvp-confirmation';
-    confirmation.textContent = hasRSVPed ? SUCCESS_MESSAGES.RSVP_CANCELLED : SUCCESS_MESSAGES.RSVP_CONFIRMED;
-    button.parentNode.appendChild(confirmation);
-
-    setTimeout(() => {
-      confirmation.remove();
-    }, TIMING.RSVP_CONFIRMATION_DURATION);
-  };
-
-  // Load existing RSVPs
-  const rsvps = JSON.parse(localStorage.getItem(STORAGE_KEYS.MEETING_RSVPS) || '{}');
-  Object.keys(rsvps).forEach(meetingId => {
-    const button = Array.from(document.querySelectorAll('[data-meeting-id]')).find(el => el.dataset.meetingId === meetingId);
-    if (button && button.classList.contains('btn-rsvp')) {
-      button.textContent = 'RSVP Confirmed';
-      button.classList.add('rsvp-confirmed');
-    }
+    openRsvpDialog(meeting, button, { onSent: markRsvpSent });
   });
 }
 

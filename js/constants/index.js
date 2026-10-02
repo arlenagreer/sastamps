@@ -15,7 +15,6 @@ export const TIMING = {
   REMINDER_AUTO_DISMISS: 15000,
   COPY_FEEDBACK_DURATION: 1500,
   FORM_MESSAGE_SUCCESS_DURATION: 10000,
-  RSVP_CONFIRMATION_DURATION: 3000,
   RETRY_DELAY_BASE: 1000,
   SERVICE_WORKER_UPDATE_DISMISS: 10000
 };
@@ -79,7 +78,6 @@ export const LAZY_LOADING = {
 export const STORAGE_KEYS = {
   MEETING_REMINDERS: 'sapa-meeting-reminders',
   REMINDER_SETTINGS: 'sapa-reminder-settings',
-  MEETING_RSVPS: 'meeting_rsvps',
   THEME_PREFERENCE: 'theme-preference',
   USER_PREFERENCES: 'user-preferences',
   SEARCH_HISTORY: 'search-history'
@@ -123,9 +121,7 @@ export const SUCCESS_MESSAGES = {
   FORM_SUBMITTED: 'Thank you! Your message has been sent successfully.',
   SETTINGS_SAVED: 'Settings have been saved successfully.',
   REMINDER_SET: 'Reminder has been set.',
-  COPIED_TO_CLIPBOARD: 'Copied to clipboard!',
-  RSVP_CONFIRMED: 'Thanks for your RSVP!',
-  RSVP_CANCELLED: 'RSVP cancelled'
+  COPIED_TO_CLIPBOARD: 'Copied to clipboard!'
 };
 
 // Filter Options
