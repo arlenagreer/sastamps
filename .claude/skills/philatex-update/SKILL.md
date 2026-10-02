@@ -172,7 +172,7 @@ A fix-required verdict is **not** a reason to go to the checkpoint; it is a reas
 
 Run it in full after a CLEAN exit. After an escalation, go to Phase 11 in "incomplete" mode. **Before Approve can be offered in incomplete mode, checks 2 and 4 must pass**, so an Approve always commits a tree that has the expected files and is pushable. Confirm:
 
-1. **Every acceptance-contract assertion is GREEN**, including the automated green bar `[G1]`-`[G5]`: `build:js`, search rebuild + embed, scoped `validate:data`, `test:quick`, `check-ics.mjs`.
+1. **Every acceptance-contract assertion is GREEN**, including the automated green bar `[G1]`-`[G5]`: `build:js`, search index rebuild (`build:search`), scoped `validate:data`, `test:quick`, `check-ics.mjs`.
 2. All expected files were modified: `data/newsletters/newsletters.json` (new edition ID), `data/meetings/meetings.json` (the edition's new dates), ≥1 ICS in `data/calendar/`, the edition's aggregate ICS in `public/` (`sapa-qN-YYYY-meetings.ics` or `sapa-YYYY-MM-meetings.ics`), the source PDF copied to `public/SAPA-PHILATEX-…pdf` (filePath must resolve — `[S4]`), and `index.html` / `newsletter.html` / `meetings.html`.
 3. The final full pass found no blocker, major or minor items.
 4. **The local CI gate is green: `bin/ci` exits 0.** A clean checkpoint then means "pushable" as well as "clean". `bin/ci` runs the full build, which assembles the site in the gitignored `_site/` and must never rewrite a tracked file. Prove that it did not touch the content being committed:

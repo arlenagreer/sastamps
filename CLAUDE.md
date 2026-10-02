@@ -178,7 +178,7 @@ npm test                  # In terminal 2
 npm run test:html         # HTML validation
 npm run test:js           # JavaScript linting
 npm run test:css          # CSS validation
-npm run test:links        # Link checking (requires server)
+npm run test:site-build   # Build and check _site/, links included
 npm run test:a11y         # Accessibility (requires server)
 ```
 
@@ -223,7 +223,7 @@ npm run test:a11y         # Accessibility (requires server)
 
 ### Search Engine
 - Lunr.js powered client-side search
-- Embedded search index for fast results
+- Search index fetched on demand from `dist/data/search-*.json`
 - Search across meetings, newsletters, and glossary
 
 ### Newsletter System

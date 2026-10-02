@@ -367,31 +367,18 @@
             setSearchStatus(statusEl, 'loading', 'Loading search index...');
 
             try {
-                let indexData, docsData;
+                // The build writes the index to dist/data/ (build:search).
+                const [indexResponse, docsResponse] = await Promise.all([
+                    fetch('./dist/data/search-index.json'),
+                    fetch('./dist/data/search-documents.json')
+                ]);
 
-                // Check if embedded data is available
-                if (window.SEARCH_INDEX_DATA && window.SEARCH_DOCUMENTS_DATA) {
-                    // Use embedded data
-                    indexData = window.SEARCH_INDEX_DATA;
-                    docsData = window.SEARCH_DOCUMENTS_DATA;
-                } else {
-                    // Fall back to fetching
-                    const basePath = window.location.protocol === 'file:'
-                        ? window.location.href.substring(0, window.location.href.lastIndexOf('/'))
-                        : '.';
-
-                    const [indexResponse, docsResponse] = await Promise.all([
-                        fetch(basePath + '/dist/data/search-index.json'),
-                        fetch(basePath + '/dist/data/search-documents.json')
-                    ]);
-
-                    if (!indexResponse.ok || !docsResponse.ok) {
-                        throw new Error('Failed to load search data');
-                    }
-
-                    indexData = await indexResponse.json();
-                    docsData = await docsResponse.json();
+                if (!indexResponse.ok || !docsResponse.ok) {
+                    throw new Error('Failed to load search data');
                 }
+
+                const indexData = await indexResponse.json();
+                const docsData = await docsResponse.json();
 
                 // Initialize Lunr index
                 searchIndex = lunr.Index.load(indexData);

@@ -47,11 +47,15 @@ jobs:
         npm run serve &
         sleep 5
         
+    # Every link, external ones included (links on the site itself are
+    # already checked by test:site-build in ci.yml). Report only: third-party
+    # sites change and time out on their own schedule.
     - name: Run link checker (including external)
       run: |
         echo "Checking all links including external..."
-        npx broken-link-checker http://localhost:3000 --recursive --filter-level 3 > reports/link-check-report.txt 2>&1 || true
+        npm run report:links:external > reports/link-check-report.txt 2>&1 || true
         
+    # pa11y 10 over every page in _site/ (it serves _site itself). Report only.
     - name: Run accessibility audit
       run: |
         npm run test:a11y > reports/accessibility-report.txt 2>&1 || true
@@ -82,28 +86,30 @@ jobs:
         
     - name: Generate summary report
       run: |
-        echo "# Weekly Test Summary - $(date)" > reports/summary.md
-        echo "" >> reports/summary.md
-        echo "## Test Results" >> reports/summary.md
-        echo "" >> reports/summary.md
-        
-        if [ -f reports/link-check-report.txt ]; then
-          echo "### Link Check" >> reports/summary.md
-          tail -n 20 reports/link-check-report.txt >> reports/summary.md
-          echo "" >> reports/summary.md
-        fi
-        
-        if [ -f reports/accessibility-report.txt ]; then
-          echo "### Accessibility" >> reports/summary.md
-          tail -n 20 reports/accessibility-report.txt >> reports/summary.md
-          echo "" >> reports/summary.md
-        fi
-        
-        if [ -f reports/bundle-analysis.txt ]; then
-          echo "### Bundle Analysis" >> reports/summary.md
-          cat reports/bundle-analysis.txt >> reports/summary.md
-          echo "" >> reports/summary.md
-        fi
+        {
+          echo "# Weekly Test Summary - $(date)"
+          echo ""
+          echo "## Test Results"
+          echo ""
+
+          if [ -f reports/link-check-report.txt ]; then
+            echo "### Link Check"
+            tail -n 20 reports/link-check-report.txt
+            echo ""
+          fi
+
+          if [ -f reports/accessibility-report.txt ]; then
+            echo "### Accessibility"
+            tail -n 20 reports/accessibility-report.txt
+            echo ""
+          fi
+
+          if [ -f reports/bundle-analysis.txt ]; then
+            echo "### Bundle Analysis"
+            cat reports/bundle-analysis.txt
+            echo ""
+          fi
+        } > reports/summary.md
         
     - name: Upload comprehensive reports
       uses: actions/upload-artifact@v7

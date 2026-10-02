@@ -9,11 +9,11 @@ const { execFileSync } = require('child_process');
 // files. Anything else is not deployed: notably *.php (Pages would serve the
 // source text), data/*.db, scripts/, js/ sources, sw.js (retired) and docs.
 const SITE_DIRS = ['css', 'dist', 'images', 'public', 'downloads', 'showcase', 'data'];
-const SITE_FILES = ['favicon.ico', 'site.webmanifest'];
+// sitemap.xml is not here: the build generates it in _site/ (build-sitemap.js).
+const SITE_FILES = ['favicon.ico', 'site.webmanifest', 'robots.txt'];
 
 // Never public, wherever it sits: the build leaves these out and the check
-// fails if one reaches _site/. robots.txt is exempt so it can be added to
-// SITE_FILES once refreshed (todo 12); it is not deployed today.
+// fails if one reaches _site/. robots.txt is the one .txt that deploys.
 const isPrivate = (rel) => /\.(php|db|env|md)$/i.test(rel)
     || (/\.txt$/i.test(rel) && rel !== 'robots.txt')
     || /(^|\/)\./.test(rel); // dotfiles: the Pages artifact upload drops them anyway

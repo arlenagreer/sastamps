@@ -16,6 +16,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync, execFileSync } = require('child_process');
 const { SITE_DIRS, SITE_FILES, isSitePage, sitePages, isPrivate, deployableFiles } = require('./lib/site');
+const { HOST, ORIGIN, EXCLUDE, pageUrl, isShallow } = require('./build-sitemap');
 
 const REPO = path.resolve(__dirname, '..');
 const SITE = path.join(REPO, '_site');
@@ -142,6 +143,43 @@ if (!fs.existsSync(SITE)) {
       if (abs && !fileExact(abs)) missing.push(`${path.relative(SITE, file)} -> ${m[1]}`);
     }
   }
+  // Absolute URLs on this site (either host) anywhere in a page, stylesheet or
+  // the manifest: og:image, JSON-LD, canonical, plain links. They are not
+  // relative references, so the scan above skips them, but a dead one is just
+  // as broken (a missing og:image served 404 for a year). Each must name a
+  // file in _site/, as Pages would serve it. The host comes from CNAME, in
+  // both its www and bare forms, with or without a scheme (//host/...).
+  // Escape every regex metacharacter, not just dots (CNAME is ours, but a
+  // regex built from text should never depend on that).
+  const bareHost = HOST.replace(/^www\./, '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  // Groups: 1 userinfo (user@host: never acceptable), 2 port (ignored, so
+  // host:443/x is checked as /x), 3 path. The host must end at a path, a
+  // port or the URL's end, so www.sastamps.org@evil.example or
+  // sastamps.org.evil.example are not mistaken for this site.
+  const SAME_SITE = new RegExp(`(?:https?:)?//(?:([^/\\s"'<>@]+)@)?(?:www\\.)?${bareHost}(?::(\\d+))?(?![\\w.:@-])(/[^\\s"'<>)\\\\,]*)?`, 'gi');
+  let sameSite = 0; // in pages only: the sanity floor below must not count sitemap/robots
+  for (const file of walk(SITE).filter((f) => /\.(html?|css|webmanifest|xml|txt)$/.test(f))) {
+    const text = fs.readFileSync(file, 'utf8');
+    for (const m of text.matchAll(SAME_SITE)) {
+      if (/\.html?$/.test(file)) sameSite++;
+      if (m[1] !== undefined) {
+        missing.push(`${path.relative(SITE, file)} -> ${m[0]} (userinfo in a same-site URL)`);
+        continue;
+      }
+      let rel = (m[3] || '/').split(/[?#]/)[0];
+      try {
+        rel = decodeURIComponent(rel);
+      } catch {
+        missing.push(`${path.relative(SITE, file)} -> ${m[0]} (malformed escape)`);
+        continue;
+      }
+      if (rel.endsWith('/')) rel += 'index.html';
+      const abs = path.join(SITE, rel);
+      // Like the relative scan: a directory resolves through its index.html.
+      if (!fileExact(abs) && !fileExact(path.join(abs, 'index.html'))) missing.push(`${path.relative(SITE, file)} -> ${m[0]}`);
+    }
+  }
+  check(sameSite >= 10, `only ${sameSite} absolute same-site URLs found in the pages (parser problem?)`);
   check(missing.length === 0, `${missing.length} unresolved reference(s): ${missing.slice(0, 8).join(' ; ')}`);
 
   console.log('▸ built assets');
@@ -156,9 +194,72 @@ if (!fs.existsSync(SITE)) {
   check(existsExact(path.join(SITE, 'dist/js/font-loading.min.js')), '_site/dist/js/font-loading.min.js missing');
   check(existsExact(path.join(SITE, 'dist/js/script.min.js')), '_site/dist/js/script.min.js missing (every page loads it)');
   const siteSearch = existsExact(path.join(SITE, 'search.html')) ? fs.readFileSync(path.join(SITE, 'search.html'), 'utf8') : '';
-  check(count(siteSearch, /window\.SEARCH_INDEX_DATA = /g) === 1, '_site/search.html must embed the search index exactly once');
-  check(count(fs.readFileSync(path.join(REPO, 'search.html'), 'utf8'), /window\.SEARCH_INDEX_DATA = /g) === 0,
-    'the source search.html must not carry an embedded index (the build adds it to _site only)');
+  // search.html fetches its index at runtime (scripts/test-search-page.js
+  // proves that in a browser). Inlining it made the page ~368 KB and kept the
+  // index from being cached apart from the page.
+  check(siteSearch.length > 0 && count(siteSearch, /window\.SEARCH_INDEX_DATA\s*=/g) === 0, '_site/search.html must not embed the search index');
+  check(count(fs.readFileSync(path.join(REPO, 'search.html'), 'utf8'), /window\.SEARCH_INDEX_DATA\s*=/g) === 0,
+    'the source search.html must not carry an embedded index');
+  for (const name of ['search-index.json', 'search-documents.json']) {
+    const p = path.join(SITE, 'dist/data', name);
+    let ok = false;
+    try {
+      ok = existsExact(p) && JSON.parse(fs.readFileSync(p, 'utf8')) !== null;
+    } catch {
+      ok = false;
+    }
+    check(ok, `_site/dist/data/${name} missing or not valid JSON (search.html fetches it)`);
+  }
+}
+
+console.log('▸ robots.txt and sitemap.xml');
+if (fs.existsSync(SITE)) {
+  const robots = existsExact(path.join(SITE, 'robots.txt')) ? fs.readFileSync(path.join(SITE, 'robots.txt'), 'utf8') : '';
+  check(robots.length > 0, '_site/robots.txt missing');
+  check(new RegExp(`^Sitemap: ${ORIGIN}sitemap\\.xml$`, 'm').test(robots), `_site/robots.txt must point at ${ORIGIN}sitemap.xml`);
+  const sitemap = existsExact(path.join(SITE, 'sitemap.xml')) ? fs.readFileSync(path.join(SITE, 'sitemap.xml'), 'utf8') : '';
+  check(sitemap.length > 0, '_site/sitemap.xml missing');
+  // Parse it as a sitemap: one <urlset>, and every <url> exactly one <loc>
+  // and one well-formed <lastmod> (none in a shallow clone: no history to date it).
+  const wantLastmod = isShallow(REPO) ? 0 : 1;
+  check(/^<\?xml version="1\.0" encoding="UTF-8"\?>\n<urlset xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9">\n[\s\S]*<\/urlset>\n$/.test(sitemap),
+    '_site/sitemap.xml is not a well-formed <urlset>');
+  const entries = [...sitemap.matchAll(/<url>([\s\S]*?)<\/url>/g)].map((m) => m[1]);
+  check(count(sitemap, /<url>/g) === entries.length && count(sitemap, /<\/url>/g) === entries.length, '_site/sitemap.xml has unbalanced <url> tags');
+  const locs = [];
+  for (const e of entries) {
+    const loc = [...e.matchAll(/<loc>([^<]*)<\/loc>/g)].map((m) => m[1]);
+    const lastmod = [...e.matchAll(/<lastmod>([^<]*)<\/lastmod>/g)].map((m) => m[1]);
+    check(loc.length === 1 && lastmod.length === wantLastmod, `sitemap entry needs one <loc> and ${wantLastmod} <lastmod>: ${e.trim().slice(0, 80)}`);
+    if (lastmod.length) {
+      check(/^\d{4}-\d{2}-\d{2}$/.test(lastmod[0]) && !Number.isNaN(Date.parse(lastmod[0])), `sitemap <lastmod> is not a date: ${lastmod[0]}`);
+    }
+    if (loc.length !== 1) continue;
+    locs.push(loc[0]);
+    check(loc[0].startsWith(ORIGIN), `sitemap <loc> is not on ${ORIGIN}: ${loc[0]}`);
+    const rel = loc[0].slice(ORIGIN.length) || 'index.html';
+    check(isSitePage(rel) && fileExact(path.join(SITE, rel)), `sitemap <loc> ${loc[0]} has no page in _site/`);
+  }
+  // And the other way: every deployed page except the excluded ones is listed.
+  for (const p of sitePages(REPO, DEPLOYABLE).filter((x) => !EXCLUDE.has(x))) {
+    check(locs.includes(pageUrl(p)), `sitemap.xml does not list ${p}`);
+  }
+  // Each listed page's rel=canonical is exactly its sitemap <loc>, on the
+  // CNAME host: search engines treat a mismatch as two different URLs.
+  console.log(`▸ rel=canonical matches the sitemap and uses https://${HOST}/`);
+  for (const loc of locs) {
+    const rel = loc.slice(ORIGIN.length) || 'index.html';
+    if (!fileExact(path.join(SITE, rel))) continue;
+    const html = fs.readFileSync(path.join(SITE, rel), 'utf8');
+    const canon = [...html.matchAll(/<link\b[^>]*\brel=["']canonical["'][^>]*>/gi)]
+      .map((m) => (m[0].match(/\bhref=["']([^"']*)["']/i) || [])[1]);
+    check(canon.length === 1, `${rel}: ${canon.length} rel=canonical links, want 1`);
+    if (canon.length === 1) {
+      check(canon[0] === loc, `${rel}: canonical ${canon[0]} is not its sitemap <loc> ${loc}`);
+      check(canon[0].startsWith(`https://${HOST}/`), `${rel}: canonical ${canon[0]} is not on https://${HOST}/ (CNAME)`);
+    }
+  }
+  check(!existsExact(path.join(REPO, 'sitemap.xml')) || !DEPLOYABLE.has('sitemap.xml'), 'a committed sitemap.xml would go stale: the build generates it');
 }
 
 // Pages that use the font-loading CSS, and therefore need the script.
