@@ -4528,11 +4528,6 @@ tr:hover {
     }
 }
 
-.page-resources .btn-bookmark.bookmarked {
-    background-color: var(--accent);
-    color: var(--dark);
-}
-
 .page-resources .resource-actions {
     position: relative;
     display: flex;
@@ -4570,4 +4565,11 @@ tr:hover {
 .page-resources .btn-outline:hover {
     background-color: var(--primary);
     color: var(--white);
+}
+
+/* After .btn-outline:hover (same specificity): a bookmarked button stays
+   gold with dark text when hovered, as it did before the fold. */
+.page-resources .btn-bookmark.bookmarked {
+    background-color: var(--accent);
+    color: var(--dark);
 }
