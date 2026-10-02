@@ -923,6 +923,15 @@ th {
     font-weight: 600;
 }
 
+/* Header row in the primary colour (TSDA show tables on index and meetings).
+   The colour sits on the th cells: the global th background above would
+   otherwise paint --light over the row colour (white on #ecf0f1, 1.14:1),
+   and tr:hover would repaint the row. White on --primary: 8.36:1. */
+.table-header-primary th {
+    background-color: var(--primary);
+    color: #fff;
+}
+
 tr:hover {
     background-color: rgb(236, 240, 241, 0.5);
 }
