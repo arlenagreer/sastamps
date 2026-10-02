@@ -7,7 +7,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="format-detection" content="telephone=no">
-    <meta name="description" content="Join SAPA for our weekly meetings featuring educational programs, auctions, and trading sessions. Find our meeting schedule and add events to your calendar.">
+    <meta name="description" content="Join SAPA most Friday nights for educational programs, auctions, and trading sessions. Find our meeting schedule and add events to your calendar.">
     <meta name="keywords" content="SAPA meetings, San Antonio Philatelic Association meetings, stamp club meetings, philately meetings, San Antonio stamp meetings">
 
     <title>Meetings - San Antonio Philatelic Association</title>
@@ -16,14 +16,14 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.sastamps.org/meetings.html">
     <meta property="og:title" content="Meetings - San Antonio Philatelic Association">
-    <meta property="og:description" content="Join SAPA for our weekly meetings featuring educational programs, auctions, and trading sessions.">
+    <meta property="og:description" content="Join SAPA most Friday nights for educational programs, auctions, and trading sessions.">
     <meta property="og:image" content="https://www.sastamps.org/dist/images/meetings-page-image.webp">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://www.sastamps.org/meetings.html">
     <meta property="twitter:title" content="Meetings - San Antonio Philatelic Association">
-    <meta property="twitter:description" content="Join SAPA for our weekly meetings featuring educational programs, auctions, and trading sessions.">
+    <meta property="twitter:description" content="Join SAPA most Friday nights for educational programs, auctions, and trading sessions.">
     <meta property="twitter:image" content="https://www.sastamps.org/dist/images/meetings-page-image.webp">
 
     <!-- Fonts -->
@@ -69,6 +69,15 @@
 
     <link rel="stylesheet" href="css/font-loading.min.css">
     <script src="dist/js/font-loading.min.js"></script>
+    <!-- Without JavaScript the schedule and calendar never load: hide their
+         spinners and the hint that points at per-meeting links. -->
+    <noscript>
+        <style>
+            #meeting-schedule-container .loading,
+            #calendar-container .loading,
+            .js-only { display: none !important; }
+        </style>
+    </noscript>
 </head>
 <body>
     <!-- Skip to content link for accessibility -->
@@ -105,7 +114,7 @@
         <section class="hero hero-overlay hero-meetings">
             <div class="container">
                 <h1>SAPA Meetings</h1>
-                <p>Join us for weekly meetings featuring educational programs, auctions, and trading sessions</p>
+                <p>Join us most Friday nights for educational programs, auctions, and trading sessions</p>
             </div>
         </section>
 
@@ -135,16 +144,19 @@
                                 <h3><i class="fas fa-info-circle" style="color: var(--primary);"></i> Meeting Types</h3>
                                 <ul class="meeting-types-list list-unstyled">
                                     <li class="mb-3">
-                                        <strong>First Friday:</strong><br>
-                                        Board of Governors Meeting &amp; Show &amp; Tell
+                                        <strong>Board of Governors &amp; Show and Tell:</strong><br>
+                                        The first meeting of each month (BOG at 7:15 PM)
                                     </li>
                                     <li class="mb-3">
-                                        <strong>Second Friday:</strong><br>
-                                        Auction (items due by 7:15 PM)
+                                        <strong>Club Auction:</strong><br>
+                                        Once a month
+                                    </li>
+                                    <li class="mb-3">
+                                        <strong>Stamp Bourse and Stamp Programs:</strong><br>
+                                        On the other Fridays
                                     </li>
                                     <li>
-                                        <strong>Other Fridays:</strong><br>
-                                        Bourse or Educational Programs
+                                        Dates move around holidays, so check the schedule below for each Friday.
                                     </li>
                                 </ul>
                             </div>
@@ -155,7 +167,7 @@
         </section>
 
         <!-- Calendar Section -->
-        <section class="section" style="background-color: var(--light);">
+        <section class="section" id="meeting-schedule" style="background-color: var(--light);">
             <div class="container">
                 <h2 class="section-title">Meeting Schedule</h2>
                 <div class="card">
@@ -173,7 +185,7 @@
                             <noscript>
                                 <div class="fallback-message">
                                     <p><strong>JavaScript is required to display the dynamic meeting schedule.</strong></p>
-                                    <p>Please enable JavaScript in your browser or contact us at <a href="mailto:loz33@hotmail.com">loz33@hotmail.com</a> for meeting information.</p>
+                                    <p>This quarter's full schedule is in the <a href="index.html#meeting-schedule">Upcoming Meetings table on the home page</a> and in the calendar file you can download below. You can also email <a href="mailto:loz33@hotmail.com">loz33@hotmail.com</a> for meeting information.</p>
                                 </div>
                             </noscript>
                         </div>
@@ -187,6 +199,11 @@
                                 <div class="loading">
                                     <i class="fas fa-spinner fa-spin"></i> Loading calendar...
                                 </div>
+                                <noscript>
+                                    <div class="fallback-message">
+                                        <p><strong>The calendar view needs JavaScript.</strong> Every meeting date is in the <a href="index.html#meeting-schedule">home page schedule</a> and in the calendar file below.</p>
+                                    </div>
+                                </noscript>
                             </div>
                         </div>
 
@@ -200,7 +217,7 @@
                                 </div>
                                 <div style="color: var(--primary); font-weight: bold;">OR</div>
                                 <div>
-                                    <p style="margin-bottom: 0.5rem;">Click the <i class="fas fa-calendar-plus"></i> icons above for individual meetings</p>
+                                    <p class="js-only" style="margin-bottom: 0.5rem;">To add a single meeting, use <strong><i class="fas fa-calendar-plus" aria-hidden="true"></i> Add to Calendar</strong> on any upcoming meeting above</p>
                                 </div>
                             </div>
                         </div>

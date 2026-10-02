@@ -5,7 +5,7 @@
 
 import { debounce } from '../utils/performance.js';
 import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
-import { parseLocalDate, isUpcomingDate } from '../utils/dates.js';
+import { parseLocalDate } from '../utils/dates.js';
 import { fetchJSON } from '../utils/fetch-json.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { createLogger } from '../utils/logger.js';
@@ -13,28 +13,59 @@ import { announceStatus, countSummary } from '../utils/announce.js';
 import {
   TIMING,
   CALENDAR,
-  ERROR_MESSAGES,
   SUCCESS_MESSAGES,
   STORAGE_KEYS,
   FILTER_OPTIONS
 } from '../constants/index.js';
 import MeetingLoader, { meetingsInQuarter, selectScheduleQuarter } from '../modules/meeting-loader.js';
+import { meetingCalendarUrl, hasTime, formatLongDate, isClubUpcoming } from '../utils/meeting-calendar.js';
 
 const logger = createLogger('MeetingsPage');
 
 // Export MeetingLoader for global access via SAPA_MEETINGS
 export { MeetingLoader };
 
+// Visible and announced text for the two ways the page can fail. Each sits
+// next to a "Try again" button, so each says that is what to do.
+const LOAD_FAILED_TEXT = 'The meeting schedule could not be loaded. Check your connection, then select Try again.';
+const CALENDAR_FAILED_TEXT = 'The calendar view could not be shown. Select Try again, or use the meeting list above.';
+
+// The live vanilla-calendar-pro instance, and which sections rendered.
+// A retry rebuilds only the sections that failed.
+let calendarInstance = null;
+let calendarReady = false;
+let listReady = false;
+
+// One load at a time per section. A load in flight is shared, not repeated,
+// and each load carries a token: a load that a newer one has superseded
+// leaves the page alone, so a late failure cannot overwrite a newer success.
+const sectionLoads = { calendar: null, list: null };
+const sectionTokens = { calendar: 0, list: 0 };
+
+function loadSection(name) {
+  if (!sectionLoads[name]) {
+    const token = ++sectionTokens[name];
+    const run = name === 'calendar'
+      ? initializeMeetingsCalendar(token)
+      : loadMeetingsList(token);
+    sectionLoads[name] = run.finally(() => {
+      sectionLoads[name] = null;
+    });
+  }
+  return sectionLoads[name];
+}
+
+const isCurrent = (name, token) => token === sectionTokens[name];
+
+const CONTAINER_IDS = { calendar: 'calendar-container', list: 'meeting-schedule-container' };
+
 // Meetings-specific functionality
 async function initializeMeetingsPage() {
   // Calendar is essential for meetings page - always load
-  await initializeMeetingsCalendar();
+  await loadSection('calendar');
 
   // Meeting list/grid view
-  const meetingsList = safeQuerySelector('#meeting-schedule-container');
-  if (meetingsList) {
-    await loadMeetingsList(meetingsList);
-  }
+  await loadSection('list');
 
   // Meeting filters
   const filtersContainer = safeQuerySelector('#meeting-filters');
@@ -46,33 +77,177 @@ async function initializeMeetingsPage() {
   initializeRSVPSystem();
 }
 
-async function initializeMeetingsCalendar() {
-  const calendarContainer = safeQuerySelector('#calendar-container');
-  if (!calendarContainer) {
+const LOADING_HTML = '<div class="loading"><i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Loading...</div>';
+
+/**
+ * "Try again": rebuild whichever sections failed (never one that works, and
+ * never one already loading), then put focus somewhere sensible in the
+ * section the button was in.
+ * @param {string} originName - 'calendar' or 'list'
+ */
+async function retryFailedSections(originName) {
+  const pending = [];
+  for (const name of ['calendar', 'list']) {
+    const ready = name === 'calendar' ? calendarReady : listReady;
+    if (ready) {
+      continue;
+    }
+    if (!sectionLoads[name]) {
+      const el = document.getElementById(CONTAINER_IDS[name]);
+      if (el) {
+        el.innerHTML = LOADING_HTML;
+      }
+    }
+    pending.push(name);
+  }
+
+  // Calendar first, then the list, as on page load (they share one fetch)
+  for (const name of pending) {
+    const wasReady = listReady;
+    await loadSection(name);
+    if (name === 'list' && listReady && !wasReady) {
+      try {
+        initializeRSVPSystem();
+      } catch (error) {
+        logger.warn('RSVP state could not be restored:', error);
+      }
+    }
+  }
+
+  // Failed again: back to that section's retry button. Recovered: the section.
+  // Re-query: the calendar's destroy() replaces its container element.
+  const origin = document.getElementById(CONTAINER_IDS[originName]);
+  const retry = origin?.querySelector('.meetings-retry');
+  if (retry) {
+    retry.focus();
+  } else if (origin) {
+    origin.setAttribute('tabindex', '-1');
+    origin.focus();
+  }
+}
+
+/**
+ * Replace a section's content with a visible error and a working retry button.
+ * role="alert" announces the same text that is shown.
+ * @param {string} name - 'calendar' or 'list'
+ * @param {string} message
+ */
+function renderLoadError(name, message) {
+  // Always the live element: the calendar's destroy() swaps it for a clone
+  const container = document.getElementById(CONTAINER_IDS[name]);
+  if (!container) {
+    return;
+  }
+  container.innerHTML = `
+        <div class="error-message meetings-load-error" role="alert">
+            <p>${escapeHTML(message)}</p>
+            <button type="button" class="btn btn-primary meetings-retry">
+                <i class="fas fa-redo" aria-hidden="true"></i> Try again
+            </button>
+        </div>
+    `;
+  const button = container.querySelector('.meetings-retry');
+  if (button) {
+    // A plain listener: the button is thrown away with its markup, and the
+    // listener with it (the cleanup registry would keep the detached node).
+    button.addEventListener('click', () => {
+      if (button.disabled) {
+        return;
+      }
+      // Stays disabled until this section's load settles (a failure renders
+      // a fresh button; a success removes this one).
+      button.disabled = true;
+      button.setAttribute('aria-disabled', 'true');
+      retryFailedSections(name);
+    });
+  }
+}
+
+/**
+ * Mark meeting days on a calendar date cell (vanilla-calendar-pro v3
+ * onCreateDateEls hook, called for every day cell it renders).
+ * @param {HTMLElement} dateEl - The cell, carrying data-vc-date
+ * @param {Object} adapter - CalendarAdapter with meetings loaded
+ */
+function markMeetingDate(dateEl, adapter) {
+  const date = dateEl?.dataset?.vcDate;
+  const meeting = date && adapter.getMeetingByDate(date);
+  if (!meeting) {
+    return;
+  }
+  dateEl.classList.add(meeting.cancelled ? 'sapa-day-cancelled' : 'sapa-day-meeting');
+  if (!isClubUpcoming(date)) {
+    dateEl.classList.add('sapa-day-past');
+  }
+  dateEl.dataset.sapaMeeting = meeting.cancelled ? 'cancelled' : 'meeting';
+
+  const button = dateEl.querySelector('[data-vc-date-btn]');
+  if (button) {
+    const what = meeting.cancelled ? `no meeting (${meeting.title})` : meeting.title;
+    button.setAttribute('aria-label', `${formatLongDate(date)}: ${what}. Show details`);
+  }
+}
+
+// v3 attaches its click handler to the container, so a second instance on
+// the same element would answer every click twice. Always tear down first.
+// destroy() replaces the container with a clone: re-query it afterwards.
+function destroyCalendar() {
+  if (calendarInstance) {
+    try {
+      calendarInstance.destroy();
+    } catch (error) {
+      logger.warn('Calendar destroy failed:', error);
+    }
+    calendarInstance = null;
+  }
+  calendarReady = false;
+}
+
+async function initializeMeetingsCalendar(token) {
+  if (!document.getElementById(CONTAINER_IDS.calendar)) {
     logger.warn('Calendar container not found on meetings page');
     return;
   }
 
+  destroyCalendar();
+
+  let adapter;
+  let Calendar;
+  let modal;
   try {
     // Import calendar dependencies
-    const [
-      { Calendar },
-      { calendarAdapter },
-      { modal },
-      { reminderSystem: _reminderSystem }
-    ] = await Promise.all([
+    const [calendarModule, adapterModule, modalModule] = await Promise.all([
       import('vanilla-calendar-pro'),
       import('../calendar-adapter.js'),
       import('../modal.js'),
       import('../reminder-system.js')
     ]);
-
-    // Initialize calendar with full meeting functionality
+    ({ Calendar } = calendarModule);
     // calendarAdapter is already an instance, not a function
-    const adapter = calendarAdapter;
-    if (adapter && adapter.loadMeetings) {
-      await adapter.loadMeetings();
+    adapter = adapterModule.calendarAdapter;
+    ({ modal } = modalModule);
+  } catch (error) {
+    logger.error('Failed to load the calendar code:', error);
+    if (isCurrent('calendar', token)) {
+      renderLoadError('calendar', CALENDAR_FAILED_TEXT);
     }
+    return;
+  }
+
+  const data = await adapter.loadMeetings();
+  if (!isCurrent('calendar', token)) {
+    return;
+  }
+  if (!data) {
+    // Without the data every day click would silently do nothing.
+    renderLoadError('calendar', LOAD_FAILED_TEXT);
+    return;
+  }
+
+  try {
+    // Re-queried after destroyCalendar(), which swaps the element
+    const calendarContainer = document.getElementById(CONTAINER_IDS.calendar);
+    calendarContainer.innerHTML = '';
 
     // vanilla-calendar-pro v3 API (flat options; v2's settings/actions are ignored)
     const calendar = new Calendar(calendarContainer, {
@@ -82,6 +257,8 @@ async function initializeMeetingsCalendar() {
       selectionDatesMode: 'single',
       displayDateMin: CALENDAR.DATE_RANGE.MIN,
       displayDateMax: CALENDAR.DATE_RANGE.MAX,
+      // Show the meeting days: a class and a spoken label on each cell
+      onCreateDateEls: (_self, dateEl) => markMeetingDate(dateEl, adapter),
       onClickDate: (self, event) => {
         // Read the clicked cell's date rather than self.context.selectedDates:
         // re-clicking a date toggles it off (enableDateToggle), emptying the selection.
@@ -95,21 +272,36 @@ async function initializeMeetingsCalendar() {
       }
     });
 
+    // Held before init(), so a half-built calendar is still destroyed on failure
+    calendarInstance = calendar;
     calendar.init();
-
-    // Reminder system is already initialized via its constructor/singleton pattern
-
-    // Meetings calendar initialized successfully
+    calendarReady = true;
+    renderCalendarLegend(document.getElementById(CONTAINER_IDS.calendar));
 
   } catch (error) {
+    // The calendar itself failed (not the data): only the calendar is
+    // rebuilt on retry; the meeting list keeps working.
     logger.error('Failed to initialize meetings calendar:', error);
-    calendarContainer.innerHTML = `
-            <div class="error-message">
-                <p>${escapeHTML(ERROR_MESSAGES.CALENDAR_UNAVAILABLE)}</p>
-                <button onclick="location.reload()">Refresh Page</button>
-            </div>
-        `;
+    destroyCalendar();
+    renderLoadError('calendar', CALENDAR_FAILED_TEXT);
   }
+}
+
+// Key to the day markings, placed under the calendar.
+function renderCalendarLegend(calendarContainer) {
+  const existing = document.getElementById('calendar-legend');
+  if (existing) {
+    existing.remove();
+  }
+  const legend = document.createElement('ul');
+  legend.id = 'calendar-legend';
+  legend.className = 'calendar-legend';
+  legend.setAttribute('aria-label', 'Calendar key');
+  legend.innerHTML = `
+        <li><span class="legend-swatch legend-meeting" aria-hidden="true">8</span> Meeting day (select it for details)</li>
+        <li><span class="legend-swatch legend-cancelled" aria-hidden="true">8</span> No meeting that Friday</li>
+    `;
+  calendarContainer.insertAdjacentElement('afterend', legend);
 }
 
 /**
@@ -122,20 +314,21 @@ function formatMeetingTime(time) {
     return time;
   }
   if (time && typeof time === 'object') {
-    if (time.meetingStart === 'N/A' || !time.meetingStart) {
-      return 'N/A';
+    if (!hasTime(time.meetingStart)) {
+      return 'Time TBD';
     }
     const parts = [];
-    if (time.doorsOpen && time.doorsOpen !== 'N/A') {
+    if (hasTime(time.doorsOpen) && time.doorsOpen !== time.meetingStart) {
       parts.push(`Doors: ${time.doorsOpen}`);
     }
-    if (time.meetingStart) {
-      parts.push(`Meeting: ${time.meetingStart}`);
+    if (hasTime(time.bogStart)) {
+      parts.push(`BOG: ${time.bogStart}`);
     }
-    if (time.meetingEnd) {
+    parts.push(`Meeting: ${time.meetingStart}`);
+    if (hasTime(time.meetingEnd)) {
       parts.push(`End: ${time.meetingEnd}`);
     }
-    return parts.join(' | ') || 'Time TBD';
+    return parts.join(' | ');
   }
   return 'Time TBD';
 }
@@ -170,10 +363,83 @@ function formatMeetingLocation(location) {
   return 'Location TBD';
 }
 
-async function loadMeetingsList(container) {
+function meetingBadges(cancelled, past, next) {
+  const badges = [];
+  if (next) {
+    badges.push('<span class="meeting-badge badge-next">Next meeting</span>');
+  }
+  if (cancelled) {
+    badges.push('<span class="meeting-badge badge-cancelled">No meeting</span>');
+  }
+  if (past) {
+    badges.push('<span class="meeting-badge badge-past">Past</span>');
+  }
+  return badges.length ? `<p class="meeting-badges">${badges.join(' ')}</p>` : '';
+}
+
+/**
+ * One meeting card.
+ * @param {Object} meeting
+ * @param {{past: boolean, next: boolean}} state
+ * @returns {string} HTML
+ */
+function renderMeetingCard(meeting, { past, next }) {
+  const cancelled = Boolean(meeting.cancelled);
+  const classes = ['meeting-item'];
+  if (cancelled) { classes.push('meeting-cancelled'); }
+  if (past) { classes.push('meeting-past'); }
+  if (next) { classes.push('meeting-next'); }
+
+  const agenda = Array.isArray(meeting.agenda) && meeting.agenda.length ? `
+                        <details class="meeting-agenda">
+                            <summary>Agenda</summary>
+                            <ul>
+                                ${meeting.agenda.map(item => `<li>${escapeHTML(typeof item === 'string' ? item : [item.time, item.item].filter(Boolean).join(' – '))}</li>`).join('')}
+                            </ul>
+                        </details>` : '';
+
+  // A cancelled Friday has no time or place to show.
+  const details = cancelled
+    ? `<p class="meeting-description">${escapeHTML(meeting.description || 'No meeting this Friday.')}</p>`
+    : `
+                    <p><strong>Time:</strong> ${escapeHTML(formatMeetingTime(meeting.time))}</p>
+                    <p><strong>Location:</strong> ${escapeHTML(formatMeetingLocation(meeting.location))}</p>
+                    ${meeting.description ? `<p class="meeting-description">${escapeHTML(meeting.description)}</p>` : ''}
+                    ${agenda}`;
+
+  // Past and cancelled meetings get no RSVP, reminder or calendar actions.
+  const calendarUrl = (past || cancelled) ? '' : safeUrl(meetingCalendarUrl(meeting), '');
+  const actions = (past || cancelled) ? '' : `
+                <div class="meeting-actions">
+                    <button type="button" class="btn-rsvp" data-meeting-id="${escapeHTML(meeting.id)}">RSVP</button>
+                    <button type="button" class="btn-reminder" data-meeting-id="${escapeHTML(meeting.id)}">Set Reminder</button>
+                    ${calendarUrl ? `<a href="${escapeHTML(calendarUrl)}" class="btn-calendar" download aria-label="Add to Calendar: ${escapeHTML(meeting.title)}, ${escapeHTML(formatLongDate(meeting.date))}"><i class="fas fa-calendar-plus" aria-hidden="true"></i> Add to Calendar</a>` : ''}
+                </div>`;
+
+  return `
+            <article id="meeting-${escapeHTML(meeting.id)}" class="${classes.join(' ')}" data-date="${escapeHTML(meeting.date)}" data-type="${escapeHTML(meeting.type || 'regular')}" tabindex="-1">
+                <div class="meeting-header">
+                    ${meetingBadges(cancelled, past, next)}
+                    <h3>${escapeHTML(meeting.title)}</h3>
+                    <time datetime="${escapeHTML(meeting.date)}" class="meeting-date">${escapeHTML(formatLongDate(meeting.date))}</time>
+                </div>
+                <div class="meeting-details">${details}
+                </div>${actions}
+            </article>
+        `;
+}
+
+async function loadMeetingsList(token) {
+  const container = document.getElementById(CONTAINER_IDS.list);
+  if (!container) {
+    return;
+  }
   try {
     const meetingsData = await fetchJSON('data/meetings/meetings.json');
-    
+    if (!isCurrent('list', token)) {
+      return;
+    }
+
     // Show the current quarter (rolling over to the next one near quarter end,
     // once its schedule is posted). Shared with MeetingLoader so the rule lives
     // in one place and nothing needs editing when a quarter changes.
@@ -186,57 +452,64 @@ async function loadMeetingsList(container) {
       return;
     }
 
-    const html = meetings.map(meeting => {
-      const calendarUrl = safeUrl(meeting.calendarLink, '');
-      return `
-            <article class="meeting-item" data-date="${escapeHTML(meeting.date)}" data-type="${escapeHTML(meeting.type || 'regular')}">
-                <header class="meeting-header">
-                    <h3>${escapeHTML(meeting.title)}</h3>
-                    <time datetime="${escapeHTML(meeting.date)}" class="meeting-date">
-                        ${escapeHTML(new Date(`${meeting.date}T00:00:00`).toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  }))}
-                    </time>
-                </header>
+    // A meeting stays upcoming through the whole of its own date in
+    // San Antonio (Central time), wherever the visitor is.
+    const now = new Date();
+    const isPast = m => !isClubUpcoming(m.date, now);
+    const nextMeeting = meetings.find(m => !m.cancelled && !isPast(m));
+    const pastCount = meetings.filter(isPast).length;
 
-                <div class="meeting-details">
-                    <p><strong>Time:</strong> ${escapeHTML(formatMeetingTime(meeting.time))}</p>
-                    <p><strong>Location:</strong> ${escapeHTML(formatMeetingLocation(meeting.location))}</p>
-                    ${meeting.description ? `<p class="meeting-description">${escapeHTML(meeting.description)}</p>` : ''}
-                    ${meeting.agenda ? `
-                        <details class="meeting-agenda">
-                            <summary>Agenda</summary>
-                            <ul>
-                                ${meeting.agenda.map(item => `<li>${escapeHTML(typeof item === 'string' ? item : item.item || '')}</li>`).join('')}
-                            </ul>
-                        </details>
-                    ` : ''}
-                </div>
+    const summary = nextMeeting
+      ? `<p class="meeting-schedule-summary"><strong>Next meeting:</strong> <a href="#meeting-${escapeHTML(nextMeeting.id)}">${escapeHTML(formatLongDate(nextMeeting.date))}: ${escapeHTML(nextMeeting.title)}</a></p>`
+      : `<p class="meeting-schedule-summary">All Q${quarter.quarter} ${quarter.year} meetings have taken place. The next schedule has not been posted yet; please check back soon.</p>`;
 
-                <footer class="meeting-actions">
-                    <button class="btn-rsvp" data-meeting-id="${escapeHTML(meeting.id)}">RSVP</button>
-                    <button class="btn-reminder" data-meeting-id="${escapeHTML(meeting.id)}">Set Reminder</button>
-                    ${calendarUrl ? `<a href="${escapeHTML(calendarUrl)}" class="btn-calendar" aria-label="Add to Calendar: ${escapeHTML(meeting.title)}">Add to Calendar</a>` : ''}
-                </footer>
-            </article>
-        `;
-    }).join('');
+    container.innerHTML = summary + meetings.map(meeting => renderMeetingCard(meeting, {
+      past: isPast(meeting),
+      next: meeting === nextMeeting
+    })).join('');
 
-    container.innerHTML = html;
-    announceStatus(scheduleStatusRegion(), `${countSummary(meetings.length, meetings.length, 'meeting', 'meetings')} for Q${quarter.quarter} ${quarter.year}`);
+    const pastNote = pastCount ? `, ${pastCount} already past` : '';
+    announceStatus(scheduleStatusRegion(), `${countSummary(meetings.length, meetings.length, 'meeting', 'meetings')} for Q${quarter.quarter} ${quarter.year}${pastNote}`);
 
     // Add event listeners for RSVP and reminder buttons
     bindMeetingActions(container);
+    listReady = true;
+
+    // A link such as meetings.html#meeting-2026-10-16 names a card that only
+    // exists now, so the browser's own jump on load found nothing.
+    scrollToHashedMeeting();
 
   } catch (error) {
     logger.error('Failed to load meetings list:', error);
-    container.innerHTML = `<p class="error-message">${escapeHTML(ERROR_MESSAGES.MEETING_LOAD_FAILED)}</p>`;
-    announceStatus(scheduleStatusRegion(), ERROR_MESSAGES.MEETING_LOAD_FAILED);
+    if (!isCurrent('list', token)) {
+      return;
+    }
+    listReady = false;
+    renderLoadError('list', LOAD_FAILED_TEXT);
+    announceStatus(scheduleStatusRegion(), LOAD_FAILED_TEXT);
   }
 }
+
+function scrollToHashedMeeting() {
+  let id = '';
+  try {
+    id = decodeURIComponent((location.hash || '').slice(1));
+  } catch {
+    return;
+  }
+  if (!/^meeting-\d{4}-\d{2}-\d{2}$/.test(id)) {
+    return;
+  }
+  const card = document.getElementById(id);
+  if (card) {
+    card.scrollIntoView({ block: 'start' });
+    card.focus({ preventScroll: true });
+  }
+}
+
+// Plain listener: the cleanup registry drops its listeners on beforeunload,
+// which would leave a page restored from the back/forward cache without it.
+window.addEventListener('hashchange', scrollToHashedMeeting);
 
 // Short visually hidden role="status" line next to the schedule (meetings.html).
 // The schedule container itself is not a live region: it holds ~6k characters.
@@ -306,8 +579,8 @@ function initializeMeetingFilters(container) {
         show = false;
       }
 
-      // A meeting stays upcoming for the whole of its own day
-      if (showUpcomingOnly && !isUpcomingDate(meeting.dataset.date, now)) {
+      // A meeting stays upcoming through its whole Central-time date
+      if (showUpcomingOnly && !isClubUpcoming(meeting.dataset.date, now)) {
         show = false;
       }
 
@@ -353,30 +626,37 @@ function handleRSVP(meetingId, button) {
 }
 
 function bindMeetingActions(container) {
-  // RSVP buttons
-  const rsvpButtons = container.querySelectorAll('.btn-rsvp');
-  rsvpButtons.forEach(button => {
-    addEventListenerWithCleanup(button, 'click', (e) => {
-      const {meetingId} = e.target.dataset;
+  // One delegated listener on the container, which outlives every re-render
+  // of the cards inside it.
+  if (container.dataset.meetingActionsBound === 'true') {
+    return;
+  }
+  container.dataset.meetingActionsBound = 'true';
+
+  // Plain listener, not addEventListenerWithCleanup: the cleanup registry
+  // removes its listeners on beforeunload, and a page restored from the
+  // back/forward cache would keep the bound flag but lose the listener.
+  container.addEventListener('click', async (e) => {
+    const button = e.target.closest?.('.btn-rsvp, .btn-reminder');
+    if (!button || !container.contains(button)) {
+      return;
+    }
+    const { meetingId } = button.dataset;
+
+    if (button.classList.contains('btn-rsvp')) {
       handleRSVP(meetingId, button);
-    });
-  });
+      return;
+    }
 
-  // Reminder buttons
-  const reminderButtons = container.querySelectorAll('.btn-reminder');
-  reminderButtons.forEach(button => {
-    addEventListenerWithCleanup(button, 'click', async (e) => {
-      const {meetingId} = e.target.dataset;
-      const { reminderSystem } = await import('../reminder-system.js');
-      reminderSystem.setReminder(meetingId);
+    const { reminderSystem } = await import('../reminder-system.js');
+    reminderSystem.setReminder(meetingId);
 
-      button.textContent = 'Reminder Set!';
-      button.disabled = true;
-      setTimeout(() => {
-        button.textContent = 'Set Reminder';
-        button.disabled = false;
-      }, TIMING.NOTIFICATION_SHORT);
-    });
+    button.textContent = 'Reminder Set!';
+    button.disabled = true;
+    setTimeout(() => {
+      button.textContent = 'Set Reminder';
+      button.disabled = false;
+    }, TIMING.NOTIFICATION_SHORT);
   });
 }
 
