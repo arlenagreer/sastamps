@@ -1,0 +1,195 @@
+name: Live Site Smoke Check
+
+# Checks what a visitor actually gets from https://www.sastamps.org after
+# every deploy and once a week: scripts/live-smoke.js (see TESTING.md).
+# The contact form silently delivered nothing for ~15 months and the phone
+# menu was hidden for ~9 because nothing checked the live site's outcomes.
+#
+# A failure opens a GitHub issue labelled "live-smoke" (or comments on the
+# open one) and assigns the repo owner, so it reaches the owner by email.
+# The next passing run closes it.
+#
+# Kept lean for the Actions budget: a sparse checkout, puppeteer installed
+# on its own (not the whole devDependency tree) and its Chrome cached.
+
+on:
+  # After each deploy: "CI Testing Pipeline" (ci.yml) deploys Pages on a push to main.
+  workflow_run:
+    workflows: ["CI Testing Pipeline"]
+    types: [completed]
+    branches: [main]
+  # Weekly, Monday 11:17 UTC (05:17/06:17 in San Antonio): catches what changes
+  # without a deploy (the email relay, expired data, the TSDA table).
+  schedule:
+    - cron: '17 11 * * 1'
+  workflow_dispatch:
+    inputs:
+      send_contact:
+        description: 'Also send ONE real "[SAPA live-smoke]" message through the contact form (it reaches the club inbox)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+
+# One at a time; a newer deploy's check waits rather than racing the issue updates.
+concurrency:
+  group: live-smoke
+  cancel-in-progress: false
+
+jobs:
+  smoke:
+    name: Smoke-check the live site
+    # After CI only when it succeeded on a push to main, i.e. when it deployed.
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+    # The checker needs scripts/ and package.json (for the puppeteer version) only.
+    - name: Checkout the checker
+      uses: actions/checkout@v7
+      with:
+        sparse-checkout: scripts
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v7
+      with:
+        node-version: '22'
+
+    - name: Read the pinned puppeteer version
+      id: pptr
+      run: echo "version=$(node -p "require('./package.json').devDependencies.puppeteer")" >> "$GITHUB_OUTPUT"
+
+    # puppeteer's postinstall downloads Chrome into ~/.cache/puppeteer unless
+    # it is already there; the key changes only when the pin does.
+    - name: Cache puppeteer's Chrome
+      uses: actions/cache@v6
+      with:
+        path: ~/.cache/puppeteer
+        key: puppeteer-chrome-${{ runner.os }}-${{ steps.pptr.outputs.version }}
+
+    - name: Install puppeteer only
+      env:
+        PPTR_VERSION: ${{ steps.pptr.outputs.version }}
+      run: |
+        npm install --prefix "$RUNNER_TEMP/smoke" --no-save --no-package-lock --no-audit --no-fund "puppeteer@$PPTR_VERSION"
+        echo "NODE_PATH=$RUNNER_TEMP/smoke/node_modules" >> "$GITHUB_ENV"
+
+    # The deploy job has just finished: give Pages ~2 minutes (with the
+    # install above) to serve the new build before the first attempt.
+    - name: Wait for Pages to propagate
+      if: github.event_name == 'workflow_run'
+      run: sleep 90
+
+    # Up to 3 attempts, 60 s then 120 s apart, so a slow propagation or a
+    # passing network blip does not raise an alarm. A run that sends a
+    # contact message makes exactly one attempt: a retry would send another.
+    - name: Run the live smoke check
+      id: smoke
+      shell: bash  # explicit: -o pipefail, so tee cannot hide the checker's exit status
+      env:
+        SEND_CONTACT: ${{ github.event_name == 'workflow_dispatch' && inputs.send_contact }}
+        GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      run: |
+        mkdir -p reports
+        args=(--json reports/live-smoke.json)
+        attempts=3
+        if [ "$SEND_CONTACT" = "true" ]; then
+          args+=(--send-contact)
+          attempts=1
+        fi
+        status=1
+        for attempt in $(seq 1 "$attempts"); do
+          echo "::group::Attempt $attempt of $attempts"
+          status=0
+          node scripts/live-smoke.js "${args[@]}" 2>&1 | tee "reports/live-smoke-attempt-$attempt.txt" || status=$?
+          echo "::endgroup::"
+          if [ "$status" -eq 0 ]; then
+            break
+          fi
+          if [ "$attempt" -lt "$attempts" ]; then
+            echo "Attempt $attempt failed (exit $status); retrying in $((attempt * 60)) s"
+            sleep $((attempt * 60))
+          fi
+        done
+        {
+          echo "## Live site smoke check"
+          echo '```'
+          cat "reports/live-smoke-attempt-$attempt.txt" 2>/dev/null || echo "(no output)"
+          echo '```'
+        } >> "$GITHUB_STEP_SUMMARY"
+        exit "$status"
+
+    - name: Upload the report
+      if: always()
+      uses: actions/upload-artifact@v7
+      with:
+        name: live-smoke-report
+        path: reports/
+        retention-days: 14
+        if-no-files-found: ignore
+
+    - name: Open or update the live-smoke issue
+      if: failure()
+      uses: actions/github-script@v9
+      with:
+        script: |
+          const fs = require('fs');
+          const { owner, repo } = context.repo;
+          const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+          let report = null;
+          try {
+            report = JSON.parse(fs.readFileSync('reports/live-smoke.json', 'utf8'));
+          } catch { /* the checker never got to write it */ }
+          const line = (r) => `- **${r.id}**: ${r.detail}`;
+          const fails = report ? report.results.filter((r) => r.status === 'FAIL') : [];
+          const warns = report ? report.results.filter((r) => r.status === 'WARN') : [];
+          const trigger = context.eventName === 'workflow_run'
+            ? `after the deploy of ${context.payload.workflow_run.head_sha.slice(0, 7)}`
+            : context.eventName === 'schedule' ? 'weekly schedule' : 'manual run';
+          const body = [
+            report
+              ? `The live site smoke check failed ${fails.length} check(s) on ${report.base} (${trigger}, after retries).`
+              : `The live site smoke check could not complete (${trigger}): no report was written. See the run log.`,
+            '',
+            ...(fails.length ? ['### Failing', ...fails.map(line), ''] : []),
+            ...(warns.length ? ['### Warnings', ...warns.map(line), ''] : []),
+            `Run: ${runUrl}`,
+            '',
+            'Reproduce locally: `npm run smoke:live`. This issue closes itself when a later run passes.'
+          ].join('\n');
+
+          try {
+            await github.rest.issues.createLabel({ owner, repo, name: 'live-smoke', color: 'd73a4a', description: 'The live site smoke check is failing' });
+          } catch (err) {
+            if (err.status !== 422) { throw err; } // 422: the label already exists
+          }
+          const { data: open } = await github.rest.issues.listForRepo({ owner, repo, state: 'open', labels: 'live-smoke', per_page: 10 });
+          if (open.length) {
+            await github.rest.issues.createComment({ owner, repo, issue_number: open[0].number, body });
+            core.notice(`Commented on #${open[0].number}`);
+          } else {
+            const { data: issue } = await github.rest.issues.create({
+              owner, repo, body, labels: ['live-smoke'], assignees: [owner],
+              title: `Live site check failing: ${fails.map((r) => r.id).slice(0, 4).join(', ') || 'checker did not complete'}`
+            });
+            core.notice(`Opened #${issue.number}`);
+          }
+
+    - name: Close the live-smoke issue
+      if: success()
+      uses: actions/github-script@v9
+      with:
+        script: |
+          const { owner, repo } = context.repo;
+          const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+          const { data: open } = await github.rest.issues.listForRepo({ owner, repo, state: 'open', labels: 'live-smoke', per_page: 10 });
+          for (const issue of open) {
+            await github.rest.issues.createComment({ owner, repo, issue_number: issue.number, body: `The live site smoke check passes again: ${runUrl}` });
+            await github.rest.issues.update({ owner, repo, issue_number: issue.number, state: 'closed', state_reason: 'completed' });
+            core.notice(`Closed #${issue.number}`);
+          }
