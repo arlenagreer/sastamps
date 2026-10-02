@@ -202,6 +202,44 @@
             font-style: italic;
         }
 
+        /* A quarterly issue with no copy on file (2025 Q1). */
+        .archive-item-missing {
+            background-color: var(--light);
+            border: 1px dashed var(--medium);
+            box-shadow: none;
+        }
+
+        .archive-item-missing:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .archive-item-missing .archive-item-header {
+            background-color: transparent;
+            border-bottom: 1px dashed var(--medium);
+        }
+
+        .archive-item-missing .unavailable-badge {
+            font-style: italic;
+            font-weight: 600;
+        }
+
+        /* Tap targets: the whole row is the link, at least 44px tall
+           (it was 21px on phones). */
+        .archive-list-item {
+            min-height: 44px;
+        }
+
+        .archive-list-item:not(.archive-item-unavailable) {
+            padding: 0;
+        }
+
+        .archive-list-item .archive-link {
+            flex: 1;
+            min-height: 44px;
+            padding: 0.5rem 1rem;
+        }
+
         .archived-section-divider {
             border: none;
             border-top: 1px solid var(--light);
@@ -298,6 +336,32 @@
                     <h2 class="archive-year-header">2026 Newsletter Archive</h2>
 
                     <div class="archive-grid">
+                        <!-- Fourth Quarter 2026 -->
+                        <div class="archive-item">
+                            <div class="archive-item-header">
+                                <h3>SAPA PHILATEX</h3>
+                                <p>Fourth Quarter 2026</p>
+                            </div>
+                            <div class="archive-item-content">
+                                <p><strong>Published:</strong> October 1, 2026</p>
+                                <p>Features the October-December meeting calendar, the October 9 stamp program 'Expertising Philatelics' by Jimmy Tomchesson (PSAG), the San Antonio TSDA Stamp Show on October 9-10, the SAPA Annual Blue-Chip Auction on December 11, the Holiday Party on December 18, a memorial to Steve Mabie, a feature article on Postal Note Stamps, and upcoming TSDA shows.</p>
+                                <div class="newsletter-tags">
+                                    <span class="tag">2026</span>
+                                    <span class="tag">Q4</span>
+                                    <span class="tag">Meetings</span>
+                                    <span class="tag">Blue-Chip Auction</span>
+                                    <span class="tag">Holiday Party</span>
+                                </div>
+                                <div class="newsletter-meta">
+                                    <span class="meta-item"><i class="fas fa-file-alt"></i> 6 pages</span>
+                                    <span class="meta-item"><i class="fas fa-download"></i> 638 KB</span>
+                                </div>
+                                <a href="public/SAPA-PHILATEX-Fourth-Quarter-2026.pdf" class="btn btn-primary" target="_blank">
+                                    <i class="fas fa-file-pdf"></i> Download PDF
+                                </a>
+                            </div>
+                        </div>
+
                         <!-- Third Quarter 2026 -->
                         <div class="archive-item">
                             <div class="archive-item-header">
@@ -456,6 +520,18 @@
                                 <a href="public/SAPA PHILATEX Second Quarter 2025.pdf" class="btn btn-primary" target="_blank">
                                     <i class="fas fa-file-pdf"></i> Download PDF
                                 </a>
+                            </div>
+                        </div>
+
+                        <!-- First Quarter 2025: no copy on file -->
+                        <div class="archive-item archive-item-missing">
+                            <div class="archive-item-header">
+                                <h3>SAPA PHILATEX</h3>
+                                <p>First Quarter 2025</p>
+                            </div>
+                            <div class="archive-item-content">
+                                <p class="unavailable-badge">Not Available</p>
+                                <p>This issue is not yet in the online archive. If you have a copy, please contact our newsletter editor.</p>
                             </div>
                         </div>
                     </div>

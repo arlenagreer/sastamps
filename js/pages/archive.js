@@ -16,6 +16,57 @@ import breadcrumb from '../modules/breadcrumb.js';
 
 const logger = createLogger('ArchivePage');
 
+const BIMONTHLY_LABELS = {
+  '01': 'January/February',
+  '02': 'March/April',
+  '03': 'May/June',
+  '04': 'July/August',
+  '05': 'September/October',
+  '06': 'November/December'
+};
+
+const QUARTERLY_LABELS = {
+  Q1: 'First Quarter: January, February, March',
+  Q2: 'Second Quarter: April, May, June',
+  Q3: 'Third Quarter: July, August, September',
+  Q4: 'Fourth Quarter: October, November, December'
+};
+
+/**
+ * One year's entries with every issue the year should have, up to its latest
+ * listed one. An issue with no entry at all (no copy on file, e.g. 2008
+ * January/February or 2024 First Quarter) is added as unavailable, so it
+ * shows as "Not Available" instead of silently missing.
+ * @param {Array<{edition: string, year: number}>} yearEntries - in display order
+ * @returns {Array<object>}
+ */
+export function withMissingIssues(yearEntries) {
+  const isQuarterly = yearEntries.some(e => /^Q[1-4]$/.test(e.edition));
+  const labels = isQuarterly ? QUARTERLY_LABELS : BIMONTHLY_LABELS;
+  const order = Object.keys(labels);
+  const listed = new Set(yearEntries.map(e => e.edition));
+  const last = Math.max(...yearEntries.map(e => order.indexOf(e.edition)));
+  if (last < 0) {
+    return yearEntries.slice();
+  }
+  const [{ year }] = yearEntries;
+  const result = [];
+  let next = 0; // the next regular edition to place
+  for (const entry of yearEntries) {
+    const at = order.indexOf(entry.edition);
+    if (at >= 0) {
+      for (; next < at; next++) {
+        if (!listed.has(order[next])) {
+          result.push({ year, edition: order[next], editionLabel: labels[order[next]], filePath: null, status: 'unavailable' });
+        }
+      }
+      next = Math.max(next, at + 1);
+    }
+    result.push(entry);
+  }
+  return result;
+}
+
 /**
  * Fetch archived newsletters JSON and render year-grouped sections
  * into the #archived-newsletters container using safe DOM methods.
@@ -46,7 +97,7 @@ async function renderArchivedNewsletters() {
 
     // Render each year section
     for (const year of sortedYears) {
-      const yearEntries = yearMap.get(year);
+      const yearEntries = withMissingIssues(yearMap.get(year));
 
       const section = document.createElement('div');
       section.classList.add('archive-year-section');

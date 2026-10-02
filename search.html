@@ -226,10 +226,63 @@
         }
 
         .result-content-snippet small {
-            color: #999;
+            color: #595959;
             font-weight: 600;
         }
+
+        .result-note {
+            font-size: 0.9rem;
+            color: var(--medium);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-badge {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.1rem 0.5rem;
+            border-radius: var(--radius-sm);
+            background: #e8f4f8;
+            color: var(--primary);
+        }
+
+        .result-badge.past {
+            background: var(--light);
+            color: var(--medium);
+        }
+
+        .search-result.type-page { border-left: 4px solid #e67e22; }
+
+        /* Tap targets: chips and the search button are at least 44px tall. */
+        .quick-searches button,
+        .search-button {
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        .search-noscript {
+            background: #fff3cd;
+            color: #533f03;
+            border-left: 4px solid #ffc107;
+            border-radius: var(--radius-md);
+            padding: 1rem 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-noscript ul {
+            margin: 0.5rem 0 0 1.25rem;
+        }
+
+        .search-noscript a {
+            display: inline-block;
+            padding: 0.6rem 0;
+        }
     </style>
+    <noscript>
+        <style>
+            .search-box, .quick-searches { display: none; }
+        </style>
+    </noscript>
 </head>
 <body>
     <!-- Skip to content link for accessibility -->
@@ -274,24 +327,40 @@
         <section class="section">
             <div class="container">
                 <div class="search-container">
-                    <div class="search-box">
-                        <input type="text"
+                    <noscript>
+                        <div class="search-noscript">
+                            <p><strong>Site search needs JavaScript, which is turned off in this browser.</strong></p>
+                            <p>You can still browse everything directly:</p>
+                            <ul>
+                                <li><a href="newsletter.html">Current PHILATEX newsletter</a></li>
+                                <li><a href="archive.html">Newsletter archive</a></li>
+                                <li><a href="meetings.html">Meeting schedule</a></li>
+                                <li><a href="membership.html">Membership</a></li>
+                                <li><a href="resources.html">Resources</a> and <a href="glossary.html">Glossary</a></li>
+                            </ul>
+                        </div>
+                    </noscript>
+
+                    <form class="search-box" role="search" action="search.html" method="get" onsubmit="event.preventDefault(); performSearch();">
+                        <label for="searchInput" class="sr-only">Search the SAPA website</label>
+                        <input type="search"
                                id="searchInput"
+                               name="q"
                                class="search-input"
                                placeholder="Search newsletters, meetings, resources, glossary..."
                                autocomplete="off">
-                        <button onclick="performSearch()" class="search-button" aria-label="Search">
-                            <i class="fas fa-search"></i>
+                        <button type="submit" class="search-button" aria-label="Search">
+                            <i class="fas fa-search" aria-hidden="true"></i>
                         </button>
-                    </div>
+                    </form>
 
                     <div class="quick-searches">
                         <p>Popular searches:</p>
-                        <button onclick="quickSearch('stamp collecting')">Stamp Collecting</button>
-                        <button onclick="quickSearch('meeting')">Meetings</button>
-                        <button onclick="quickSearch('newsletter')">Newsletters</button>
-                        <button onclick="quickSearch('beginner')">Beginners</button>
-                        <button onclick="quickSearch('2025')">2025 Events</button>
+                        <button type="button" onclick="quickSearch('meeting')">Meetings</button>
+                        <button type="button" onclick="quickSearch('auction')">Auctions</button>
+                        <button type="button" onclick="quickSearch('philatex')">PHILATEX</button>
+                        <button type="button" onclick="quickSearch('membership')">Membership</button>
+                        <button type="button" onclick="quickSearch('beginner')">Beginners</button>
                     </div>
 
                     <div id="searchStatus" class="search-status" role="status"></div>
@@ -345,18 +414,28 @@
     <script src="https://unpkg.com/lunr@2.3.9/lunr.min.js" integrity="sha384-203J0SNzyqHby3iU6hzvzltrWi/M41wOP5Gu+BiJMz5nwKykbkUx8Kp7iti0Lpli" crossorigin="anonymous"></script>
     <!-- Search functionality -->
     <script>
-        // Search variables
-        let searchIndex = null;
-        let documents = {};
-        let isLoading = false;
+        // Site search. The index and result records are built by
+        // scripts/build-search-index.js into dist/data/. Every value from
+        // those records is escaped before it reaches innerHTML.
+        var searchIndex = null;
+        var documents = {};
+        var isLoading = false;
 
-        // Initialize search when page loads
+        var MS_PER_DAY = 24 * 60 * 60 * 1000;
+        // Same rule as js/modules/meeting-loader.js (QUARTER_ADVANCE_DAYS):
+        // meetings.html shows the next quarter once the current one has two
+        // weeks left, if that quarter's meetings are posted.
+        var QUARTER_ADVANCE_DAYS = 14;
+        var shownMeetingQuarter = null;
+
         document.addEventListener('DOMContentLoaded', initializeSearch);
 
-        // Handle Enter key in search input
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                performSearch();
+        // Back/Forward: show the results for the query in the URL.
+        window.addEventListener('popstate', function () {
+            var query = new URLSearchParams(window.location.search).get('q') || '';
+            document.getElementById('searchInput').value = query;
+            if (searchIndex) {
+                performSearch({ updateUrl: false });
             }
         });
 
@@ -364,47 +443,41 @@
             if (isLoading) return;
             isLoading = true;
 
-            const statusEl = document.getElementById('searchStatus');
+            var statusEl = document.getElementById('searchStatus');
             setSearchStatus(statusEl, 'loading', 'Loading search index...');
 
             try {
-                // The build writes the index to dist/data/ (build:search).
-                const [indexResponse, docsResponse] = await Promise.all([
+                if (typeof lunr === 'undefined') {
+                    throw new Error('lunr did not load');
+                }
+                var responses = await Promise.all([
                     fetch('./dist/data/search-index.json'),
                     fetch('./dist/data/search-documents.json')
                 ]);
-
-                if (!indexResponse.ok || !docsResponse.ok) {
+                if (!responses[0].ok || !responses[1].ok) {
                     throw new Error('Failed to load search data');
                 }
+                var indexData = await responses[0].json();
+                var docsData = await responses[1].json();
 
-                const indexData = await indexResponse.json();
-                const docsData = await docsResponse.json();
-
-                // Initialize Lunr index
                 searchIndex = lunr.Index.load(indexData);
-
-                // Build documents map
-                docsData.documents.forEach(doc => {
+                docsData.documents.forEach(function (doc) {
                     documents[doc.id] = doc;
                 });
+                shownMeetingQuarter = selectShownMeetingQuarter(new Date());
 
                 setSearchStatus(statusEl, '', '');
 
-                // Focus on search input
-                document.getElementById('searchInput').focus();
-
-                // Check for search query in URL
-                const urlParams = new URLSearchParams(window.location.search);
-                const query = urlParams.get('q');
+                var query = new URLSearchParams(window.location.search).get('q');
                 if (query) {
                     document.getElementById('searchInput').value = query;
-                    performSearch();
+                    performSearch({ updateUrl: false });
+                } else {
+                    document.getElementById('searchInput').focus();
                 }
-
             } catch (error) {
                 console.error('Search initialization error:', error);
-                setSearchStatus(statusEl, 'error', 'Failed to load search index. Please try again later.');
+                setSearchStatus(statusEl, 'error', 'Search could not load. Please reload the page, or browse the Newsletter, Archive and Meetings pages from the menu.');
             } finally {
                 isLoading = false;
             }
@@ -423,31 +496,48 @@
             }
         }
 
-        function performSearch() {
-            const query = document.getElementById('searchInput').value.trim();
-            if (!query) return;
+        function setUrlQuery(query) {
+            var url = new URL(window.location);
+            var current = url.searchParams.get('q') || '';
+            if (current === query) return;
+            if (query) {
+                url.searchParams.set('q', query);
+            } else {
+                url.searchParams.delete('q');
+            }
+            window.history.pushState({ q: query }, '', url);
+        }
 
-            const statusEl = document.getElementById('searchStatus');
-            const resultsEl = document.getElementById('searchResults');
+        function performSearch(options) {
+            var updateUrl = !options || options.updateUrl !== false;
+            var input = document.getElementById('searchInput');
+            var query = input.value.trim();
+            var statusEl = document.getElementById('searchStatus');
+            var resultsEl = document.getElementById('searchResults');
+
+            if (!query) {
+                // An empty search clears the previous results and message.
+                resultsEl.innerHTML = '';
+                setSearchStatus(statusEl, '', '');
+                if (updateUrl) setUrlQuery('');
+                return;
+            }
 
             if (!searchIndex) {
-                setSearchStatus(statusEl, 'error', 'Search index not loaded yet. Please wait...');
+                setSearchStatus(statusEl, 'loading', 'Search is still loading. Please wait a moment...');
                 initializeSearch();
                 return;
             }
 
-            try {
-                // Update URL with search query
-                const url = new URL(window.location);
-                url.searchParams.set('q', query);
-                window.history.pushState({}, '', url);
+            if (updateUrl) setUrlQuery(query);
 
-                // Perform search
-                const results = searchIndex.search(query);
-                displayResults(query, results);
+            try {
+                var outcome = runSearch(query);
+                displayResults(query, outcome);
             } catch (error) {
                 console.error('Search error:', error);
-                setSearchStatus(statusEl, 'error', 'Search error: ' + error.message);
+                resultsEl.innerHTML = '';
+                setSearchStatus(statusEl, 'error', 'Sorry, that search could not be run. Try a plain word or two, such as auction or 2009.');
             }
         }
 
@@ -456,169 +546,278 @@
             performSearch();
         }
 
-        function displayResults(query, results) {
-            const statusEl = document.getElementById('searchStatus');
-            const resultsEl = document.getElementById('searchResults');
+        // The words of a query, as plain search terms. lunr's own query
+        // syntax (field:, ~, ^, +, -, *) is not offered: "C:" or "stamp~"
+        // from a visitor is just text.
+        function queryTerms(query) {
+            return query.toLowerCase()
+                .replace(/[^\p{L}\p{N}'’]+/gu, ' ')
+                .split(' ')
+                .map(function (t) { return t.replace(/^['’]+|['’]+$/g, ''); })
+                .filter(function (t) { return t && lunr.stopWordFilter(t) !== undefined; });
+        }
 
+        function runSearch(query) {
+            var terms = queryTerms(query);
+            if (terms.length === 0) {
+                return { terms: terms, results: [], mode: 'no-terms' };
+            }
+            var wildcard = lunr.Query.wildcard.TRAILING;
+            var required = lunr.Query.presence.REQUIRED;
+
+            // 1. Every word must match (a prefix also scores, a little).
+            var results = searchIndex.query(function (q) {
+                terms.forEach(function (t) {
+                    q.term(t, { presence: required });
+                    if (t.length >= 3) q.term(t, { wildcard: wildcard, usePipeline: false, boost: 0.2 });
+                });
+            });
+            var mode = 'all';
+
+            // 2. Any word, including the start of a word ("philat").
             if (results.length === 0) {
-                setSearchStatus(statusEl, 'no-results', `No results found for "${query}"`);
+                results = searchIndex.query(function (q) {
+                    terms.forEach(function (t) {
+                        q.term(t);
+                        if (t.length >= 3) q.term(t, { wildcard: wildcard, usePipeline: false, boost: 0.5 });
+                    });
+                });
+                mode = 'any';
+            }
+
+            // 3. Close spellings ("auktion" finds auction).
+            // Short words are left out: one edit away from "c" is every
+            // one-letter word. (A query with no clauses matches everything.)
+            var fuzzyTerms = terms.filter(function (t) { return t.length >= 4; });
+            if (results.length === 0 && fuzzyTerms.length > 0) {
+                results = searchIndex.query(function (q) {
+                    fuzzyTerms.forEach(function (t) {
+                        q.term(t, { editDistance: t.length >= 8 ? 2 : 1, usePipeline: false });
+                    });
+                });
+                mode = 'fuzzy';
+            }
+
+            var today = startOfToday();
+            var ranked = results
+                .filter(function (r) { return documents[r.ref]; })
+                .map(function (r) {
+                    var doc = documents[r.ref];
+                    return { doc: doc, score: r.score * recencyFactor(doc, today) };
+                })
+                .sort(function (a, b) { return b.score - a.score; });
+            return { terms: terms, results: ranked, mode: mode };
+        }
+
+        function startOfToday() {
+            var now = new Date();
+            return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        }
+
+        // YYYY-MM-DD is a calendar date, not a UTC instant: new Date('2026-10-09')
+        // is midnight UTC, which is Oct 8 in US time zones.
+        function parseLocalDate(value) {
+            var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(value || '');
+            return m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])) : null;
+        }
+
+        // Rank the current issue and upcoming meetings above old ones.
+        function recencyFactor(doc, today) {
+            var date = parseLocalDate(doc.date);
+            if (doc.type === 'meeting') {
+                if (!date) return 1;
+                var days = (date - today) / MS_PER_DAY;
+                var factor = days >= 0
+                    ? 2 - Math.min(days / 120, 1) * 0.6   // upcoming: 2.0 now, 1.4 in four months
+                    : Math.max(0.15, 0.6 * Math.exp(days / 120)); // past: fades
+                return doc.cancelled ? factor * 0.25 : factor;
+            }
+            if (doc.type === 'newsletter') {
+                if (!date) return 0.6;
+                var age = Math.max(0, (today - date) / MS_PER_DAY);
+                return 0.5 + 1.7 * Math.exp(-age / 150);
+            }
+            if (doc.type === 'page') return 1.5;
+            return 1;
+        }
+
+        function quarterOf(date) {
+            return { year: date.getFullYear(), quarter: Math.floor(date.getMonth() / 3) + 1 };
+        }
+
+        function quarterKey(q) {
+            return q.year + '-Q' + q.quarter;
+        }
+
+        // The quarter meetings.html is showing today (selectScheduleQuarter).
+        function selectShownMeetingQuarter(now) {
+            var current = quarterOf(now);
+            var end = new Date(current.year, current.quarter * 3, 0);
+            if ((end - now) / MS_PER_DAY > QUARTER_ADVANCE_DAYS) return quarterKey(current);
+            var next = current.quarter === 4 ? { year: current.year + 1, quarter: 1 } : { year: current.year, quarter: current.quarter + 1 };
+            var nextKey = quarterKey(next);
+            var posted = Object.keys(documents).some(function (id) {
+                return documents[id].type === 'meeting' && documents[id].quarter === nextKey;
+            });
+            return posted ? nextKey : quarterKey(current);
+        }
+
+        var QUARTER_WORDS = ['First', 'Second', 'Third', 'Fourth'];
+
+        // Where a result lands. A meeting links to its card on meetings.html
+        // while that page shows its quarter; otherwise to the quarter's
+        // PHILATEX, whose calendar lists it.
+        function resultLink(doc) {
+            if (doc.type === 'meeting' && doc.quarter !== shownMeetingQuarter && doc.newsletterUrl) {
+                var parts = doc.quarter.split('-Q');
+                return {
+                    href: doc.newsletterUrl,
+                    pdf: true,
+                    note: 'Listed in the ' + QUARTER_WORDS[Number(parts[1]) - 1] + ' Quarter ' + parts[0] + ' PHILATEX (PDF)'
+                };
+            }
+            var href = doc.url || '#';
+            return { href: href, pdf: /\.pdf(#|$)/i.test(href), note: '' };
+        }
+
+        function displayResults(query, outcome) {
+            var statusEl = document.getElementById('searchStatus');
+            var resultsEl = document.getElementById('searchResults');
+            var results = outcome.results;
+
+            if (outcome.mode === 'no-terms') {
                 resultsEl.innerHTML = '';
+                setSearchStatus(statusEl, 'no-results', 'Type a word or two to search, for example auction, membership or 2009.');
+                return;
+            }
+            if (results.length === 0) {
+                resultsEl.innerHTML = '';
+                setSearchStatus(statusEl, 'no-results', 'No results found for "' + query + '". Try a different or shorter word.');
                 return;
             }
 
-            setSearchStatus(statusEl, 'success', `Found ${results.length} result${results.length === 1 ? '' : 's'} for "${query}"`);
+            var count = results.length + ' result' + (results.length === 1 ? '' : 's');
+            var message = outcome.mode === 'fuzzy'
+                ? 'No exact matches for "' + query + '". Showing ' + count + ' with a similar spelling.'
+                : outcome.mode === 'any'
+                    ? 'No result has every word of "' + query + '". Showing ' + count + ' matching some of them.'
+                    : 'Found ' + count + ' for "' + query + '"';
+            setSearchStatus(statusEl, 'success', message);
 
-            resultsEl.innerHTML = results.map(result => {
-                const doc = documents[result.ref];
-                if (!doc) return '';
-
-                return renderSearchResult(doc, result.score, query);
+            resultsEl.innerHTML = results.map(function (r) {
+                return renderSearchResult(r.doc, outcome.terms);
             }).join('');
         }
 
-        function renderSearchResult(doc, score, query) {
-            const typeClass = `type-${doc.type}`;
-            const typeIcon = getTypeIcon(doc.type);
-            const date = doc.date ? new Date(doc.date).toLocaleDateString() : '';
-            const url = getDocumentUrl(doc);
+        var TYPE_LABELS = { newsletter: 'Newsletter', meeting: 'Meeting', resource: 'Resource', glossary: 'Glossary', page: 'Page' };
 
-            // Highlight query terms in title and summary
-            const highlightedTitle = highlightText(doc.title, query);
-            const highlightedSummary = highlightText(doc.summary || 'No description available', query);
-
-            // Get content snippet if available
-            const contentSnippet = getContentSnippet(doc, query);
-
-            return `
-                <div class="search-result ${typeClass}">
-                    <div class="result-title">
-                        <i class="${typeIcon}"></i>
-                        <a href="${url}">${highlightedTitle}</a>
-                    </div>
-                    <div class="result-meta">
-                        <span><i class="fas fa-tag"></i> ${capitalize(doc.type)}</span>
-                        ${doc.category ? `<span><i class="fas fa-folder"></i> ${formatCategory(doc.category)}</span>` : ''}
-                        ${date ? `<span><i class="fas fa-calendar"></i> ${date}</span>` : ''}
-                        <span><i class="fas fa-chart-bar"></i> ${(score * 100).toFixed(0)}% match</span>
-                    </div>
-                    <div class="result-summary">
-                        ${highlightedSummary}
-                    </div>
-                    ${contentSnippet ? `
-                        <div class="result-content-snippet">
-                            <small><em>Content match:</em></small><br>
-                            ...${contentSnippet}...
-                        </div>
-                    ` : ''}
-                    ${doc.tags && doc.tags.length > 0 ? `
-                        <div class="result-tags">
-                            ${doc.tags.map(tag => `<span class="tag">${highlightText(tag, query)}</span>`).join('')}
-                        </div>
-                    ` : ''}
-                </div>
-            `;
+        function formatDate(doc) {
+            if (doc.period) return doc.period;
+            var date = parseLocalDate(doc.date);
+            if (!date) return '';
+            return date.toLocaleDateString('en-US', { weekday: doc.type === 'meeting' ? 'short' : undefined, year: 'numeric', month: 'long', day: 'numeric' });
         }
 
-        function getTypeIcon(type) {
-            const icons = {
-                newsletter: 'fas fa-newspaper',
-                meeting: 'fas fa-calendar',
-                resource: 'fas fa-book',
-                glossary: 'fas fa-book-open'
-            };
-            return icons[type] || 'fas fa-file';
-        }
-
-        function getDocumentUrl(doc) {
-            // Return the URL from the document, or construct based on type
-            if (doc.url) return doc.url;
-
-            switch (doc.type) {
-                case 'newsletter':
-                    return 'newsletter.html';
-                case 'meeting':
-                    return 'meetings.html';
-                case 'resource':
-                    return 'resources.html';
-                case 'glossary':
-                    return 'glossary.html';
-                default:
-                    return '#';
+        function renderSearchResult(doc, terms) {
+            var typeClass = 'type-' + (TYPE_LABELS[doc.type] ? doc.type : 'page');
+            var link = resultLink(doc);
+            var date = formatDate(doc);
+            var today = startOfToday();
+            var docDate = parseLocalDate(doc.date);
+            var badge = '';
+            if (doc.type === 'meeting' && docDate) {
+                badge = docDate >= today
+                    ? '<span class="result-badge">Upcoming</span>'
+                    : '<span class="result-badge past">Past</span>';
             }
+            var typeLabel = doc.category === 'archive' ? 'Newsletter archive' : (TYPE_LABELS[doc.type] || 'Page');
+            var snippet = getContentSnippet(doc, terms);
+            var newTab = link.pdf ? ' target="_blank" rel="noopener"' : '';
+            var linkHint = link.pdf ? '<span class="sr-only"> (PDF, opens in a new tab)</span>' : '';
+
+            return '<div class="search-result ' + typeClass + '">'
+                + '<div class="result-title">'
+                + '<i class="' + getTypeIcon(doc) + '" aria-hidden="true"></i> '
+                + '<a href="' + escapeHTML(link.href) + '"' + newTab + '>' + highlightText(doc.title, terms) + linkHint + '</a>'
+                + '</div>'
+                + '<div class="result-meta">'
+                + '<span>' + escapeHTML(typeLabel) + '</span>'
+                + (date ? '<span><i class="fas fa-calendar" aria-hidden="true"></i> ' + escapeHTML(date) + '</span>' : '')
+                + badge
+                + '</div>'
+                + (link.note ? '<p class="result-note">' + escapeHTML(link.note) + '</p>' : '')
+                + '<div class="result-summary">' + highlightText(doc.summary || '', terms) + '</div>'
+                + (snippet ? '<div class="result-content-snippet"><small><em>On this page:</em></small><br>&hellip;' + snippet + '&hellip;</div>' : '')
+                + (doc.tags && doc.tags.length
+                    ? '<div class="result-tags">' + doc.tags.map(function (tag) {
+                        return '<span class="tag">' + highlightText(String(tag), terms) + '</span>';
+                    }).join('') + '</div>'
+                    : '')
+                + '</div>';
         }
 
-        function capitalize(str) {
-            return str.charAt(0).toUpperCase() + str.slice(1);
+        function getTypeIcon(doc) {
+            if (doc.type === 'newsletter') return 'fas fa-newspaper';
+            if (doc.type === 'meeting') return 'fas fa-calendar';
+            if (doc.type === 'resource') return 'fas fa-book';
+            if (doc.type === 'glossary') return 'fas fa-book-open';
+            return 'fas fa-file-alt';
         }
 
-        function formatCategory(category) {
-            return category.split('-').map(word => capitalize(word)).join(' ');
-        }
-
-        function highlightText(text, query) {
-            if (!text || !query) return text;
-
-            // Split query into individual terms
-            const terms = query.toLowerCase().split(/\s+/).filter(term => term.length > 0);
-
-            // Create a regex pattern for all terms
-            const pattern = terms.map(term => escapeRegExp(term)).join('|');
-            if (!pattern) return text;
-
-            const regex = new RegExp(`(${pattern})`, 'gi');
-
-            // Replace matches with highlighted version
-            return text.replace(regex, '<mark>$1</mark>');
+        function escapeHTML(value) {
+            return String(value == null ? '' : value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
         }
 
         function escapeRegExp(string) {
             return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
 
-        function getContentSnippet(doc, query) {
-            if (!doc.content || !query) return null;
+        // Highlight the query words in raw text, and return HTML. The text is
+        // split on the matches first and every piece escaped, so a match can
+        // never cut through an entity or let markup through.
+        function highlightText(text, terms) {
+            var raw = String(text == null ? '' : text);
+            var words = (terms || []).filter(function (t) { return t.length >= 2; });
+            if (!raw || words.length === 0) return escapeHTML(raw);
+            var regex = new RegExp('(' + words.map(escapeRegExp).join('|') + ')', 'gi');
+            return raw.split(regex).map(function (part, i) {
+                return i % 2 === 1 ? '<mark>' + escapeHTML(part) + '</mark>' : escapeHTML(part);
+            }).join('');
+        }
 
-            const terms = query.toLowerCase().split(/\s+/).filter(term => term.length > 0);
-            const content = doc.content.toLowerCase();
-
-            // Find the first matching term position
-            let firstMatchIndex = -1;
-            let matchedTerm = '';
-
-            for (const term of terms) {
-                const index = content.indexOf(term);
-                if (index !== -1 && (firstMatchIndex === -1 || index < firstMatchIndex)) {
-                    firstMatchIndex = index;
-                    matchedTerm = term;
+        // A short excerpt of page text around the first query word.
+        function getContentSnippet(doc, terms) {
+            if (!doc.content || !terms.length) return null;
+            var content = doc.content;
+            var lower = content.toLowerCase();
+            var first = -1;
+            var matched = '';
+            terms.forEach(function (term) {
+                var index = lower.indexOf(term);
+                if (index !== -1 && (first === -1 || index < first)) {
+                    first = index;
+                    matched = term;
                 }
-            }
-
-            if (firstMatchIndex === -1) return null;
-
-            // Extract snippet around the match
-            const snippetRadius = 100; // Characters before and after the match
-            const start = Math.max(0, firstMatchIndex - snippetRadius);
-            const end = Math.min(doc.content.length, firstMatchIndex + matchedTerm.length + snippetRadius);
-
-            let snippet = doc.content.substring(start, end);
-
-            // Clean up snippet boundaries
+            });
+            if (first === -1) return null;
+            var radius = 100;
+            var start = Math.max(0, first - radius);
+            var end = Math.min(content.length, first + matched.length + radius);
+            var snippet = content.substring(start, end);
             if (start > 0) {
-                const firstSpace = snippet.indexOf(' ');
-                if (firstSpace > 0 && firstSpace < 20) {
-                    snippet = snippet.substring(firstSpace + 1);
-                }
+                var firstSpace = snippet.indexOf(' ');
+                if (firstSpace > 0 && firstSpace < 20) snippet = snippet.substring(firstSpace + 1);
             }
-
-            if (end < doc.content.length) {
-                const lastSpace = snippet.lastIndexOf(' ');
-                if (lastSpace > snippet.length - 20) {
-                    snippet = snippet.substring(0, lastSpace);
-                }
+            if (end < content.length) {
+                var lastSpace = snippet.lastIndexOf(' ');
+                if (lastSpace > snippet.length - 20) snippet = snippet.substring(0, lastSpace);
             }
-
-            // Highlight the snippet
-            return highlightText(snippet, query);
+            return highlightText(snippet, terms);
         }
     </script>
 </body>
