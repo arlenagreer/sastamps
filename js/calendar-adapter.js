@@ -6,13 +6,16 @@
 import { escapeHTML } from './utils/safe-dom.js';
 import { createLogger } from './utils/logger.js';
 import { fetchJSON } from './utils/fetch-json.js';
-import { parseLocalDate, isUpcomingDate } from './utils/dates.js';
+import { parseLocalDate } from './utils/dates.js';
+// Upcoming = still the meeting's date or later in San Antonio (Central time)
+import { hasTime, isClubUpcoming } from './utils/meeting-calendar.js';
 
 const logger = createLogger('CalendarAdapter');
 
 export class CalendarAdapter {
   constructor() {
     this.meetingsData = null;
+    this.loadError = null;
     this.eventTypeStyles = {
       'business': {
         color: '#1a5276',
@@ -42,16 +45,23 @@ export class CalendarAdapter {
   }
 
   /**
-   * Load meetings data from JSON file
+   * Load meetings data from JSON file.
+   * Resolves to the data, or to null when the load failed. A failure is kept
+   * in `loadError` so the page can say so: a calendar with no meetings behind
+   * it looks normal but silently does nothing when a day is clicked.
    */
   async loadMeetings() {
     try {
       // Same URL string as the meetings page list, so fetchJSON's memo
-      // serves both from one request.
+      // serves both from one request (a failed load is not memoised, so a
+      // retry fetches again).
       this.meetingsData = await fetchJSON('data/meetings/meetings.json');
+      this.loadError = null;
       return this.meetingsData;
     } catch (error) {
       logger.error('Error loading meetings:', error);
+      this.meetingsData = null;
+      this.loadError = error;
       return null;
     }
   }
@@ -172,10 +182,11 @@ export class CalendarAdapter {
       `${escapeHTML(meeting.location.name)}<br>${escapeHTML(meeting.location.address?.street || '')}` :
       'Location TBD';
 
-    const timeInfo = meeting.time ? `
+    // A cancelled entry's times are "N/A": show no schedule for it
+    const timeInfo = meeting.time && hasTime(meeting.time.meetingStart) ? `
             <strong>Schedule:</strong><br>
-            Doors: ${escapeHTML(meeting.time.doorsOpen)}<br>
-            Meeting: ${escapeHTML(meeting.time.meetingStart)}${meeting.time.meetingEnd ? ` - ${escapeHTML(meeting.time.meetingEnd)}` : ''}
+            ${hasTime(meeting.time.doorsOpen) ? `Doors: ${escapeHTML(meeting.time.doorsOpen)}<br>` : ''}
+            Meeting: ${escapeHTML(meeting.time.meetingStart)}${hasTime(meeting.time.meetingEnd) ? ` - ${escapeHTML(meeting.time.meetingEnd)}` : ''}
         ` : '';
 
     const presenter = meeting.presenter ?
@@ -240,7 +251,7 @@ export class CalendarAdapter {
   getUpcomingEvents(events, limit = 5) {
     const now = new Date();
     const upcoming = events
-      .filter(event => isUpcomingDate(event.date, now) && !event.cancelled)
+      .filter(event => isClubUpcoming(event.date, now) && !event.cancelled)
       .sort((a, b) => parseLocalDate(a.date) - parseLocalDate(b.date))
       .slice(0, limit);
 
@@ -287,7 +298,7 @@ export class CalendarAdapter {
       stats.byType[event.type] = (stats.byType[event.type] || 0) + 1;
 
       // Count upcoming
-      if (isUpcomingDate(event.date, now) && !event.cancelled) {
+      if (isClubUpcoming(event.date, now) && !event.cancelled) {
         stats.upcoming++;
       }
 
