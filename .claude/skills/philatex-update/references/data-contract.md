@@ -45,7 +45,7 @@ Existing `YYYY-QN` entries stay as they are. History is never rewritten into the
 
 **Edition labels in page text (bimonthly).** The pages hard-code quarterly wording that the skill fills in. These are not templated, so for a bimonthly edition write the label as follows:
 
-- Edition label: `January/February 2027` wherever a quarterly run writes `Fourth Quarter 2026`. Examples: the index.html banner `SAPA PHILATEX - January/February 2027`; the newsletter.html current-issue `<p>` and the card title `January/February 2027 Edition`; an archive.html card `<p>January/February 2027</p>` with a `<!-- January/February 2027 -->` comment.
+- Edition label: `January/February 2027` wherever a quarterly run writes `Fourth Quarter 2026`. Examples: the index.html banner `SAPA PHILATEX - January/February 2027`; the newsletter.html current-issue `<p>` and the card title `January/February 2027 Edition`. archive.html is not edited: `js/pages/archive.js` renders its issue cards from `newsletters.json` (labelled from `months`).
 - The TSDA table caption names the months, e.g. `…for January–February 2027`, never a quarter.
 - Leave the general prose about the publication schedule ("quarterly publication", newsletter.html's "Frequency: Quarterly" and its quarter-to-publish-date list, archive.html's intro) alone during a content run. Changing it is a separate, operator-approved site edit.
 - Known gap: `js/modules/template-engine.js` renders a newsletter card as `{quarter} Quarter {year}`, which has no bimonthly form. If a run's output reaches that renderer, report it as a finding. Do not edit JS in a content run.
