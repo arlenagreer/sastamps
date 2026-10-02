@@ -7,7 +7,7 @@
     <meta name="keywords" content="contact SAPA, San Antonio Philatelic Association contact, stamp club contact, philately contact, San Antonio stamp collectors">
 
     <!-- Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://maps.gstatic.com https://maps.googleapis.com https://*.ggpht.com; connect-src 'self'; frame-src 'self' https://www.google.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://maps.gstatic.com https://maps.googleapis.com https://*.ggpht.com; connect-src 'self' https://formsubmit.co; frame-src 'self' https://www.google.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self' https://formsubmit.co; upgrade-insecure-requests;">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <!-- Clickjacking: a best-effort, script-based guard, not real protection.
          The real fix is an X-Frame-Options or CSP frame-ancestors RESPONSE
@@ -78,6 +78,12 @@
 
     <link rel="stylesheet" href="css/font-loading.min.css">
     <script src="dist/js/font-loading.min.js"></script>
+    <style>
+        /* No-JS confirmation after the relay redirects back to #sent. */
+        .sent-notice { display: none; max-width: 800px; margin: 2rem auto 0; padding: 1rem 1.25rem;
+            border-radius: 8px; background: #e8f5e9; color: #1b5e20; border: 1px solid #a5d6a7; }
+        .sent-notice:target, .sent-notice.is-shown { display: block; }
+    </style>
 </head>
 <body>
     <!-- Skip to content link for accessibility -->
@@ -172,8 +178,24 @@
 
                 <div class="card" style="max-width: 800px; margin: 2rem auto 0;">
                     <div class="card-content">
-                        <form id="contact-form" novalidate>
-                            <input type="hidden" id="csrf-token" name="csrf_token" value="">
+                        <!-- Messages are delivered by the FormSubmit relay (GitHub Pages
+                             cannot run server code). The form's action is the ONLY place
+                             the recipient is set: contact.js posts to the relay's AJAX
+                             form of this same URL. Without JavaScript the browser posts
+                             here directly (its own required/email checks apply), and the
+                             relay redirects back to #sent, which shows the notice below. -->
+                        <div id="sent" class="sent-notice" role="status">
+                            <i class="fas fa-check-circle"></i> Thank you! Your message has been sent. We'll get back to you soon.
+                        </div>
+                        <form id="contact-form" action="https://formsubmit.co/arlenagreer@gmail.com" method="POST">
+                            <input type="hidden" name="_subject" value="SAPA website contact form">
+                            <input type="hidden" name="_template" value="table">
+                            <input type="hidden" name="_next" value="https://www.sastamps.org/contact.html#sent">
+                            <!-- No captcha: the relay's captcha page needs JavaScript, which
+                                 would strand exactly the no-JS visitors this path serves. -->
+                            <input type="hidden" name="_captcha" value="false">
+                            <!-- Spam trap: people never see or fill this; bots that do are dropped. -->
+                            <input type="text" name="_honey" class="form-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
 
                             <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
                                 <div class="form-group">

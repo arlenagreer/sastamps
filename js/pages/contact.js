@@ -11,11 +11,13 @@ import { createLogger } from '../utils/logger.js';
 import {
   ERROR_MESSAGES,
   SUCCESS_MESSAGES,
-  API_ENDPOINTS,
   CSS_CLASSES
 } from '../constants/index.js';
 
 const logger = createLogger('ContactPage');
+
+const RELAY_TIMEOUT_MS = 30000;
+const RELAY_UNCONFIRMED = "We couldn't confirm your message was sent (the connection timed out). It may still arrive, so please wait a few minutes before sending it again, or email us at loz33@hotmail.com.";
 
 // Contact-specific functionality
 function initializeContactPage() {
@@ -27,14 +29,27 @@ function initializeContactPage() {
 
   // Contact information
   initializeContactInfo();
+
+  // Back from the relay's redirect (#sent): the static notice is showing;
+  // drop the fragment so a reload or a shared link doesn't claim a send.
+  // (The class keeps it shown whether or not the browser re-evaluates :target.)
+  const sentNotice = document.getElementById('sent');
+  if (sentNotice && window.location.hash === '#sent' && window.history.replaceState) {
+    sentNotice.classList.add('is-shown');
+    window.history.replaceState(null, '', window.location.pathname + window.location.search);
+  }
 }
 
 function initializeContactForm(form) {
+  // This script validates; the browser's own checks stay on for visitors
+  // without JavaScript (the attribute is not in the HTML for that reason).
+  form.noValidate = true;
+
   // Add real-time validation
-  const inputs = form.querySelectorAll('input, textarea');
+  const inputs = form.querySelectorAll('input:not([type="hidden"]):not([name="_honey"]), select, textarea');
   inputs.forEach(input => {
     addEventListenerWithCleanup(input, 'blur', validateField);
-    addEventListenerWithCleanup(input, 'input', debounce(validateField, 500));
+    addEventListenerWithCleanup(input, input.tagName === 'SELECT' ? 'change' : 'input', debounce(validateField, 500));
   });
 
   // Handle form submission
@@ -171,7 +186,7 @@ async function handleFormSubmission(event) {
   const originalButtonText = submitButton.textContent;
 
   // Validate all fields
-  const fields = form.querySelectorAll('input[required], textarea[required]');
+  const fields = form.querySelectorAll('input[required], select[required], textarea[required]');
   let allValid = true;
 
   fields.forEach(field => {
@@ -180,41 +195,58 @@ async function handleFormSubmission(event) {
     }
   });
 
+  // A fresh attempt replaces any earlier "sent" notice (inline style so it
+  // also wins over a :target the browser may still be matching).
+  const sentNotice = document.getElementById('sent');
+  if (sentNotice) {
+    sentNotice.classList.remove('is-shown');
+    sentNotice.style.display = 'none';
+  }
+
   if (!allValid) {
     showFormMessage(ERROR_MESSAGES.VALIDATION_FAILED, CSS_CLASSES.ERROR);
     return;
   }
+
+  let timer;
 
   // Show loading state
   submitButton.disabled = true;
   submitButton.textContent = 'Sending...';
 
   try {
-    // Collect form data
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
+    // Collect form data (includes the relay's hidden _subject/_template/_honey
+    // fields; _next only matters for the no-JavaScript submit).
+    const data = {};
+    new FormData(form).forEach((value, key) => { data[key] = value; });
+    delete data._next;
+    data._subject = `SAPA website: ${data.subject || 'Contact form'} (from ${data.name})`;
 
-    // Add CSRF token if available
-    const csrfToken = await getCSRFToken();
-    if (csrfToken) {
-      data.csrf_token = csrfToken;
+    // Deliver through the email relay: the AJAX form of the form's own
+    // action URL, so the recipient is set in one place (contact.html).
+    const relay = new URL(form.action);
+    if (!relay.pathname.startsWith('/ajax/')) {
+      relay.pathname = `/ajax${relay.pathname}`;
     }
-
-    // Import API client dynamically
-    const { apiClient: _apiClient } = await import('../utils/api-client.js');
-
-    // Submit to server
-    const response = await fetch(API_ENDPOINTS.CONTACT_FORM, {
+    // Manual timer, not AbortSignal.timeout (missing before Safari 16).
+    const controller = new AbortController();
+    timer = setTimeout(() => controller.abort(), RELAY_TIMEOUT_MS);
+    const response = await fetch(relay.href, {
       method: 'POST',
+      signal: controller.signal,
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
       },
       body: JSON.stringify(data)
     });
 
+    clearTimeout(timer); // the relay answered; don't abort while reading the body
     const result = await response.json();
 
-    if (response.ok && result.success) {
+    // FormSubmit answers {success: "true"|"false", message}; "false" includes
+    // the one-time "form needs activation" reply, which must not read as sent.
+    if (response.ok && String(result.success) === 'true') {
       showFormMessage(SUCCESS_MESSAGES.FORM_SUBMITTED, CSS_CLASSES.SUCCESS);
       form.reset();
 
@@ -227,9 +259,13 @@ async function handleFormSubmission(event) {
 
   } catch (error) {
     logger.error('Form submission failed:', error);
-    showFormMessage(ERROR_MESSAGES.SUBMISSION_FAILED, CSS_CLASSES.ERROR);
+    // A timeout or a dropped connection means we don't know: the relay may
+    // already have delivered it. Only a relay reply we read is a definite no.
+    const unconfirmed = error && (error.name === 'AbortError' || error.name === 'TypeError');
+    showFormMessage(unconfirmed ? RELAY_UNCONFIRMED : ERROR_MESSAGES.SUBMISSION_FAILED, CSS_CLASSES.ERROR);
 
   } finally {
+    clearTimeout(timer);
     // Restore button state
     submitButton.disabled = false;
     submitButton.textContent = originalButtonText;
@@ -258,17 +294,6 @@ function showFormMessage(message, type) {
     setTimeout(() => {
       messageElement.remove();
     }, 10000);
-  }
-}
-
-async function getCSRFToken() {
-  try {
-    const response = await fetch('csrf-token.php');
-    const data = await response.json();
-    return data.token;
-  } catch (error) {
-    logger.warn('Failed to get CSRF token:', error);
-    return null;
   }
 }
 

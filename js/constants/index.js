@@ -87,7 +87,6 @@ export const STORAGE_KEYS = {
 
 // API Endpoints
 export const API_ENDPOINTS = {
-  CONTACT_FORM: '/contact-handler.php',
   CSRF_TOKEN: '/csrf-token.php',
   NETLIFY_CONTACT: '/.netlify/functions/contact-form',
   NEWSLETTER_ARCHIVE: '/api/newsletters',
@@ -112,7 +111,7 @@ export const ERROR_MESSAGES = {
   NETWORK: 'Network error. Please check your connection.',
   VALIDATION_FAILED: 'Please correct the errors above before submitting.',
   LOAD_FAILED: 'Failed to load content. Please try again.',
-  SUBMISSION_FAILED: 'Sorry, there was an error sending your message. Please try again.',
+  SUBMISSION_FAILED: 'Sorry, there was an error sending your message. Please try again, or email us at loz33@hotmail.com.',
   CALENDAR_UNAVAILABLE: 'Calendar temporarily unavailable. Please try refreshing the page.',
   MEETING_LOAD_FAILED: 'Unable to load meetings. Please try again later.',
   REMINDER_PERMISSION_DENIED: 'Notification permission was denied.',
