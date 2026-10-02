@@ -26,3 +26,7 @@ Not yet decided. Options:
 - **(c) Host on a platform with custom headers** (Netlify config already exists in the repo) and set the headers there.
 
 In every case, correct the misleading comment in contact.html.
+
+## Update (2026-10-01)
+
+Option (a) shipped in #167: contact.html hides itself when framed (verified: a cross-origin frame shows a blank page) and the misleading comment is corrected. Options (b)/(c) (CDN or a host that can send X-Frame-Options / frame-ancestors) remain the owner's decision; moving to Cloudflare Pages or Netlify would also give the contact form a real server-side handler (owner reminder set for 2026-10-08).

@@ -17,3 +17,7 @@ Async patterns are inconsistent — mixed .then() callbacks and async/await acro
 - Route all console.log/console.warn calls through the logger module
 - Add production mode flag to silence debug logging
 - Consider adding a development mode with verbose logging
+
+## Resolution (2026-10-01)
+
+Stray console.log/warn calls now go through the logger (#168). Rewriting every .then() chain to async/await was declined: behaviour-neutral churn across the codebase for little gain.

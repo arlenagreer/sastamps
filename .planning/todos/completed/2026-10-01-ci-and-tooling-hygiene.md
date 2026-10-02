@@ -40,3 +40,16 @@ Found on 2026-09-30 while fixing the Dependabot alerts (#158). All of these alre
 ## Solution
 
 Pick the items worth doing. 1 (choose a runner: pa11y 10 per URL, or lighthouse accessibility) gives the most value. 3, 4, 6, 8 and 9 are done.
+
+## Resolution (2026-10-01)
+
+All items resolved on 2026-10-01 except where noted:
+1-2. Accessibility runner: scripts/a11y-check.js (pa11y 10 over every deployed page), .pa11yrc fixed (#169). Still non-blocking; #170 brought true violations to 0, so making it blocking with color-contrast on is in open follow-ups.
+3, 4, 6, 8, 9: done earlier (see items).
+5. Link checker: unpinned broken-link-checker removed; check-site-build resolves every local and absolute same-site URL; linkinator kept only for the weekly external report (#169).
+7. 2025-Q4 .ics regenerated from meetings.json, check-ics 26/26 (#169). 2025-Q2 (14) and Q3 (36) still fail: open follow-ups.
+10. resources.html inline CSS folded into styles.css, pixel-identical (#170).
+11. test:js glob quoted, 72 errors fixed (#168).
+12. sitemap.xml/robots.txt built and deployed (#169).
+13. Search index no longer inlined; search.html 368 KB -> 23 KB (#169).
+14. Dead blur-up blocks removed (#167).

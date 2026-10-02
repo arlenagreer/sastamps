@@ -19,3 +19,7 @@ The project has no unit tests, integration tests, or E2E tests. Current testing 
 - Add Playwright or Cypress for E2E testing (contact form flow, search functionality, calendar interaction)
 - Configure pre-commit hooks (husky + lint-staged) to run tests before pushing
 - Add CI integration for automated test runs
+
+## Update (2026-10-01)
+
+Partly done: node:test unit tests (escapeHTML/safeUrl contract, site rules, sitemap; 196 tests) and a headless search-page test run in bin/ci and CI (#169). Pre-commit hooks are covered by the local-ci-gate push hook. Remaining: end-to-end journey tests against the live site (the site-wide UAT, started 2026-10-01, will turn its journeys into scheduled checks), including the contact form.

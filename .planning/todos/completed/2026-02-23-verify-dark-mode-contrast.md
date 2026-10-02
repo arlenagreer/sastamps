@@ -17,3 +17,7 @@ Dark mode has comprehensive color overrides via `[data-theme="dark"]`, but text/
 - Use automated tools (axe-core, Lighthouse) with dark mode enabled
 - Fix any failing combinations by adjusting dark theme CSS variables
 - Document verified contrast ratios for the design system
+
+## Resolution (2026-10-01)
+
+Moot: nothing on the site can switch dark mode on (no toggle; the site's design decision is light-only). #170 reverted dark-only overrides; removing the unreachable [data-theme=dark] CSS is in open follow-ups.
