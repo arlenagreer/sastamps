@@ -27,6 +27,11 @@ function initializeContactPage() {
 
   // Contact information
   initializeContactInfo();
+
+  // Back from a no-JavaScript submit: the relay redirects to ?sent=1.
+  if (contactForm && new URLSearchParams(window.location.search).get('sent') === '1') {
+    showFormMessage(SUCCESS_MESSAGES.FORM_SUBMITTED, CSS_CLASSES.SUCCESS);
+  }
 }
 
 function initializeContactForm(form) {
@@ -171,7 +176,7 @@ async function handleFormSubmission(event) {
   const originalButtonText = submitButton.textContent;
 
   // Validate all fields
-  const fields = form.querySelectorAll('input[required], textarea[required]');
+  const fields = form.querySelectorAll('input[required], select[required], textarea[required]');
   let allValid = true;
 
   fields.forEach(field => {
@@ -190,31 +195,27 @@ async function handleFormSubmission(event) {
   submitButton.textContent = 'Sending...';
 
   try {
-    // Collect form data
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
+    // Collect form data (includes the relay's hidden _subject/_template/_honey
+    // fields; _next only matters for the no-JavaScript submit).
+    const data = Object.fromEntries(new FormData(form).entries());
+    delete data._next;
+    data._subject = `SAPA website: ${data.subject || 'Contact form'} (from ${data.name})`;
 
-    // Add CSRF token if available
-    const csrfToken = await getCSRFToken();
-    if (csrfToken) {
-      data.csrf_token = csrfToken;
-    }
-
-    // Import API client dynamically
-    const { apiClient: _apiClient } = await import('../utils/api-client.js');
-
-    // Submit to server
+    // Deliver through the email relay (see API_ENDPOINTS.CONTACT_FORM).
     const response = await fetch(API_ENDPOINTS.CONTACT_FORM, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
       },
       body: JSON.stringify(data)
     });
 
     const result = await response.json();
 
-    if (response.ok && result.success) {
+    // FormSubmit answers {success: "true"|"false", message}; "false" includes
+    // the one-time "form needs activation" reply, which must not read as sent.
+    if (response.ok && String(result.success) === 'true') {
       showFormMessage(SUCCESS_MESSAGES.FORM_SUBMITTED, CSS_CLASSES.SUCCESS);
       form.reset();
 
@@ -258,17 +259,6 @@ function showFormMessage(message, type) {
     setTimeout(() => {
       messageElement.remove();
     }, 10000);
-  }
-}
-
-async function getCSRFToken() {
-  try {
-    const response = await fetch('csrf-token.php');
-    const data = await response.json();
-    return data.token;
-  } catch (error) {
-    logger.warn('Failed to get CSRF token:', error);
-    return null;
   }
 }
 
