@@ -14,7 +14,7 @@ Everything known to be wrong or unfinished after PRs #164-#171, in one place, mo
 2. DECISION: "Set Reminder" (13 buttons) is browser-only (in-page notification if the visitor returns). Remove, or replace with a calendar-file download.
 3. Glossary has only 5 terms (data/glossary/glossary.json) although it is presented as a terminology database.
 4. Glossary search clear button may be covered by the suggestions dropdown (seen in headless Chrome; confirm in the UAT).
-5. Contact form posts through FormSubmit with arlenagreer@gmail.com visible in the page source (spam exposure); no alias was offered on activation. DECISION: proper server-side handler / club inbox (owner reminder 2026-10-08).
+5. Contact form posts through FormSubmit with `arlenagreer@gmail.com` visible in the page source (spam exposure); no alias was offered on activation. DECISION: proper server-side handler / club inbox (owner reminder 2026-10-08).
 
 ## Data
 
@@ -36,3 +36,17 @@ Everything known to be wrong or unfinished after PRs #164-#171, in one place, mo
 ## Solution
 
 Work the visitor-facing items first; the two DECISION items are for the owner.
+
+## Update (2026-10-02)
+
+The site-wide UAT (docs/uat/findings-2026-10-02.md) resolved or superseded several items:
+- **Item 4:** the glossary clear button was not covered; the definitions bug was fixed in #178.
+- **Item 9:** reworked in #177/#178/#180; home.js dormant sections remain.
+- **Item 13:** search.html escaping fixed in #180.
+- **Item 14:** the calendar colours were aligned in #170/#177.
+
+New open items and decisions are listed under "Still open" in that file. Owner decisions:
+- RSVP and Set Reminder: remove, or make them real;
+- showcase visibility;
+- contact recipient and a server-side handler (Google Task, Oct 8);
+- error monitoring endpoint.
