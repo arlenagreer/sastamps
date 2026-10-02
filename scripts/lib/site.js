@@ -7,10 +7,12 @@ const { execFileSync } = require('child_process');
 
 // What the live site serves: root site pages plus these directories and
 // files. Anything else is not deployed: notably *.php (Pages would serve the
-// source text), data/*.db, scripts/, js/ sources, sw.js (retired) and docs.
+// source text), data/*.db, scripts/, js/ sources and docs.
+// sw.js deploys as a kill switch: it removes the retired 2025 caching worker
+// from browsers that still hold it (see the comment at the top of sw.js).
 const SITE_DIRS = ['css', 'dist', 'images', 'public', 'downloads', 'showcase', 'data'];
 // sitemap.xml is not here: the build generates it in _site/ (build-sitemap.js).
-const SITE_FILES = ['favicon.ico', 'site.webmanifest', 'robots.txt'];
+const SITE_FILES = ['favicon.ico', 'site.webmanifest', 'robots.txt', 'sw.js'];
 
 // Never public, wherever it sits: the build leaves these out and the check
 // fails if one reaches _site/. robots.txt is the one .txt that deploys.

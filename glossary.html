@@ -57,8 +57,14 @@
             }).catch(function () {});
         }
     </script>
+
+    <!-- Without JavaScript nothing below would ever finish "Loading...": hide those placeholders -->
+    <noscript><style>.js-only { display: none !important; }</style></noscript>
 </head>
 <body>
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to content</a>
+
     <!-- Header -->
     <header>
         <div class="container header-container">
@@ -85,7 +91,7 @@
     </header>
 
     <!-- Main Content -->
-    <main>
+    <main id="main-content">
         <!-- Hero Section -->
         <section class="hero hero-overlay hero-glossary">
             <div class="container">
@@ -100,7 +106,7 @@
                 <div class="card">
                     <div class="card-content">
                         <div id="glossary-search-container">
-                            <div class="loading">
+                            <div class="loading js-only">
                                 <i class="fas fa-spinner fa-spin"></i> Loading search...
                             </div>
                         </div>
@@ -116,7 +122,7 @@
                     <div class="card-content">
                         <h2 class="section-title" style="margin-bottom: 1rem;">Browse Glossary</h2>
                         <div id="glossary-filters-container">
-                            <div class="loading">
+                            <div class="loading js-only">
                                 <i class="fas fa-spinner fa-spin"></i> Loading filters...
                             </div>
                         </div>
@@ -129,7 +135,7 @@
         <section class="section">
             <div class="container">
                 <div id="glossary-content-container">
-                    <div class="loading">
+                    <div class="loading js-only">
                         <i class="fas fa-spinner fa-spin"></i> Loading glossary terms...
                     </div>
                 </div>
@@ -172,7 +178,7 @@
                                 <h4>Contributing</h4>
                                 <p>This glossary is maintained by the SAPA Education Committee. If you'd like to suggest new terms or improvements, please contact us at <a href="mailto:loz33@hotmail.com">loz33@hotmail.com</a>.</p>
                             </div>
-                            <div class="panel-primary">
+                            <div class="panel-primary js-only">
                                 <h3 class="text-white mt-0">Quick Stats</h3>
                                 <div id="glossary-stats">
                                     <div class="stat-item">
@@ -238,85 +244,40 @@
 
     <!-- Scripts -->
     <script>
-        // Check if we can use modules (will fail on file:// protocol)
-        var moduleSupport = 'noModule' in HTMLScriptElement.prototype && window.location.protocol !== 'file:';
+        // The glossary needs its script (and a web server: modules and fetch do not run from file://).
+        var canLoadGlossary = window.location.protocol !== 'file:';
 
-        // Fallback content function
+        // Shown when the glossary script cannot load: plain wording for a visitor.
         function showFallbackContent() {
-            const containers = [
-                '#glossary-search-container',
-                '#glossary-filters-container',
-                '#glossary-content-container'
-            ];
-
-            containers.forEach(selector => {
-                const container = document.querySelector(selector);
-                if (container) {
-                    container.innerHTML = `
-                        <div class="error-message" style="
-                            background-color: #fff3cd;
-                            color: #856404;
-                            border: 1px solid #ffc107;
-                            border-radius: var(--radius-md);
-                            padding: 1rem;
-                            text-align: center;
-                        ">
-                            <h3><i class="fas fa-exclamation-triangle"></i> Development Mode</h3>
-                            <p>The glossary content requires a web server to load properly.</p>
-                            <p>To view this page locally, please use a local development server or visit the live site.</p>
-                            <p style="font-size: 0.875rem; margin-top: 0.5rem;">
-                                For assistance: <a href="mailto:loz33@hotmail.com">loz33@hotmail.com</a>
-                            </p>
-                        </div>
-                    `;
-                }
+            ['#glossary-search-container', '#glossary-filters-container'].forEach(function (selector) {
+                var container = document.querySelector(selector);
+                if (container) { container.innerHTML = ''; }
             });
+            ['#total-terms', '#total-categories', '#total-references'].forEach(function (selector) {
+                var stat = document.querySelector(selector);
+                if (stat) { stat.textContent = 'Unavailable'; }
+            });
+            var content = document.querySelector('#glossary-content-container');
+            if (content) {
+                content.innerHTML =
+                    '<div class="card"><div class="card-content text-center" role="alert">' +
+                    '<h3><i class="fas fa-exclamation-triangle" aria-hidden="true"></i> The glossary could not load</h3>' +
+                    '<p>Something stopped the glossary from loading. Please refresh the page or try again later.</p>' +
+                    '<p>If it keeps happening, email <a href="mailto:loz33@hotmail.com">loz33@hotmail.com</a>.</p>' +
+                    '</div></div>';
+            }
         }
 
-        if (moduleSupport) {
-            // Simply load the glossary script - it self-initializes
+        if (canLoadGlossary) {
+            // The glossary script initializes itself once it loads.
             var glossaryScript = document.createElement('script');
             glossaryScript.src = 'dist/js/glossary.min.js';
-            glossaryScript.onload = () => {
-                console.log('✅ Glossary page loaded successfully');
-                // Debug: Check if containers are being updated after script loads
-                setTimeout(() => {
-                    const searchContainer = document.getElementById('glossary-search-container');
-                    const filtersContainer = document.getElementById('glossary-filters-container');
-                    const contentContainer = document.getElementById('glossary-content-container');
-
-                    if (searchContainer && searchContainer.innerHTML.includes('Loading search')) {
-                        console.error('❌ Search container still showing loading message');
-                    }
-                    if (filtersContainer && filtersContainer.innerHTML.includes('Loading filters')) {
-                        console.error('❌ Filters container still showing loading message');
-                    }
-                    if (contentContainer && contentContainer.innerHTML.includes('Loading glossary')) {
-                        console.error('❌ Content container still showing loading message');
-                    }
-
-                    // Try manual initialization if auto-init failed
-                    if (window.initializeGlossary &&
-                        (searchContainer.innerHTML.includes('Loading') ||
-                         filtersContainer.innerHTML.includes('Loading') ||
-                         contentContainer.innerHTML.includes('Loading'))) {
-                        console.log('🔄 Attempting manual initialization...');
-                        window.initializeGlossary();
-                    }
-                }, 1000);
-            };
-            glossaryScript.onerror = () => {
-                console.warn('⚠️ Glossary page script failed to load');
-                showFallbackContent();
-            };
+            glossaryScript.onerror = showFallbackContent;
             document.body.appendChild(glossaryScript);
+        } else if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', showFallbackContent);
         } else {
-            // Show fallback for file:// protocol
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', showFallbackContent);
-            } else {
-                showFallbackContent();
-            }
+            showFallbackContent();
         }
     </script>
 

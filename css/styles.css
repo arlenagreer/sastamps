@@ -4070,6 +4070,79 @@ tr:hover {
 
 .glossary-term.expanded .expand-icon {
     color: var(--white);
+    transform: rotate(180deg);
+}
+
+/* Term headers are real buttons (js/pages/glossary.js): reset the button
+   look so the card keeps its design, and show keyboard focus. */
+.term-heading {
+    margin: 0;
+    font-size: inherit;
+}
+
+button.term-header {
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+    font: inherit;
+    font-family: var(--font-body);
+    font-weight: 400;
+    text-align: left;
+    color: inherit;
+}
+
+.term-header:focus {
+    outline: 3px solid var(--accent);
+    outline-offset: -3px;
+}
+
+/* Browsers without :focus-visible drop this rule and keep the outline. */
+.term-header:focus:not(:focus-visible) {
+    outline: none;
+}
+
+.term-title,
+.alternate-names {
+    display: block;
+}
+
+.term-header .term-title {
+    font-weight: 700;
+}
+
+.term-content[hidden] {
+    display: none;
+}
+
+/* Jump targets (A-Z, related terms, glossary.html#term-...) land below the
+   sticky header instead of under it. */
+.glossary-letter-header,
+.glossary-term,
+.term-header {
+    scroll-margin-top: 7rem;
+}
+
+/* A letter with no terms is visibly unavailable, not a dead button. */
+.alphabet-btn:disabled,
+.alphabet-btn:disabled:hover {
+    background: transparent;
+    border-style: dashed;
+    color: var(--medium);
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.alphabet-btn:focus {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* Related terms with no entry in the glossary yet: plain text, not a link. */
+.related-term-text,
+.related-term-text:hover {
+    background: var(--white);
+    color: var(--dark);
+    border: 1px dashed var(--medium);
 }
 
 
@@ -4280,8 +4353,8 @@ tr:hover {
     }
     
     .alphabet-btn {
-        width: 28px;
-        height: 28px;
+        width: 36px;
+        height: 36px;
         font-size: 0.875rem;
     }
 }
@@ -4785,29 +4858,198 @@ tr:hover {
     border-top: 1px solid var(--light);
 }
 
-.page-resources .bookmark-feedback {
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--primary);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius-md);
-    font-size: 0.875rem;
-    animation: fade-in-out 2s ease;
+/* Search results for resources.html#resource-<id> land below the sticky header. */
+.page-resources .resource-item,
+.page-resources .resource-card {
+    scroll-margin-top: 7rem;
 }
 
-@keyframes fade-in-out {
-    0%,
-    100% {
-        opacity: 0;
+.page-resources .resource-item.highlighted {
+    box-shadow: 0 0 0 3px var(--accent);
+}
+
+/* Visible "nothing matches" message and the no-JavaScript notice */
+.page-resources .resources-empty,
+.page-resources .resources-noscript {
+    margin: 1.5rem 0 0;
+    padding: 1rem 1.25rem;
+    border: 2px dashed var(--primary);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    color: var(--dark);
+    font-weight: 600;
+}
+
+.page-resources .resources-noscript h2 {
+    font-size: 1.25rem;
+    margin: 0 0 0.5rem;
+}
+
+.page-resources .resources-noscript p {
+    font-weight: 400;
+    margin: 0;
+}
+
+.page-resources .btn-bookmarks-filter.active {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--dark);
+}
+
+/* Guide dialog (native <dialog>, js/pages/resources.js). Close sits in a
+   sticky bar at the top so it is reachable on a phone without scrolling. */
+body.resource-dialog-open {
+    overflow: hidden;
+}
+
+.resource-dialog {
+    width: min(800px, calc(100vw - 2rem));
+    max-width: none;
+    max-height: calc(100vh - 2rem);
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    overflow: auto;
+    background: var(--white);
+    color: var(--dark);
+    box-shadow: 0 25px 50px rgb(0, 0, 0, 0.25);
+}
+
+.resource-dialog::backdrop {
+    background: rgb(0, 0, 0, 0.75);
+}
+
+.resource-dialog-bar {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 1rem 0.75rem 1.5rem;
+    background: var(--primary);
+    color: var(--white);
+}
+
+.page-resources .resource-dialog-title {
+    margin: 0;
+    font-size: 1.35rem;
+    line-height: 1.3;
+    color: var(--white);
+    font-family: var(--font-heading);
+}
+
+.page-resources .resource-dialog-title:focus {
+    outline: none;
+}
+
+.resource-dialog-close {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border: 2px solid rgb(255, 255, 255, 0.7);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--white);
+    font-size: 1.75rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.resource-dialog-close:hover,
+.resource-dialog-close:focus {
+    background: rgb(255, 255, 255, 0.2);
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.resource-dialog .resource-modal {
+    padding: 1.5rem;
+}
+
+.resource-dialog .resource-modal-content p {
+    margin: 0.75rem 0;
+}
+
+.resource-dialog .resource-modal-content h3 {
+    font-size: 1.35rem;
+}
+
+.resource-dialog .resource-modal-content h4 {
+    font-size: 1.1rem;
+}
+
+.resource-dialog .resource-modal-content ol {
+    padding-left: 1.5rem;
+    margin: 0.5rem 0;
+}
+
+@media (width <= 768px) {
+    .resource-dialog {
+        width: calc(100vw - 1rem);
+        max-height: calc(100vh - 1rem);
     }
 
-    20%,
-    80% {
-        opacity: 1;
+    .resource-dialog .resource-modal {
+        padding: 1rem;
     }
+
+    .page-resources .resource-dialog-title {
+        font-size: 1.15rem;
+    }
+}
+
+/* Print the whole open guide, and nothing else. */
+@media print {
+    body.resource-dialog-open {
+        overflow: visible;
+    }
+
+    body.resource-dialog-open > *:not(.resource-dialog) {
+        display: none !important;
+    }
+
+    body.resource-dialog-open .resource-dialog {
+        position: static;
+        display: block;
+        width: auto;
+        max-width: none;
+        max-height: none;
+        margin: 0;
+        overflow: visible;
+        box-shadow: none;
+    }
+
+    .resource-dialog-bar {
+        position: static;
+        padding: 0 0 0.5rem;
+    }
+
+    .resource-dialog .resource-modal {
+        padding: 0;
+    }
+
+    .resource-dialog-close,
+    .resource-dialog .resource-modal-actions {
+        display: none !important;
+    }
+}
+
+/* Bookmark feedback: inline, persistent role="status" elements next to the
+   button (or next to "My Bookmarks" when the card leaves the view). Text is
+   set and cleared by js/pages/resources.js; empty means invisible. */
+.page-resources .bookmark-feedback,
+.page-resources .bookmark-status {
+    align-self: center;
+    color: var(--primary-dark);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.page-resources .bookmark-feedback:empty,
+.page-resources .bookmark-status:empty {
+    display: none;
 }
 
 .page-resources .resource-actions {

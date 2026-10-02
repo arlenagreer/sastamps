@@ -8,13 +8,14 @@ import { fetchJSON } from '../utils/fetch-json.js';
 import { createLogger } from '../utils/logger.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { announceStatus, countSummary } from '../utils/announce.js';
+import { scrollBelowHeader, scrollBelowHeaderOnLoad } from '../utils/scroll-below-header.js';
 
 const logger = createLogger('GlossaryPage');
 
+const DIFFICULTY_ORDER = { beginner: 1, intermediate: 2, advanced: 3 };
+
 // Initialize glossary page
 async function initializeGlossary() {
-  // Initializing glossary page
-
   // Load glossary data and initialize components
   const searchContainer = safeQuerySelector('#glossary-search-container');
   if (searchContainer) {
@@ -54,23 +55,23 @@ async function loadGlossarySearch(container) {
     container.innerHTML = `
             <div class="glossary-search">
                 <div class="search-header">
-                    <h3><i class="fas fa-search"></i> Search Glossary</h3>
+                    <h3><i class="fas fa-search" aria-hidden="true"></i> Search Glossary</h3>
                     <p>Find philatelic terms and definitions</p>
                 </div>
                 <div class="search-form">
                     <div class="search-input-group">
-                        <input 
-                            type="search" 
-                            id="glossary-search-input" 
-                            placeholder="Search terms, definitions, or categories..." 
+                        <input
+                            type="search"
+                            id="glossary-search-input"
+                            placeholder="Search terms, definitions, or categories..."
                             aria-label="Search glossary terms"
                             autocomplete="off"
                         >
                         <button id="glossary-search-button" aria-label="Search" type="button">
-                            <i class="fas fa-search"></i>
+                            <i class="fas fa-search" aria-hidden="true"></i>
                         </button>
                         <button id="glossary-clear-button" aria-label="Clear search" type="button" style="display: none;">
-                            <i class="fas fa-times"></i>
+                            <i class="fas fa-times" aria-hidden="true"></i>
                         </button>
                     </div>
                     <div class="search-suggestions" id="search-suggestions" style="display: none;"></div>
@@ -102,7 +103,7 @@ async function loadGlossarySearch(container) {
         clearButton.style.display = 'none';
         resultsContainer.style.display = 'none';
         if (statusRegion) { statusRegion.textContent = ''; }
-        showAllTerms();
+        applyFilters();
       }
     });
 
@@ -123,7 +124,7 @@ async function loadGlossarySearch(container) {
       clearButton.style.display = 'none';
       resultsContainer.style.display = 'none';
       if (statusRegion) { statusRegion.textContent = ''; }
-      showAllTerms();
+      applyFilters();
       searchInput.focus();
     });
 
@@ -136,6 +137,16 @@ async function loadGlossarySearch(container) {
         if (query) {
           performSearch(query, resultsContainer);
         }
+      }
+    });
+
+    // Search result links (results are re-rendered; one delegated handler)
+    addEventListenerWithCleanup(resultsContainer, 'click', (e) => {
+      const link = e.target.closest('.search-result-link');
+      if (!link) {return;}
+      e.preventDefault();
+      if (link.dataset.termId) {
+        scrollToTerm(link.dataset.termId);
       }
     });
 
@@ -177,58 +188,60 @@ async function loadGlossaryFilters(container) {
     const terms = await loadGlossaryTerms();
 
     // Extract unique categories and difficulties
-    const categories = [...new Set(terms.map(term => term.category))].sort();
-    const difficulties = [...new Set(terms.map(term => term.difficulty))].sort();
-    const _subcategories = [...new Set(terms.map(term => term.subcategory).filter(Boolean))].sort();
+    const categories = [...new Set(terms.map(term => term.category))]
+      .sort((a, b) => formatCategory(a).localeCompare(formatCategory(b)));
+    const difficulties = [...new Set(terms.map(term => term.difficulty))]
+      .sort((a, b) => (DIFFICULTY_ORDER[a] || 99) - (DIFFICULTY_ORDER[b] || 99));
 
+    // "Group by" replaces the old "Sort by": every term shares one dateAdded,
+    // so "Recently Added" could never change anything and is gone.
     container.innerHTML = `
             <div class="glossary-filters">
                 <div class="filters-grid">
                     <div class="filter-group">
                         <label for="category-filter">
-                            <i class="fas fa-layer-group"></i> Category
+                            <i class="fas fa-layer-group" aria-hidden="true"></i> Category
                         </label>
-                        <select id="category-filter" aria-label="Filter by category">
+                        <select id="category-filter">
                             <option value="">All Categories</option>
                             ${categories.map(cat => `<option value="${escapeHTML(cat)}">${escapeHTML(formatCategory(cat))}</option>`).join('')}
                         </select>
                     </div>
-                    
+
                     <div class="filter-group">
                         <label for="difficulty-filter">
-                            <i class="fas fa-signal"></i> Difficulty
+                            <i class="fas fa-signal" aria-hidden="true"></i> Difficulty
                         </label>
-                        <select id="difficulty-filter" aria-label="Filter by difficulty">
+                        <select id="difficulty-filter">
                             <option value="">All Levels</option>
                             ${difficulties.map(diff => `<option value="${escapeHTML(diff)}">${escapeHTML(formatDifficulty(diff))}</option>`).join('')}
                         </select>
                     </div>
-                    
+
                     <div class="filter-group">
                         <label for="sort-filter">
-                            <i class="fas fa-sort"></i> Sort By
+                            <i class="fas fa-sort" aria-hidden="true"></i> Group By
                         </label>
-                        <select id="sort-filter" aria-label="Sort terms">
-                            <option value="alphabetical">Alphabetical</option>
+                        <select id="sort-filter">
+                            <option value="alphabetical">Letter (A&ndash;Z)</option>
                             <option value="category">Category</option>
                             <option value="difficulty">Difficulty</option>
-                            <option value="recent">Recently Added</option>
                         </select>
                     </div>
-                    
+
                     <div class="filter-group">
                         <button id="filter-reset" type="button" class="btn btn-secondary">
-                            <i class="fas fa-undo"></i> Reset Filters
+                            <i class="fas fa-undo" aria-hidden="true"></i> Reset Filters
                         </button>
                     </div>
                 </div>
-                
-                <div class="alphabet-nav" id="alphabet-nav">
-                    <span class="alphabet-label">Jump to letter:</span>
+
+                <nav class="alphabet-nav" id="alphabet-nav" aria-label="Jump to letter">
+                    <span class="alphabet-label" aria-hidden="true">Jump to letter:</span>
                     ${Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ').map(letter =>
-    `<button class="alphabet-btn" data-letter="${letter}">${letter}</button>`
+    `<button type="button" class="alphabet-btn" data-letter="${letter}">${letter}</button>`
   ).join('')}
-                </div>
+                </nav>
             </div>
         `;
 
@@ -252,14 +265,18 @@ async function loadGlossaryFilters(container) {
 
     alphabetBtns.forEach(btn => {
       addEventListenerWithCleanup(btn, 'click', (e) => {
-        const {letter} = e.target.dataset;
-        jumpToLetter(letter);
+        const button = e.currentTarget;
+        if (button.disabled) {return;}
+        if (!jumpToLetter(button.dataset.letter)) {return;}
 
         // Visual feedback
         alphabetBtns.forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
+        button.classList.add('active');
       });
     });
+
+    // The term list may already be on screen.
+    updateAlphabetNav();
 
   } catch (error) {
     logger.error('Failed to load glossary filters:', error);
@@ -289,7 +306,14 @@ async function loadGlossaryContent(container) {
 
     // Store terms globally for filtering
     window.glossaryTerms = terms;
-    renderGlossaryTerms(terms, container);
+    bindTermInteractions(container);
+    renderGlossaryTerms(sortTerms(terms, 'alphabetical'), container, 'alphabetical');
+
+    // Links such as glossary.html#term-perforation (site search results) land
+    // on the term once it exists; the browser's own fragment jump ran before
+    // the async render.
+    openTermFromHash({ onLoad: true });
+    addEventListenerWithCleanup(window, 'hashchange', () => openTermFromHash());
 
   } catch (error) {
     logger.error('Failed to load glossary content:', error);
@@ -305,11 +329,84 @@ async function loadGlossaryContent(container) {
 }
 
 /**
- * Render glossary terms
- * @param {Array} terms - Array of glossary terms
- * @param {HTMLElement} container - Container element
+ * If the URL fragment names a term (#term-<id>), scroll to it and expand it.
  */
-function renderGlossaryTerms(terms, container) {
+function openTermFromHash({ onLoad = false } = {}) {
+  const match = /^#term-(.+)$/.exec(window.location.hash || '');
+  if (!match) {return;}
+  let termId = match[1];
+  try {
+    termId = decodeURIComponent(termId);
+  } catch {
+    // keep the raw fragment
+  }
+  scrollToTerm(termId);
+  if (onLoad) {
+    // Re-measure once fonts and late layout settle.
+    scrollBelowHeaderOnLoad([...document.querySelectorAll('#glossary-content-container .glossary-term')]
+      .find(el => el.dataset.termId === termId) || null);
+  }
+}
+
+function byTermName(a, b) {
+  return a.term.localeCompare(b.term, undefined, { sensitivity: 'base' });
+}
+
+/**
+ * Sort a copy of the terms for a grouping mode. Within every group the terms
+ * are alphabetical.
+ * @param {Array} terms - Glossary terms
+ * @param {string} mode - 'alphabetical' | 'category' | 'difficulty'
+ * @returns {Array} Sorted copy
+ */
+function sortTerms(terms, mode) {
+  const sorted = [...terms];
+  switch (mode) {
+  case 'category':
+    sorted.sort((a, b) =>
+      formatCategory(a.category).localeCompare(formatCategory(b.category)) || byTermName(a, b));
+    break;
+  case 'difficulty':
+    sorted.sort((a, b) =>
+      ((DIFFICULTY_ORDER[a.difficulty] || 99) - (DIFFICULTY_ORDER[b.difficulty] || 99)) || byTermName(a, b));
+    break;
+  case 'alphabetical':
+  default:
+    sorted.sort(byTermName);
+    break;
+  }
+  return sorted;
+}
+
+/**
+ * Group key (used in the section id) and heading for a term.
+ * @param {Object} term - Glossary term
+ * @param {string} mode - Grouping mode
+ * @returns {{key: string, label: string}} Group
+ */
+function groupFor(term, mode) {
+  if (mode === 'category') {
+    return { key: `cat-${term.category}`, label: formatCategory(term.category) };
+  }
+  if (mode === 'difficulty') {
+    return { key: `level-${term.difficulty}`, label: formatDifficulty(term.difficulty) };
+  }
+  const letter = term.term.charAt(0).toUpperCase();
+  return { key: letter, label: letter };
+}
+
+/**
+ * Render glossary terms (already sorted), grouped by the current mode.
+ * Rendering only replaces the container's children. The click handler lives
+ * on the container and is bound once (bindTermInteractions), so re-renders
+ * never stack handlers.
+ * @param {Array} terms - Sorted glossary terms
+ * @param {HTMLElement} container - Container element
+ * @param {string} mode - Grouping mode
+ */
+function renderGlossaryTerms(terms, container, mode = 'alphabetical') {
+  container.dataset.groupMode = mode;
+
   if (terms.length === 0) {
     container.innerHTML = `
             <div class="card">
@@ -319,57 +416,91 @@ function renderGlossaryTerms(terms, container) {
                 </div>
             </div>
         `;
+    updateAlphabetNav();
     return;
   }
 
-  // Group terms alphabetically
-  const groupedTerms = {};
+  const groups = [];
+  const byKey = new Map();
   terms.forEach(term => {
-    const firstLetter = term.term.charAt(0).toUpperCase();
-    if (!groupedTerms[firstLetter]) {
-      groupedTerms[firstLetter] = [];
+    const { key, label } = groupFor(term, mode);
+    if (!byKey.has(key)) {
+      const group = { key, label, terms: [] };
+      byKey.set(key, group);
+      groups.push(group);
     }
-    groupedTerms[firstLetter].push(term);
+    byKey.get(key).terms.push(term);
   });
 
-  // Sort letters and terms within each letter
-  const sortedLetters = Object.keys(groupedTerms).sort();
-
-  const html = sortedLetters.map(letter => `
-        <div class="glossary-section" id="section-${escapeHTML(letter)}">
-            <h2 class="glossary-letter-header">${escapeHTML(letter)}</h2>
+  container.innerHTML = groups.map(group => `
+        <section class="glossary-section" id="section-${escapeHTML(group.key)}" aria-labelledby="heading-${escapeHTML(group.key)}">
+            <h2 class="glossary-letter-header" id="heading-${escapeHTML(group.key)}" tabindex="-1">${escapeHTML(group.label)}</h2>
             <div class="glossary-terms">
-                ${groupedTerms[letter].map(term => renderTermCard(term)).join('')}
+                ${group.terms.map(term => renderTermCard(term)).join('')}
             </div>
-        </div>
+        </section>
     `).join('');
 
-  container.innerHTML = html;
+  updateAlphabetNav();
+}
 
-  // Add click handlers for term expansion
+/**
+ * One delegated click handler for the term list: expand/collapse and
+ * related-term links. Bound once per container.
+ * @param {HTMLElement} container - The persistent #glossary-content-container
+ */
+function bindTermInteractions(container) {
+  if (container.dataset.termHandlerBound === 'true') {return;}
+  container.dataset.termHandlerBound = 'true';
+
   addEventListenerWithCleanup(container, 'click', (e) => {
-    if (e.target.closest('.term-header')) {
-      const termCard = e.target.closest('.glossary-term');
-      const content = termCard.querySelector('.term-content');
-      const icon = termCard.querySelector('.expand-icon');
-
-      if (content.style.display === 'none' || !content.style.display) {
-        content.style.display = 'block';
-        icon.style.transform = 'rotate(180deg)';
-        termCard.classList.add('expanded');
-      } else {
-        content.style.display = 'none';
-        icon.style.transform = 'rotate(0deg)';
-        termCard.classList.remove('expanded');
-      }
-    }
-
-    // Handle related term clicks
-    if (e.target.closest('.related-term')) {
+    const related = e.target.closest('a.related-term[data-term-id]');
+    if (related) {
       e.preventDefault();
-      const {termId} = e.target.closest('.related-term').dataset;
-      scrollToTerm(termId);
+      scrollToTerm(related.dataset.termId);
+      return;
     }
+
+    const header = e.target.closest('.term-header');
+    if (header && container.contains(header)) {
+      setTermExpanded(header.closest('.glossary-term'), header.getAttribute('aria-expanded') !== 'true');
+    }
+  });
+}
+
+/**
+ * Expand or collapse one term card.
+ * @param {HTMLElement|null} termCard - .glossary-term element
+ * @param {boolean} expanded - Desired state
+ */
+function setTermExpanded(termCard, expanded) {
+  if (!termCard) {return;}
+  const header = termCard.querySelector('.term-header');
+  const content = termCard.querySelector('.term-content');
+  if (!header || !content) {return;}
+  header.setAttribute('aria-expanded', String(expanded));
+  content.hidden = !expanded;
+  termCard.classList.toggle('expanded', expanded);
+}
+
+/**
+ * Enable the A-Z buttons whose letter has a term in the current list and
+ * disable the rest, so an empty letter is visibly unavailable instead of a
+ * button that silently does nothing.
+ */
+function updateAlphabetNav() {
+  const buttons = document.querySelectorAll('#alphabet-nav .alphabet-btn');
+  if (buttons.length === 0) {return;}
+  const present = new Set(
+    [...document.querySelectorAll('#glossary-content-container .glossary-term .term-title')]
+      .map(el => el.textContent.trim().charAt(0).toUpperCase())
+  );
+  buttons.forEach(btn => {
+    const { letter } = btn.dataset;
+    const has = present.has(letter);
+    btn.disabled = !has;
+    btn.title = has ? `Jump to terms starting with ${letter}` : `No terms start with ${letter}`;
+    if (!has) {btn.classList.remove('active');}
   });
 }
 
@@ -381,26 +512,27 @@ function renderGlossaryTerms(terms, container) {
 function renderTermCard(term) {
   const difficulty = formatDifficulty(term.difficulty);
   const category = formatCategory(term.category);
+  const id = escapeHTML(term.id);
 
   return `
-        <div class="glossary-term" id="term-${escapeHTML(term.id)}" data-term-id="${escapeHTML(term.id)}">
-            <div class="term-header">
-                <div class="term-title-group">
-                    <h3 class="term-title">${escapeHTML(term.term)}</h3>
-                    ${term.alternateNames && term.alternateNames.length > 0 ?
-    `<div class="alternate-names">
-                            Also known as: ${term.alternateNames.map(name => escapeHTML(name)).join(', ')}
-                        </div>` : ''
+        <article class="glossary-term" id="term-${id}" data-term-id="${id}">
+            <h3 class="term-heading">
+                <button type="button" class="term-header" id="term-toggle-${id}" aria-expanded="false" aria-controls="term-content-${id}">
+                    <span class="term-title-group">
+                        <span class="term-title">${escapeHTML(term.term)}</span>
+                        ${term.alternateNames && term.alternateNames.length > 0 ?
+    `<span class="alternate-names">Also known as: ${term.alternateNames.map(name => escapeHTML(name)).join(', ')}</span>` : ''
 }
-                </div>
-                <div class="term-meta">
-                    <span class="difficulty-badge difficulty-${escapeHTML(term.difficulty)}">${escapeHTML(difficulty)}</span>
-                    <span class="category-badge">${escapeHTML(category)}</span>
-                    <i class="fas fa-chevron-down expand-icon"></i>
-                </div>
-            </div>
-            
-            <div class="term-content" style="display: none;">
+                    </span>
+                    <span class="term-meta">
+                        <span class="difficulty-badge difficulty-${escapeHTML(term.difficulty)}">${escapeHTML(difficulty)}</span>
+                        <span class="category-badge">${escapeHTML(category)}</span>
+                        <i class="fas fa-chevron-down expand-icon" aria-hidden="true"></i>
+                    </span>
+                </button>
+            </h3>
+
+            <div class="term-content" id="term-content-${id}" hidden>
                 <div class="term-definition">
                     <p class="definition">${escapeHTML(term.definition)}</p>
                     ${term.detailedDescription ?
@@ -409,10 +541,10 @@ function renderTermCard(term) {
                         </div>` : ''
 }
                 </div>
-                
+
                 ${term.examples && term.examples.length > 0 ? `
                     <div class="term-examples">
-                        <h4><i class="fas fa-lightbulb"></i> Examples</h4>
+                        <h4><i class="fas fa-lightbulb" aria-hidden="true"></i> Examples</h4>
                         <ul>
                             ${term.examples.map(example => `
                                 <li>
@@ -423,34 +555,35 @@ function renderTermCard(term) {
                         </ul>
                     </div>
                 ` : ''}
-                
+
                 ${term.etymology ? `
                     <div class="term-etymology">
-                        <h4><i class="fas fa-history"></i> Etymology</h4>
+                        <h4><i class="fas fa-history" aria-hidden="true"></i> Etymology</h4>
                         <p><strong>Origin:</strong> ${escapeHTML(term.etymology.origin)}</p>
                         <p><strong>Meaning:</strong> ${escapeHTML(term.etymology.meaning)}</p>
                         ${term.etymology.history ? `<p><strong>History:</strong> ${escapeHTML(term.etymology.history)}</p>` : ''}
                     </div>
                 ` : ''}
-                
+
                 ${term.relatedTerms && term.relatedTerms.length > 0 ? `
                     <div class="related-terms">
-                        <h4><i class="fas fa-link"></i> Related Terms</h4>
+                        <h4><i class="fas fa-link" aria-hidden="true"></i> Related Terms</h4>
                         <div class="related-terms-list">
-                            ${term.relatedTerms.map(relatedId =>
-    `<a href="#term-${escapeHTML(relatedId)}" class="related-term" data-term-id="${escapeHTML(relatedId)}">${escapeHTML(formatTermId(relatedId))}</a>`
+                            ${term.relatedTerms.map(relatedId => (termExists(relatedId)
+    ? `<a href="#term-${escapeHTML(relatedId)}" class="related-term" data-term-id="${escapeHTML(relatedId)}">${escapeHTML(formatTermId(relatedId))}</a>`
+    : `<span class="related-term related-term-text">${escapeHTML(formatTermId(relatedId))}</span>`)
   ).join('')}
                         </div>
                     </div>
                 ` : ''}
-                
+
                 ${term.tags && term.tags.length > 0 ? `
                     <div class="term-tags">
                         ${term.tags.map(tag => `<span class="tag">${escapeHTML(tag)}</span>`).join('')}
                     </div>
                 ` : ''}
             </div>
-        </div>
+        </article>
     `;
 }
 
@@ -469,14 +602,14 @@ async function performSearch(query, resultsContainer) {
     }
 
     const lowerQuery = query.toLowerCase();
-    const results = terms.filter(term => {
+    const results = sortTerms(terms.filter(term => {
       return term.term.toLowerCase().includes(lowerQuery) ||
                    term.definition.toLowerCase().includes(lowerQuery) ||
                    (term.detailedDescription && term.detailedDescription.toLowerCase().includes(lowerQuery)) ||
                    (term.tags && term.tags.some(tag => tag.toLowerCase().includes(lowerQuery))) ||
                    (term.category && term.category.toLowerCase().includes(lowerQuery)) ||
                    (term.alternateNames && term.alternateNames.some(name => name.toLowerCase().includes(lowerQuery)));
-    });
+    }), 'alphabetical');
 
     if (results.length === 0) {
       resultsContainer.innerHTML = `
@@ -513,17 +646,6 @@ async function performSearch(query, resultsContainer) {
       ? `No results for "${query}"`
       : `${results.length} result${results.length !== 1 ? 's' : ''} for "${query}"`);
 
-    // Bind click handlers for search result links
-    resultsContainer.querySelectorAll('.search-result-link').forEach(link => {
-      addEventListenerWithCleanup(link, 'click', (e) => {
-        e.preventDefault();
-        const { termId } = e.currentTarget.dataset;
-        if (termId) {
-          scrollToTerm(termId);
-        }
-      });
-    });
-
   } catch (error) {
     logger.error('Search failed:', error);
     if (generation !== searchGeneration) {
@@ -536,7 +658,7 @@ async function performSearch(query, resultsContainer) {
 }
 
 /**
- * Apply filters to glossary terms
+ * Apply filters and grouping to glossary terms
  */
 function applyFilters() {
   const categoryFilter = document.querySelector('#category-filter')?.value || '';
@@ -547,62 +669,44 @@ function applyFilters() {
 
   let filteredTerms = [...window.glossaryTerms];
 
-  // Apply category filter
   if (categoryFilter) {
     filteredTerms = filteredTerms.filter(term => term.category === categoryFilter);
   }
 
-  // Apply difficulty filter
   if (difficultyFilter) {
     filteredTerms = filteredTerms.filter(term => term.difficulty === difficultyFilter);
   }
 
-  // Apply sorting
-  switch (sortFilter) {
-  case 'category':
-    filteredTerms.sort((a, b) => {
-      if (a.category !== b.category) {return a.category.localeCompare(b.category);}
-      return a.term.localeCompare(b.term);
-    });
-    break;
-  case 'difficulty':
-    const difficultyOrder = { 'beginner': 1, 'intermediate': 2, 'advanced': 3 };
-    filteredTerms.sort((a, b) => {
-      const orderA = difficultyOrder[a.difficulty] || 999;
-      const orderB = difficultyOrder[b.difficulty] || 999;
-      if (orderA !== orderB) {return orderA - orderB;}
-      return a.term.localeCompare(b.term);
-    });
-    break;
-  case 'recent':
-    filteredTerms.sort((a, b) => {
-      const dateA = new Date(a.dateAdded || '1970-01-01');
-      const dateB = new Date(b.dateAdded || '1970-01-01');
-      return dateB - dateA;
-    });
-    break;
-  case 'alphabetical':
-  default:
-    filteredTerms.sort((a, b) => a.term.localeCompare(b.term));
-    break;
-  }
+  filteredTerms = sortTerms(filteredTerms, sortFilter);
 
   const container = document.querySelector('#glossary-content-container');
   if (container) {
-    renderGlossaryTerms(filteredTerms, container);
+    renderGlossaryTerms(filteredTerms, container, sortFilter);
     announceTermCount(filteredTerms.length);
   }
 }
 
 /**
- * Show all terms (reset search)
+ * Show all terms: reset the filters and grouping, then re-render.
  */
 function showAllTerms() {
-  const container = document.querySelector('#glossary-content-container');
-  if (container && window.glossaryTerms) {
-    renderGlossaryTerms(window.glossaryTerms, container);
-    announceTermCount(window.glossaryTerms.length);
-  }
+  const category = document.querySelector('#category-filter');
+  const difficulty = document.querySelector('#difficulty-filter');
+  const sort = document.querySelector('#sort-filter');
+  if (category) {category.value = '';}
+  if (difficulty) {difficulty.value = '';}
+  if (sort) {sort.value = 'alphabetical';}
+  applyFilters();
+}
+
+/**
+ * Whether a term id exists in the glossary data. Related-term targets that
+ * do not exist are shown as plain text, not as links that go nowhere.
+ * @param {string} termId - Term id
+ * @returns {boolean} True when the term exists
+ */
+function termExists(termId) {
+  return Array.isArray(window.glossaryTerms) && window.glossaryTerms.some(t => t.id === termId);
 }
 
 /**
@@ -619,33 +723,47 @@ function announceTermCount(shown) {
 }
 
 /**
- * Jump to specific letter section
+ * Jump to a letter. Grouped A-Z, that is the letter's section heading;
+ * grouped by category or difficulty, it is the first term with that letter.
  * @param {string} letter - Letter to jump to
+ * @returns {boolean} True when there was somewhere to go
  */
 function jumpToLetter(letter) {
-  const section = document.querySelector(`#section-${letter}`);
-  if (section) {
-    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const container = document.querySelector('#glossary-content-container');
+  if (!container) {return false;}
+  let target = null;
+  if (container.dataset.groupMode === 'alphabetical') {
+    target = container.querySelector(`#section-${letter} .glossary-letter-header`);
   }
+  if (!target) {
+    const card = [...container.querySelectorAll('.glossary-term')]
+      .find(el => (el.querySelector('.term-title')?.textContent || '').trim().charAt(0).toUpperCase() === letter);
+    target = card ? card.querySelector('.term-header') : null;
+  }
+  if (!target) {return false;}
+  // Measured against the sticky header at scroll time.
+  scrollBelowHeader(target);
+  target.focus({ preventScroll: true });
+  return true;
 }
 
 /**
- * Scroll to specific term
+ * Scroll to specific term and expand it
  * @param {string} termId - Term ID to scroll to
  */
 function scrollToTerm(termId) {
-  const termElement = document.querySelector(`#term-${termId}`);
+  const findCard = () => [...document.querySelectorAll('#glossary-content-container .glossary-term')]
+    .find(el => el.dataset.termId === termId);
+  let termElement = findCard();
+  if (!termElement && termExists(termId)) {
+    // The term exists but the current filter hides it: show everything first.
+    showAllTerms();
+    termElement = findCard();
+  }
   if (termElement) {
-    termElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-    // Expand the term if it's collapsed
-    const content = termElement.querySelector('.term-content');
-    const icon = termElement.querySelector('.expand-icon');
-    if (content && content.style.display !== 'block') {
-      content.style.display = 'block';
-      if (icon) {icon.style.transform = 'rotate(180deg)';}
-      termElement.classList.add('expanded');
-    }
+    scrollBelowHeader(termElement);
+    setTermExpanded(termElement, true);
+    termElement.querySelector('.term-header')?.focus({ preventScroll: true });
 
     // Highlight the term briefly
     termElement.classList.add('highlighted');
@@ -674,6 +792,10 @@ async function loadGlossaryStats() {
 
   } catch (error) {
     logger.error('Failed to load glossary stats:', error);
+    ['#total-terms', '#total-categories', '#total-references'].forEach(selector => {
+      const el = document.querySelector(selector);
+      if (el) {el.textContent = 'Unavailable';}
+    });
   }
 }
 
@@ -695,8 +817,6 @@ function formatTermId(termId) {
     word.charAt(0).toUpperCase() + word.slice(1)
   ).join(' ');
 }
-
-// escapeHTML is now imported from '../utils/safe-dom.js'
 
 // Make scrollToTerm globally available for onclick handlers
 window.scrollToTerm = scrollToTerm;

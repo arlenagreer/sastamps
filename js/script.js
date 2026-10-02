@@ -581,26 +581,12 @@ function setupImageGallery() {
   });
 }
 
-/**
- * Smooth Scrolling for Anchor Links
- */
-document.querySelectorAll('a[href^="#"]:not([href="#"])').forEach(anchor => {
-  addEventListenerWithCleanup(anchor, 'click', function(e) {
-    e.preventDefault();
-
-    const targetId = this.getAttribute('href');
-    const targetElement = document.querySelector(targetId);
-
-    if (targetElement) {
-      targetElement.scrollIntoView({
-        behavior: 'smooth'
-      });
-
-      // Update URL but without scrolling
-      history.pushState(null, null, targetId);
-    }
-  });
-});
+// No click handler for in-page #anchor links. One used to preventDefault()
+// every such click, scroll, and pushState() the URL, so the browser never
+// moved focus to the target: the "Skip to content" link skipped nothing.
+// Native fragment navigation already scrolls smoothly (html's
+// scroll-behavior), lands below the sticky header (scroll-padding-top) and
+// moves keyboard focus.
 
 /**
  * Activate Current Page in Navigation

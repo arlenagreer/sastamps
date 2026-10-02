@@ -91,12 +91,14 @@ export class Logger {
     const { level, message, ...context } = logEntry;
     const prefix = `[${logEntry.timestamp}] [${level}] [${this.name}]`;
 
+    // Each level goes to its own console method, so the browser's level
+    // filter works (debug and info are not shown as warnings).
     switch (level) {
     case LOG_LEVEL_NAMES[LogLevel.DEBUG]:
-      console.warn(prefix, message, context);
+      console.debug(prefix, message, context); // eslint-disable-line no-console
       break;
     case LOG_LEVEL_NAMES[LogLevel.INFO]:
-      console.warn(prefix, message, context);
+      console.info(prefix, message, context); // eslint-disable-line no-console
       break;
     case LOG_LEVEL_NAMES[LogLevel.WARN]:
       console.warn(prefix, message, context);
@@ -113,7 +115,8 @@ export class Logger {
      * @param {Object} logEntry - Formatted log entry
      */
   async logToRemote(logEntry) {
-    if (!this.config.enableRemote || !ENV.isProduction) {return;}
+    // Off unless explicitly configured with an endpoint (see LOGGING_CONFIG).
+    if (!this.config.enableRemote || !this.config.remoteEndpoint || !ENV.isProduction) {return;}
 
     try {
       await fetch(this.config.remoteEndpoint, {
@@ -123,9 +126,8 @@ export class Logger {
         },
         body: JSON.stringify(logEntry)
       });
-    } catch (error) {
-      // Fail silently to avoid infinite loop
-      console.error('Failed to send log to remote:', error);
+    } catch (_error) {
+      // Fail silently: reporting must never add errors of its own.
     }
   }
 
