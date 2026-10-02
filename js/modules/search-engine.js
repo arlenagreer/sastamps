@@ -3,10 +3,17 @@
  * Handles search functionality using Lunr.js and provides UI components
  */
 
-import { escapeHTML } from '../utils/safe-dom.js';
+import { escapeHTML, safeUrl } from '../utils/safe-dom.js';
+import { parseLocalDate } from '../utils/dates.js';
 import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('SearchEngine');
+
+// Pinned Lunr build and its Subresource Integrity hash. Must match the
+// <script integrity> on search.html; recompute with
+//   curl -s https://unpkg.com/lunr@2.3.9/lunr.min.js | openssl dgst -sha384 -binary | openssl base64 -A
+const DEFAULT_LUNR_URL = 'https://unpkg.com/lunr@2.3.9/lunr.min.js';
+const DEFAULT_LUNR_INTEGRITY = 'sha384-203J0SNzyqHby3iU6hzvzltrWi/M41wOP5Gu+BiJMz5nwKykbkUx8Kp7iti0Lpli';
 
 class SearchEngine {
   constructor(options = {}) {
@@ -15,7 +22,10 @@ class SearchEngine {
     this.isLoaded = false;
     this.isLoading = false;
     this.baseUrl = options.baseUrl || './dist/data';
-    this.lunrUrl = options.lunrUrl || 'https://unpkg.com/lunr@2.3.9/lunr.min.js';
+    this.lunrUrl = options.lunrUrl || DEFAULT_LUNR_URL;
+    // A caller-supplied URL brings its own integrity (or none); the pinned
+    // hash only describes the default build.
+    this.lunrIntegrity = options.lunrUrl ? (options.lunrIntegrity || null) : DEFAULT_LUNR_INTEGRITY;
     this.callbacks = {
       onLoad: options.onLoad || (() => {}),
       onSearch: options.onSearch || (() => {}),
@@ -37,6 +47,10 @@ class SearchEngine {
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');
       script.src = this.lunrUrl;
+      if (this.lunrIntegrity) {
+        script.integrity = this.lunrIntegrity;
+        script.crossOrigin = 'anonymous';
+      }
       script.onload = () => resolve();
       script.onerror = () => reject(new Error('Failed to load Lunr.js'));
       document.head.appendChild(script);
@@ -227,7 +241,7 @@ class SearchEngine {
 
       // Filter by years (for newsletters and meetings)
       if (years && years.length > 0 && doc.date) {
-        const docYear = new Date(doc.date).getFullYear();
+        const docYear = parseLocalDate(doc.date).getFullYear();
         if (!years.includes(docYear.toString())) {
           return false;
         }
@@ -299,7 +313,7 @@ class SearchEngine {
       if (doc.difficulty) {options.difficulty.add(doc.difficulty);}
       if (doc.quarter) {options.quarters.add(doc.quarter);}
       if (doc.date) {
-        const year = new Date(doc.date).getFullYear();
+        const year = parseLocalDate(doc.date).getFullYear();
         options.years.add(year.toString());
       }
       if (doc.tags && Array.isArray(doc.tags)) {
@@ -359,10 +373,11 @@ class SearchEngine {
                 <div class="search-input-wrapper">
                     <input type="search" 
                            class="search-input" 
-                           placeholder="${placeholder}"
+                           placeholder="${escapeHTML(placeholder)}"
+                           aria-label="${escapeHTML(placeholder)}"
                            autocomplete="off"
                            spellcheck="false">
-                    <button class="search-button" type="button">
+                    <button class="search-button" type="button" aria-label="Search">
                         <i class="fas fa-search"></i>
                     </button>
                     <div class="search-suggestions" style="display: none;"></div>
@@ -417,7 +432,7 @@ class SearchEngine {
                 ` : ''}
                 
                 <div class="search-results">
-                    <div class="search-status"></div>
+                    <div class="search-status" role="status" aria-live="polite"></div>
                     <div class="search-results-list"></div>
                 </div>
             </div>
@@ -717,15 +732,16 @@ class SearchEngine {
      */
   renderSearchResult(result, maxScore = 1) {
     const doc = result.document;
+    const docUrl = safeUrl(doc.url, '');
     const typeIcon = this.getTypeIcon(doc.type);
-    const formattedDate = doc.date ? new Date(doc.date).toLocaleDateString() : '';
+    const formattedDate = doc.date ? parseLocalDate(doc.date).toLocaleDateString() : '';
 
     return `
             <div class="search-result-item" data-type="${escapeHTML(doc.type)}">
                 <div class="search-result-header">
                     <h3 class="search-result-title">
                         <i class="${escapeHTML(typeIcon)}"></i>
-                        <a href="${escapeHTML(doc.url)}">${escapeHTML(doc.title)}</a>
+                        ${docUrl ? `<a href="${escapeHTML(docUrl)}">${escapeHTML(doc.title)}</a>` : escapeHTML(doc.title)}
                     </h3>
                     <div class="search-result-meta">
                         <span class="search-result-type">${escapeHTML(this.formatLabel(doc.type))}</span>
@@ -767,7 +783,7 @@ class SearchEngine {
 
       if (suggestions.length > 0) {
         container.innerHTML = suggestions.map(suggestion => `
-                    <div class="search-suggestion" data-url="${escapeHTML(suggestion.url)}">
+                    <div class="search-suggestion" data-url="${escapeHTML(safeUrl(suggestion.url, ''))}">
                         <i class="${escapeHTML(this.getTypeIcon(suggestion.type))}"></i>
                         <span>${escapeHTML(suggestion.text)}</span>
                     </div>

@@ -7,6 +7,7 @@
 import { safeQuerySelector } from '../utils/safe-dom.js';
 import { debounce as _debounce } from '../utils/performance.js';
 import { createLogger } from '../utils/logger.js';
+import { fetchJSON } from '../utils/fetch-json.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { retireServiceWorkers } from '../utils/service-worker.js';
 
@@ -28,11 +29,7 @@ async function renderArchivedNewsletters() {
 
   try {
     logger.info('Fetching archived newsletters data...');
-    const response = await fetch('data/newsletters/archived-newsletters.json');
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-    const data = await response.json();
+    const data = await fetchJSON('data/newsletters/archived-newsletters.json');
     const entries = data.archivedNewsletters;
 
     // Group entries by year

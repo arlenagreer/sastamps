@@ -17,7 +17,7 @@
     "test": "npm run test:html && npm run test:inline-js && npm run test:site-build && npm run test:js && npm run test:css && npm run test:md",
     "test:html": "html-validate '*.html' '!test-*.html' --config .htmlvalidate.json",
     "report:links:external": "linkinator _site --skip '^(mailto|tel):' --retry --retry-errors",
-    "test:js": "eslint js/**/*.js js/font-loading.js",
+    "test:js": "eslint 'js/**/*.js'",
     "test:inline-js": "node scripts/check-inline-scripts.js",
     "test:inline-js:site": "node scripts/check-inline-scripts.js _site",
     "test:css": "stylelint 'css/**/*.css' --config .stylelintrc.json",

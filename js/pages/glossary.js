@@ -4,6 +4,7 @@
  */
 
 import { safeQuerySelector, escapeHTML } from '../utils/safe-dom.js';
+import { fetchJSON } from '../utils/fetch-json.js';
 import { createLogger } from '../utils/logger.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 
@@ -73,6 +74,7 @@ async function loadGlossarySearch(container) {
                     </div>
                     <div class="search-suggestions" id="search-suggestions" style="display: none;"></div>
                 </div>
+                <div id="glossary-search-status" class="sr-only" role="status" aria-live="polite"></div>
                 <div id="search-results" style="display: none;"></div>
             </div>
         `;
@@ -82,6 +84,7 @@ async function loadGlossarySearch(container) {
     const searchButton = container.querySelector('#glossary-search-button');
     const clearButton = container.querySelector('#glossary-clear-button');
     const resultsContainer = container.querySelector('#search-results');
+    const statusRegion = container.querySelector('#glossary-search-status');
 
     let searchTimeout;
 
@@ -94,8 +97,10 @@ async function loadGlossarySearch(container) {
         clearButton.style.display = 'block';
         searchTimeout = setTimeout(() => performSearch(query, resultsContainer), 300);
       } else {
+        cancelPendingSearch();
         clearButton.style.display = 'none';
         resultsContainer.style.display = 'none';
+        if (statusRegion) { statusRegion.textContent = ''; }
         showAllTerms();
       }
     });
@@ -103,6 +108,7 @@ async function loadGlossarySearch(container) {
     // Search button click
     addEventListenerWithCleanup(searchButton, 'click', () => {
       const query = searchInput.value.trim();
+      clearTimeout(searchTimeout);
       if (query) {
         performSearch(query, resultsContainer);
       }
@@ -110,9 +116,12 @@ async function loadGlossarySearch(container) {
 
     // Clear button click
     addEventListenerWithCleanup(clearButton, 'click', () => {
+      clearTimeout(searchTimeout);
+      cancelPendingSearch();
       searchInput.value = '';
       clearButton.style.display = 'none';
       resultsContainer.style.display = 'none';
+      if (statusRegion) { statusRegion.textContent = ''; }
       showAllTerms();
       searchInput.focus();
     });
@@ -122,6 +131,7 @@ async function loadGlossarySearch(container) {
       if (e.key === 'Enter') {
         e.preventDefault();
         const query = searchInput.value.trim();
+        clearTimeout(searchTimeout);
         if (query) {
           performSearch(query, resultsContainer);
         }
@@ -135,14 +145,35 @@ async function loadGlossarySearch(container) {
 }
 
 /**
+ * Load the glossary terms. The JSON is fetched once per page (fetchJSON
+ * memoises it); callers get their own array so sorting or filtering never
+ * reorders the shared copy.
+ * @returns {Promise<Array>} Glossary terms
+ */
+async function loadGlossaryTerms() {
+  const glossaryData = await fetchJSON('data/glossary/glossary.json');
+  return [...(glossaryData.terms || [])];
+}
+
+/**
+ * Glossary search generation. Every search, and every clear, takes a new
+ * number; a search whose number is no longer current when its data arrives
+ * is stale and must not render or announce anything (a slow earlier query
+ * would otherwise overwrite a newer one, or speak after the box was cleared).
+ */
+let searchGeneration = 0;
+
+function cancelPendingSearch() {
+  searchGeneration++;
+}
+
+/**
  * Load glossary filters
  * @param {HTMLElement} container - Filters container element
  */
 async function loadGlossaryFilters(container) {
   try {
-    const response = await fetch('data/glossary/glossary.json');
-    const glossaryData = await response.json();
-    const terms = glossaryData.terms || [];
+    const terms = await loadGlossaryTerms();
 
     // Extract unique categories and difficulties
     const categories = [...new Set(terms.map(term => term.category))].sort();
@@ -241,9 +272,7 @@ async function loadGlossaryFilters(container) {
  */
 async function loadGlossaryContent(container) {
   try {
-    const response = await fetch('data/glossary/glossary.json');
-    const glossaryData = await response.json();
-    const terms = glossaryData.terms || [];
+    const terms = await loadGlossaryTerms();
 
     if (terms.length === 0) {
       container.innerHTML = `
@@ -306,8 +335,8 @@ function renderGlossaryTerms(terms, container) {
   const sortedLetters = Object.keys(groupedTerms).sort();
 
   const html = sortedLetters.map(letter => `
-        <div class="glossary-section" id="section-${letter}">
-            <h2 class="glossary-letter-header">${letter}</h2>
+        <div class="glossary-section" id="section-${escapeHTML(letter)}">
+            <h2 class="glossary-letter-header">${escapeHTML(letter)}</h2>
             <div class="glossary-terms">
                 ${groupedTerms[letter].map(term => renderTermCard(term)).join('')}
             </div>
@@ -430,10 +459,13 @@ function renderTermCard(term) {
  * @param {HTMLElement} resultsContainer - Results container
  */
 async function performSearch(query, resultsContainer) {
+  const generation = ++searchGeneration;
+  const statusRegion = document.getElementById('glossary-search-status');
   try {
-    const response = await fetch('data/glossary/glossary.json');
-    const glossaryData = await response.json();
-    const terms = glossaryData.terms || [];
+    const terms = await loadGlossaryTerms();
+    if (generation !== searchGeneration) {
+      return; // superseded by a newer search or a clear
+    }
 
     const lowerQuery = query.toLowerCase();
     const results = terms.filter(term => {
@@ -474,6 +506,14 @@ async function performSearch(query, resultsContainer) {
 
     resultsContainer.style.display = 'block';
 
+    // Announce the outcome through the always-rendered status region: a live
+    // region that is display:none while it fills is not reliably announced.
+    if (statusRegion) {
+      statusRegion.textContent = results.length === 0
+        ? `No results for "${query}"`
+        : `${results.length} result${results.length !== 1 ? 's' : ''} for "${query}"`;
+    }
+
     // Bind click handlers for search result links
     resultsContainer.querySelectorAll('.search-result-link').forEach(link => {
       addEventListenerWithCleanup(link, 'click', (e) => {
@@ -487,8 +527,14 @@ async function performSearch(query, resultsContainer) {
 
   } catch (error) {
     logger.error('Search failed:', error);
+    if (generation !== searchGeneration) {
+      return;
+    }
     resultsContainer.innerHTML = '<p class="error-message">Search temporarily unavailable. Please try again.</p>';
     resultsContainer.style.display = 'block';
+    if (statusRegion) {
+      statusRegion.textContent = 'Search temporarily unavailable. Please try again.';
+    }
   }
 }
 
@@ -600,9 +646,7 @@ function scrollToTerm(termId) {
  */
 async function loadGlossaryStats() {
   try {
-    const response = await fetch('data/glossary/glossary.json');
-    const glossaryData = await response.json();
-    const terms = glossaryData.terms || [];
+    const terms = await loadGlossaryTerms();
 
     const totalTerms = terms.length;
     const categories = new Set(terms.map(term => term.category)).size;

@@ -6,6 +6,9 @@
  */
 
 import { escapeHTML } from './utils/safe-dom.js';
+import { createLogger } from './utils/logger.js';
+
+const logger = createLogger('ErrorBoundary');
 
 class ErrorBoundary {
   constructor(options = {}) {
@@ -76,7 +79,7 @@ class ErrorBoundary {
     // Try retry if configured
     if (this.retryCallback && this.currentRetries < this.maxRetries) {
       this.currentRetries++;
-      console.log(`[${this.componentName}] Retrying... (${this.currentRetries}/${this.maxRetries})`);
+      logger.info(`[${this.componentName}] Retrying... (${this.currentRetries}/${this.maxRetries})`);
 
       setTimeout(() => {
         try {
@@ -96,7 +99,7 @@ class ErrorBoundary {
      * @param {Error} error - The error that occurred
      */
   showFallbackUI(error) {
-    if (!this.container) return;
+    if (!this.container) { return; }
 
     const fallbackElement = typeof this.fallbackUI === 'function'
       ? this.fallbackUI(error, this.componentName)
@@ -172,14 +175,6 @@ class ErrorBoundary {
     // Log to console
     console.error(`[ErrorBoundary] ${componentName}:`, error);
 
-    // Send to analytics if available
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'exception', {
-        description: `${componentName}: ${error.message}`,
-        fatal: false
-      });
-    }
-
     try {
       const errorLog = JSON.parse(localStorage.getItem('errorBoundaryLog') || '[]');
       errorLog.push({
@@ -197,7 +192,7 @@ class ErrorBoundary {
 
       localStorage.setItem('errorBoundaryLog', JSON.stringify(errorLog));
     } catch (storageError) {
-      console.warn('Failed to log error to localStorage:', storageError);
+      logger.warn('Failed to log error to localStorage', { error: storageError });
     }
   }
 
@@ -242,7 +237,7 @@ class GlobalErrorBoundary {
 
     // Check if we're getting too many errors
     if (this.errorTimes.length >= this.maxErrors) {
-      console.warn('Too many errors detected. Stopping error boundary logging to prevent spam.');
+      logger.warn('Too many errors detected. Stopping error boundary logging to prevent spam.');
       return;
     }
 
@@ -261,19 +256,11 @@ class GlobalErrorBoundary {
 
     console.error('[GlobalErrorBoundary] Uncaught error:', errorInfo);
 
-    // Send to analytics
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'exception', {
-        description: `Global: ${errorInfo.message}`,
-        fatal: false
-      });
-    }
-
     // Show user-friendly error notification
     this.showErrorNotification(errorInfo);
   }
 
-  showErrorNotification(errorInfo) {
+  showErrorNotification(_errorInfo) {
     // Create or update error notification
     let notification = document.getElementById('global-error-notification');
 
