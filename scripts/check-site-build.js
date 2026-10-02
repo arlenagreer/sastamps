@@ -149,7 +149,9 @@ if (!fs.existsSync(SITE)) {
   // as broken (a missing og:image served 404 for a year). Each must name a
   // file in _site/, as Pages would serve it. The host comes from CNAME, in
   // both its www and bare forms, with or without a scheme (//host/...).
-  const bareHost = HOST.replace(/^www\./, '').replace(/\./g, '\\.');
+  // Escape every regex metacharacter, not just dots (CNAME is ours, but a
+  // regex built from text should never depend on that).
+  const bareHost = HOST.replace(/^www\./, '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   // Groups: 1 userinfo (user@host: never acceptable), 2 port (ignored, so
   // host:443/x is checked as /x), 3 path. The host must end at a path, a
   // port or the URL's end, so www.sastamps.org@evil.example or
