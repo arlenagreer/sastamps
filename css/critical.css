@@ -398,10 +398,6 @@ nav a:hover::after {
         font-size: 1rem;
         margin-right: 5px;
     }
-    
-    .timeline {
-        background-position: 18px 0;
-    }
 }
 
 @media (width <= 576px) {
