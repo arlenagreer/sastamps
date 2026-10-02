@@ -3,8 +3,8 @@
  * Only includes functionality needed for the resources page
  */
 
-import { debounce } from '../utils/performance.js';
-import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
+import { safeQuerySelector, escapeHTML, safeUrl, safeLocalStorageSet, safeLocalStorageRemove } from '../utils/safe-dom.js';
+import { renderMarkdown } from '../utils/markdown.js';
 import { fetchJSON } from '../utils/fetch-json.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { formatDate } from '../utils/helpers.js';
@@ -71,39 +71,55 @@ const BOOKMARK_KEY = 'resource_bookmarks';
 let memoryBookmarks = null;
 let bookmarkStorageWorks = true;
 
+function useMemoryBookmarks(list = []) {
+  bookmarkStorageWorks = false;
+  memoryBookmarks = [...list];
+}
+
 function readBookmarks() {
   if (memoryBookmarks) {
     return [...memoryBookmarks];
   }
+
+  // Storage that throws on access is "blocked": keep bookmarks for this visit.
+  let raw;
   try {
-    const parsed = JSON.parse(window.localStorage.getItem(BOOKMARK_KEY) || '[]');
-    return Array.isArray(parsed) ? parsed.filter(id => typeof id === 'string') : [];
+    raw = window.localStorage.getItem(BOOKMARK_KEY);
   } catch (error) {
-    logger.warn('Bookmarks unavailable from storage:', error);
-    bookmarkStorageWorks = false;
-    memoryBookmarks = [];
+    logger.warn('Bookmark storage is blocked:', error);
+    useMemoryBookmarks();
     return [];
   }
+  if (raw === null) {return [];}
+
+  // Unreadable data is corrupt, not blocked: reset the key and carry on.
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return parsed.filter(id => typeof id === 'string');
+    }
+  } catch {
+    // fall through to the reset
+  }
+  logger.warn('Resetting unreadable bookmark data');
+  safeLocalStorageRemove(BOOKMARK_KEY);
+  return [];
 }
 
 function writeBookmarks(list) {
-  if (!memoryBookmarks) {
-    try {
-      window.localStorage.setItem(BOOKMARK_KEY, JSON.stringify(list));
-      return;
-    } catch (error) {
-      logger.warn('Bookmarks could not be saved to storage:', error);
-      bookmarkStorageWorks = false;
-    }
+  if (memoryBookmarks || !safeLocalStorageSet(BOOKMARK_KEY, list)) {
+    useMemoryBookmarks(list);
   }
-  memoryBookmarks = [...list];
 }
 
 /* ------------------------------------------------------------------------
  * Rendering
  * --------------------------------------------------------------------- */
+// Each Bookmark button is followed by a persistent, inline status line: a
+// live region that exists before its text changes is reliably announced.
 function bookmarkButton(resourceId, extraClass = '') {
-  return `<button type="button" class="btn-outline btn-bookmark${extraClass}" data-resource-id="${escapeHTML(resourceId)}" aria-pressed="false">🔖 Bookmark</button>`;
+  return `<button type="button" class="btn-outline btn-bookmark${extraClass}" data-resource-id="${escapeHTML(resourceId)}" aria-pressed="false">🔖 Bookmark</button>
+                <span class="bookmark-feedback" role="status"></span>`;
 }
 
 function displayFeaturedResources(resources) {
@@ -246,18 +262,48 @@ function displayAllResources(resources) {
 /* ------------------------------------------------------------------------
  * Search, filters and the bookmarks view
  * --------------------------------------------------------------------- */
+// Pending debounced search. Anything that resets the view cancels it, so a
+// query typed just before Clear Filters cannot come back 300ms later.
+let pendingSearch = null;
+
+function cancelPendingSearch() {
+  clearTimeout(pendingSearch);
+  pendingSearch = null;
+}
+
 function initializeResourceSearch() {
   const searchInput = safeQuerySelector('#resource-search');
   if (!searchInput) {return;}
 
-  const runSearch = debounce((query) => {
-    viewState.query = query;
-    applyView();
-  }, 300);
-
   addEventListenerWithCleanup(searchInput, 'input', (e) => {
-    runSearch(e.target.value);
+    const query = e.target.value;
+    cancelPendingSearch();
+    pendingSearch = setTimeout(() => {
+      pendingSearch = null;
+      viewState.query = query;
+      applyView();
+    }, 300);
   });
+}
+
+/**
+ * Reset search, filters and the bookmarks view (Clear Filters, a #resource-
+ * link to a hidden item, "View All" in a category).
+ * @param {{category?: string}} [keep] - A category to apply after the reset
+ */
+function resetView({ category = '' } = {}) {
+  cancelPendingSearch();
+  const searchInput = safeQuerySelector('#resource-search');
+  const categoryFilter = safeQuerySelector('#category-filter');
+  const difficultyFilter = safeQuerySelector('#difficulty-filter');
+  if (searchInput) {searchInput.value = '';}
+  if (categoryFilter) {categoryFilter.value = category;}
+  if (difficultyFilter) {difficultyFilter.value = '';}
+  viewState.query = '';
+  viewState.category = category;
+  viewState.difficulty = '';
+  viewState.bookmarksOnly = false;
+  applyView();
 }
 
 function initializeResourceFilters() {
@@ -289,17 +335,7 @@ function initializeResourceFilters() {
   }
 
   if (clearButton) {
-    addEventListenerWithCleanup(clearButton, 'click', () => {
-      if (categoryFilter) {categoryFilter.value = '';}
-      if (difficultyFilter) {difficultyFilter.value = '';}
-      const searchInput = safeQuerySelector('#resource-search');
-      if (searchInput) {searchInput.value = '';}
-      viewState.query = '';
-      viewState.category = '';
-      viewState.difficulty = '';
-      viewState.bookmarksOnly = false;
-      applyView();
-    });
+    addEventListenerWithCleanup(clearButton, 'click', () => resetView());
   }
 }
 
@@ -349,13 +385,15 @@ function applyView() {
     item.style.display = ids.has(item.dataset.id) ? '' : 'none';
   });
 
+  // A category card shows when ANY resource in that category matches (not
+  // only the up-to-3 previews it renders); each preview follows its resource.
   document.querySelectorAll('.category-card').forEach(card => {
-    const visible = [...card.querySelectorAll('.resource-preview')].filter(preview => {
-      const show = ids.has(preview.dataset.id);
-      preview.style.display = show ? '' : 'none';
-      return show;
+    const categoryId = card.dataset.category;
+    const anyMatch = matches.some(r => r.category === categoryId);
+    card.querySelectorAll('.resource-preview').forEach(preview => {
+      preview.style.display = ids.has(preview.dataset.id) ? '' : 'none';
     });
-    card.style.display = visible.length > 0 ? '' : 'none';
+    card.style.display = anyMatch ? '' : 'none';
   });
 
   const featuredSection = safeQuerySelector('#featured-resources');
@@ -403,12 +441,13 @@ function updateBookmarksFilterButton() {
 function revealResourceFromHash() {
   const match = /^#resource-(.+)$/.exec(window.location.hash || '');
   if (!match) {return;}
+  const wanted = decodeURIComponentSafe(match[1]);
   const item = [...document.querySelectorAll('#resources-container .resource-item')]
-    .find(el => `resource-${el.dataset.id}` === decodeURIComponentSafe(match[0].slice(1)));
+    .find(el => el.dataset.id === wanted);
   if (!item) {return;}
   if (item.style.display === 'none') {
-    // Filters hide it: clear them so the linked resource is visible.
-    safeQuerySelector('#clear-filters')?.click();
+    // Search or filters hide it: reset them so the linked resource is visible.
+    resetView();
   }
   // scroll-margin-top (styles.css) keeps it clear of the sticky header.
   item.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -491,12 +530,20 @@ function bindCategoryActions(container) {
  * Guide dialog: a native modal <dialog> (role dialog, aria-modal, the page
  * behind is inert). Focus moves to the title, Tab stays inside, Escape and
  * both Close buttons close it, and focus returns to the control that opened
- * it. Its layout lives in styles.css (no inline !important styles), so the
- * print stylesheet can print the whole guide.
+ * it. Its layout lives in styles.css (no inline !important styles).
+ *
+ * Listeners are plain addEventListener calls on the dialog and its children:
+ * they go away with the element, so closed dialogs are not retained by the
+ * page-wide cleanup registry.
  * --------------------------------------------------------------------- */
 let activeDialog = null;
+let dialogCounter = 0;
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+function isVisible(el) {
+  return !!(el && el.isConnected && el.getClientRects().length > 0);
+}
 
 function openDialog(innerHTML, titleId, returnFocus) {
   if (activeDialog) {
@@ -511,7 +558,7 @@ function openDialog(innerHTML, titleId, returnFocus) {
   document.body.appendChild(dialog);
   document.body.classList.add('resource-dialog-open');
 
-  activeDialog = { dialog, returnFocus };
+  activeDialog = { dialog, returnFocus, bookmarksChanged: false };
 
   if (typeof dialog.showModal === 'function') {
     dialog.showModal();
@@ -520,25 +567,27 @@ function openDialog(innerHTML, titleId, returnFocus) {
     dialog.setAttribute('role', 'dialog');
   }
 
+  const title = document.getElementById(titleId);
+
   // Native Escape fires "cancel": close through our path so focus returns.
-  addEventListenerWithCleanup(dialog, 'cancel', (e) => {
+  dialog.addEventListener('cancel', (e) => {
     e.preventDefault();
     closeDialog();
   });
 
-  addEventListenerWithCleanup(dialog, 'keydown', (e) => {
+  dialog.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       e.preventDefault();
       closeDialog();
       return;
     }
     if (e.key !== 'Tab') {return;}
-    const focusable = [...dialog.querySelectorAll(FOCUSABLE)].filter(el => el.offsetParent !== null || el === document.activeElement);
+    const focusable = [...dialog.querySelectorAll(FOCUSABLE)].filter(el => isVisible(el) || el === document.activeElement);
     if (focusable.length === 0) {return;}
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
     const current = document.activeElement;
-    if (e.shiftKey && (current === first || !dialog.contains(current) || current === dialog.querySelector(`#${titleId}`))) {
+    if (e.shiftKey && (current === first || current === title || !dialog.contains(current))) {
       e.preventDefault();
       last.focus();
     } else if (!e.shiftKey && (current === last || !dialog.contains(current))) {
@@ -548,12 +597,8 @@ function openDialog(innerHTML, titleId, returnFocus) {
   });
 
   // A click on the backdrop lands on the <dialog> element itself.
-  addEventListenerWithCleanup(dialog, 'click', (e) => {
-    if (e.target === dialog) {
-      closeDialog();
-      return;
-    }
-    if (e.target.closest('[data-dialog-close]')) {
+  dialog.addEventListener('click', (e) => {
+    if (e.target === dialog || e.target.closest('[data-dialog-close]')) {
       closeDialog();
       return;
     }
@@ -562,7 +607,6 @@ function openDialog(innerHTML, titleId, returnFocus) {
     }
   });
 
-  const title = dialog.querySelector(`#${titleId}`);
   if (title) {
     title.focus();
   }
@@ -571,22 +615,65 @@ function openDialog(innerHTML, titleId, returnFocus) {
 
 function closeDialog({ restoreFocus = true } = {}) {
   if (!activeDialog) {return;}
-  const { dialog, returnFocus } = activeDialog;
+  const { dialog, returnFocus, bookmarksChanged } = activeDialog;
   activeDialog = null;
   if (typeof dialog.close === 'function' && dialog.open) {
     dialog.close();
   }
   dialog.remove();
   document.body.classList.remove('resource-dialog-open');
-  if (restoreFocus && returnFocus && returnFocus.isConnected) {
+
+  // A bookmark removed inside the dialog while "My Bookmarks" is on: the list
+  // behind it is now out of date.
+  if (bookmarksChanged && viewState.bookmarksOnly) {
+    applyView();
+  }
+
+  if (!restoreFocus) {return;}
+  if (isVisible(returnFocus)) {
     returnFocus.focus();
+  } else {
+    // The trigger was hidden by the view change: go somewhere sensible.
+    const fallback = safeQuerySelector('#bookmarks-filter');
+    if (isVisible(fallback)) {fallback.focus();}
   }
 }
+
+/*
+ * Printing. A modal dialog lives in the browser's top layer, where it is
+ * positioned against the viewport and does not flow across pages. While
+ * printing, re-open it non-modally so the print stylesheet can lay the whole
+ * guide out in the page; restore the modal afterwards.
+ */
+let printing = null;
+
+function preparePrint() {
+  if (!activeDialog || printing) {return;}
+  const { dialog } = activeDialog;
+  if (typeof dialog.show !== 'function' || !dialog.matches(':modal')) {return;}
+  printing = { dialog, focus: document.activeElement };
+  dialog.close();
+  dialog.show();
+}
+
+function restoreAfterPrint() {
+  if (!printing) {return;}
+  const { dialog, focus } = printing;
+  printing = null;
+  if (activeDialog && activeDialog.dialog === dialog && dialog.isConnected) {
+    dialog.close();
+    dialog.showModal();
+    if (focus && dialog.contains(focus)) {focus.focus();}
+  }
+}
+
+window.addEventListener('beforeprint', preparePrint);
+window.addEventListener('afterprint', restoreAfterPrint);
 
 function dialogHeader(titleId, title) {
   return `
         <div class="resource-dialog-bar">
-            <h2 id="${titleId}" class="resource-dialog-title" tabindex="-1">${escapeHTML(title)}</h2>
+            <h2 id="${escapeHTML(titleId)}" class="resource-dialog-title" tabindex="-1">${escapeHTML(title)}</h2>
             <button type="button" class="resource-dialog-close" data-dialog-close aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -609,7 +696,8 @@ async function openResourceModal(resourceId, returnFocus = document.activeElemen
     return;
   }
 
-  const titleId = `resource-dialog-title-${resource.id}`;
+  // Ids come from a counter, never from the data.
+  const titleId = `resource-dialog-title-${++dialogCounter}`;
   const modalContent = `
             ${dialogHeader(titleId, resource.title)}
             <div class="resource-modal">
@@ -659,7 +747,7 @@ async function openResourceModal(resourceId, returnFocus = document.activeElemen
   const modalBookmarkButton = dialog.querySelector('.btn-bookmark-modal');
   if (modalBookmarkButton) {
     setBookmarkButtonState(modalBookmarkButton, readBookmarks().includes(resource.id));
-    addEventListenerWithCleanup(modalBookmarkButton, 'click', (e) => {
+    modalBookmarkButton.addEventListener('click', (e) => {
       e.preventDefault();
       toggleBookmark(resource.id, e.currentTarget);
     });
@@ -682,7 +770,7 @@ async function showResourceSections(resourceId, returnFocus = document.activeEle
     return;
   }
 
-  const titleId = `resource-sections-title-${resource.id}`;
+  const titleId = `resource-sections-title-${++dialogCounter}`;
   const sections = [...resource.sections].sort((a, b) => a.order - b.order);
   const modalContent = `
             ${dialogHeader(titleId, `${resource.title}: Sections`)}
@@ -699,7 +787,7 @@ async function showResourceSections(resourceId, returnFocus = document.activeEle
                 </div>
 
                 <div class="resource-modal-actions">
-                    <button type="button" class="btn-primary btn-read-full" data-resource-id="${escapeHTML(resource.id)}">
+                    <button type="button" class="btn-primary btn-read-full">
                         📖 Read Full Guide
                     </button>
                     <button type="button" class="btn-secondary btn-close-modal" data-dialog-close>
@@ -713,7 +801,7 @@ async function showResourceSections(resourceId, returnFocus = document.activeEle
 
   const readFullButton = dialog.querySelector('.btn-read-full');
   if (readFullButton) {
-    addEventListenerWithCleanup(readFullButton, 'click', () => {
+    readFullButton.addEventListener('click', () => {
       closeDialog({ restoreFocus: false });
       openResourceModal(resourceId, returnFocus);
     });
@@ -734,6 +822,15 @@ function updateBookmarkStates() {
   updateBookmarksFilterButton();
 }
 
+// Show a message in a persistent role="status" element for its full time.
+const feedbackTimers = new WeakMap();
+function showFeedback(region, message, duration) {
+  if (!region) {return;}
+  clearTimeout(feedbackTimers.get(region));
+  region.textContent = message;
+  feedbackTimers.set(region, setTimeout(() => { region.textContent = ''; }, duration));
+}
+
 function toggleBookmark(resourceId, button) {
   const bookmarks = readBookmarks();
   const wasBookmarked = bookmarks.includes(resourceId);
@@ -747,127 +844,48 @@ function toggleBookmark(resourceId, button) {
   if (!bookmarkStorageWorks) {
     message += ' for this visit only (this browser is not saving site data)';
   }
+  const duration = bookmarkStorageWorks ? 3000 : 6000;
 
-  const feedback = document.createElement('div');
-  feedback.className = 'bookmark-feedback';
-  feedback.setAttribute('role', 'status');
-  feedback.textContent = message;
-  button.parentNode.appendChild(feedback);
-  setTimeout(() => feedback.remove(), bookmarkStorageWorks ? 2000 : 4000);
-
-  if (viewState.bookmarksOnly && !button.closest('dialog')) {
-    applyView();
-  } else {
+  const inDialog = !!button.closest('dialog');
+  if (inDialog) {
+    if (activeDialog) {activeDialog.bookmarksChanged = true;}
+    showFeedback(button.parentNode.querySelector('.bookmark-feedback'), message, duration);
     updateBookmarksFilterButton();
+    return;
   }
+
+  if (!viewState.bookmarksOnly) {
+    showFeedback(button.parentNode.querySelector('.bookmark-feedback'), message, duration);
+    updateBookmarksFilterButton();
+    return;
+  }
+
+  // "My Bookmarks" is on and this card may now leave the view. Note where
+  // focus should go BEFORE the card disappears, then say what happened next
+  // to that place (a status region outside the hidden card).
+  const card = button.closest('.resource-item, .resource-card');
+  const sameList = card ? [...card.parentNode.querySelectorAll(':scope > .resource-item, :scope > .resource-card')] : [];
+  const after = sameList.slice(sameList.indexOf(card) + 1);
+  applyView();
+  if (isVisible(button)) {
+    showFeedback(button.parentNode.querySelector('.bookmark-feedback'), message, duration);
+    return;
+  }
+  const nextButton = after.map(el => el.querySelector('.btn-bookmark')).find(isVisible);
+  const target = nextButton || safeQuerySelector('#bookmarks-filter');
+  if (isVisible(target)) {target.focus();}
+  showFeedback(safeQuerySelector('#bookmark-status'), message, duration);
 }
 
 function filterByCategory(categoryId) {
-  const categoryFilter = safeQuerySelector('#category-filter');
-  if (categoryFilter) {
-    categoryFilter.value = categoryId;
-    categoryFilter.dispatchEvent(new Event('change'));
-  }
+  // "View All" means every resource in the category: clear the search,
+  // difficulty and bookmarks view, then apply the category.
+  resetView({ category: categoryId });
 
   const allResourcesSection = safeQuerySelector('#all-resources');
   if (allResourcesSection) {
     allResourcesSection.scrollIntoView({ behavior: 'smooth' });
   }
-}
-
-/* ------------------------------------------------------------------------
- * Markdown. A deliberately small renderer for the guide text in
- * resources.json: headings, paragraphs, bullet and numbered lists, bold,
- * italic, inline code and links. Every piece of text is HTML-escaped BEFORE
- * any markup is added, and link targets go through safeUrl, so the data
- * cannot inject HTML or script.
- * --------------------------------------------------------------------- */
-function renderInline(text) {
-  const links = [];
-  let html = escapeHTML(text);
-
-  // Links first, swapped for placeholders so emphasis rules cannot touch URLs.
-  html = html.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (whole, label, rawUrl) => {
-    const url = safeUrl(rawUrl.replace(/&amp;/g, '&'), '');
-    if (!url) {return label;}
-    const external = /^https?:/i.test(url);
-    links.push(`<a href="${escapeHTML(url)}"${external ? ' target="_blank" rel="noopener"' : ''}>${label}</a>`);
-    return `\u0000${links.length - 1}\u0000`;
-  });
-
-  html = html
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/__(.+?)__/g, '<strong>$1</strong>')
-    .replace(/(^|[^*\w])\*(?!\s)([^*]+?)\*(?!\w)/g, '$1<em>$2</em>')
-    .replace(/(^|[^_\w])_(?!\s)([^_]+?)_(?!\w)/g, '$1<em>$2</em>');
-
-  return html.replace(/\u0000(\d+)\u0000/g, (whole, index) => links[Number(index)]);
-}
-
-export function renderMarkdown(markdown, title = '') {
-  if (typeof markdown !== 'string' || markdown.trim() === '') {return '';}
-
-  const out = [];
-  let paragraph = [];
-  let list = null; // { type: 'ul' | 'ol', items: [] }
-  let first = true;
-
-  const flushParagraph = () => {
-    if (paragraph.length > 0) {
-      out.push(`<p>${paragraph.map(renderInline).join('<br>')}</p>`);
-      paragraph = [];
-    }
-  };
-  const flushList = () => {
-    if (list) {
-      out.push(`<${list.type}>${list.items.map(item => `<li>${renderInline(item)}</li>`).join('')}</${list.type}>`);
-      list = null;
-    }
-  };
-
-  markdown.replace(/\r\n?/g, '\n').split('\n').forEach(rawLine => {
-    const line = rawLine.trim();
-
-    if (line === '') {
-      flushParagraph();
-      flushList();
-      return;
-    }
-
-    const heading = /^(#{1,6})\s+(.+?)\s*#*$/.exec(line);
-    if (heading) {
-      flushParagraph();
-      flushList();
-      const text = heading[2];
-      // The dialog title already shows the guide's title.
-      if (!(first && heading[1].length === 1 && title && text.trim() === title.trim())) {
-        const level = Math.min(6, Math.max(3, heading[1].length + 1));
-        out.push(`<h${level}>${renderInline(text)}</h${level}>`);
-      }
-      first = false;
-      return;
-    }
-    first = false;
-
-    const bullet = /^[-*+]\s+(.*)$/.exec(line);
-    const numbered = /^\d+[.)]\s+(.*)$/.exec(line);
-    if (bullet || numbered) {
-      flushParagraph();
-      const type = bullet ? 'ul' : 'ol';
-      if (list && list.type !== type) {flushList();}
-      if (!list) {list = { type, items: [] };}
-      list.items.push((bullet || numbered)[1]);
-      return;
-    }
-
-    flushList();
-    paragraph.push(line);
-  });
-
-  flushParagraph();
-  flushList();
-  return out.join('\n');
 }
 
 function formatResourceType(type) {

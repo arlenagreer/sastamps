@@ -4758,29 +4758,20 @@ body.resource-dialog-open {
     }
 }
 
-.page-resources .bookmark-feedback {
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--primary);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius-md);
+/* Bookmark feedback: inline, persistent role="status" elements next to the
+   button (or next to "My Bookmarks" when the card leaves the view). Text is
+   set and cleared by js/pages/resources.js; empty means invisible. */
+.page-resources .bookmark-feedback,
+.page-resources .bookmark-status {
+    align-self: center;
+    color: var(--primary-dark);
     font-size: 0.875rem;
-    animation: fade-in-out 2s ease;
+    font-weight: 600;
 }
 
-@keyframes fade-in-out {
-    0%,
-    100% {
-        opacity: 0;
-    }
-
-    20%,
-    80% {
-        opacity: 1;
-    }
+.page-resources .bookmark-feedback:empty,
+.page-resources .bookmark-status:empty {
+    display: none;
 }
 
 .page-resources .resource-actions {
