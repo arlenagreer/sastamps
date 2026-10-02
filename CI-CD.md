@@ -82,7 +82,7 @@ npm test       # Terminal 2
 npm run test:html
 npm run test:css
 npm run test:js
-npm run test:links
+npm run test:site-build
 npm run test:a11y
 ```
 

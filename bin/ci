@@ -131,17 +131,35 @@ echo
 # condition is the one place a non-zero status does not trigger it, so the
 # real failure is captured in $failed with nothing wrapped in an
 # after-the-fact pass-through.
+# --exit2-not-verified (first argument): the check exits 2 when it could not
+# run at all (e.g. headless Chrome missing or would not launch), as opposed
+# to 1 for a real finding. Such a section is NOT VERIFIED: it is left out of
+# the totals (it is neither a pass nor a failure), named on its own line
+# before the summary, and a run with no failures then exits 3.
+not_verified=()
 run_section() {
+  local exit2_not_verified=0
+  if [ "$1" = "--exit2-not-verified" ]; then
+    exit2_not_verified=1; shift
+  fi
   local label="$1"; shift
   echo
   echo "▸ $label"
+  local status=0
+  "$@" || status=$?
+  if [ "$status" -eq 2 ] && [ "$exit2_not_verified" -eq 1 ]; then
+    not_verified+=("$label")
+    echo "  NOT VERIFIED: $label could not run (its message is above)"
+    return 0
+  fi
   total=$((total + 1))
-  if ! "$@"; then
+  if [ "$status" -ne 0 ]; then
     failed=$((failed + 1))
     echo "  FAILED: $label"
   fi
   return 0
 }
+
 
 run_section "validate:data (node scripts/validate-data.js)" npm run --silent validate:data
 run_section "test:html (html-validate)"                     npm run --silent test:html
@@ -149,16 +167,24 @@ run_section "test:js (eslint)"                               npm run --silent te
 run_section "test:css (stylelint)"                            npm run --silent test:css
 run_section "test:md (markdownlint)"                          npm run --silent test:md
 run_section "test:font-loading (fonts load even with storage blocked)"      npm run --silent test:font-loading
+# node:test unit tests (tests/*.test.* and tests/xss-security-test.js): the
+# deploy allowlist and sitemap, the escapeHTML/safeUrl XSS contract, and the
+# DOM-free helpers in js/utils. No test skips.
+run_section "test:unit (node --test tests/)"                  npm run --silent test:unit
 # Runs the build itself: checks that it writes no tracked file, that _site/
 # holds every page and nothing private, and that every local reference in
 # _site/ resolves. _site/ is exactly what the Pages deploy uploads.
 run_section "test:site-build (npm run build -> _site/, sources untouched)" npm run --silent test:site-build
-# Runs AFTER the build on purpose, against _site/: the build embeds the
-# search data into _site/search.html, and _site/ is what deploys.
+# Runs AFTER the build on purpose, against _site/, which is what deploys.
 # html-validate and eslint (js/**) never parse the JavaScript inside HTML
 # pages, which is how an entity-escaped `&amp;&amp;` in search.html's inline
 # script broke site search in production unnoticed.
 run_section "test:inline-js (inline <script> blocks parse, in _site/)" npm run --silent test:inline-js:site
+# Headless Chrome (the one puppeteer's npm ci install downloads; no network
+# needed after that) loads _site/search.html, which fetches its lunr index
+# from dist/data/, and searches. The index is no longer inlined into the
+# page, so this is the only proof that search works in the built site.
+run_section --exit2-not-verified "test:search-page (search.html loads its index and finds results)" node scripts/test-search-page.js
 
 # ── Declared exclusions -- outside this local gate, each with its own reason ──
 #
@@ -174,10 +200,12 @@ run_section "test:inline-js (inline <script> blocks parse, in _site/)" npm run -
 # have here.
 echo
 echo "▸ declared OUTSIDE this local gate (each needs something this runner does not provide)"
-echo "  - test:links      -- its own command text says to start a server in another"
-echo "                       terminal first; with no server running it has nothing to check."
-echo "  - test:a11y        -- calls pa11y-ci, which is not a devDependency (only pa11y is),"
-echo "                       and would also need npm run serve answering on localhost."
+echo "  - external links  -- third-party sites change and time out on their own schedule;"
+echo "                       the weekly workflow crawls them (npm run report:links:external)."
+echo "                       Links on this site, relative or absolute, are checked by test:site-build."
+echo "  - test:a11y        -- pa11y 10 over every built page (scripts/a11y-check.js). Its first"
+echo "                       real run found 5 link-in-text-block errors in today's pages;"
+echo "                       it joins this gate once those pages are fixed."
 echo "  - audit:lighthouse -- needs npm run serve answering on localhost first."
 echo "  - audit:security   -- npm audit depends on the registry's advisory feed; an advisory"
 echo "                       published overnight would redden this every push in a repo whose"
@@ -191,10 +219,20 @@ echo "                       already on a weekly Monday schedule."
 # ([0-9]+ (runs|tests|examples), [0-9]+ [a-z]+(, [0-9]+ (failures|errors|skips))+).
 # Without it a green push reports "no recognisable test summary in the log,"
 # over a run that checked seven real things.
+if [ "${#not_verified[@]}" -gt 0 ]; then
+  echo
+  for label in "${not_verified[@]}"; do
+    echo "NOT VERIFIED: $label"
+  done
+fi
 printf '\n%d tests, %d assertions, %d failures, 0 errors\n' "$total" "$total" "$failed"
 
 # ── Closing exit -- never an if/echo as the last command ────────────────────
 if [ "$failed" -gt 0 ]; then
   exit 1
+fi
+if [ "${#not_verified[@]}" -gt 0 ]; then
+  echo "bin/ci: ${#not_verified[@]} check(s) could not run and are not in the totals: NOT VERIFIED (exit 3)." >&2
+  exit 3
 fi
 exit 0

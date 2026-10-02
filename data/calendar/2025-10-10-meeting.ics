@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//San Antonio Philatelic Association//SAPA Meetings//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:20251010T193000Z-sapa@sastamps.org
+DTSTAMP:20251001T000000Z
+DTSTART:20251011T000000Z
+DTEND:20251011T020000Z
+SUMMARY:SAPA Meeting - Year-End Stamp Auction
+DESCRIPTION:Special year-end auction featuring premium lots\, collections\, and donated materials for club fundraising. Cash or check accepted for purchases. Premium year-end lots available. All proceeds support club activities. Doors open at 6:30 PM\, meeting begins at 7:00 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting
+END:VEVENT
+END:VCALENDAR

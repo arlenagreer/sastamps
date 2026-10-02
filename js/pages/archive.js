@@ -4,7 +4,7 @@
  */
 
 // Import utilities
-import { safeQuerySelector } from '../utils/safe-dom.js';
+import { safeQuerySelector, safeUrl } from '../utils/safe-dom.js';
 import { debounce as _debounce } from '../utils/performance.js';
 import { createLogger } from '../utils/logger.js';
 import { fetchJSON } from '../utils/fetch-json.js';
@@ -61,13 +61,15 @@ async function renderArchivedNewsletters() {
 
       for (const entry of yearEntries) {
         const li = document.createElement('li');
+        // An unsafe or empty filePath (javascript:, data:, ...) gets no link.
+        const fileUrl = entry.status === 'available' ? safeUrl(entry.filePath, '') : '';
 
-        if (entry.status === 'available') {
+        if (fileUrl) {
           li.classList.add('archive-list-item');
 
           const link = document.createElement('a');
           link.classList.add('archive-link');
-          link.setAttribute('href', entry.filePath);
+          link.setAttribute('href', fileUrl);
           link.setAttribute('target', '_blank');
 
           const icon = document.createElement('i');

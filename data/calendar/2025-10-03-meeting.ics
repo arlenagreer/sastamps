@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//San Antonio Philatelic Association//SAPA Meetings//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:20251003T193000Z-sapa@sastamps.org
+DTSTAMP:20251001T000000Z
+DTSTART:20251004T000000Z
+DTEND:20251004T020000Z
+SUMMARY:SAPA Meeting - Board of Governors Meeting & Show and Tell
+DESCRIPTION:Monthly Board of Governors meeting followed by member show and tell presentations. Doors open at 6:30 PM\, meeting begins at 7:00 PM.
+LOCATION:MacArthur Park Lutheran Church\, Building 1\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
+STATUS:CONFIRMED
+CATEGORIES:SAPA,Meeting
+END:VEVENT
+END:VCALENDAR
