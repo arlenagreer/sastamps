@@ -158,7 +158,7 @@
             transition: background-color var(--transition-fast);
         }
 
-        .archive-list-item:hover {
+        .archive-list-item:not(.archive-item-unavailable):hover {
             background-color: var(--light);
         }
 
@@ -182,8 +182,13 @@
             font-size: 1rem;
         }
 
+        /* Unavailable issues: a muted --light card with a dashed --medium
+           border and no hover state, rather than opacity (opacity 0.55 took
+           the label text to 1.84:1). --medium on --light is 4.80:1. */
         .archive-item-unavailable {
-            opacity: 0.55;
+            background-color: var(--light);
+            border: 1px dashed var(--medium);
+            cursor: default;
         }
 
         .archive-item-unavailable .archive-label {

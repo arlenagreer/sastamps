@@ -861,7 +861,7 @@ class SearchEngine {
                 transform: translateY(-50%);
                 background: none;
                 border: none;
-                color: var(--medium, #7f8c8d);
+                color: var(--medium, #5f6b6d);
                 font-size: 1.2rem;
                 cursor: pointer;
                 padding: 0.5rem;
@@ -950,7 +950,7 @@ class SearchEngine {
             .filter-select,
             .filter-input {
                 padding: 0.5rem;
-                border: 1px solid var(--medium, #7f8c8d);
+                border: 1px solid var(--medium, #5f6b6d);
                 border-radius: var(--radius-sm, 3px);
                 background-color: var(--white, #fff);
                 font-size: 0.9rem;
@@ -981,11 +981,11 @@ class SearchEngine {
 
             .clear-filters-button {
                 background-color: var(--warning, #f39c12);
-                color: var(--white, #fff);
+                color: #2c3e50;
             }
 
             .clear-filters-button:hover {
-                background-color: #e67e22;
+                background-color: #f5b041;
             }
 
             .toggle-filters-button {
@@ -1031,7 +1031,7 @@ class SearchEngine {
 
             .search-loading {
                 background-color: var(--light, #ecf0f1);
-                color: var(--medium, #7f8c8d);
+                color: var(--medium, #5f6b6d);
                 text-align: center;
             }
 
@@ -1068,7 +1068,7 @@ class SearchEngine {
             }
 
             .search-result-title i {
-                color: var(--secondary, #d35400);
+                color: var(--secondary, #ba4a00);
             }
 
             .search-result-meta {
@@ -1088,24 +1088,25 @@ class SearchEngine {
                 color: var(--dark, #2c3e50);
             }
 
+            /* Same values as .difficulty-* in css/styles.css (WCAG AA). */
             .search-result-difficulty.difficulty-beginner {
-                background-color: #27ae60;
-                color: var(--white, #fff);
+                background-color: #1e8449;
+                color: #fff;
             }
 
             .search-result-difficulty.difficulty-intermediate {
-                background-color: #f39c12;
-                color: var(--white, #fff);
+                background-color: var(--warning, #f39c12);
+                color: #2c3e50;
             }
 
             .search-result-difficulty.difficulty-advanced {
-                background-color: #c0392b;
-                color: var(--white, #fff);
+                background-color: var(--danger, #c0392b);
+                color: #fff;
             }
 
             .search-result-summary {
                 margin: 1rem 0;
-                color: var(--medium, #7f8c8d);
+                color: var(--medium, #5f6b6d);
                 line-height: 1.6;
             }
 
@@ -1125,7 +1126,7 @@ class SearchEngine {
 
             .search-result-score {
                 font-size: 0.8rem;
-                color: var(--medium, #7f8c8d);
+                color: var(--medium, #5f6b6d);
                 text-align: right;
                 margin-top: 0.5rem;
             }

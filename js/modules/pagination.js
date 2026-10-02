@@ -408,7 +408,7 @@ class Pagination {
             }
 
             .pagination-info {
-                color: var(--medium, #7f8c8d);
+                color: var(--medium, #5f6b6d);
                 font-size: 0.9rem;
             }
 
@@ -448,12 +448,12 @@ class Pagination {
             .pagination-btn:disabled {
                 opacity: 0.5;
                 cursor: not-allowed;
-                color: var(--medium, #7f8c8d);
+                color: var(--medium, #5f6b6d);
             }
 
             .pagination-ellipsis {
                 padding: 0.5rem 0.25rem;
-                color: var(--medium, #7f8c8d);
+                color: var(--medium, #5f6b6d);
             }
 
             .pagination-settings {
@@ -464,7 +464,7 @@ class Pagination {
             }
 
             .pagination-settings label {
-                color: var(--medium, #7f8c8d);
+                color: var(--medium, #5f6b6d);
             }
 
             .items-per-page-select {

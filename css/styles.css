@@ -86,6 +86,17 @@ a:hover {
     color: var(--primary-light);
 }
 
+/* Links inside running text must not rely on colour alone (WCAG 1.4.1,
+   axe link-in-text-block). Only unclassed links in prose inside <main>:
+   nav, buttons (.btn, .button) and card links all carry a class. */
+main p a:not([class]),
+main blockquote a:not([class]),
+main dd a:not([class]),
+main figcaption a:not([class]) {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+}
+
 img {
     max-width: 100%;
     height: auto;
@@ -444,8 +455,8 @@ footer {
 }
 
 .btn-secondary:hover {
-    background-color: #e67e22;
-    color: var(--white);
+    background-color: #a04000; /* darker on hover; was #e67e22 (2.85:1 under white text) */
+    color: #fff;
 }
 
 .btn-light {
@@ -724,7 +735,7 @@ footer {
 /* Button variant utilities */
 .btn-accent {
     background-color: var(--accent);
-    color: white;
+    color: #2c3e50; /* was white: 1.66:1 on gold; 6.61:1 */
     padding: 12px 24px;
     text-decoration: none;
     border-radius: 4px;
@@ -912,6 +923,15 @@ th {
     font-weight: 600;
 }
 
+/* Header row in the primary colour (TSDA show tables on index and meetings).
+   The colour sits on the th cells: the global th background above would
+   otherwise paint --light over the row colour (white on #ecf0f1, 1.14:1),
+   and tr:hover would repaint the row. White on --primary: 8.36:1. */
+.table-header-primary th {
+    background-color: var(--primary);
+    color: #fff;
+}
+
 tr:hover {
     background-color: rgb(236, 240, 241, 0.5);
 }
@@ -920,24 +940,17 @@ tr:hover {
 /* ===== COMPONENT SPECIFIC STYLES ===== */
 
 
-/* Timeline */
+/* Timeline
+   The centre line is a background stripe, not an absolutely positioned
+   ::after. axe-core cannot resolve the background behind text whose ancestor
+   has a large pseudo-element, so every timeline entry used to come back as a
+   "needs review" colour-contrast result. Same look, measurable contrast. */
 .timeline {
     position: relative;
     max-width: 1200px;
     margin: 0 auto;
     padding: 1rem 0;
-}
-
-.timeline::after {
-    content: '';
-    position: absolute;
-    width: 4px;
-    background-color: var(--primary);
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    margin-left: -2px;
-    border-radius: 2px;
+    background: linear-gradient(var(--primary), var(--primary)) 50% 0 / 4px 100% no-repeat;
 }
 
 .timeline-item {
@@ -975,8 +988,8 @@ tr:hover {
 /* .timeline-content h3 defined in critical.css */
 
 @media screen and (width <= 768px) {
-    .timeline::after {
-        left: 20px;
+    .timeline {
+        background-position: 18px 0;
     }
     
     .timeline-item {
@@ -3165,13 +3178,13 @@ tr:hover {
 }
 
 .difficulty-beginner {
-    background: var(--success);
-    color: var(--white);
+    background: #1e8449; /* was --success #27ae60 (2.87:1 under white text); 4.72:1 */
+    color: #fff;
 }
 
 .difficulty-intermediate {
     background: var(--warning);
-    color: var(--white);
+    color: #2c3e50; /* was white (2.19:1 on orange); 5.01:1 */
 }
 
 .difficulty-advanced {
@@ -3181,7 +3194,7 @@ tr:hover {
 
 .featured-badge {
     background: var(--accent);
-    color: var(--dark);
+    color: #2c3e50; /* fixed value: dark text on gold in any theme (6.61:1) */
     padding: 0.25rem 0.5rem;
     border-radius: var(--radius-sm);
     font-size: 0.75rem;
@@ -4265,4 +4278,298 @@ tr:hover {
     .loading-container {
         padding: var(--space-xl);
     }
+}
+
+/* ==========================================================================
+   Resources page (body.page-resources)
+   Folded in from the inline <style class="critical-css"> block that used to sit
+   in resources.html after the stylesheet links. Every selector is prefixed with
+   .page-resources so it matches only on that page. Plain selectors, not
+   the where/is pseudo-classes: the CSS build targets Safari 13 / Chrome 80, which drop
+   rules using them. The prefix adds one class of specificity, so the :hover
+   rules that used to beat these base rules are restated here as well.
+   Rules that only repeated critical.css / styles.css were dropped.
+   ========================================================================== */
+.page-resources h2 {
+    font-size: 2rem;
+}
+
+.page-resources .container {
+    margin: 0 auto;
+    max-width: var(--container-xl);
+    padding: 0 1.5rem;
+    width: 100%;
+}
+
+.page-resources .site-title a {
+    transition: color var(--transition-fast);
+}
+
+.page-resources .site-title a:hover {
+    color: var(--primary-light);
+}
+
+.page-resources nav li.active a {
+    color: var(--primary);
+}
+
+@media (width <= 1280px) {
+    .page-resources nav li {
+        margin-left: 1rem;
+    }
+
+    .page-resources nav a {
+        padding: 0.25rem;
+        font-size: 0.95rem;
+    }
+
+    .page-resources .nav-icon {
+        font-size: 1rem;
+        margin-right: 6px;
+    }
+}
+
+@media (width <= 1024px) {
+    .page-resources nav li {
+        margin-left: 0.75rem;
+    }
+
+    .page-resources nav a {
+        font-size: 0.9rem;
+    }
+}
+
+.page-resources .hero {
+    background-color: var(--primary);
+    color: white;
+    padding: 3rem 0;
+    text-align: center;
+    position: relative;
+}
+
+.page-resources .hero h1 {
+    margin: 0 0 1rem;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+}
+
+.page-resources .hero p {
+    font-size: 1.25rem;
+    margin: 0;
+    opacity: 0.9;
+}
+
+@media (width <= 768px) {
+    .page-resources nav ul {
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        right: -100%;
+        background: white;
+        height: 100vh;
+        width: 300px;
+        padding: 2rem;
+        transition: right 0.3s ease;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .page-resources nav ul.active {
+        right: 0;
+    }
+
+    .page-resources nav li {
+        margin: 0 0 1rem;
+    }
+}
+
+.page-resources .category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.page-resources .category-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    background: white;
+    box-shadow: 0 2px 4px rgb(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.page-resources .category-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgb(0, 0, 0, 0.15);
+}
+
+.page-resources .resource-item {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 1rem;
+    margin: 1rem 0;
+    background: #fafafa;
+}
+
+.page-resources .resource-item:hover {
+    background: white;
+}
+
+.page-resources .resource-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.page-resources .difficulty-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.page-resources .difficulty-beginner {
+    background: #e3f2fd;
+    color: #1565c0; /* was #1976d2 (4.02:1); 5.03:1 */
+}
+
+.page-resources .difficulty-intermediate {
+    background: #fff3e0;
+    color: #a84300; /* was #f57c00 (2.46:1); 5.52:1 */
+}
+
+.page-resources .difficulty-advanced {
+    background: #fce4ec;
+    color: #c2185b;
+}
+
+.page-resources .search-filters {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.page-resources .filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* Resource detail modal and bookmark feedback (rendered by js/pages/resources.js) */
+.page-resources .resource-modal-header {
+    border-bottom: 1px solid var(--light);
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.page-resources .resource-modal-meta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.page-resources .sections-list {
+    margin: 1.5rem 0;
+}
+
+.page-resources .section-item {
+    padding: 1rem;
+    border: 1px solid var(--light);
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
+}
+
+.page-resources .section-item h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+}
+
+.page-resources .resource-modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--light);
+}
+
+.page-resources .bookmark-feedback {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    animation: fade-in-out 2s ease;
+}
+
+@keyframes fade-in-out {
+    0%,
+    100% {
+        opacity: 0;
+    }
+
+    20%,
+    80% {
+        opacity: 1;
+    }
+}
+
+.page-resources .resource-actions {
+    position: relative;
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.page-resources .btn-primary,
+.page-resources .btn-secondary,
+.page-resources .btn-outline {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.page-resources .btn-secondary:hover {
+    background-color: var(--accent);
+    color: var(--dark);
+}
+
+.page-resources .btn-outline {
+    background-color: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+}
+
+.page-resources .btn-outline:hover {
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+/* After .btn-outline:hover (same specificity): a bookmarked button stays
+   gold with dark text when hovered, as it did before the fold. */
+.page-resources .btn-bookmark.bookmarked {
+    background-color: var(--accent);
+    color: var(--dark);
 }

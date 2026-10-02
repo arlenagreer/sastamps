@@ -9,6 +9,7 @@ import { fetchJSON } from '../utils/fetch-json.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { formatDate } from '../utils/helpers.js';
 import { createLogger } from '../utils/logger.js';
+import { announceStatus, countSummary } from '../utils/announce.js';
 
 const logger = createLogger('ResourcesPage');
 
@@ -188,6 +189,15 @@ function displayAllResources(resources) {
 
   container.innerHTML = html;
   bindResourceActions(container);
+  announceResourceCount();
+}
+
+// Short visually hidden role="status" line above the "All Resources" list
+// (resources.html). The lists themselves are not live regions.
+function announceResourceCount() {
+  const items = document.querySelectorAll('#resources-container .resource-item');
+  const shown = [...items].filter(item => item.style.display !== 'none').length;
+  announceStatus(safeQuerySelector('#resources-status'), countSummary(shown, items.length, 'resource', 'resources'));
 }
 
 function initializeResourceSearch(resources) {
@@ -286,6 +296,8 @@ function filterResourcesDisplay(filteredResources) {
     const categoryResources = filteredResources.filter(r => r.category === categoryId);
     card.style.display = categoryResources.length > 0 ? 'block' : 'none';
   });
+
+  announceResourceCount();
 }
 
 function showAllResources() {
@@ -293,6 +305,8 @@ function showAllResources() {
   allItems.forEach(item => {
     item.style.display = 'block';
   });
+
+  announceResourceCount();
 }
 
 function bindResourceActions(container) {

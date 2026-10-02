@@ -492,7 +492,7 @@ class NewsletterLoader {
 
             .filter-select {
                 padding: 0.5rem;
-                border: 1px solid var(--medium, #7f8c8d);
+                border: 1px solid var(--medium, #5f6b6d);
                 border-radius: var(--radius-sm, 3px);
                 background-color: var(--white, #fff);
                 font-size: 0.9rem;
@@ -556,7 +556,7 @@ class NewsletterLoader {
                 gap: 1rem;
                 margin-bottom: 1rem;
                 font-size: 0.9rem;
-                color: var(--medium, #7f8c8d);
+                color: var(--medium, #5f6b6d);
             }
 
             .meta-item {
@@ -574,14 +574,14 @@ class NewsletterLoader {
             }
 
             .no-results h3 {
-                color: var(--medium, #7f8c8d);
+                color: var(--medium, #5f6b6d);
                 margin-bottom: 1rem;
             }
 
             .loading {
                 text-align: center;
                 padding: 3rem;
-                color: var(--medium, #7f8c8d);
+                color: var(--medium, #5f6b6d);
                 font-size: 1.1rem;
             }
 

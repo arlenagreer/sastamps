@@ -9,10 +9,11 @@
     --primary: #1a5276;
     --primary-light: #2980b9;
     --primary-dark: #0e2f44;
-    --secondary: #d35400;
-    --accent: #f1c40f;
+    --secondary: #ba4a00; /* was #d35400 (4.16:1 under white text); 5.16:1 */
+    --accent: #f1c40f; /* gold: only on dark backgrounds or behind dark text */
+    --accent-dark: #7d6608; /* gold for text on light backgrounds, 5.56:1 on white */
     --dark: #2c3e50;
-    --medium: #7f8c8d;
+    --medium: #5f6b6d; /* was #7f8c8d (3.47:1 on white); 5.51:1 on white, 4.80:1 on --light */
     --light: #ecf0f1;
     --white: #fff;
     --success: #27ae60;
@@ -396,10 +397,6 @@ nav a:hover::after {
     .nav-icon {
         font-size: 1rem;
         margin-right: 5px;
-    }
-    
-    .timeline::after {
-        left: 20px;
     }
 }
 
