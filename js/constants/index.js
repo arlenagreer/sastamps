@@ -149,29 +149,6 @@ export const PERFORMANCE = {
   FPS_TARGET: 60
 };
 
-// Analytics Configuration
-export const ANALYTICS = {
-  GA_MEASUREMENT_ID: 'G-XXXXXXXXXX', // Replace with actual ID in production
-  EVENTS: {
-    PAGE_VIEW: 'page_view',
-    FORM_SUBMIT: 'form_submit',
-    FILE_DOWNLOAD: 'file_download',
-    NEWSLETTER_DOWNLOAD: 'newsletter_download',
-    MEETING_RSVP: 'meeting_rsvp',
-    SEARCH: 'search',
-    RESOURCE_VIEW: 'resource_view'
-  }
-};
-
-
-// Analytics Events (combining both legacy and new events)
-export const ANALYTICS_EVENTS = {
-  ...ANALYTICS.EVENTS,
-  CONTACT_FORM_SUBMIT: 'contact_form_submit',
-  SEARCH_PERFORMED: 'search_performed',
-  REMINDER_SET: 'reminder_set'
-};
-
 // Z-Index Layers
 export const Z_INDEX = {
   DROPDOWN: 100,

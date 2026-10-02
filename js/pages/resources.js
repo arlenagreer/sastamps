@@ -4,7 +4,8 @@
  */
 
 import { debounce } from '../utils/performance.js';
-import { safeQuerySelector, escapeHTML } from '../utils/safe-dom.js';
+import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
+import { fetchJSON } from '../utils/fetch-json.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { formatDate } from '../utils/helpers.js';
 import { createLogger } from '../utils/logger.js';
@@ -39,19 +40,11 @@ async function initializeResourcesPage() {
 
   // Update bookmark states
   updateBookmarkStates();
-
-  // Track page view
-  if (typeof gtag === 'function') {
-    gtag('event', 'page_view', {
-      page_title: 'Resources Page',
-      page_location: window.location.href
-    });
-  }
 }
 
 async function loadResourcesData() {
   try {
-    const { default: data } = await import('../../data/members/resources.json');
+    const data = await fetchJSON('data/members/resources.json');
     // Resources data loaded successfully
     return data;
   } catch (error) {
@@ -210,14 +203,6 @@ function initializeResourceSearch(resources) {
     const results = searchResources(resources, query);
     filterResourcesDisplay(results);
 
-    // Track search
-    if (typeof gtag === 'function') {
-      gtag('event', 'search', {
-        search_term: query,
-        search_type: 'resources',
-        results_count: results.length
-      });
-    }
   }, 300);
 
   addEventListenerWithCleanup(searchInput, 'input', (e) => {
@@ -384,7 +369,7 @@ function bindCategoryActions(container) {
 
 async function openResourceModal(resourceId) {
   try {
-    const { default: resourcesData } = await import('../../data/members/resources.json');
+    const resourcesData = await fetchJSON('data/members/resources.json');
     const resource = resourcesData.resources.find(r => r.id === resourceId);
 
     if (!resource) {
@@ -411,14 +396,17 @@ async function openResourceModal(resourceId) {
                         <div class="external-links-section">
                             <h3>Additional Resources</h3>
                             <ul class="external-links-list">
-                                ${resource.externalLinks.map(link => `
+                                ${resource.externalLinks.map(link => {
+    const linkUrl = safeUrl(link.url, '');
+    return `
                                     <li>
-                                        <a href="${escapeHTML(link.url)}" target="_blank" rel="noopener">
+                                        ${linkUrl ? `<a href="${escapeHTML(linkUrl)}" target="_blank" rel="noopener">
                                             ${escapeHTML(link.title)}
-                                        </a>
+                                        </a>` : escapeHTML(link.title)}
                                         ${link.description ? `<span class="link-description">${escapeHTML(link.description)}</span>` : ''}
                                     </li>
-                                `).join('')}
+                                `;
+  }).join('')}
                             </ul>
                         </div>
                     ` : ''}
@@ -455,15 +443,6 @@ async function openResourceModal(resourceId) {
         modalBookmarkButton.setAttribute('aria-label', 'Bookmark resource');
         modalBookmarkButton.classList.remove('bookmarked');
       }
-    }
-
-    // Track resource view
-    if (typeof gtag === 'function') {
-      gtag('event', 'resource_view', {
-        resource_id: resourceId,
-        resource_title: resource.title,
-        resource_category: resource.category
-      });
     }
 
   } catch (error) {
@@ -569,7 +548,7 @@ function closeModal(modal) {
 
 async function showResourceSections(resourceId) {
   try {
-    const { default: resourcesData } = await import('../../data/members/resources.json');
+    const resourcesData = await fetchJSON('data/members/resources.json');
     const resource = resourcesData.resources.find(r => r.id === resourceId);
 
     if (!resource || !resource.sections) {

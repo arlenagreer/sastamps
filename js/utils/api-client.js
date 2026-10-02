@@ -203,8 +203,7 @@ export const submitForm = withErrorHandling(
     return response;
   },
   {
-    errorMessage: 'Form submission failed. Please try again.',
-    trackError: true
+    errorMessage: 'Form submission failed. Please try again.'
   }
 );
 

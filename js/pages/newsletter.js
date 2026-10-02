@@ -4,7 +4,9 @@
  */
 
 import { debounce } from '../utils/performance.js';
-import { safeQuerySelector, escapeHTML } from '../utils/safe-dom.js';
+import { safeQuerySelector, escapeHTML, safeUrl } from '../utils/safe-dom.js';
+import { normaliseNewsletter } from '../modules/newsletter-normalise.js';
+import { fetchJSON } from '../utils/fetch-json.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import _breadcrumb from '../modules/breadcrumb.js';
 import { createLogger } from '../utils/logger.js';
@@ -28,15 +30,18 @@ async function initializeNewsletterPage() {
 
 async function loadNewslettersList(container) {
   try {
-    const { default: newslettersData } = await import('../../data/newsletters/newsletters.json');
+    const newslettersData = await fetchJSON('data/newsletters/newsletters.json');
     const newsletters = newslettersData.newsletters
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
+      .map(normaliseNewsletter)
+      .sort((a, b) => b.dateValue - a.dateValue);
 
-    const html = newsletters.map(newsletter => `
-            <article class="newsletter-item" data-date="${escapeHTML(newsletter.date)}" data-year="${new Date(newsletter.date).getFullYear()}">
+    const html = newsletters.map(newsletter => {
+      const coverUrl = safeUrl(newsletter.coverImage, '');
+      return `
+            <article class="newsletter-item" data-date="${escapeHTML(newsletter.date)}" data-year="${newsletter.dateValue.getFullYear()}">
                 <div class="newsletter-preview">
-                    ${newsletter.coverImage ?
-    `<img src="${escapeHTML(newsletter.coverImage)}" alt="Cover of ${escapeHTML(newsletter.title)}" loading="lazy">` :
+                    ${coverUrl ?
+    `<img src="${escapeHTML(coverUrl)}" alt="Cover of ${escapeHTML(newsletter.title)}" loading="lazy">` :
     '<div class="newsletter-placeholder">📰</div>'
 }
                 </div>
@@ -45,7 +50,7 @@ async function loadNewslettersList(container) {
                     <header class="newsletter-header">
                         <h3>${escapeHTML(newsletter.title)}</h3>
                         <time datetime="${escapeHTML(newsletter.date)}" class="newsletter-date">
-                            ${escapeHTML(new Date(newsletter.date).toLocaleDateString('en-US', {
+                            ${escapeHTML(newsletter.dateValue.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
@@ -72,26 +77,32 @@ async function loadNewslettersList(container) {
                     </div>
 
                     <footer class="newsletter-actions">
-                        <a href="${escapeHTML(newsletter.pdfUrl)}" target="_blank" class="btn-primary btn-view-pdf" data-newsletter-id="${escapeHTML(newsletter.id)}">
-                            📄 View PDF
+                        ${newsletter.pdfUrl ? `
+                        <a href="${escapeHTML(newsletter.pdfUrl)}" target="_blank" rel="noopener" class="btn-primary btn-view-pdf" data-newsletter-id="${escapeHTML(newsletter.id)}" aria-label="View PDF: ${escapeHTML(newsletter.title)} (opens in a new tab)">
+                            <span aria-hidden="true">📄</span> View PDF
                         </a>
-                        <button class="btn-secondary btn-download" data-url="${escapeHTML(newsletter.pdfUrl)}" data-title="${escapeHTML(newsletter.title)}">
-                            💾 Download
+                        <button class="btn-secondary btn-download" data-url="${escapeHTML(newsletter.pdfUrl)}" data-title="${escapeHTML(newsletter.title)}" aria-label="Download PDF: ${escapeHTML(newsletter.title)}">
+                            <span aria-hidden="true">💾</span> Download
                         </button>
+                        ` : ''}
                         ${newsletter.articleLinks && newsletter.articleLinks.length > 0 ? `
                             <details class="newsletter-articles">
                                 <summary>Articles (${newsletter.articleLinks.length})</summary>
                                 <ul>
-                                    ${newsletter.articleLinks.map(article => `
-                                        <li><a href="${escapeHTML(article.url)}" target="_blank" rel="noopener">${escapeHTML(article.title)}</a></li>
-                                    `).join('')}
+                                    ${newsletter.articleLinks.map(article => {
+    const articleUrl = safeUrl(article.url, '');
+    return articleUrl
+      ? `<li><a href="${escapeHTML(articleUrl)}" target="_blank" rel="noopener">${escapeHTML(article.title)}</a></li>`
+      : `<li>${escapeHTML(article.title)}</li>`;
+  }).join('')}
                                 </ul>
                             </details>
                         ` : ''}
                     </footer>
                 </div>
             </article>
-        `).join('');
+        `;
+    }).join('');
 
     container.innerHTML = html;
     bindNewsletterActions(container);
@@ -123,8 +134,8 @@ function initializeNewsletterSearch(container) {
     }
 
     try {
-      const { default: newslettersData } = await import('../../data/newsletters/newsletters.json');
-      const results = searchNewsletters(newslettersData.newsletters, query);
+      const newslettersData = await fetchJSON('data/newsletters/newsletters.json');
+      const results = searchNewsletters(newslettersData.newsletters.map(normaliseNewsletter), query);
 
       if (results.length === 0) {
         resultsContainer.innerHTML = '<p>No newsletters found matching your search.</p>';
@@ -162,7 +173,7 @@ function searchNewsletters(newsletters, query) {
       newsletter.title,
       newsletter.summary,
       ...(newsletter.features || []),
-      new Date(newsletter.date).toLocaleDateString()
+      newsletter.dateValue.toLocaleDateString()
     ].join(' ').toLowerCase();
 
     return searchTerms.every(term => searchText.includes(term));
@@ -276,16 +287,8 @@ function bindNewsletterActions(container) {
   const downloadButtons = container.querySelectorAll('.btn-download');
   downloadButtons.forEach(button => {
     addEventListenerWithCleanup(button, 'click', (e) => {
-      const {url} = e.target.dataset;
-      const {title} = e.target.dataset;
+      const {url, title} = e.currentTarget.dataset;
       downloadNewsletter(url, title);
-    });
-  });
-  const viewButtons = container.querySelectorAll('.btn-view-pdf');
-  viewButtons.forEach(button => {
-    addEventListenerWithCleanup(button, 'click', (e) => {
-      const {newsletterId} = e.target.dataset;
-      trackNewsletterView(newsletterId);
     });
   });
 }
@@ -293,13 +296,16 @@ function bindNewsletterActions(container) {
 function downloadNewsletter(url, title) {
   try {
     const link = document.createElement('a');
-    link.href = url;
+    const safe = safeUrl(url, '');
+    if (!safe) {
+      return;
+    }
+    link.href = safe;
     link.download = `${title}.pdf`;
     link.style.display = 'none';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    trackNewsletterDownload(title);
 
   } catch (error) {
     logger.error('Download failed:', error);
@@ -307,21 +313,6 @@ function downloadNewsletter(url, title) {
   }
 }
 
-function trackNewsletterView(newsletterId) {
-  if (typeof gtag === 'function') {
-    gtag('event', 'newsletter_view', {
-      newsletter_id: newsletterId
-    });
-  }
-}
-
-function trackNewsletterDownload(title) {
-  if (typeof gtag === 'function') {
-    gtag('event', 'newsletter_download', {
-      newsletter_title: title
-    });
-  }
-}
 
 
 if (document.readyState === 'loading') {

@@ -9,8 +9,7 @@ export default [
         // Project-specific globals
         Calendar: "readonly",
         lunr: "readonly",
-        VanillaCalendar: "readonly",
-        gtag: "readonly"
+        VanillaCalendar: "readonly"
       },
       ecmaVersion: 2022,
       sourceType: "module"
