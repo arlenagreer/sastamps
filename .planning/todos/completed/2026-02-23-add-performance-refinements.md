@@ -18,3 +18,7 @@ Source maps are disabled in production (no debugging capability). No HTTP cache 
 - Enable gzip/brotli compression at the server/CDN level
 - Store Lighthouse baseline scores and track over time
 - Consider HTTP/2 Server Push for critical assets
+
+## Resolution (2026-10-01)
+
+Closed. Source maps stay off in production on purpose (they would ship the sources' size again). HTTP cache headers and compression are set by GitHub Pages' CDN (Fastly already serves gzip); they cannot be configured without a CDN/host change (see the clickjacking todo). HTTP/2 Server Push is deprecated in browsers. A stored Lighthouse baseline is carried to `2026-10-01-open-follow-ups.md`.

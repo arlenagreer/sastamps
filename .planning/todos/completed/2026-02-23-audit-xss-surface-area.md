@@ -18,3 +18,7 @@ Newsletter rendering (~script.js line 1206) dynamically creates HTML content. Wh
 - Ensure every dynamic content insertion uses escapeHTML/sanitizeText utilities
 - Consider switching to textContent where HTML rendering isn't needed
 - Add CSP nonce-based script allowlisting as defense-in-depth
+
+## Resolution (2026-10-01)
+
+Done in #168: all 115 innerHTML/outerHTML/insertAdjacentHTML sites audited (table in the PR); escapeHTML now escapes quotes (the root cause of attribute breakout); new safeUrl()/firstSafeUrl() reject javascript:/data:/vbscript: links built from data; ~10 unescaped interpolations fixed. archive.js links routed through safeUrl in #169, and tests/xss-security-test.js (node:test, in bin/ci) checks the contract plus every URL in data/**/*.json. CSP nonces are not applicable while pages rely on 'unsafe-inline'. Remaining (in open follow-ups): audit the inline <script> blocks inside the HTML pages.

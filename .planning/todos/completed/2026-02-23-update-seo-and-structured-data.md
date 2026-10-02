@@ -21,3 +21,7 @@ Sitemap lastmod dates are stale (2025-06-28). No `<link rel="canonical">` tags o
 - Use Schema.org LocalBusiness for SAPA organization pages
 - Use Schema.org Event for meeting pages
 - Verify all images have descriptive alt attributes
+
+## Resolution (2026-10-01)
+
+Done: canonical links on www for every deployed page, og/twitter URLs fixed, Organization JSON-LD cleaned (invented facts removed, real logo) (#167); sitemap.xml generated at build on the www host with per-page/data lastmod, robots.txt deployed, canonical==sitemap checked in CI (#169). The hand-written Event block (stale after its date) was removed; generating Event JSON-LD from meetings.json at build is in open follow-ups.

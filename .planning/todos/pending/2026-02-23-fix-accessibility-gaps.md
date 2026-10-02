@@ -22,3 +22,7 @@ Several WCAG 2.0 AA accessibility gaps exist: color-contrast rule is disabled in
 - Change "View PDF" to "View [Newsletter Name] PDF"
 - Add focus trapping to modals and keyboard navigation improvements
 - Ensure touch targets are minimum 44x44px
+
+## Update (2026-10-01)
+
+Mostly done: WCAG AA contrast across all pages (true axe violations 131 -> 0), links in text underlined, status regions for search/glossary/meetings/resources, accessible labels on JS-rendered PDF/calendar links (#168, #170). Remaining: enable the color-contrast rule in .pa11yrc.json and make test:a11y blocking; focus trapping in modals and 44x44 touch targets were not audited.
