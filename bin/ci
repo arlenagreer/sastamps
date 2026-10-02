@@ -108,18 +108,7 @@ if ! node -e 'require.resolve("ajv")' >/dev/null 2>&1; then
   exit 3
 fi
 
-# The browser checks (test:search-page) drive puppeteer's headless Chrome,
-# which npm ci downloads unless PUPPETEER_SKIP_DOWNLOAD is set. Without it
-# they cannot run at all: that is "nothing verified" (exit 3), the same
-# condition as a missing node_modules, not a red result.
-if ! node -e 'Promise.resolve(require("puppeteer").executablePath()).then((p) => process.exit(require("fs").existsSync(p) ? 0 : 1), () => process.exit(1))' >/dev/null 2>&1; then
-  echo "bin/ci: puppeteer's Chrome is not installed, so the browser checks cannot run." >&2
-  echo "bin/ci: NOT VERIFIED. Run 'npx puppeteer browsers install chrome' (or npm ci" >&2
-  echo "bin/ci: without PUPPETEER_SKIP_DOWNLOAD) and re-run." >&2
-  exit 3
-fi
-
-echo "  ok -- node_modules present and resolvable, headless Chrome installed"
+echo "  ok -- node_modules present and resolvable"
 echo
 
 # ── Sections 2-7: the blocking set, zero exemptions ──────────────────────────
@@ -142,38 +131,35 @@ echo
 # condition is the one place a non-zero status does not trigger it, so the
 # real failure is captured in $failed with nothing wrapped in an
 # after-the-fact pass-through.
+# --exit2-not-verified (first argument): the check exits 2 when it could not
+# run at all (e.g. headless Chrome missing or would not launch), as opposed
+# to 1 for a real finding. Such a section is NOT VERIFIED: it is left out of
+# the totals (it is neither a pass nor a failure), named on its own line
+# before the summary, and a run with no failures then exits 3.
+not_verified=()
 run_section() {
+  local exit2_not_verified=0
+  if [ "$1" = "--exit2-not-verified" ]; then
+    exit2_not_verified=1; shift
+  fi
   local label="$1"; shift
   echo
   echo "▸ $label"
+  local status=0
+  "$@" || status=$?
+  if [ "$status" -eq 2 ] && [ "$exit2_not_verified" -eq 1 ]; then
+    not_verified+=("$label")
+    echo "  NOT VERIFIED: $label could not run (its message is above)"
+    return 0
+  fi
   total=$((total + 1))
-  if ! "$@"; then
+  if [ "$status" -ne 0 ]; then
     failed=$((failed + 1))
     echo "  FAILED: $label"
   fi
   return 0
 }
 
-# A browser check exits 2 when it could not run at all (no _site/, Chrome
-# would not launch): that is not a red result, it is "not verified". It is
-# kept apart from $failed and turns a run with no failures into exit 3.
-not_verified=0
-run_browser_section() {
-  local label="$1"; shift
-  echo
-  echo "▸ $label"
-  total=$((total + 1))
-  local status=0
-  "$@" || status=$?
-  if [ "$status" -eq 2 ]; then
-    not_verified=$((not_verified + 1))
-    echo "  NOT VERIFIED: $label could not run (see its message above)"
-  elif [ "$status" -ne 0 ]; then
-    failed=$((failed + 1))
-    echo "  FAILED: $label"
-  fi
-  return 0
-}
 
 run_section "validate:data (node scripts/validate-data.js)" npm run --silent validate:data
 run_section "test:html (html-validate)"                     npm run --silent test:html
@@ -197,7 +183,7 @@ run_section "test:inline-js (inline <script> blocks parse, in _site/)" npm run -
 # needed after that) loads _site/search.html, which fetches its lunr index
 # from dist/data/, and searches. The index is no longer inlined into the
 # page, so this is the only proof that search works in the built site.
-run_browser_section "test:search-page (search.html loads its index and finds results)" node scripts/test-search-page.js
+run_section --exit2-not-verified "test:search-page (search.html loads its index and finds results)" node scripts/test-search-page.js
 
 # ── Declared exclusions -- outside this local gate, each with its own reason ──
 #
@@ -232,14 +218,20 @@ echo "                       already on a weekly Monday schedule."
 # ([0-9]+ (runs|tests|examples), [0-9]+ [a-z]+(, [0-9]+ (failures|errors|skips))+).
 # Without it a green push reports "no recognisable test summary in the log,"
 # over a run that checked seven real things.
+if [ "${#not_verified[@]}" -gt 0 ]; then
+  echo
+  for label in "${not_verified[@]}"; do
+    echo "NOT VERIFIED: $label"
+  done
+fi
 printf '\n%d tests, %d assertions, %d failures, 0 errors\n' "$total" "$total" "$failed"
 
 # ── Closing exit -- never an if/echo as the last command ────────────────────
 if [ "$failed" -gt 0 ]; then
   exit 1
 fi
-if [ "$not_verified" -gt 0 ]; then
-  echo "bin/ci: $not_verified check(s) could not run: NOT VERIFIED (exit 3)." >&2
+if [ "${#not_verified[@]}" -gt 0 ]; then
+  echo "bin/ci: ${#not_verified[@]} check(s) could not run and are not in the totals: NOT VERIFIED (exit 3)." >&2
   exit 3
 fi
 exit 0

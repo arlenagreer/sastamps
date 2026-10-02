@@ -44,9 +44,12 @@ function serve(root) {
     res.writeHead(200, { 'Content-Type': TYPES[path.extname(file).toLowerCase()] || 'application/octet-stream' });
     fs.createReadStream(file).pipe(res);
   });
-  return new Promise((resolve) => server.listen(0, '127.0.0.1', () => resolve({
-    server, base: `http://127.0.0.1:${server.address().port}/`, requests
-  })));
+  return new Promise((resolve, reject) => {
+    server.once('error', reject);
+    server.listen(0, '127.0.0.1', () => resolve({
+      server, base: `http://127.0.0.1:${server.address().port}/`, requests
+    }));
+  });
 }
 
 // GitHub's Ubuntu runners block the unprivileged user namespaces Chrome's
