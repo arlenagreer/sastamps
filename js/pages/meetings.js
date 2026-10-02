@@ -9,6 +9,7 @@ import { parseLocalDate, isUpcomingDate } from '../utils/dates.js';
 import { fetchJSON } from '../utils/fetch-json.js';
 import { addEventListenerWithCleanup } from '../utils/event-cleanup.js';
 import { createLogger } from '../utils/logger.js';
+import { announceStatus, countSummary } from '../utils/announce.js';
 import {
   TIMING,
   CALENDAR,
@@ -181,6 +182,7 @@ async function loadMeetingsList(container) {
 
     if (meetings.length === 0) {
       container.innerHTML = `<p class="meeting-schedule-empty">The Q${quarter.quarter} ${quarter.year} meeting schedule has not been posted yet. Please check back soon.</p>`;
+      announceStatus(scheduleStatusRegion(), `The Q${quarter.quarter} ${quarter.year} meeting schedule has not been posted yet.`);
       return;
     }
 
@@ -224,6 +226,7 @@ async function loadMeetingsList(container) {
     }).join('');
 
     container.innerHTML = html;
+    announceStatus(scheduleStatusRegion(), `${countSummary(meetings.length, meetings.length, 'meeting', 'meetings')} for Q${quarter.quarter} ${quarter.year}`);
 
     // Add event listeners for RSVP and reminder buttons
     bindMeetingActions(container);
@@ -231,7 +234,14 @@ async function loadMeetingsList(container) {
   } catch (error) {
     logger.error('Failed to load meetings list:', error);
     container.innerHTML = `<p class="error-message">${escapeHTML(ERROR_MESSAGES.MEETING_LOAD_FAILED)}</p>`;
+    announceStatus(scheduleStatusRegion(), ERROR_MESSAGES.MEETING_LOAD_FAILED);
   }
+}
+
+// Short visually hidden role="status" line next to the schedule (meetings.html).
+// The schedule container itself is not a live region: it holds ~6k characters.
+function scheduleStatusRegion() {
+  return safeQuerySelector('#meeting-schedule-status');
 }
 
 function initializeMeetingFilters(container) {
@@ -303,6 +313,9 @@ function initializeMeetingFilters(container) {
 
       meeting.style.display = show ? 'block' : 'none';
     });
+
+    const shown = [...meetings].filter(m => m.style.display !== 'none').length;
+    announceStatus(scheduleStatusRegion(), countSummary(shown, meetings.length, 'meeting', 'meetings'));
   }, TIMING.DEBOUNCE_SEARCH);
 
   addEventListenerWithCleanup(yearFilter, 'change', applyFilters);
