@@ -239,10 +239,11 @@
     <header>
         <div class="container header-container">
             <h1 class="site-title"><a href="index.html">San Antonio Philatelic Association</a></h1>
-            <nav>
-                <button class="menu-toggle" aria-expanded="false" aria-controls="nav-menu">
+            <nav class="flex-center">
+                <input type="checkbox" id="menu-toggle-checkbox" class="menu-toggle-checkbox" />
+                <label for="menu-toggle-checkbox" class="menu-toggle" aria-label="Toggle menu">
                     <i class="fas fa-bars"></i><span class="sr-only">Menu</span>
-                </button>
+                </label>
                 <ul class="nav-menu" id="nav-menu">
                     <li><a href="index.html"><i class="fas fa-home nav-icon"></i>Home</a></li>
                     <li><a href="about.html"><i class="fas fa-info-circle nav-icon"></i>About</a></li>
@@ -253,7 +254,7 @@
                     <li><a href="resources.html"><i class="fas fa-book nav-icon"></i>Resources</a></li>
                     <li><a href="glossary.html"><i class="fas fa-spell-check nav-icon"></i>Glossary</a></li>
                     <li><a href="contact.html"><i class="fas fa-envelope nav-icon"></i>Contact</a></li>
-                    <li class="active"><a href="search.html"><i class="fas fa-search nav-icon"></i>Search</a></li>
+                    <li><a href="search.html" aria-current="page"><i class="fas fa-search nav-icon"></i>Search</a></li>
                 </ul>
             </nav>
         </div>

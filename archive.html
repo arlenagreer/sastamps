@@ -248,15 +248,16 @@
         <div class="container header-container">
             <h1 class="site-title"><a href="index.html">San Antonio Philatelic Association</a></h1>
             <nav class="flex-center">
-                <button class="menu-toggle" aria-expanded="false" aria-controls="nav-menu">
+                <input type="checkbox" id="menu-toggle-checkbox" class="menu-toggle-checkbox" />
+                <label for="menu-toggle-checkbox" class="menu-toggle" aria-label="Toggle menu">
                     <i class="fas fa-bars"></i><span class="sr-only">Menu</span>
-                </button>
+                </label>
                 <ul class="nav-menu" id="nav-menu">
                     <li><a href="index.html"><i class="fas fa-home nav-icon"></i>Home</a></li>
                     <li><a href="about.html"><i class="fas fa-info-circle nav-icon"></i>About</a></li>
                     <li><a href="meetings.html"><i class="fas fa-calendar nav-icon"></i>Meetings</a></li>
                     <li><a href="newsletter.html"><i class="fas fa-newspaper nav-icon"></i>Newsletter</a></li>
-                    <li><a href="archive.html"><i class="fas fa-archive nav-icon"></i>Archive</a></li>
+                    <li><a href="archive.html" aria-current="page"><i class="fas fa-archive nav-icon"></i>Archive</a></li>
                     <li><a href="membership.html"><i class="fas fa-users nav-icon"></i>Membership</a></li>
                     <li><a href="resources.html"><i class="fas fa-book nav-icon"></i>Resources</a></li>
                     <li><a href="glossary.html"><i class="fas fa-spell-check nav-icon"></i>Glossary</a></li>

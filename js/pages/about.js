@@ -47,7 +47,11 @@ function initMobileMenu() {
   if (menuToggle && navMenu) {
     // Close menu when clicking outside
     addEventListenerWithCleanup(document, 'click', (event) => {
-      if (!navMenu.contains(event.target) && !menuToggle.contains(event.target)) {
+      // The menu button (label) toggles the checkbox itself; treating a tap on
+      // it as "outside" unchecked the box and the label re-checked it, so the
+      // menu could never be closed from the button.
+      if (!navMenu.contains(event.target) && !menuToggle.contains(event.target) &&
+          !event.target.closest('.menu-toggle')) {
         menuToggle.checked = false;
       }
     });
