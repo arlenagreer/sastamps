@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SAPA Membership Application</title>
+<!--
+  Source of downloads/SAPA_membership_application.pdf. Build it with
+  `npm run build:membership-application`, never by hand: the build prints this
+  page with headless Chrome (a tagged PDF), then turns every [data-field]
+  element into a fillable form field at the same spot. data-label is the
+  field's screen-reader name.
+
+  Facts on this form were ruled by the Board of Governors on 2026-10-04 (dues,
+  payee, APS chapter, schedule wording, newsletter cadence, and that only Al
+  Lozano's email and mailing address appear online).
+-->
+<style>
+  @font-face { font-family: "Merriweather"; font-weight: 400; src: url("../../node_modules/@fontsource/merriweather/files/merriweather-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Merriweather"; font-weight: 400; font-style: italic; src: url("../../node_modules/@fontsource/merriweather/files/merriweather-latin-400-italic.woff2") format("woff2"); }
+  @font-face { font-family: "Merriweather"; font-weight: 700; src: url("../../node_modules/@fontsource/merriweather/files/merriweather-latin-700-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Open Sans"; font-weight: 400; src: url("../../node_modules/@fontsource/open-sans/files/open-sans-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Open Sans"; font-weight: 400; font-style: italic; src: url("../../node_modules/@fontsource/open-sans/files/open-sans-latin-400-italic.woff2") format("woff2"); }
+  @font-face { font-family: "Open Sans"; font-weight: 600; src: url("../../node_modules/@fontsource/open-sans/files/open-sans-latin-600-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Open Sans"; font-weight: 700; src: url("../../node_modules/@fontsource/open-sans/files/open-sans-latin-700-normal.woff2") format("woff2"); }
+
+  :root {
+    --navy: #1a5276;
+    --navy-dark: #0e2f44;
+    --rust: #ba4a00;
+    --gold: #f1c40f;
+    --gold-dark: #7d6608;
+    --ink: #2c3e50;
+    --muted: #5d6d7e;
+    --rule: #b8c4cc;
+    --paper: #fffdf7;
+    --tint: #eef3f6;
+  }
+  @page { size: Letter; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: "Open Sans", Arial, sans-serif; font-size: 9.6pt; line-height: 1.38; color: var(--ink); }
+  .page {
+    width: 8.5in; height: 11in; position: relative; overflow: hidden;
+    padding: 0.42in 0.5in 0.38in; background: var(--paper);
+    break-after: page;
+  }
+  .page:last-child { break-after: auto; }
+  /* A double rule around the sheet, like the frame of a souvenir sheet. */
+  .frame { position: absolute; inset: 0.2in; border: 1.5pt solid var(--navy); pointer-events: none; }
+  .frame::after { content: ""; position: absolute; inset: 3pt; border: 0.6pt solid var(--gold-dark); }
+
+  h1, h2, h3 { font-family: "Merriweather", Georgia, serif; color: var(--navy-dark); margin: 0; }
+
+  .masthead { display: flex; align-items: center; gap: 14pt; padding: 6pt 4pt 9pt; border-bottom: 2pt solid var(--navy); position: relative; }
+  .masthead .titles { flex: 1; }
+  .club { font-family: "Merriweather", Georgia, serif; font-weight: 700; font-size: 15pt; color: var(--navy); letter-spacing: 0.2pt; }
+  .masthead h1 { font-size: 19pt; font-weight: 700; margin-top: 1pt; }
+  .affil { font-size: 8.3pt; color: var(--muted); letter-spacing: 0.5pt; text-transform: uppercase; margin-top: 3pt; }
+  .masthead::after { content: ""; position: absolute; left: 0; right: 0; bottom: -5pt; border-bottom: 0.6pt solid var(--gold-dark); }
+
+  /* The emblem: a stamp with perforated edges. */
+  .stamp {
+    width: 64pt; height: 74pt; flex: none; padding: 6pt;
+    background:
+      radial-gradient(circle, var(--paper) 2.6pt, transparent 2.9pt) -4.5pt -4.5pt / 9pt 9pt,
+      var(--rust);
+  }
+  .stamp-face {
+    width: 100%; height: 100%; background: var(--navy); color: #fff; text-align: center;
+    border: 1.2pt solid var(--gold); display: flex; flex-direction: column; justify-content: center;
+    font-family: "Merriweather", Georgia, serif;
+  }
+  .stamp-face .big { font-size: 17pt; font-weight: 700; letter-spacing: 1pt; }
+  .stamp-face .small { font-size: 5.4pt; letter-spacing: 0.5pt; color: var(--gold); text-transform: uppercase; }
+  .stamp-face .year { font-size: 10pt; margin-top: 2pt; }
+
+  .section { margin-top: 8pt; }
+  .section-title {
+    font-family: "Merriweather", Georgia, serif; font-size: 10.5pt; font-weight: 700; color: var(--navy);
+    text-transform: uppercase; letter-spacing: 0.8pt; display: flex; align-items: center; gap: 6pt; margin-bottom: 5pt;
+  }
+  .section-title::after { content: ""; flex: 1; border-bottom: 0.6pt solid var(--rule); }
+
+  .row { display: flex; gap: 10pt; align-items: flex-end; margin-bottom: 5pt; }
+  .cell { display: flex; flex-direction: column; min-width: 0; }
+  .lbl { font-size: 7.4pt; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5pt; margin-bottom: 1.5pt; }
+  .line { height: 17pt; border-bottom: 0.9pt solid var(--ink); background: #fff; }
+  .box { border: 0.9pt solid var(--ink); background: #fff; }
+  .check { display: inline-flex; align-items: center; gap: 4pt; margin-right: 8pt; white-space: nowrap; }
+  .check .sq { width: 10pt; height: 10pt; border: 0.9pt solid var(--ink); background: #fff; flex: none; }
+  .check-sq { display: inline-block; width: 10pt; height: 10pt; border: 0.9pt solid var(--ink); background: #fff; flex: none; }
+  .inline { display: flex; align-items: center; flex-wrap: wrap; row-gap: 4pt; }
+  .inline .prompt { font-weight: 600; margin-right: 8pt; }
+  .pledge { font-size: 9pt; margin: 2pt 0 7pt; }
+  .hint { font-size: 7.6pt; color: var(--muted); font-style: italic; }
+
+  .type-choice { display: flex; gap: 18pt; align-items: center; justify-content: flex-end; font-weight: 600; margin-top: 7pt; }
+
+  table.dues { width: 100%; border-collapse: collapse; font-size: 9pt; }
+  table.dues th, table.dues td { border: 0.6pt solid var(--rule); padding: 4pt 6pt; text-align: center; }
+  table.dues thead th { background: var(--navy); color: #fff; font-weight: 600; border-color: var(--navy); }
+  table.dues tbody th { text-align: left; background: var(--tint); font-weight: 700; white-space: nowrap; }
+  table.dues td .amt { display: inline-flex; align-items: center; gap: 5pt; font-weight: 600; }
+  table.dues .note { display: block; font-size: 6.9pt; color: var(--muted); font-weight: 400; }
+  .dues-foot { font-size: 8pt; margin-top: 4pt; color: var(--muted); }
+
+  .pay {
+    margin-top: 9pt; display: flex; gap: 12pt; padding: 8pt 10pt; background: var(--tint); border-left: 3pt solid var(--rust);
+  }
+  .pay .how { flex: 1; font-size: 8.8pt; }
+  .pay .how strong { color: var(--navy-dark); }
+  .pay address { font-style: normal; font-size: 9pt; line-height: 1.35; padding-left: 12pt; border-left: 0.6pt solid var(--rule); white-space: nowrap; }
+
+  .disclaimer { font-size: 7.6pt; color: var(--muted); text-align: center; margin-top: 8pt; font-style: italic; }
+
+  .office { margin-top: 16pt; border: 0.9pt dashed var(--muted); padding: 6pt 9pt 7pt; font-size: 8.2pt; color: var(--muted); }
+  .office .t { font-weight: 700; text-transform: uppercase; letter-spacing: 0.7pt; font-size: 7.4pt; margin-bottom: 4pt; }
+  .office .blanks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5pt 12pt; }
+  .office .blanks span { border-bottom: 0.6pt solid var(--muted); padding-top: 9pt; display: block; }
+
+  /* Page 2 */
+  .welcome h2 { font-size: 17pt; margin: 14pt 0 4pt; }
+  .lede { font-family: "Merriweather", Georgia, serif; font-size: 10.5pt; font-style: italic; color: var(--navy); margin: 0 0 10pt; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14pt 20pt; }
+  .card h3 { font-size: 10.8pt; margin-bottom: 3pt; color: var(--navy); }
+  .card p { margin: 0 0 5pt; }
+  .card address { font-style: normal; }
+  .steps { counter-reset: step; list-style: none; padding: 0; margin: 4pt 0 0; }
+  .steps li { counter-increment: step; position: relative; padding-left: 22pt; margin-bottom: 7pt; }
+  .steps li::before {
+    content: counter(step); position: absolute; left: 0; top: -1pt; width: 15pt; height: 15pt; border-radius: 50%;
+    background: var(--rust); color: #fff; font-weight: 700; font-size: 8.5pt; text-align: center; line-height: 15pt;
+  }
+  .callout { margin-top: 14pt; padding: 10pt 12pt; border: 1pt solid var(--navy); background: #fff; display: flex; gap: 14pt; align-items: center; }
+  .callout address { font-style: normal; font-size: 10pt; line-height: 1.4; font-weight: 600; color: var(--navy-dark); }
+  .callout .what { flex: 1; }
+  .footer-band { position: absolute; left: 0.5in; right: 0.5in; bottom: 0.36in; text-align: center; font-size: 7.8pt; color: var(--muted); border-top: 0.6pt solid var(--rule); padding-top: 5pt; }
+</style>
+</head>
+<body>
+
+<!-- ───────────────────────── Page 1: the application ───────────────────────── -->
+<section class="page" aria-label="Application for membership">
+  <div class="frame" aria-hidden="true"></div>
+
+  <header class="masthead">
+    <div class="titles">
+      <div class="club">San Antonio Philatelic Association</div>
+      <h1>Application for Membership</h1>
+      <div class="affil">Founded 1896 &nbsp;·&nbsp; APS Chapter 53-0388 &nbsp;·&nbsp; TPA Chapter #3</div>
+    </div>
+    <div class="stamp" aria-hidden="true">
+      <div class="stamp-face"><div class="small">San Antonio</div><div class="big">SAPA</div><div class="year">1896</div></div>
+    </div>
+  </header>
+
+  <div class="type-choice">
+    <span>I am applying as a:</span>
+    <span class="check"><span class="sq" data-field="membership_member" data-type="checkbox" data-label="Applying as a member"></span>Member</span>
+    <span class="check"><span class="sq" data-field="membership_junior" data-type="checkbox" data-label="Applying as a junior member"></span>Junior Member</span>
+  </div>
+
+  <div class="section">
+    <div class="section-title">About You</div>
+    <div class="row">
+      <div class="cell" style="flex: 3"><span class="lbl">Last name</span><div class="line" data-field="last_name" data-label="Last name"></div></div>
+      <div class="cell" style="flex: 3"><span class="lbl">First name</span><div class="line" data-field="first_name" data-label="First name"></div></div>
+      <div class="cell" style="flex: 0.7"><span class="lbl">M.I.</span><div class="line" data-field="middle_initial" data-label="Middle initial" data-max="2"></div></div>
+    </div>
+    <p class="pledge">I hereby apply for admission to the San Antonio Philatelic Association. I agree to be bound by all rules, regulations, the Constitution, and the Bylaws of the Association.</p>
+    <div class="row">
+      <div class="cell" style="flex: 5"><span class="lbl">Mailing address (street)</span><div class="line" data-field="street" data-label="Mailing address, street"></div></div>
+      <div class="cell" style="flex: 1"><span class="lbl">Apt. #</span><div class="line" data-field="apt" data-label="Apartment number"></div></div>
+    </div>
+    <div class="row">
+      <div class="cell" style="flex: 4"><span class="lbl">City</span><div class="line" data-field="city" data-label="City"></div></div>
+      <div class="cell" style="flex: 1"><span class="lbl">State</span><div class="line" data-field="state" data-label="State"></div></div>
+      <div class="cell" style="flex: 1.6"><span class="lbl">ZIP code</span><div class="line" data-field="zip" data-label="ZIP code" data-max="10"></div></div>
+    </div>
+    <div class="row">
+      <div class="cell" style="flex: 2"><span class="lbl">Phone</span><div class="line" data-field="phone" data-label="Phone number"></div></div>
+      <div class="cell" style="flex: 3.4"><span class="lbl">Email</span><div class="line" data-field="email" data-label="Email address"></div></div>
+    </div>
+    <div class="inline" style="margin-bottom: 4pt;">
+      <span class="prompt">May we publish your email in The Philatex?</span>
+      <span class="check"><span class="sq" data-field="email_publish_yes" data-type="checkbox" data-label="Yes, you may publish my email in The Philatex"></span>Yes</span>
+      <span class="check"><span class="sq" data-field="email_publish_no" data-type="checkbox" data-label="No, do not publish my email in The Philatex"></span>No</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Your Collecting</div>
+    <div class="row">
+      <div class="cell" style="flex: 1"><span class="lbl">APS member #</span><div class="line" data-field="aps_number" data-label="American Philatelic Society member number, if any"></div></div>
+      <div class="cell" style="flex: 1"><span class="lbl">ATA member #</span><div class="line" data-field="ata_number" data-label="American Topical Association member number, if any"></div></div>
+      <div class="cell" style="flex: 1"><span class="lbl">TPA member #</span><div class="line" data-field="tpa_number" data-label="Texas Philatelic Association member number, if any"></div></div>
+      <div class="cell" style="flex: 1.5"><span class="lbl">Other societies</span><div class="line" data-field="other_societies" data-label="Other philatelic societies you belong to or have belonged to"></div></div>
+    </div>
+    <div class="hint" style="margin: -3pt 0 5pt;">Societies you belong to now, or have in the past. Leave blank if none.</div>
+    <div class="cell"><span class="lbl">My primary collecting interests are</span><div class="box" style="height: 28pt;" data-field="collecting_interests" data-label="Your primary collecting interests" data-multiline="true"></div></div>
+    <div class="inline" style="margin-top: 7pt;">
+      <span class="prompt">I'd help with:</span>
+      <span class="check"><span class="sq" data-field="help_officer" data-type="checkbox" data-label="Willing to help: serving as an officer"></span>Being an officer</span>
+      <span class="check"><span class="sq" data-field="help_auctions" data-type="checkbox" data-label="Willing to help: auctions"></span>Auctions</span>
+      <span class="check"><span class="sq" data-field="help_picnics" data-type="checkbox" data-label="Willing to help: picnics"></span>Picnics</span>
+      <span class="check"><span class="sq" data-field="help_errands" data-type="checkbox" data-label="Willing to help: errands"></span>Errands</span>
+      <span class="check"><span class="sq" data-field="help_publicity" data-type="checkbox" data-label="Willing to help: publicity"></span>Publicity</span>
+      <span class="check"><span class="sq" data-field="help_other" data-type="checkbox" data-label="Willing to help: other"></span>Other:</span>
+      <span class="line" style="display: inline-block; width: 64pt; height: 14pt;" data-field="help_other_text" data-label="Other ways you would help"></span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Signature</div>
+    <div class="row">
+      <div class="cell" style="flex: 3"><span class="lbl">Signature</span><div class="line" data-field="signature" data-label="Signature, or type your full name"></div></div>
+      <div class="cell" style="flex: 1.2"><span class="lbl">Date</span><div class="line" data-field="date" data-label="Date"></div></div>
+      <div class="cell" style="flex: 2.2"><span class="lbl">Nominated by (optional)</span><div class="line" data-field="nominated_by" data-label="Nominated by, optional"></div></div>
+    </div>
+    <div class="hint" style="margin: -2pt 0 5pt;">Juniors: a parent or guardian, who is present with the junior at meetings, is responsible for the junior member's conduct.</div>
+    <div class="row">
+      <div class="cell" style="flex: 3"><span class="lbl">Responsible adult (juniors only)</span><div class="line" data-field="junior_sponsor_name" data-label="Juniors only: name of the responsible adult"></div></div>
+      <div class="cell" style="flex: 1.2"><span class="lbl">Date</span><div class="line" data-field="junior_sponsor_date" data-label="Juniors only: date signed by the responsible adult"></div></div>
+      <div class="cell" style="flex: 2.2"><span class="lbl">Relationship to junior</span><div class="line" data-field="junior_sponsor_relationship" data-label="Juniors only: relationship of the responsible adult to the junior"></div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Annual Dues</div>
+    <table class="dues">
+      <caption class="hint" style="caption-side: bottom; text-align: left; padding-top: 4pt;">Dues are $25.00 a year for members and $12.50 for juniors, prorated by quarter by the date we receive your application. Check the amount you are paying.</caption>
+      <thead>
+        <tr><th scope="col">Application received</th><th scope="col">Jan – Mar</th><th scope="col">Apr – Jun</th><th scope="col">Jul – Sep</th><th scope="col">Oct – Dec</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">New member</th>
+          <td><span class="amt"><span class="sq check-sq" data-field="dues_member_q1" data-type="checkbox" data-label="New member, application received January to March: $25.00"></span>$25.00</span></td>
+          <td><span class="amt"><span class="sq check-sq" data-field="dues_member_q2" data-type="checkbox" data-label="New member, application received April to June: $18.75"></span>$18.75</span></td>
+          <td><span class="amt"><span class="sq check-sq" data-field="dues_member_q3" data-type="checkbox" data-label="New member, application received July to September: $12.50"></span>$12.50</span></td>
+          <td><span class="amt"><span class="sq check-sq" data-field="dues_member_q4" data-type="checkbox" data-label="New member, application received October to December: $31.25, which includes next year's $25.00"></span>$31.25</span><span class="note">includes next year's $25.00</span></td>
+        </tr>
+        <tr>
+          <th scope="row">New junior</th>
+          <td><span class="amt"><span class="sq check-sq" data-field="dues_junior_q1" data-type="checkbox" data-label="New junior, application received January to March: $12.50"></span>$12.50</span></td>
+          <td><span class="amt"><span class="sq check-sq" data-field="dues_junior_q2" data-type="checkbox" data-label="New junior, application received April to June: $9.38"></span>$9.38</span></td>
+          <td><span class="amt"><span class="sq check-sq" data-field="dues_junior_q3" data-type="checkbox" data-label="New junior, application received July to September: $6.25"></span>$6.25</span></td>
+          <td><span class="amt"><span class="sq check-sq" data-field="dues_junior_q4" data-type="checkbox" data-label="New junior, application received October to December: $15.63, which includes next year's $12.50"></span>$15.63</span><span class="note">includes next year's $12.50</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="dues-foot">Members will be dropped from the roster if renewal dues are not received by January 31st. <strong>To pay,</strong> make your check payable to <strong>S.A.P.A.</strong> and see <em>How to join</em> on the back.</div>
+  </div>
+
+
+</section>
+
+<!-- ───────────────────────── Page 2: about the club ───────────────────────── -->
+<section class="page welcome" aria-label="About the San Antonio Philatelic Association">
+  <div class="frame" aria-hidden="true"></div>
+
+  <header class="masthead">
+    <div class="titles">
+      <div class="club">San Antonio Philatelic Association</div>
+      <h1>Welcome, Fellow Collector</h1>
+      <div class="affil">Founded 1896 &nbsp;·&nbsp; APS Chapter 53-0388 &nbsp;·&nbsp; TPA Chapter #3</div>
+    </div>
+    <div class="stamp" aria-hidden="true">
+      <div class="stamp-face"><div class="small">San Antonio</div><div class="big">SAPA</div><div class="year">1896</div></div>
+    </div>
+  </header>
+
+  <h2>Visitors are always welcome</h2>
+  <p class="lede">We are glad you are thinking of joining us. It is not only great to increase our numbers, but it also increases the fun.</p>
+
+  <div class="cols">
+    <div class="card">
+      <h3>When we meet</h3>
+      <p>We meet most Friday nights. Doors open at 6:30 PM. BOG meetings begin at 7:15 PM and all other meetings begin at 7:30 PM.</p>
+      <p>Programs by our members, auctions, bourses (like a flea market for stamps) and other club activities are held as shown in the schedule, on our website and in The Philatex. Come early on auction nights to look over the lots.</p>
+    </div>
+    <div class="card">
+      <h3>Where we meet</h3>
+      <address>MacArthur Park Lutheran Church, Building 1<br>2903 Nacogdoches Road<br>San Antonio, TX 78217</address>
+      <p style="margin-top: 5pt;">The church is on the southwest corner of Nacogdoches Road and Lovelace, about a mile north of Loop 410. Park on the Nacogdoches side and enter Building 1, which faces Nacogdoches Road. There is a big number 1 on the front of the building.</p>
+    </div>
+    <div class="card">
+      <h3>Why join</h3>
+      <p>Members may sell at our auctions and bourses; visitors may only buy. Members also receive The Philatex, our club newsletter, which is published regularly and includes the club calendar. We encourage junior members to join, too.</p>
+    </div>
+    <div class="card">
+      <h3>How to join</h3>
+      <ol class="steps">
+        <li>Fill in the application on the other side, on your computer or by hand.</li>
+        <li>Write a check payable to <strong>S.A.P.A.</strong> for the dues shown for the quarter you apply in.</li>
+        <li>Mail both by US mail to Al Lozano, Vice President, or bring them to a scheduled meeting. We do not take payments online.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="what"><strong>Mail your application and check to:</strong><br><span class="hint">Questions? Email loz33@hotmail.com or visit www.sastamps.org.</span></div>
+    <address>San Antonio Philatelic Association<br>c/o Al Lozano<br>13530 FM 1560N<br>Helotes, TX 78023</address>
+  </div>
+
+  <p class="disclaimer">The San Antonio Philatelic Association is a not-for-profit organization. Neither it nor its officers accept responsibility or liability for any loss or damage arising from any cause or reason whatsoever.</p>
+
+  <div class="office" aria-label="For association records">
+    <div class="t">For association records</div>
+    <div class="blanks">
+      <div>Member #<span></span></div><div>Application<span></span></div><div>1st reading<span></span></div><div>Board OK<span></span></div>
+      <div>Election<span></span></div><div>Fee to Treasurer<span></span></div><div>Mailing list<span></span></div><div>Membership kit<span></span></div>
+    </div>
+  </div>
+
+  <div class="footer-band">www.sastamps.org &nbsp;·&nbsp; Chapter #3 of the Texas Philatelic Association &nbsp;·&nbsp; Chapter 53-0388 of the American Philatelic Society</div>
+</section>
+
+</body>
+</html>
