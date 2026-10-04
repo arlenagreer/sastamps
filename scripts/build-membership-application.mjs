@@ -22,7 +22,8 @@
  *    script), taken before printing, and tests/membership-application.test.mjs
  *    fails if either has changed since the PDF was built. The dates are the
  *    sources' last commit, so a rebuild after a change carries a new date and
- *    rebuilding unchanged sources keeps the old one. (A rebuild is still not
+ *    rebuilding unchanged sources on the same history keeps the old one (a
+ *    squash-merge gives the sources a new commit date). (A rebuild is still not
  *    byte-identical: Chrome numbers its tag-structure IDs from DOM node ids,
  *    which drift by a few between runs. Commit a rebuild only after a change.)
  */
@@ -31,13 +32,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import puppeteer from 'puppeteer';
-import { PDFDocument, PDFName, PDFHexString, StandardFonts } from 'pdf-lib';
+import { PDFDocument, PDFName, PDFHexString, StandardFonts, rgb } from 'pdf-lib';
 import { sourceHash, SOURCES } from './membership-application/source-hash.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const TEMPLATE = path.join(ROOT, 'scripts/membership-application/application.html');
 const OUT = path.join(ROOT, 'downloads/SAPA_membership_application.pdf');
 const PX_TO_PT = 72 / 96;
+const INK = rgb(0x2c / 255, 0x3e / 255, 0x50 / 255); // the template's --ink
 
 async function printTemplate() {
   const browser = await puppeteer.launch({ headless: true });
@@ -57,7 +59,8 @@ async function printTemplate() {
       const r = el.getBoundingClientRect();
       const p = sheet.getBoundingClientRect();
       return {
-        name: el.dataset.field || el.dataset.group, label: el.dataset.label || el.dataset.groupLabel,
+        name: el.dataset.field || el.dataset.group, label: el.dataset.group ? el.dataset.groupLabel : el.dataset.label,
+        strayLabel: Boolean(el.dataset.group && el.dataset.label),
         type: el.dataset.group ? 'radio' : el.dataset.type || 'text', value: el.dataset.value,
         multiline: el.dataset.multiline === 'true', max: el.dataset.max ? Number(el.dataset.max) : undefined,
         page: pages.indexOf(sheet), x: r.left - p.left, y: r.top - p.top, w: r.width, h: r.height
@@ -93,6 +96,7 @@ async function addFields(pdfBytes, fields, hash) {
     const box = { x: f.x * PX_TO_PT, y: height - (f.y + f.h) * PX_TO_PT, width: f.w * PX_TO_PT, height: f.h * PX_TO_PT };
     if (f.type === 'radio') {
       if (!f.value) {throw new Error(`${f.name}: an option has no data-value`);}
+      if (f.strayLabel) {throw new Error(`${f.name}: a radio option takes data-value (and data-group-label on the first), not data-label`);}
       let group = groups.get(f.name);
       if (!group) {
         if (!f.label) {throw new Error(`${f.name}: its first option has no data-group-label`);}
@@ -106,14 +110,16 @@ async function addFields(pdfBytes, fields, hash) {
       }
       if (group.values.has(f.value)) {throw new Error(`${f.name}: option "${f.value}" appears twice`);}
       group.values.add(f.value);
-      // The circle is printed on the page; the widget sits inside it and draws
-      // only the dot (a full-size widget's appearance would cover the ring).
-      const inset = 2;
+      // The circle is printed on the page. pdf-lib's round appearance paints
+      // over a ring the widget's own size, so the widget sits just inside the
+      // printed ring (1.2pt) and draws only the dot.
+      const inset = 1.2;
       group.field.addOptionToPage(f.value, page, {
-        ...look, x: box.x + inset, y: box.y + inset, width: box.width - 2 * inset, height: box.height - 2 * inset
+        ...look, textColor: INK, x: box.x + inset, y: box.y + inset, width: box.width - 2 * inset, height: box.height - 2 * inset
       });
-      // Each option's own name, so a screen reader does not announce eight
-      // identical "dues" options.
+      // Each option's own name. TU is formally a field entry, so not every
+      // reader uses it on a widget; the option's export value (f.value) names
+      // it too. Not verified with a screen reader.
       const widgets = group.field.acroField.getWidgets();
       widgets[widgets.length - 1].dict.set(PDFName.of('TU'), PDFHexString.fromText(`${f.value}. ${group.label}`));
       continue;
