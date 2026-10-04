@@ -91,7 +91,9 @@ async function addFields(pdfBytes, fields, hash) {
   for (const f of fields) {
     const page = pages[f.page];
     const { height } = page.getSize();
-    // No background or border: the printed line or box underneath shows through.
+    // Text fields and check boxes get no background or border, so the printed
+    // line or box underneath shows through. (Radio widgets differ: pdf-lib
+    // still paints a white disc for them; see the inset below.)
     const look = { backgroundColor: undefined, borderColor: undefined, borderWidth: 0 };
     const box = { x: f.x * PX_TO_PT, y: height - (f.y + f.h) * PX_TO_PT, width: f.w * PX_TO_PT, height: f.h * PX_TO_PT };
     if (f.type === 'radio') {
@@ -110,16 +112,19 @@ async function addFields(pdfBytes, fields, hash) {
       }
       if (group.values.has(f.value)) {throw new Error(`${f.name}: option "${f.value}" appears twice`);}
       group.values.add(f.value);
-      // The circle is printed on the page. pdf-lib's round appearance paints
-      // over a ring the widget's own size, so the widget sits just inside the
-      // printed ring (1.2pt) and draws only the dot.
+      // The circle is printed on the page. pdf-lib paints a radio widget's
+      // appearance on a white disc (/MK /BG [1 1 1]) even with no background
+      // asked for, so a widget the ring's own size covers the ring. The widget
+      // sits inside it instead: 1.2pt clears the template's 0.9pt ring border
+      // (.check-sq); thicken that border and this must grow with it.
       const inset = 1.2;
       group.field.addOptionToPage(f.value, page, {
         ...look, textColor: INK, x: box.x + inset, y: box.y + inset, width: box.width - 2 * inset, height: box.height - 2 * inset
       });
       // Each option's own name. TU is formally a field entry, so not every
-      // reader uses it on a widget; the option's export value (f.value) names
-      // it too. Not verified with a screen reader.
+      // reader uses it on a widget. pdf-lib keeps the option names in /Opt
+      // and names the widget states by index ("0", "1", ...), so this TU is the
+      // only per-option name. Not verified with a screen reader.
       const widgets = group.field.acroField.getWidgets();
       widgets[widgets.length - 1].dict.set(PDFName.of('TU'), PDFHexString.fromText(`${f.value}. ${group.label}`));
       continue;
