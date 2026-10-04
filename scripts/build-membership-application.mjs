@@ -18,23 +18,24 @@
  *    the name a screen reader announces. pdf-lib's widgets are not in
  *    Chrome's tag tree, so the tooltip is each field's only accessible name.
  * 3. The document info is set here, never left to Chrome (which can put the
- *    file:// path in it). Subject records sourceHash() (the template, this
- *    script and the pinned package versions), and
- *    tests/membership-application.test.mjs fails if any of them has changed
- *    since the PDF was built.
+ *    file:// path in it). Subject records sourceHash() (the template and this
+ *    script), taken before printing, and tests/membership-application.test.mjs
+ *    fails if either has changed since the PDF was built. The dates are the
+ *    sources' last commit, so rebuilding unchanged sources changes nothing,
+ *    and a rebuild after a change carries a new date.
  */
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import puppeteer from 'puppeteer';
-import { PDFDocument, PDFName, PDFHexString, StandardFonts, rgb } from 'pdf-lib';
-import { sourceHash } from './membership-application/source-hash.mjs';
+import { PDFDocument, PDFName, PDFHexString, StandardFonts } from 'pdf-lib';
+import { sourceHash, SOURCES } from './membership-application/source-hash.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const TEMPLATE = path.join(ROOT, 'scripts/membership-application/application.html');
 const OUT = path.join(ROOT, 'downloads/SAPA_membership_application.pdf');
 const PX_TO_PT = 72 / 96;
-const INK = rgb(0x2c / 255, 0x3e / 255, 0x50 / 255);
 
 async function printTemplate() {
   const browser = await puppeteer.launch({ headless: true });
@@ -67,7 +68,14 @@ async function printTemplate() {
   }
 }
 
-async function addFields(pdfBytes, fields) {
+// The sources' last commit date; now, if either has uncommitted changes.
+function sourceDate() {
+  const dirty = execFileSync('git', ['status', '--porcelain', '--', ...SOURCES], { cwd: ROOT, encoding: 'utf8' }).trim();
+  const committed = execFileSync('git', ['log', '-1', '--format=%cI', '--', ...SOURCES], { cwd: ROOT, encoding: 'utf8' }).trim();
+  return dirty || !committed ? new Date() : new Date(committed);
+}
+
+async function addFields(pdfBytes, fields, hash) {
   const doc = await PDFDocument.load(pdfBytes);
   const form = doc.getForm();
   const font = await doc.embedFont(StandardFonts.Helvetica);
@@ -88,13 +96,24 @@ async function addFields(pdfBytes, fields) {
         if (!f.label) {throw new Error(`${f.name}: its first option has no data-group-label`);}
         if (names.has(f.name)) {throw new Error(`${f.name}: duplicate field name`);}
         names.add(f.name);
-        group = form.createRadioGroup(f.name);
-        group.acroField.dict.set(PDFName.of('TU'), PDFHexString.fromText(f.label));
+        group = { field: form.createRadioGroup(f.name), label: f.label, values: new Set() };
+        group.field.acroField.dict.set(PDFName.of('TU'), PDFHexString.fromText(f.label));
         groups.set(f.name, group);
+      } else if (f.label) {
+        throw new Error(`${f.name}: data-group-label belongs on the first option only`);
       }
-      // The widget draws its own circle (the template prints nothing there):
-      // pdf-lib's round appearance would otherwise cut into a printed box.
-      group.addOptionToPage(f.value, page, { ...box, borderColor: INK, borderWidth: 0.8, backgroundColor: rgb(1, 1, 1) });
+      if (group.values.has(f.value)) {throw new Error(`${f.name}: option "${f.value}" appears twice`);}
+      group.values.add(f.value);
+      // The circle is printed on the page; the widget sits inside it and draws
+      // only the dot (a full-size widget's appearance would cover the ring).
+      const inset = 2;
+      group.field.addOptionToPage(f.value, page, {
+        ...look, x: box.x + inset, y: box.y + inset, width: box.width - 2 * inset, height: box.height - 2 * inset
+      });
+      // Each option's own name, so a screen reader does not announce eight
+      // identical "dues" options.
+      const widgets = group.field.acroField.getWidgets();
+      widgets[widgets.length - 1].dict.set(PDFName.of('TU'), PDFHexString.fromText(`${f.value}. ${group.label}`));
       continue;
     }
     if (!f.label) {throw new Error(`${f.name}: no data-label`);}
@@ -116,10 +135,10 @@ async function addFields(pdfBytes, fields) {
   }
   form.updateFieldAppearances(font);
 
-  const built = new Date();
+  const built = sourceDate();
   doc.setTitle('SAPA Membership Application', { showInWindowTitleBar: true });
   doc.setAuthor('San Antonio Philatelic Association');
-  doc.setSubject(`source sha256 ${sourceHash(ROOT)}`);
+  doc.setSubject(`source sha256 ${hash}`);
   doc.setKeywords(['SAPA', 'membership', 'application', 'San Antonio Philatelic Association']);
   doc.setCreator('San Antonio Philatelic Association');
   doc.setProducer('pdf-lib');
@@ -130,7 +149,9 @@ async function addFields(pdfBytes, fields) {
   return doc.save({ useObjectStreams: false });
 }
 
+// Hashed before printing, so an edit saved mid-build cannot be recorded as printed.
+const hash = sourceHash(ROOT);
 const { pdf, fields } = await printTemplate();
-const out = await addFields(pdf, fields);
+const out = await addFields(pdf, fields, hash);
 fs.writeFileSync(OUT, out);
 console.log(`${path.relative(ROOT, OUT)}: ${fields.length} fields, ${out.length} bytes`);

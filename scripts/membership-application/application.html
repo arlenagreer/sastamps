@@ -90,8 +90,9 @@
   .box { border: 0.9pt solid var(--ink); background: #fff; }
   .check { display: inline-flex; align-items: center; gap: 4pt; margin-right: 8pt; white-space: nowrap; }
   .check .sq { width: 10pt; height: 10pt; border: 0.9pt solid var(--ink); background: #fff; flex: none; }
-  /* A radio option: the PDF widget draws the circle, so nothing is printed under it. */
-  [data-group] { border-color: transparent !important; background: transparent !important; border-radius: 50%; }
+  /* A radio option: the circle is printed, so it shows even where form fields are
+     hidden (a print setting, a preview). The widget sits inside it and draws only the dot. */
+  [data-group] { border-radius: 50%; }
   .check-sq { display: inline-block; width: 10pt; height: 10pt; border: 0.9pt solid var(--ink); background: #fff; flex: none; }
   .inline { display: flex; align-items: center; flex-wrap: wrap; row-gap: 4pt; }
   .inline .prompt { font-weight: 600; margin-right: 8pt; }
@@ -160,7 +161,7 @@
 
   <div class="type-choice">
     <span>I am applying as a:</span>
-    <span class="check"><span class="sq" data-group="membership_type" data-value="Member" data-group-label="Applying as a member or a junior member"></span>Member</span>
+    <span class="check"><span class="sq" data-group="membership_type" data-value="Member" data-group-label="Applying as a member or a junior member. Choose one."></span>Member</span>
     <span class="check"><span class="sq" data-group="membership_type" data-value="Junior member"></span>Junior Member</span>
   </div>
 
@@ -187,7 +188,7 @@
     </div>
     <div class="inline" style="margin-bottom: 4pt;">
       <span class="prompt">May we publish your email in The Philatex?</span>
-      <span class="check"><span class="sq" data-group="email_publish" data-value="Yes" data-group-label="May we publish your email in The Philatex?"></span>Yes</span>
+      <span class="check"><span class="sq" data-group="email_publish" data-value="Yes" data-group-label="May we publish your email in The Philatex? Choose one."></span>Yes</span>
       <span class="check"><span class="sq" data-group="email_publish" data-value="No"></span>No</span>
     </div>
   </div>
@@ -239,7 +240,7 @@
       <tbody>
         <tr>
           <th scope="row">New member</th>
-          <td><span class="amt"><span class="sq check-sq" data-group="dues" data-value="New member, Jan to Mar, $25.00" data-group-label="Dues you are paying, by the quarter we receive your application"></span>$25.00</span></td>
+          <td><span class="amt"><span class="sq check-sq" data-group="dues" data-value="New member, Jan to Mar, $25.00" data-group-label="Dues you are paying, by the quarter we receive your application. Choose one."></span>$25.00</span></td>
           <td><span class="amt"><span class="sq check-sq" data-group="dues" data-value="New member, Apr to Jun, $18.75"></span>$18.75</span></td>
           <td><span class="amt"><span class="sq check-sq" data-group="dues" data-value="New member, Jul to Sep, $12.50"></span>$12.50</span></td>
           <td><span class="amt"><span class="sq check-sq" data-group="dues" data-value="New member, Oct to Dec, $31.25"></span>$31.25</span><span class="note">includes next year's $25.00</span></td>
@@ -280,7 +281,7 @@
   <div class="cols">
     <div class="card">
       <h3>When we meet</h3>
-      <p>We meet most Friday nights. Doors open at 6:30 PM. BOG meetings begin at 7:15 PM and most other meetings at 7:30 PM; special events can differ, as shown in the schedule.</p>
+      <p>We meet most Friday nights. Doors usually open at 6:30 PM. BOG meetings begin at 7:15 PM and most other meetings at 7:30 PM; special events can differ, as shown in the schedule.</p>
       <p>Programs by our members, auctions, bourses (like a flea market for stamps) and other club activities are held as shown in the schedule, on our website and in The Philatex. Come early on auction nights to look over the lots.</p>
     </div>
     <div class="card">

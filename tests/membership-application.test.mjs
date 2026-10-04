@@ -57,7 +57,7 @@ test('meetings.json: the club email is not labelled as the Secretary', () => {
 
 test('the newsletter is described as published regularly, not quarterly', () => {
   for (const page of ['index.html', 'about.html', 'newsletter.html', 'membership.html', 'archive.html']) {
-    assert.doesNotMatch(read(page), /quarterly (publication|newsletter|PHILATEX)|published quarterly|Frequency:<\/strong> Quarterly/i, page);
+    assert.doesNotMatch(read(page), /quarterly (publication|newsletter|PHILATEX|schedule)|(published|been|follow a) quarterly|Frequency:<\/strong> Quarterly/i, page);
   }
   assert.match(read('newsletter.html'), /Frequency:<\/strong> Published regularly/);
   assert.doesNotMatch(read('newsletter.html'), /First Quarter: January 1/, 'no fixed quarterly publication dates');
@@ -84,7 +84,7 @@ test('membership.html: dues, how to pay by check, and the application link', () 
 test('the application template carries the ruled facts and none of the retired ones', () => {
   const html = read(TEMPLATE);
   for (const s of ['53-0388', '$25.00', '$12.50', 'Al Lozano', 'Vice President', CLUB_ADDRESS, 'Helotes, TX 78023',
-    'regularly', 'as shown in the schedule', 'S.A.P.A.', 'loz33@hotmail.com', 'Doors open at 6:30 PM']) {
+    'regularly', 'as shown in the schedule', 'S.A.P.A.', 'loz33@hotmail.com', 'open at 6:30 PM']) {
     assert.ok(html.includes(s), `template has ${s}`);
   }
   for (const s of [...RETIRED_PII, 'Dora', 'Boursette', 'bimonthly', '#388', '#53', 'Fred (our Treasurer)', '2007']) {
@@ -127,6 +127,13 @@ test('the PDF is fillable, tagged, built from the current template, with no scri
   for (const f of fields) {
     const tu = f.acroField.dict.get(PDFName.of('TU'));
     assert.ok(tu && tu.decodeText().trim().length > 2, `${f.getName()} has a screen-reader label`);
+  }
+  // A radio option is announced by its own widget's name, or every dues option sounds the same.
+  for (const n of ['email_publish', 'membership_type', 'dues']) {
+    const widgets = form.getRadioGroup(n).acroField.getWidgets();
+    const labels = widgets.map(w => w.dict.get(PDFName.of('TU'))?.decodeText());
+    assert.ok(labels.every(Boolean), `${n}: every option has a label`);
+    assert.equal(new Set(labels).size, labels.length, `${n}: option labels differ`);
   }
 });
 
