@@ -21,8 +21,10 @@
  *    file:// path in it). Subject records sourceHash() (the template and this
  *    script), taken before printing, and tests/membership-application.test.mjs
  *    fails if either has changed since the PDF was built. The dates are the
- *    sources' last commit, so rebuilding unchanged sources changes nothing,
- *    and a rebuild after a change carries a new date.
+ *    sources' last commit, so a rebuild after a change carries a new date and
+ *    rebuilding unchanged sources keeps the old one. (A rebuild is still not
+ *    byte-identical: Chrome numbers its tag-structure IDs from DOM node ids,
+ *    which drift by a few between runs. Commit a rebuild only after a change.)
  */
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
