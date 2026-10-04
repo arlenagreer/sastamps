@@ -7,17 +7,18 @@
  * one's contact details online but Al Lozano's email and mailing address.
  *
  * The PDF is built from scripts/membership-application/application.html by
- * scripts/build-membership-application.mjs; the build records the template's
- * hash in the PDF, so a template edited without a rebuild fails here.
+ * scripts/build-membership-application.mjs; the build records a hash of its
+ * sources in the PDF, so a source changed without a rebuild fails here.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import crypto from 'node:crypto';
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
+import { sourceHash } from '../scripts/membership-application/source-hash.mjs';
 
 const require = createRequire(import.meta.url);
-const { PDFDocument, PDFName, PDFDict } = require('pdf-lib');
+const { PDFDocument, PDFName, PDFDict, PDFRadioGroup, PDFCheckBox } = require('pdf-lib');
 const { sitePages, deployableFiles } = require('../scripts/lib/site.js');
 
 const ROOT = new URL('../', import.meta.url);
@@ -30,7 +31,7 @@ const CLUB_ADDRESS = '13530 FM 1560N';
 const RETIRED_PII = ['6918 Sunriver', 'Sunriver', '78244-1850', '495-1654'];
 
 test('every page footer names APS chapter 53-0388, and no page says #388', () => {
-  const root = new URL('.', ROOT).pathname;
+  const root = fileURLToPath(ROOT);
   const pages = sitePages(root, deployableFiles(root));
   let footers = 0;
   for (const page of pages) {
@@ -55,10 +56,11 @@ test('meetings.json: the club email is not labelled as the Secretary', () => {
 });
 
 test('the newsletter is described as published regularly, not quarterly', () => {
-  for (const page of ['index.html', 'about.html', 'newsletter.html', 'membership.html']) {
+  for (const page of ['index.html', 'about.html', 'newsletter.html', 'membership.html', 'archive.html']) {
     assert.doesNotMatch(read(page), /quarterly (publication|newsletter|PHILATEX)|published quarterly|Frequency:<\/strong> Quarterly/i, page);
   }
   assert.match(read('newsletter.html'), /Frequency:<\/strong> Published regularly/);
+  assert.doesNotMatch(read('newsletter.html'), /First Quarter: January 1/, 'no fixed quarterly publication dates');
 });
 
 test('contact.html describes the schedule as shown in the schedule, not by fixed Fridays', () => {
@@ -103,8 +105,7 @@ test('the PDF is fillable, tagged, built from the current template, with no scri
   assert.equal(String(markInfo.get(PDFName.of('Marked'))), 'true', 'tagged PDF');
   assert.ok(doc.catalog.get(PDFName.of('StructTreeRoot')), 'has a structure tree');
 
-  const hash = crypto.createHash('sha256').update(read(TEMPLATE)).digest('hex');
-  assert.equal(doc.getSubject(), `template sha256 ${hash}`, 'PDF rebuilt from the current template');
+  assert.equal(doc.getSubject(), `source sha256 ${sourceHash(fileURLToPath(ROOT))}`, 'PDF rebuilt from the current sources');
 
   assert.equal(doc.getTitle(), 'SAPA Membership Application');
   assert.equal(doc.getAuthor(), 'San Antonio Philatelic Association');
@@ -112,9 +113,17 @@ test('the PDF is fillable, tagged, built from the current template, with no scri
   const fields = doc.getForm().getFields();
   const names = fields.map(f => f.getName());
   for (const n of ['last_name', 'first_name', 'street', 'city', 'state', 'zip', 'phone', 'email',
-    'email_publish_yes', 'email_publish_no', 'collecting_interests', 'signature', 'date', 'junior_sponsor_name']) {
+    'collecting_interests', 'signature', 'date', 'junior_sponsor_signature']) {
     assert.ok(names.includes(n), `field ${n}`);
   }
+  // Either/or choices take one answer: radio groups, not separate check boxes.
+  const form = doc.getForm();
+  const options = (n) => form.getField(n) instanceof PDFRadioGroup && form.getRadioGroup(n).getOptions();
+  assert.deepEqual(options('email_publish'), ['Yes', 'No']);
+  assert.deepEqual(options('membership_type'), ['Member', 'Junior member']);
+  assert.equal(options('dues').length, 8);
+  assert.ok(options('dues').includes('New junior, Oct to Dec, $15.63'));
+  assert.ok(fields.filter(f => f instanceof PDFCheckBox).every(f => f.getName().startsWith('help_')), 'only "I\'d help with" is multi-choice');
   for (const f of fields) {
     const tu = f.acroField.dict.get(PDFName.of('TU'));
     assert.ok(tu && tu.decodeText().trim().length > 2, `${f.getName()} has a screen-reader label`);

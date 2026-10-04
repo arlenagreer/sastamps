@@ -7,8 +7,10 @@
   Source of downloads/SAPA_membership_application.pdf. Build it with
   `npm run build:membership-application`, never by hand: the build prints this
   page with headless Chrome (a tagged PDF), then turns every [data-field]
-  element into a fillable form field at the same spot. data-label is the
-  field's screen-reader name.
+  element into a fillable form field at the same spot, and every set of
+  [data-group] elements into one radio group (one choice only), each element
+  an option named by data-value. data-label (data-group-label on a group's
+  first option) is the screen-reader name.
 
   Facts on this form were ruled by the Board of Governors on 2026-10-04 (dues,
   payee, APS chapter, schedule wording, newsletter cadence, and that only Al
@@ -88,6 +90,8 @@
   .box { border: 0.9pt solid var(--ink); background: #fff; }
   .check { display: inline-flex; align-items: center; gap: 4pt; margin-right: 8pt; white-space: nowrap; }
   .check .sq { width: 10pt; height: 10pt; border: 0.9pt solid var(--ink); background: #fff; flex: none; }
+  /* A radio option: the PDF widget draws the circle, so nothing is printed under it. */
+  [data-group] { border-color: transparent !important; background: transparent !important; border-radius: 50%; }
   .check-sq { display: inline-block; width: 10pt; height: 10pt; border: 0.9pt solid var(--ink); background: #fff; flex: none; }
   .inline { display: flex; align-items: center; flex-wrap: wrap; row-gap: 4pt; }
   .inline .prompt { font-weight: 600; margin-right: 8pt; }
@@ -156,8 +160,8 @@
 
   <div class="type-choice">
     <span>I am applying as a:</span>
-    <span class="check"><span class="sq" data-field="membership_member" data-type="checkbox" data-label="Applying as a member"></span>Member</span>
-    <span class="check"><span class="sq" data-field="membership_junior" data-type="checkbox" data-label="Applying as a junior member"></span>Junior Member</span>
+    <span class="check"><span class="sq" data-group="membership_type" data-value="Member" data-group-label="Applying as a member or a junior member"></span>Member</span>
+    <span class="check"><span class="sq" data-group="membership_type" data-value="Junior member"></span>Junior Member</span>
   </div>
 
   <div class="section">
@@ -183,8 +187,8 @@
     </div>
     <div class="inline" style="margin-bottom: 4pt;">
       <span class="prompt">May we publish your email in The Philatex?</span>
-      <span class="check"><span class="sq" data-field="email_publish_yes" data-type="checkbox" data-label="Yes, you may publish my email in The Philatex"></span>Yes</span>
-      <span class="check"><span class="sq" data-field="email_publish_no" data-type="checkbox" data-label="No, do not publish my email in The Philatex"></span>No</span>
+      <span class="check"><span class="sq" data-group="email_publish" data-value="Yes" data-group-label="May we publish your email in The Philatex?"></span>Yes</span>
+      <span class="check"><span class="sq" data-group="email_publish" data-value="No"></span>No</span>
     </div>
   </div>
 
@@ -219,7 +223,7 @@
     </div>
     <div class="hint" style="margin: -2pt 0 5pt;">Juniors: a parent or guardian, who is present with the junior at meetings, is responsible for the junior member's conduct.</div>
     <div class="row">
-      <div class="cell" style="flex: 3"><span class="lbl">Responsible adult (juniors only)</span><div class="line" data-field="junior_sponsor_name" data-label="Juniors only: name of the responsible adult"></div></div>
+      <div class="cell" style="flex: 3"><span class="lbl">Responsible adult's signature (juniors only)</span><div class="line" data-field="junior_sponsor_signature" data-label="Juniors only: signature, or typed full name, of the responsible adult"></div></div>
       <div class="cell" style="flex: 1.2"><span class="lbl">Date</span><div class="line" data-field="junior_sponsor_date" data-label="Juniors only: date signed by the responsible adult"></div></div>
       <div class="cell" style="flex: 2.2"><span class="lbl">Relationship to junior</span><div class="line" data-field="junior_sponsor_relationship" data-label="Juniors only: relationship of the responsible adult to the junior"></div></div>
     </div>
@@ -228,24 +232,24 @@
   <div class="section">
     <div class="section-title">Annual Dues</div>
     <table class="dues">
-      <caption class="hint" style="caption-side: bottom; text-align: left; padding-top: 4pt;">Dues are $25.00 a year for members and $12.50 for juniors, prorated by quarter by the date we receive your application. Check the amount you are paying.</caption>
+      <caption class="hint" style="caption-side: bottom; text-align: left; padding-top: 4pt;">Dues are $25.00 a year for members and $12.50 for juniors, prorated by quarter by the date we receive your application. Mark the amount you are paying.</caption>
       <thead>
         <tr><th scope="col">Application received</th><th scope="col">Jan – Mar</th><th scope="col">Apr – Jun</th><th scope="col">Jul – Sep</th><th scope="col">Oct – Dec</th></tr>
       </thead>
       <tbody>
         <tr>
           <th scope="row">New member</th>
-          <td><span class="amt"><span class="sq check-sq" data-field="dues_member_q1" data-type="checkbox" data-label="New member, application received January to March: $25.00"></span>$25.00</span></td>
-          <td><span class="amt"><span class="sq check-sq" data-field="dues_member_q2" data-type="checkbox" data-label="New member, application received April to June: $18.75"></span>$18.75</span></td>
-          <td><span class="amt"><span class="sq check-sq" data-field="dues_member_q3" data-type="checkbox" data-label="New member, application received July to September: $12.50"></span>$12.50</span></td>
-          <td><span class="amt"><span class="sq check-sq" data-field="dues_member_q4" data-type="checkbox" data-label="New member, application received October to December: $31.25, which includes next year's $25.00"></span>$31.25</span><span class="note">includes next year's $25.00</span></td>
+          <td><span class="amt"><span class="sq check-sq" data-group="dues" data-value="New member, Jan to Mar, $25.00" data-group-label="Dues you are paying, by the quarter we receive your application"></span>$25.00</span></td>
+          <td><span class="amt"><span class="sq check-sq" data-group="dues" data-value="New member, Apr to Jun, $18.75"></span>$18.75</span></td>
+          <td><span class="amt"><span class="sq check-sq" data-group="dues" data-value="New member, Jul to Sep, $12.50"></span>$12.50</span></td>
+          <td><span class="amt"><span class="sq check-sq" data-group="dues" data-value="New member, Oct to Dec, $31.25"></span>$31.25</span><span class="note">includes next year's $25.00</span></td>
         </tr>
         <tr>
           <th scope="row">New junior</th>
-          <td><span class="amt"><span class="sq check-sq" data-field="dues_junior_q1" data-type="checkbox" data-label="New junior, application received January to March: $12.50"></span>$12.50</span></td>
-          <td><span class="amt"><span class="sq check-sq" data-field="dues_junior_q2" data-type="checkbox" data-label="New junior, application received April to June: $9.38"></span>$9.38</span></td>
-          <td><span class="amt"><span class="sq check-sq" data-field="dues_junior_q3" data-type="checkbox" data-label="New junior, application received July to September: $6.25"></span>$6.25</span></td>
-          <td><span class="amt"><span class="sq check-sq" data-field="dues_junior_q4" data-type="checkbox" data-label="New junior, application received October to December: $15.63, which includes next year's $12.50"></span>$15.63</span><span class="note">includes next year's $12.50</span></td>
+          <td><span class="amt"><span class="sq check-sq" data-group="dues" data-value="New junior, Jan to Mar, $12.50"></span>$12.50</span></td>
+          <td><span class="amt"><span class="sq check-sq" data-group="dues" data-value="New junior, Apr to Jun, $9.38"></span>$9.38</span></td>
+          <td><span class="amt"><span class="sq check-sq" data-group="dues" data-value="New junior, Jul to Sep, $6.25"></span>$6.25</span></td>
+          <td><span class="amt"><span class="sq check-sq" data-group="dues" data-value="New junior, Oct to Dec, $15.63"></span>$15.63</span><span class="note">includes next year's $12.50</span></td>
         </tr>
       </tbody>
     </table>
@@ -276,7 +280,7 @@
   <div class="cols">
     <div class="card">
       <h3>When we meet</h3>
-      <p>We meet most Friday nights. Doors open at 6:30 PM. BOG meetings begin at 7:15 PM and all other meetings begin at 7:30 PM.</p>
+      <p>We meet most Friday nights. Doors open at 6:30 PM. BOG meetings begin at 7:15 PM and most other meetings at 7:30 PM; special events can differ, as shown in the schedule.</p>
       <p>Programs by our members, auctions, bourses (like a flea market for stamps) and other club activities are held as shown in the schedule, on our website and in The Philatex. Come early on auction nights to look over the lots.</p>
     </div>
     <div class="card">
