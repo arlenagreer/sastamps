@@ -10,7 +10,7 @@ A modern, accessible, and performance-optimized website for the San Antonio Phil
 ## 🌟 Features
 
 - **📅 Meeting Calendar** - Interactive calendar with ICS export for easy integration
-- **📰 Newsletter Archive** - Quarterly PHILATEX newsletters in digital format
+- **📰 Newsletter Archive** - PHILATEX newsletters in digital format
 - **📚 Educational Resources** - Comprehensive guides for stamp collectors
 - **🔍 Philatelic Glossary** - Searchable database of stamp collecting terminology
 - **💌 Contact System** - Secure contact form with validation and rate limiting
