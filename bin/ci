@@ -21,6 +21,7 @@
 # checkouts on this machine use bin/ci (the gate's first probe path), and this
 # repo's own reason is sharper: an entry point inside package.json would be a
 # casualty of the exact failure (a broken npm install) it has to explain.
+# ci-tier: full-only — light, no Docker; the full run is already cheap
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
