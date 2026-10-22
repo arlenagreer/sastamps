@@ -73,6 +73,7 @@ jobs:
           http://localhost:3000/resources.html
           http://localhost:3000/glossary.html
           http://localhost:3000/search.html
+          http://localhost:3000/blue-chip-auction.html
         uploadArtifacts: true
         temporaryPublicStorage: true
         
