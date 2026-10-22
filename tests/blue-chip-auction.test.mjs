@@ -11,12 +11,17 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
+const { deployableFiles, sitePages } = require('../scripts/lib/site');
+const { SITE_PAGES } = require('../scripts/build-search-index');
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8');
 const PAGE = 'blue-chip-auction.html';
 
-// Every hrefs on the page, parsed per <a> tag rather than across attributes.
+// Every href on the page, parsed per <a> tag rather than across attributes.
 const hrefs = (html) => [...html.matchAll(/<a\b[^>]*>/gi)]
   .map((m) => /\bhref="([^"]*)"/i.exec(m[0])?.[1]).filter(Boolean);
 
@@ -47,10 +52,52 @@ test('the Club News auction card links to the announcement', () => {
 // The superseded rule, in any of the wordings the Q4 run produced.
 const STALE = /(submitted|verified)[^.;]*\b(before|after) November 20\b/i;
 
-test('no member-facing source still carries the November 20 verification rule', () => {
-  for (const rel of ['index.html', 'meetings.html', PAGE, 'data/meetings/meetings.json',
-    'data/calendar/2026-11-20-meeting.ics', 'data/calendar/2026-12-11-meeting.ics', 'public/sapa-q4-2026-meetings.ics']) {
+test('nothing deployed still carries the November 20 verification rule', () => {
+  // Every page, data file and calendar the site serves, so a copy nobody
+  // remembered (the search index reads newsletters.json) cannot hide.
+  const deployable = deployableFiles(ROOT);
+  const files = [...sitePages(ROOT, deployable),
+    ...[...deployable].filter((f) => /^(data|public)\/.*\.(json|ics)$/.test(f))];
+  assert.ok(files.length > 50, `only ${files.length} files scanned`);
+  for (const rel of files) {
     assert.doesNotMatch(read(rel), STALE, rel);
+  }
+});
+
+const navHrefs = (html) => hrefs(html.slice(html.indexOf('<ul class="nav-menu"'), html.indexOf('</ul>', html.indexOf('<ul class="nav-menu"'))));
+
+test('the page has the same main navigation as the homepage', () => {
+  assert.deepEqual(navHrefs(read(PAGE)), navHrefs(read('index.html')));
+});
+
+test('site search indexes the announcement page', () => {
+  assert.ok(SITE_PAGES.some((p) => p.file === PAGE && p.keywords.includes('auction')));
+});
+
+test('the highlights link is underlined, not told apart by color alone', () => {
+  const html = read('index.html');
+  const start = html.indexOf('Latest Issue Highlights');
+  const tag = [...html.slice(start, html.indexOf('</ul>', start)).matchAll(/<a\b[^>]*>/gi)]
+    .map((m) => m[0]).find((t) => t.includes(`href="${PAGE}"`));
+  assert.ok(tag, 'no link to the page in the highlights');
+  assert.match(/\bstyle="([^"]*)"/.exec(tag)?.[1] ?? '', /text-decoration:\s*underline/);
+});
+
+// Calendar apps match an imported event by UID; SEQUENCE and LAST-MODIFIED
+// tell them the event changed (RFC 5545 3.8.7.4).
+test('every changed calendar event is marked as revised', () => {
+  const block = (text, uid) => {
+    const i = text.indexOf(`UID:${uid}`);
+    return text.slice(text.lastIndexOf('BEGIN:VEVENT', i), text.indexOf('END:VEVENT', i));
+  };
+  for (const day of ['2026-11-06', '2026-11-20', '2026-12-11']) {
+    const ymd = day.replaceAll('-', '');
+    for (const [rel, uid] of [[`data/calendar/${day}-meeting.ics`, `${ymd}T193000Z-sapa@sastamps.org`],
+      ['public/sapa-q4-2026-meetings.ics', `sapa-${day}@sastamps.org`]]) {
+      const ev = block(read(rel), uid);
+      assert.match(ev, /^SEQUENCE:1\r?$/m, `${rel} ${day}`);
+      assert.match(ev, /^LAST-MODIFIED:20261022T\d{6}Z\r?$/m, `${rel} ${day}`);
+    }
   }
 });
 

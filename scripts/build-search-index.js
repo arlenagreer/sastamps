@@ -37,7 +37,8 @@ const SITE_PAGES = [
     { file: 'archive.html', keywords: ['philatex', 'back issues', 'past issues', 'old newsletters'] },
     { file: 'resources.html', keywords: ['guides', 'beginners', 'learn'] },
     { file: 'glossary.html', keywords: ['terms', 'definitions', 'dictionary', 'vocabulary'] },
-    { file: 'contact.html', keywords: ['email', 'message', 'question', 'questions'] }
+    { file: 'contact.html', keywords: ['email', 'message', 'question', 'questions'] },
+    { file: 'blue-chip-auction.html', title: 'Blue-Chip Auction 2026', keywords: ['auction', 'blue chip', 'lots', 'submit lots', 'bid', 'bidding'] }
 ];
 
 // How much page text search-documents.json keeps for the result snippet.
