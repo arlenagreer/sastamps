@@ -3651,7 +3651,7 @@
       "type": "business",
       "title": "Board of Governors Meeting & Show and Tell",
       "topic": "Show and Tell",
-      "description": "Monthly Board of Governors meeting followed by member show and tell presentations. Guests welcome!",
+      "description": "Monthly Board of Governors meeting followed by member show and tell presentations. Last meeting to submit lots for the December 11 SAPA Blue-Chip Auction. Guests welcome!",
       "agenda": [
         {
           "time": "6:30 PM",
@@ -3672,6 +3672,9 @@
           "item": "Meeting adjournment"
         }
       ],
+      "specialNotes": [
+        "Blue-Chip Auction lots due: submit up to 15 lots to a member of the Board of Governors"
+      ],
       "requirements": {
         "rsvpRequired": false,
         "membershipRequired": false,
@@ -3682,7 +3685,7 @@
         "email": "loz33@hotmail.com"
       },
       "cancelled": false,
-      "tags": ["bog", "business", "show-and-tell", "guests-welcome"]
+      "tags": ["bog", "business", "show-and-tell", "blue-chip-auction", "guests-welcome"]
     },
     {
       "id": "2026-11-13",
@@ -3757,9 +3760,9 @@
         }
       },
       "type": "social",
-      "title": "Stamp Bourse & Blue-Chip Auction Lot Viewing/Verification",
-      "topic": "Dealer tables and stamp trading; Blue-Chip Auction lot viewing and verification",
-      "description": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers, plus Blue-Chip Auction Lot Viewing and Blue-Chip Auction Lot Verification ahead of the December 11 SAPA Blue-Chip Auction. All lots submitted before November 20 will be reviewed by a panel of experts who will verify the lot description and the catalog value. Visitors welcome!",
+      "title": "Stamp Bourse & Blue-Chip Auction Lot Viewing",
+      "topic": "Dealer tables and stamp trading; Blue-Chip Auction lot viewing",
+      "description": "Monthly bourse featuring dealer tables and opportunities for buying, selling, and trading stamps and covers, plus Blue-Chip Auction Lot Viewing ahead of the December 11 SAPA Blue-Chip Auction: verified lots will be on display. Visitors welcome!",
       "agenda": [
         {
           "time": "6:30 PM",
@@ -3775,8 +3778,7 @@
         }
       ],
       "specialNotes": [
-        "Blue-Chip Auction Lot Viewing",
-        "Blue-Chip Auction Lot Verification: lots submitted before November 20 are verified by a panel of SAPA experts; lots submitted after November 20 will not be verified",
+        "Blue-Chip Auction Lot Viewing: verified lots for the December 11 SAPA Blue-Chip Auction will be on display",
         "Contact Al Lozano to reserve tables",
         "Visitors welcome!"
       ],
@@ -3901,7 +3903,7 @@
       "type": "auction",
       "title": "SAPA Blue-Chip Auction",
       "topic": "Annual Blue-Chip Auction",
-      "description": "SAPA's annual Blue-Chip Auction. Blue-Chip lots must have a catalog value of at least $20, although the opening bid on a lot may be lower than $20. Each lot containing stamps must include the Scott (or other recognized) catalog number, the catalog value, and the year of the catalog used to determine the value, and the condition of the stamp(s) must be described. Lots submitted before November 20 are reviewed by a panel of experts who verify the lot description and catalog value; lots submitted after November 20, including on the day of the auction, are not verified by SAPA experts.",
+      "description": "SAPA's annual Blue-Chip Auction, reserved for philatelic items with a catalog value of at least $20; the opening bid is set by the offeror and may be less than $20. Each member may submit up to 15 lots to a member of the Board of Governors no later than the November 6 meeting, listing for each lot the catalog number, catalog value, year of the catalog used, condition and description, and opening bid. Lots submitted with incomplete information may be rejected. Lots submitted on or after November 7 will still be accepted but may not be verified; unverified lots are identified as such at the auction and offered as is.",
       "agenda": [
         {
           "time": "6:30 PM",
@@ -3914,11 +3916,11 @@
       ],
       "specialNotes": [
         "Minimum catalog value of $20 per lot (the opening bid may be lower than $20)",
-        "Each lot containing stamps must list the Scott (or other recognized) catalog number, the catalog value, and the catalog year used",
-        "Condition must be described (hinged, used, never hinged, regummed, etc.)",
-        "A list of the lots will be sent to all SAPA members and several dealers before the auction night",
-        "Lots on display at the November 20 and December 4 meetings",
-        "Lots submitted after November 20, including on auction night, will not be verified by SAPA experts"
+        "Up to 15 lots per member, submitted to a member of the Board of Governors by the November 6 meeting",
+        "List for each lot: catalog number, catalog value, year of the catalog used, condition and description, and opening bid",
+        "A list of all lots will be emailed to every SAPA member before the auction",
+        "Verified lots on display at the November 20 and December 4 meetings",
+        "Lots submitted on or after November 7 are accepted but may not be verified; unverified lots are offered as is"
       ],
       "requirements": {
         "rsvpRequired": false,

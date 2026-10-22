@@ -72,9 +72,9 @@ DTEND:20261106T210000
 DTSTAMP:20261001T000000Z
 UID:sapa-2026-11-06@sastamps.org
 SUMMARY:Board of Governors Meeting & Show and Tell
-DESCRIPTION:Monthly Board of Governors meeting followed by member show and tell presentations. Guests welcome!
+DESCRIPTION:Monthly Board of Governors meeting followed by member show and tell presentations. Last meeting to submit lots for the December 11 SAPA Blue-Chip Auction. Guests welcome!
 LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
-CATEGORIES:business,show-and-tell,board-meeting,guests-welcome
+CATEGORIES:business,show-and-tell,board-meeting,blue-chip-auction,guests-welcome
 STATUS:CONFIRMED
 END:VEVENT
 
@@ -95,8 +95,8 @@ DTSTART:20261120T183000
 DTEND:20261120T210000
 DTSTAMP:20261001T000000Z
 UID:sapa-2026-11-20@sastamps.org
-SUMMARY:Stamp Bourse & Blue-Chip Auction Lot Viewing/Verification
-DESCRIPTION:Monthly bourse featuring dealer tables and opportunities for buying\, selling\, and trading stamps and covers\, plus Blue-Chip Auction Lot Viewing and Lot Verification ahead of the December 11 SAPA Blue-Chip Auction. Lots submitted before November 20 are verified by a panel of SAPA experts. Visitors welcome!
+SUMMARY:Stamp Bourse & Blue-Chip Auction Lot Viewing
+DESCRIPTION:Monthly bourse featuring dealer tables and opportunities for buying\, selling\, and trading stamps and covers\, plus Blue-Chip Auction Lot Viewing ahead of the December 11 SAPA Blue-Chip Auction: verified lots will be on display. Visitors welcome!
 LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
 CATEGORIES:bourse,dealers,trading,buying,selling,blue-chip-auction,guests-welcome
 STATUS:CONFIRMED
@@ -132,7 +132,7 @@ DTEND:20261211T210000
 DTSTAMP:20261001T000000Z
 UID:sapa-2026-12-11@sastamps.org
 SUMMARY:SAPA Blue-Chip Auction
-DESCRIPTION:SAPA's annual Blue-Chip Auction. Lots must have a catalog value of at least $20 (the opening bid may be lower). Each lot containing stamps must include the Scott (or other recognized) catalog number\, catalog value\, and catalog year\, and the condition must be described. Lots submitted before November 20 are verified by a panel of experts\; later lots\, including those submitted on auction night\, are not verified.
+DESCRIPTION:SAPA's annual Blue-Chip Auction. Lots must have a catalog value of at least $20 (the opening bid may be lower). Members may submit up to 15 lots to a member of the Board of Governors by the November 6 meeting\, listing the catalog number\, catalog value\, catalog year\, condition\, and opening bid. Lots submitted on or after November 7 are accepted but may not be verified\; unverified lots are offered as is.
 LOCATION:MacArthur Park Lutheran Church\, Building 1\, Fellowship Hall\, 2903 Nacogdoches Road\, San Antonio\, TX 78217
 CATEGORIES:auction,blue-chip-auction,annual,buying,selling
 STATUS:CONFIRMED
