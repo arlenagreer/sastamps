@@ -62,9 +62,10 @@ test('nothing deployed still carries the November 20 verification rule', () => {
     ...[...deployable].filter((f) => /^(data|public)\/.*\.(json|ics)$/.test(f))];
   assert.ok(files.length > 50, `only ${files.length} files scanned`);
   for (const rel of files) {
-    assert.doesNotMatch(read(rel), STALE, rel);
+    const text = read(rel);
+    assert.doesNotMatch(text, STALE, rel);
     // The schedule wordings that put verification on November 20 itself.
-    assert.doesNotMatch(read(rel), STALE_EVENT, rel);
+    assert.doesNotMatch(text, STALE_EVENT, rel);
   }
 });
 
@@ -76,11 +77,16 @@ test('the page tells newsletter readers that these dates replace the printed one
 
 test('the banner previews verified lots, and the newsletter page links the update', () => {
   const html = read('index.html');
-  const banner = html.slice(html.indexOf('id="blue-chip-banner"'), html.indexOf('</section>', html.indexOf('id="blue-chip-banner"')));
-  assert.match(banner, /verified lots/i);
+  const at = html.indexOf('id="blue-chip-banner"');
+  assert.ok(at > 0, 'index.html has no #blue-chip-banner');
+  assert.match(html.slice(at, html.indexOf('</section>', at)), /verified lots/i);
   const issue = read('newsletter.html');
-  const li = issue.slice(issue.indexOf('SAPA Annual Blue-Chip Auction, December 11'));
-  assert.ok(hrefs(li.slice(0, li.indexOf('</li>'))).includes(PAGE), 'newsletter.html does not link the auction update');
+  const from = issue.indexOf('SAPA Annual Blue-Chip Auction, December 11');
+  assert.ok(from > 0, 'newsletter.html no longer lists the auction');
+  const tag = [...issue.slice(from, issue.indexOf('</li>', from)).matchAll(/<a\b[^>]*>/gi)]
+    .map((m) => m[0]).find((t) => t.includes(`href="${PAGE}"`));
+  assert.ok(tag, 'newsletter.html does not link the auction update');
+  assert.match(/\bstyle="([^"]*)"/.exec(tag)?.[1] ?? '', /text-decoration:\s*underline/);
 });
 
 test('only verified lots are said to be on display', () => {
