@@ -3770,7 +3770,7 @@
         },
         {
           "time": "7:30 PM",
-          "item": "Bourse officially opens; Blue-Chip Auction lots on display"
+          "item": "Bourse officially opens; verified Blue-Chip Auction lots on display"
         },
         {
           "time": "9:00 PM",
@@ -3867,7 +3867,7 @@
         }
       ],
       "specialNotes": [
-        "Blue-Chip Auction Lot Viewing: lots for the December 11 SAPA Blue-Chip Auction will be on display"
+        "Blue-Chip Auction Lot Viewing: verified lots for the December 11 SAPA Blue-Chip Auction will be on display"
       ],
       "requirements": {
         "rsvpRequired": false,

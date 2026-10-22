@@ -49,8 +49,9 @@ test('the Club News auction card links to the announcement', () => {
   assert.ok(hrefs(html.slice(card, html.indexOf('</div>', card))).includes(PAGE));
 });
 
-// The superseded rule, in any of the wordings the Q4 run produced.
-const STALE = /(submitted|verified)[^.;]*\b(before|after) November 20\b/i;
+// The superseded rule: any statement tying lot submission, receipt or
+// verification to November 20, however it is worded.
+const STALE = /\b(submi\w*|receiv\w*|verif\w*|due)\b[^.;]*\b(before|after|by|until|through|on) Nov(?:ember|\.)? 20\b/i;
 
 test('nothing deployed still carries the November 20 verification rule', () => {
   // Every page, data file and calendar the site serves, so a copy nobody
@@ -65,6 +66,21 @@ test('nothing deployed still carries the November 20 verification rule', () => {
 });
 
 const navHrefs = (html) => hrefs(html.slice(html.indexOf('<ul class="nav-menu"'), html.indexOf('</ul>', html.indexOf('<ul class="nav-menu"'))));
+
+test('the page tells newsletter readers that these dates replace the printed one', () => {
+  assert.match(read(PAGE).replace(/\s+/g, ' '), /replace the November 20 date printed in the Fourth Quarter 2026 PHILATEX/);
+});
+
+test('only verified lots are said to be on display', () => {
+  const list = JSON.parse(read('data/meetings/meetings.json'));
+  const meetings = Array.isArray(list) ? list : list.meetings;
+  for (const id of ['2026-11-20', '2026-12-04']) {
+    const m = meetings.find((x) => x.id === id);
+    for (const line of [...m.agenda.map((a) => a.item), ...(m.specialNotes ?? [])]) {
+      if (/lots?\b.*\bon display/i.test(line)) assert.match(line, /verified/i, `${id}: ${line}`);
+    }
+  }
+});
 
 test('the page has the same main navigation as the homepage', () => {
   assert.deepEqual(navHrefs(read(PAGE)), navHrefs(read('index.html')));

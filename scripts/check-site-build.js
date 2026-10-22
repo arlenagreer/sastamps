@@ -321,7 +321,7 @@ if (fs.existsSync(SITE)) {
 }
 
 // Pages that use the font-loading CSS, and therefore need the script.
-const FONT_PAGES = ['index.html', 'about.html', 'contact.html', 'meetings.html', 'membership.html', 'newsletter.html', 'archive.html'];
+const FONT_PAGES = ['index.html', 'about.html', 'contact.html', 'meetings.html', 'membership.html', 'newsletter.html', 'archive.html', 'blue-chip-auction.html'];
 console.log('▸ source pages load plain links and nothing is inlined');
 // Every deployed page links both minified stylesheets, except these, which
 // are self-contained or not deployed.
