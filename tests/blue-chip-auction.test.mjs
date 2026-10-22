@@ -51,6 +51,7 @@ test('the Club News auction card links to the announcement', () => {
 
 // The superseded rule: any statement tying lot submission, receipt or
 // verification to November 20, however it is worded.
+const STALE_EVENT = /Lot Viewing\s*(?:\/|&amp;|&|and)\s*(?:Lot )?Verification/i;
 const STALE = /\b(submi\w*|receiv\w*|verif\w*|due)\b[^.;]*\b(before|after|by|until|through|on) Nov(?:ember|\.)? 20\b/i;
 
 test('nothing deployed still carries the November 20 verification rule', () => {
@@ -62,6 +63,8 @@ test('nothing deployed still carries the November 20 verification rule', () => {
   assert.ok(files.length > 50, `only ${files.length} files scanned`);
   for (const rel of files) {
     assert.doesNotMatch(read(rel), STALE, rel);
+    // The schedule wordings that put verification on November 20 itself.
+    assert.doesNotMatch(read(rel), STALE_EVENT, rel);
   }
 });
 
@@ -69,6 +72,15 @@ const navHrefs = (html) => hrefs(html.slice(html.indexOf('<ul class="nav-menu"')
 
 test('the page tells newsletter readers that these dates replace the printed one', () => {
   assert.match(read(PAGE).replace(/\s+/g, ' '), /replace the November 20 date printed in the Fourth Quarter 2026 PHILATEX/);
+});
+
+test('the banner previews verified lots, and the newsletter page links the update', () => {
+  const html = read('index.html');
+  const banner = html.slice(html.indexOf('id="blue-chip-banner"'), html.indexOf('</section>', html.indexOf('id="blue-chip-banner"')));
+  assert.match(banner, /verified lots/i);
+  const issue = read('newsletter.html');
+  const li = issue.slice(issue.indexOf('SAPA Annual Blue-Chip Auction, December 11'));
+  assert.ok(hrefs(li.slice(0, li.indexOf('</li>'))).includes(PAGE), 'newsletter.html does not link the auction update');
 });
 
 test('only verified lots are said to be on display', () => {
