@@ -29,7 +29,12 @@ nothing on the site can run code on a server:
 
 ## Solution
 
-Not yet decided. **The owner wants to discuss what the migration makes
+Round 1 is designed in
+`docs/superpowers/specs/2026-10-22-cloudflare-announcements-design.md`: the hosting move
+(release 1), then self-service homepage announcements for Jim (release 2). The notes below
+were the starting point for the 2026-10-22 discussion.
+
+Not yet decided beyond round 1. **The owner wants to discuss what the migration makes
 possible before any work starts**, especially interactivity and serverless
 functions. Topics for that discussion (verify Cloudflare's current
 free-tier limits first; they change):
